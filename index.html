@@ -1,0 +1,544 @@
+<!DOCTYPE html>  <!-- Le dice al navegador que esto es HTML moderno -->
+<meta charset="UTF-8">
+
+<html>
+<style>
+  * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #d0d0d0;
+}
+
+/* -------------------------------------------------- BARRA SUPERIOR */
+.top-bar {
+  background: black;
+  color: white;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* -------------------------------------------------- ZONA PRINCIPAL */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------- IZQUIERDA 20% */
+.panel-izquierda {
+  width: 30%;
+  background: #f2f2f2;
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 2px solid #ccc;
+}
+
+/* -------------------------------------------------- CENTRO 60% */
+.campo-central {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  background: #d4b483;
+  padding: 10px;
+}
+.lado-jugador {
+  position: relative;
+  width: 660px;
+  height: 240px;
+}
+.red-linea {
+  width: 660px;
+  height: 8px;
+  background: black;
+  margin: 8px 0;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------- DERECHA 20% */
+.panel-derecha {
+  width: 20%;
+  background: #f9f9f9;
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 2px solid #ccc;
+}
+
+/* -------------------------------------------------- LOG */
+#log {
+  white-space: pre-wrap;
+  font-size: 12px;
+  flex-direction: column;  /* cada línea debajo de la anterior */
+  gap: 2px;                /* pequeño espacio entre líneas */
+}
+
+/* -------------------------------------------------- MANO */
+.mano-bottom {
+  background: transparent;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#mano {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-wrap: nowrap; /* no saltar a segunda fila */
+}
+
+/* -------------------------------------------------- CARTAS */
+.carta {
+  border: 1px solid black;
+  border-radius: 0;
+  width: 80px;
+  height: 112px;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carta:hover {
+  /* filter: brightness(1.1);          aclara ligeramente la carta */
+  outline: 2px solid #31d1ae;      /* marco verde al hacer hover */
+  outline-offset: -2px;            /* el marco queda por dentro de la carta */
+}
+
+.carta.seleccionada {
+  outline: 2px solid red;
+  outline-offset: -2px;
+}
+
+/* -------------------------------------------------- PREVIEW */
+.preview {
+  position: fixed;
+  bottom: 80px;
+  left: 10px;
+  background: white;
+  border: 2px solid black;
+  padding: 15px;
+  width: 18%;
+  text-align: center;
+  z-index: 10;
+}
+
+/* -------------------------------------------------- MARCADOR */
+.marcador {
+  display: flex;
+  gap: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+/* -------------------------------------------------- TOOLTIP */
+.tooltip {
+  display: none;
+  position: fixed;
+  background: none;
+  border: none;
+  padding: 0;
+  z-index: 100;
+  width: 250px;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------- ZONAS */
+.zona {
+  position: absolute;
+  width: 80px;
+  height: 112px;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+
+/* zona tumbada horizontal */
+.zona.horizontal {
+  width: 112px;
+  height: 80px;
+}
+
+.zona .carta {
+  position: absolute;
+  width: 74px;
+  height: 104px;
+  background: white;
+  border: 1px solid black;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.lado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.red {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* -------------------------------------------------- BOTONES */
+button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.panel {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ccc;
+}
+/* -------------------------------------------------- LADO JUGADOR */
+.lado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.fila-zonas {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* -------------------------------------------------- COLORES */
+.zona-recepcion  { background: #1565c0; }
+.zona-pase       { background: #2e7d32; }
+.zona-remate     { background: #c62828; }
+.zona-bloqueo    { background: #212121; }
+.zona-apoyo      { background: #616161; }
+.zona-mazo       { background: #2c2c2c; }
+.zona-puntos     { background: #b0bec5; }
+.zona-trash      { background: #b0bec5; color: #333; }
+.zona-saque      { background: #e65100; }
+.zona-eventos    { background: #b0bec5; color: #333; }
+
+/* -------------------------------------------------- ZONA LATERAL */
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+/* -------------------------------------------------- POSICIONES JUGADOR 1 */
+#campo-j1 .zona-puntos    { top: 0px;    left: 50px; }
+#campo-j1 .zona-saque     { top: 150px;   left: 80px; }
+#campo-j1 #j1-bloqueo     { top: 0px;    left: 256px; }
+#campo-j1 #j1-recepcion   { top: 118px;  left: 170px; }
+#campo-j1 #j1-pase        { top: 118px;  left: 256px; }
+#campo-j1 #j1-remate      { top: 118px;  left: 342px; }
+#campo-j1 #j1-bloqueoApoyoIzq { top: 0px; left: 170px; }
+#campo-j1 #j1-bloqueoApoyo    { top: 0px; left: 342px; }
+#campo-j1 #j1-eventos     { top: 150px;  left: -5px; }
+#campo-j1 #j1-mazo        { top: 75px;    left: 430px;}
+#campo-j1 #j1-trash       { top: 75px;  left: 515px; }
+
+/* -------------------------------------------------- POSICIONES JUGADOR 2 (espejo) */
+#campo-j2 .zona-puntos    { top: 160px;  left: 430px; }
+#campo-j2 .zona-saque     { top: -20px;   left: 430px; }
+#campo-j2 #j2-bloqueo     { top: 130px;  left: 256px; }
+#campo-j2 #j2-recepcion   { top: 12px;    left: 342px; }
+#campo-j2 #j2-pase        { top: 12px;    left: 256px; }
+#campo-j2 #j2-remate      { top: 12px;    left: 170px; }
+#campo-j2 #j2-bloqueoApoyoIzq { top: 130px; left: 170px; }
+#campo-j2 #j2-bloqueoApoyo           { top: 130px; left: 342px; }
+#campo-j2 #j2-eventos     { top: -20px;    left: 515px; }
+#campo-j2 #j2-mazo        { top: 65px;  left: 80px; }
+#campo-j2 #j2-trash       { top: 65px;   left: -5px; }
+
+.zona.horizontal .carta {/* las cartas de las zonas horizontales están en horizontal */
+  width: 104px;
+  height: 74px;
+}
+
+.btn-campo {
+  color: white;
+  font-weight: bold;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 3px;
+}
+
+#btn-evento {
+  position: absolute;
+  top: 260px;       
+  left: -5px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #b0bec5;
+  color: #333;
+}
+
+#btn-saque {
+  position: absolute;
+  top: 122px; 
+  left: 80px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #e65100;
+  /* display: none;  oculto por defecto */
+}
+
+#btn-recepcion {
+  position: absolute;
+  top: 228px; 
+  left: 170px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #1565c0;
+  /* display: none; oculto por defecto */
+}
+
+#btn-pase {
+  position: absolute;
+  top: 228px; 
+  left: 256px;
+  width: 80px;
+  background: #2e7d32;
+}
+
+#btn-remate {
+  position: absolute;
+  top: 228px;
+  left: 342px;
+  width: 80px;
+  background: #c62828;
+}
+
+#btn-bloqueo {
+  position: absolute;
+  top: -5px; /* encima del bloqueo, pero ya está arriba del todo */
+  left: 430px;
+  width: 80px; /* ancho para cubrir los 3 bloqueadores */
+  background: #212121;
+}
+
+/* -------------------------------------------------- CONTADORES DE ZONA */
+.zona-contador {
+  position: absolute;
+  top: 5px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 3px;
+  z-index: 30;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+</style>
+<!----------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------- HTML -->
+<link rel="icon" type="image/png" href="favicon.png"> <!-- Icono navegador -->
+<!------------------------------------------------------------------------------------------------ BARRA SUPERIOR -->
+<div class="top-bar">
+  <div class="marcador">
+    <span id="puntos-j1">Andres: 2 📛</span>
+    <span>—</span>
+    <span id="puntos-j2">Raul: 2 📛</span>
+  </div>
+  <h3 id="faseActual">Fase: Saque</h3>
+</div>
+
+<!------------------------------------------------------------------------------------------------ ZONA PRINCIPAL -->
+<div class="main">
+  <!--------------------------------------------------------------------------- IZQUIERDA: PREVIEW + BOTONES -->
+  <div class="panel-izquierda">
+  <!----------------------------------------------------------------------- ACCIONES -->
+
+  <div class="panel">
+    <h3>Otros</h3>
+    <button onclick="usarHabilidad()">Usar habilidad</button>
+    <button onclick="jugarHabilidadDesdeMano()">Habilidad desde mano</button>
+    <button onclick="concederPunto()">🏳️ Conceder punto</button>
+    <button onclick="deseleccionarCarta()">Deseleccionar carta</button>
+    <button onclick="hacerMulligan(game.jugadores[game.jugadorActivo])">Devolver carta al mazo</button>
+    <button onclick="confirmarMulligan(game.jugadores[game.jugadorActivo])">Confirmar mulligan</button>
+    <button onclick="mostrarEstado()">Mostrar estado</button>
+  </div>
+    <div class="panel">
+    <h3>Acciones</h3>
+    <button onclick="jugarCarta()">Jugar carta</button>
+  </div>
+  <!--------------------------------------------------------------------------- MANO -->
+  <div class="mano-bottom">
+    <h3 id="nombreJugadorActivo">Jugador: </h3>
+    <div id="mano"></div>
+  </div>
+</div>
+
+<div class="campo-central">
+  <div id="pelota" style="position:absolute; font-size:24px; z-index:50; transition: all 0.3s ease;">🏐</div>
+  <!-- MANO DEL RIVAL (dorsos) — fijo en la parte superior de la pantalla -->
+  <div id="mano-rival" style="
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 99;
+  "></div>
+  <!-- JUGADOR 2 (rival) -->
+  <div class="lado-jugador" id="campo-j2">
+    <!-- Puntos — horizontal, arriba izquierda -->
+    <div class="zona zona-puntos horizontal" id="j2-mazoPuntos">Puntos</div>
+    <!-- Saque — vertical, abajo izquierda -->
+    <div class="zona zona-saque" id="j2-saque">Saque</div>
+    <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq">Apoyo</div>
+    <div class="zona zona-bloqueo" id="j2-bloqueo">Bloqueo</div>
+    <div class="zona zona-apoyo" id="j2-bloqueoApoyo">Apoyo</div>
+    <!-- Recepción -->
+    <div class="zona zona-recepcion" id="j2-recepcion">Recepción</div>
+    <!-- Pase -->
+    <div class="zona zona-pase" id="j2-pase">Pase</div>
+    <!-- Remate -->
+    <div class="zona zona-remate" id="j2-remate">Remate</div>
+    <!-- Eventos — horizontal, abajo centro -->
+    <div class="zona zona-eventos" id="j2-eventos">Eventos</div>
+    <!-- Mazo -->
+    <div class="zona zona-mazo" id="j2-mazo">Mazo</div>
+    <!-- Trash — horizontal -->
+    <div class="zona zona-trash" id="j2-trash">Trash</div>
+  </div>
+
+  <!-- RED -->
+  <div class="red-linea"></div>
+
+  <!-- JUGADOR 1 -->
+  <div class="lado-jugador" id="campo-j1">
+    <button id="btn-evento" class="btn-campo" onclick="jugarEvento()">Jugar Evento</button>
+    <button id="btn-saque" class="btn-campo" onclick="resolverSaque()">Saque</button>
+    <button id="btn-recepcion" class="btn-campo" onclick="resolverRecepcion()">Recepción</button>
+    <button id="btn-pase" class="btn-campo" onclick="resolverPase()">Pase</button>
+    <button id="btn-remate" class="btn-campo" onclick="resolverRemate()">Remate</button>
+    <button id="btn-bloqueo" class="btn-campo" onclick="resolverBloqueo()">Bloqueo</button>
+    <!-- Puntos — horizontal, arriba izquierda -->
+    <div class="zona zona-puntos horizontal" id="j1-mazoPuntos">Puntos</div>
+    <!-- Saque — vertical, abajo izquierda -->
+    <div class="zona zona-saque" id="j1-saque">Saque</div>
+    <!-- Bloqueo central -->
+    <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq">Apoyo</div>
+    <div class="zona zona-bloqueo" id="j1-bloqueo">Bloqueo</div>
+    <div class="zona zona-apoyo" id="j1-bloqueoApoyo">Apoyo</div>
+    <div class="zona zona-recepcion" id="j1-recepcion">Recepción</div>
+    <!-- Pase -->
+    <div class="zona zona-pase" id="j1-pase">Pase</div>
+    <!-- Remate -->
+    <div class="zona zona-remate" id="j1-remate">Remate</div>
+    <!-- Eventos — horizontal, abajo centro -->
+    <div class="zona zona-eventos" id="j1-eventos">Eventos</div>
+    <!-- Mazo -->
+    <div class="zona zona-mazo" id="j1-mazo">Mazo</div>
+    <!-- Trash — horizontal -->
+    <div class="zona zona-trash" id="j1-trash">Trash</div>
+  </div>
+
+</div>
+
+  <!-- DERECHA: LOG -->
+  <div class="panel-derecha">
+    <div id="log-container" style="height:50%; overflow-y:auto; border-bottom: 2px solid #ccc; padding:10px;">
+      <h3>Log</h3>
+      <div id="log"></div>
+    </div>
+    <div id="selector-cartas" style="height:50%; padding:10px; display:none; flex-direction:column; gap:8px;">
+      <h3 id="selector-titulo">Elige una carta</h3>
+      <div id="selector-mano" style="display:flex; flex-wrap:wrap; gap:5px; overflow-y:auto;" onmouseleave="document.getElementById('tooltip').style.display='none'">
+      <button onclick="cancelarSelector()" style="margin-top:auto;">Cancelar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL FIN DE PARTIDA -->
+<div id="panel-fin" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 3px solid black;
+  padding: 40px;
+  z-index: 500;
+  text-align: center;
+  min-width: 300px;
+">
+  <h2 id="fin-titulo" style="font-size: 28px; margin-bottom: 20px;"></h2>
+  <button onclick="volverLobby()" style="padding: 12px 24px; font-size: 16px;">🏠 Volver al lobby</button>
+</div>
+
+<!-- TOOLTIP -->
+<div id="tooltip" class="tooltip"></div>
+
+<!-- PANEL DE OPCIONES A ELEGIR -->
+<div id="panel-eleccion" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; border:2px solid black; padding:20px; z-index:200; flex-direction:column; gap:10px; text-align:center;">
+  <h3>Elige una opción:</h3>
+  <div id="opciones-eleccion" style="display:flex; flex-direction:column; gap:8px;"></div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<!-- Otros JS -->
+<script src="cartas.js"></script>
+<script src="online.js"></script>
+<script src="game.js"></script>
+
+</html>

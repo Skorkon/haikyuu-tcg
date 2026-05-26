@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>HV-TCG · Lobby</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    h1 { margin-bottom: 40px; }
+
+    section {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    h2 { margin-top: 0; }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 16px;
+      width: 200px;
+    }
+
+    #codigo-sala {
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 6px;
+      margin: 10px 0;
+    }
+
+    #lista-partidas {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HV-TCG · Buscar partida</h1>
+
+  <!-- PASO 1: cargar tu mazo -->
+  <section>
+    <h2>1. Carga tu mazo</h2>
+    <input type="file" id="input-mazo" accept=".json">
+    <p id="estado-mazo">Ningún mazo cargado</p>
+  </section>
+
+  <!-- PASO 2: crear una partida nueva -->
+  <section>
+    <h2>2. Crear partida</h2>
+    <button id="btn-crear">Crear partida</button>
+    <p id="codigo-sala" style="display:none"></p>
+    <p id="estado-sala"></p>
+  </section>
+
+  <!-- PASO 3: unirse a una partida existente -->
+  <section>
+    <h2>3. Unirse a una partida</h2>
+
+    <!-- opción A: lista de partidas abiertas -->
+    <p><strong>Partidas abiertas:</strong></p>
+    <div id="lista-partidas">Buscando partidas...</div>
+
+    <!-- opción B: introducir código manualmente -->
+    <p style="margin-top:20px"><strong>O introduce un código:</strong></p>
+    <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6">
+    <button id="btn-unirse">Unirse</button>
+  </section>
+
+    <!-- Firebase (la librería oficial, se carga desde internet) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- Archivos de juego -->
+    <script src="cartas.js"></script>
+    <script src="online.js"></script>
+    <script src="lobby.js"></script>
+</body>
+</html>

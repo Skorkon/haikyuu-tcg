@@ -53,11 +53,13 @@
   <h1>HV-TCG · Buscar partida</h1>
 
   <!-- PASO 1: cargar tu mazo -->
-  <section>
-    <h2>1. Carga tu mazo</h2>
-    <input type="file" id="input-mazo" accept=".json">
-    <p id="estado-mazo">Ningún mazo cargado</p>
-  </section>
+<section>
+  <h2>1. Tu nombre y mazo</h2>
+  <input type="text" id="input-nombre" placeholder="Tu nombre" maxlength="20">
+  <br><br>
+  <input type="file" id="input-mazo" accept=".json">
+  <p id="estado-mazo">Ningún mazo cargado</p>
+</section>
 
   <!-- PASO 2: crear una partida nueva -->
   <section>

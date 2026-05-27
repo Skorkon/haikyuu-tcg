@@ -1,6 +1,6 @@
 // ── VARIABLES ─────────────────────────────────────────────
 let miMazo = null;  // aquí se guardará el mazo cargado
-
+let miNombre = "Jugador"; // nombre por defecto
 
 // ── CARGAR MAZO ───────────────────────────────────────────
 document.getElementById("input-mazo").addEventListener("change", function(evento) {
@@ -16,6 +16,10 @@ document.getElementById("input-mazo").addEventListener("change", function(evento
   lector.readAsText(archivo);
 });
 
+// ── NOMBRE ────────────────────────────────────────────────
+document.getElementById("input-nombre").addEventListener("change", function() {
+  miNombre = this.value.trim() || "Jugador"; // guardar nombre
+});
 
 // ── BOTÓN CREAR PARTIDA ───────────────────────────────────
 document.getElementById("btn-crear").addEventListener("click", function() {

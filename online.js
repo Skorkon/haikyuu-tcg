@@ -49,6 +49,7 @@ function crearPartida(mazo) {
     jugador2listo: false,
     jugador1mazo:  mazo,
     jugador2mazo:  null,
+    jugador1nombre: miNombre, // nombre del jugador 1
   });
 
   console.log("Partida creada: " + codigo);
@@ -62,6 +63,7 @@ function unirseAPartida(codigo, mazo) {
   modoOnline = true;
 
   db.ref("partidas/" + codigo + "/jugador2mazo").set(mazo); // añade el mazo del jugador 2
+  db.ref("partidas/" + codigo + "/jugador2nombre").set(miNombre); // nombre del jugador 2
   db.ref("partidas/" + codigo + "/estado").set("completa"); // cambia el estado de la partida
 
   console.log("Unido a la partida: " + codigo);
@@ -241,7 +243,7 @@ function escucharSala() {
 }
 
 // ── ARRANCAR PARTIDA Y CREAR MAZOS ────────────────────────────
-function arrancarPartidaOnline(mazoJ1, mazoJ2) {
+function arrancarPartidaOnline(mazoJ1, mazoJ2, nombreJ1, nombreJ2) {
   const miMazoData    = miNumero === 1 ? mazoJ1 : mazoJ2;
   const rivalMazoData = miNumero === 1 ? mazoJ2 : mazoJ1;
 
@@ -251,6 +253,9 @@ function arrancarPartidaOnline(mazoJ1, mazoJ2) {
 
   game.jugadores[miIndice].mazo    = construirMazo(miMazoData);
   game.jugadores[rivalIndice].mazo = construirMazo(rivalMazoData);
+  // asignar nombres a los jugadores
+  game.jugadores[0].nombre = nombreJ1 || "Jugador 1"; // nombre J1
+  game.jugadores[1].nombre = nombreJ2 || "Jugador 2"; // nombre J2
 
   console.log("Mi mazo cargado: "    + game.jugadores[miIndice].mazo.length    + " cartas");
   console.log("Mazo rival cargado: " + game.jugadores[rivalIndice].mazo.length + " cartas");
@@ -300,7 +305,7 @@ function leerParametrosURL() {
   // leer los mazos de Firebase y arrancar
   db.ref("partidas/" + salaActual).once("value", function(snap) {
     const sala = snap.val();
-    arrancarPartidaOnline(sala.jugador1mazo, sala.jugador2mazo);
+    arrancarPartidaOnline(sala.jugador1mazo, sala.jugador2mazo, sala.jugador1nombre, sala.jugador2nombre);
   });
 }
 

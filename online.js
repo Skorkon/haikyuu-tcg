@@ -326,6 +326,7 @@ function confirmarMulliganOnline() {
         escucharFase();             // empezar a escuchar cambios de fase
         escucharManoRival();        // escuchar cambios en mano rival
         escucharEfectos()           // escuchar los efectos que se vayan añadiendo al array
+        escucharTrashRival()        // escuchar los cambios de cartas en el trash
         actualizarFaseUI();         // actualizar el letrero
         renderMano();               // redibujar mano
         renderManoRival()
@@ -416,6 +417,34 @@ function escucharEfectos() {
   });
 }
 
+// ── SINCRONIZAR TRASH ─────────────────────────────────────
+function enviarTrash(jugador) {
+  if (!modoOnline) return;                                    // solo en modo online
+  const miIndice = miNumero - 1;                             // índice del jugador local
+  if (jugador !== game.jugadores[miIndice]) return;          // solo si es el jugador local
+  
+  db.ref("partidas/" + salaActual + "/trash/jugador" + miNumero).set(
+    jugador.trash.map(c => c.info?.id || null)               // array de IDs del trash
+  );
+}
+
+function escucharTrashRival() {
+  const rivalNumero = miNumero === 1 ? 2 : 1;               // número del rival
+  const rivalIndice = miNumero === 1 ? 1 : 0;               // índice del rival
+  
+  db.ref("partidas/" + salaActual + "/trash/jugador" + rivalNumero).on("value", function(snap) {
+    const ids = snap.val();                                   // ids del trash del rival
+    if (!ids) return;                                         // ignorar si no hay dato
+    
+    const todasLasCartas = inicializarCartas();               // cargar catálogo
+    game.jugadores[rivalIndice].trash = ids                  // reconstruir trash del rival
+      .filter(id => id)                                       // filtrar nulls
+      .map(id => todasLasCartas.find(c => c.info?.id === id)) // buscar carta por id
+      .filter(c => c);                                        // filtrar no encontradas
+    
+    renderCampo();                                            // redibujar campo
+  });
+}
 
 // ── BORRAR PARTIDA TERMINADA ──────────────────────────────
 function borrarPartida() {

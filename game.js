@@ -1897,6 +1897,7 @@ function añadirCartaAMano(jugador, carta) {
     robarCarta(rival, 1);
     log("Tendo Satori: roba 1 carta por efecto.");
   }
+  if (modoOnline) enviarTrash(jugador);                      // sincronizar trash tras mover carta
   renderMano();
   renderManoRival()
 }
@@ -2158,14 +2159,14 @@ game.jugadores[0].mazo.push(gtsr); */
 });*/
 
 // TRASH 
-["HV-P02-034", "HV-P02-033", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
+["HV-P01-044", "HV-P02-033", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(carta);
   if (carta) game.jugadores[1].trash.push(carta);
 });
 
 // MAZO J1
-["HV-D02-001", "HV-P02-016", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-P01-045", "HV-P02-016", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);

@@ -943,17 +943,20 @@ function inicializarCartas() {
       }
       game.valorAtaque += 2;
       log("Habilidad Akaashi: +2 al pase 💫");
-      let indexBokuto = jugador.trash.findIndex(c => c.nombre === "Kotaro Bokuto");
-        if (indexBokuto !== -1) {
-          let bokuto = jugador.trash.splice(indexBokuto, 1)[0];
-          añadirCartaAMano(jugador, bokuto);
-          log("Kotaro Bokuto añadido a tu mano desde el trash 🦅");
-          renderMano();
-          renderManoRival()
-        } 
-        else {
-          log("No hay ningún Bokuto en el trash");
-        }
+      let bokutos = jugador.trash.filter(c => c.nombre === "Kotaro Bokuto"); // buscar todos los Bokutos
+      if (bokutos.length === 0) {
+        log("No hay ningún Bokuto en el trash ❌");
+        return;
+      }
+
+      let bokutoElegido = await mostrarSelectorCartas("Elige un Kotaro Bokuto del trash:", bokutos); // selector
+      if (!bokutoElegido) return;
+
+      let index = jugador.trash.indexOf(bokutoElegido);           // buscar en el trash
+      jugador.trash.splice(index, 1);                             // sacar del trash
+      añadirCartaAMano(jugador, bokutoElegido);                   // añadir a la mano
+      log("Kotaro Bokuto añadido a tu mano desde el trash.");
+      renderMano();
       },
     { tipo: "personaje",
         id: "HV-P01-045",

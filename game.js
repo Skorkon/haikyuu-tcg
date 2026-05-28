@@ -1449,9 +1449,12 @@ function mostrarEstado() {
 function actualizarFaseUI() { // texto que indica la fase de juego en directo
   document.getElementById("faseActual").textContent =
     "Fase: " + game.fase;
+  let btnMulligan = document.getElementById("btn-confirmar-mulligan");
+  btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none"; // solo visible en mulligan
+  document.getElementById("contador-ataque").textContent = "⚔️ " + game.valorAtaque;  // actualiza contador ataque
+  document.getElementById("contador-defensa").textContent = "🛡️ " + game.valorDefensa; // actualiza contador defensa
   moverPelota()
 }
-
 
 // ===================================================================================================================================
 // ======================================================================================================= FUNCIÓN QUE MUESRTA LA MANO
@@ -1488,6 +1491,11 @@ function renderMano() {
     }
 
     div.onclick = () => {
+      if (game.fase === "mulligan") {          // si estamos en mulligan
+        seleccionarCarta(carta);               // selecciona la carta
+        hacerMulligan(game.jugadores[game.jugadorActivo]); // la devuelve al mazo
+        return;
+      }
       seleccionarCarta(carta);
       game.ultimaCarta = null; 
       renderMano();

@@ -68,6 +68,35 @@ body {
   margin: 8px 0;
   border-radius: 4px;
 }
+.red-linea {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+
+.contador-campo {
+  background: rgba(0, 0, 0, 0.85); /* fondo negro con opacidad */
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;              /* bordes redondeados */
+  z-index: 10;
+}
+
+#contador-ataque {
+  position: absolute;
+  top: -20px;    /* ajusta hacia arriba */
+  left: 10px;    /* ajusta hacia la izquierda */
+}
+
+#contador-defensa {
+  position: absolute;
+  top: -20px;    /* ajusta hacia arriba */
+  left: 70px;    /* un poco más a la derecha que el ataque */
+}
 
 /* -------------------------------------------------- DERECHA 20% */
 .panel-derecha {
@@ -406,8 +435,7 @@ button {
     <button onclick="jugarHabilidadDesdeMano()">Habilidad desde mano</button>
     <button onclick="concederPunto()">🏳️ Conceder punto</button>
     <button onclick="deseleccionarCarta()">Deseleccionar carta</button>
-    <button onclick="hacerMulligan(game.jugadores[game.jugadorActivo])">Devolver carta al mazo</button>
-    <button onclick="confirmarMulligan(game.jugadores[game.jugadorActivo])">Confirmar mulligan</button>
+    <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(game.jugadores[game.jugadorActivo])">Confirmar mulligan</button> <!-- Botón con ID para poder trabajar con él en el JS -->
     <button onclick="mostrarEstado()">Mostrar estado</button>
   </div>
     <div class="panel">
@@ -457,7 +485,10 @@ button {
   </div>
 
   <!-- RED -->
-  <div class="red-linea"></div>
+  <div class="red-linea">
+    <div id="contador-ataque" class="contador-campo">⚔️ 0</div>
+    <div id="contador-defensa" class="contador-campo">🛡️ 0</div>
+  </div>
 
   <!-- JUGADOR 1 -->
   <div class="lado-jugador" id="campo-j1">

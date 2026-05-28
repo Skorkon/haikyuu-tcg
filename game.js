@@ -1249,10 +1249,14 @@ function usarHabilidad() {
     }
   }
   // =================================================== comprobaciones básicas
-if (jugador.zonas[carta.zonaActual]?.at(-1) !== carta) {
-  log("Esta carta está en el GUTS y no puede usar su habilidad ❌");
-  return;
-}
+  if (carta.info?.activacionMano && carta.zonaActual !== null) { // ---- si habilidad desde mano
+    log("Esta carta solo puede usar su habilidad desde la mano ❌");
+    return;
+  }
+  if (jugador.zonas[carta.zonaActual]?.at(-1) !== carta) { // ------------ si carta en el GUTS
+    log("Esta carta está en el GUTS y no puede usar su habilidad ❌");
+    return;
+  }
   if (!carta || !carta.habilidad) { // --------------- si carta sin habilidad
     log("Esta carta no tiene habilidad.");
     return;
@@ -2167,14 +2171,14 @@ game.jugadores[0].mazo.push(gtsr); */
 });*/
 
 // TRASH 
-["HV-P01-044", "HV-P02-033", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
+["HV-P01-075", "HV-P02-033", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(carta);
   if (carta) game.jugadores[1].trash.push(carta);
 });
 
 // MAZO J1
-["HV-P01-045", "HV-P02-016", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-D01-007", "HV-P01-074", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);
@@ -2222,7 +2226,7 @@ game.jugadores[1].mazoPuntos.push(crearCarta("Punto J2-1"), crearCarta("Punto J2
 });
 
 // mazo evento de pruebas
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }

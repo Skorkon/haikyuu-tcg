@@ -174,6 +174,54 @@ function inicializarCartas() {
       rareza: "D"
     }
   ),
+  crearCarta("Ennoshita Chikara", // ============================================================== D01-007
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 1
+    },
+    async function(jugador, game, carta) {              // async porque tiene selector de descarte
+      if (carta.zonaActual !== "recepcion") {           // comprobar que está en recepción
+        log("Solo puedes usar esta habilidad en recepción.");
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      if (jugador.mano.length === 0) {                  // comprobar que hay cartas en mano
+        log("No tienes cartas en la mano para descartar.");
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      let cartaDescarte = await mostrarSelectorCartas(  // abrir selector para elegir qué descartar
+        "Elige una carta de tu mano para descartar:",   // título del selector
+        jugador.mano                                    // mostrar toda la mano
+      );
+      if (!cartaDescarte) {                             // si cancela el selector // quizás habría que borrar esto
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      let index = jugador.mano.indexOf(cartaDescarte);  // buscar la carta elegida en la mano
+      jugador.mano.splice(index, 1);                    // sacarla de la mano
+      jugador.trash.push(cartaDescarte);                // enviarla al trash
+      log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+      game.valorDefensa += 3;                           // añadir +3 a la recepción de esta jugada
+      log("Habilidad Ennoshita: +3 a la recepción.");
+      renderMano();                                     // actualizar la mano tras el descarte
+      renderManoRival();                                // actualizar la mano del rival
+      renderCampo();                                    // actualizar el campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-D01-007",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "D",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Descarta 1 carta de tu mano para añadir +3 a la recepción.`
+    }
+  ),
   crearCarta("Sawamura Daichi", // ============================================================== D01-008
     {
       saque: 3,
@@ -890,6 +938,39 @@ function inicializarCartas() {
       rareza: "NP"
     }
   ),
+  crearCarta("Ennoshita Chikara", // ============================================================== P01-013
+    {
+      saque: 1,
+      recepcion: 2,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    function(jugador, game, carta) {              // habilidad: se activa desde la mano en recepción
+      let receptor = jugador.zonas.recepcion.at(-1); // buscar la carta en recepción
+      if (!receptor) {                            // si no hay receptor en juego
+        log("No hay ningún personaje en recepción ❌");
+        return false;                             // return false: habilidad no ejecutada
+      }
+      if (receptor.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
+        log("El receptor debe ser de Karasuno ❌");
+        return false;                             // return false: habilidad no ejecutada
+      }
+      game.valorDefensa += 2;                     // añadir +2 a la recepción de esta jugada
+      log("Habilidad Ennoshita: +2 a la recepción de " + receptor.nombre + ".");
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-013",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N",
+      activacionMano: true,
+      fases: ["recepcion"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta desde tu mano para añadir +2 a la recepción de un personaje de <strong>Karasuno</strong> en juego.`
+    }
+  ),
   crearCarta("Sawamura Daichi", // ============================================================== P01-014
     {
       saque: 1,
@@ -906,6 +987,75 @@ function inicializarCartas() {
       posicion: "WS",
       anyo: 3,
       rareza: "R"
+    }
+  ),
+  crearCarta("Sugawara Koshi", // ============================================================== P01-015
+    {
+      saque: 1,
+      recepcion: 2,
+      pase: 1,
+      remate: 2,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {              // async porque usa usarGuts
+      if (carta.zonaActual !== "pase") {                // comprobar que está en pase
+        log("Solo puedes usar esta habilidad en pase.");
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      if (!await usarGuts(jugador, "pase", 2)) {        // pagar 2 GUTS de pase
+        carta.habilidadUsada = false;                   // resetear si no hay suficientes GUTS
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      robarCarta(jugador, 1, true);                     // robar 1 carta
+      game.valorAtaque += 1;                            // +1 al pase
+      log("Habilidad Sugawara: roba 1 carta y +1 al pase 💫");
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-015",
+      escuela: "Karasuno",
+      posicion: "S",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong>: Roba 1 carta y +1 al pase.`
+    }
+  ),
+  crearCarta("Azumane Asahi", // ============================================================== P01-016
+    {
+      saque: 3,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {              // async porque usa usarGuts
+      if (carta.zonaActual !== "remate") {              // comprobar que está en remate
+        log("Solo puedes usar esta habilidad en remate ❌");
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      let colocador = jugador.zonas.pase.at(-1);        // buscar el colocador en pase
+      if (!colocador || colocador.info?.escuela !== "Karasuno" || colocador.info?.posicion !== "S") {
+        log("Tu colocador debe ser un setter (S) de Karasuno."); // comprobar escuela y posición
+        carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      if (!await usarGuts(jugador, "remate", 4)) {      // pagar 4 GUTS de remate
+        carta.habilidadUsada = false;                   // resetear si no hay suficientes GUTS
+        return false;                                   // return false: habilidad no ejecutada
+      }
+      game.valorAtaque += 2;                            // +2 al remate
+      log("Habilidad Asahi: +2 al remate.");
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-016",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 4</strong>: Si tu colocador es un <strong>colocador (S) de Karasuno</strong>, +2 al remate.`
     }
   ),
   crearCarta("Kotaro Bokuto", // ============================================================== P01-044
@@ -1479,6 +1629,70 @@ function inicializarCartas() {
       posicion: "S",
       anyo: 3,
       rareza: "N",
+    }
+  ),
+  crearCarta("Ukai Ikki", // ============================================================== P01-074
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                         // roba 1 carta
+      game.valorAtaque += 1;                                // +1 al remate
+      log("Ukai Ikki: roba 1 carta y +1 al remate.");
+
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
+      let rival = game.jugadores[rivalIndex];               // jugador rival
+
+      let cartasValidas = rival.zonas.eventos.filter(c =>   // filtrar eventos del rival
+        c.info?.fases?.includes("pase") ||                  // jugables en pase
+        c.info?.fases?.includes("recepcion")                // o en recepción
+      );
+
+      if (cartasValidas.length >= 5) {                      // si hay 5 o más
+        game.valorAtaque += 2;                              // +2 adicional al remate
+        log("Efecto adicional Ukai Ikki: +2 al remate por condición cumplida.");
+      }
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P01-074",
+      fases: ["remate"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate. Si el rival tiene 5 o más cartas de eventos jugables en <strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> o <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> en su zona de eventos, +2 adicional al remate.`
+    }
+  ),
+  crearCarta("Shimizu Kiyoko", // ============================================================== P01-075
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+
+      if (game.fase === "recepcion") {                          // si recepción
+        let receptor = jugador.zonas.recepcion.at(-1);         // buscar el receptor en juego
+        if (!receptor || receptor.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
+          log("Tu receptor debe ser de Karasuno.");
+          return false;                                         // return false: habilidad no ejecutada
+        }
+        game.valorDefensa += 1;                                // +1 a la recepción
+        log("Shimizu Kiyoko: +1 a la recepción de " + receptor.nombre + ".");
+        robarCarta(jugador, 1, true);                          // roba 1 carta solo en recepción
+        log(jugador.nombre + " roba 1 carta.");              // log del robo
+      } else if (game.fase === "remate") {                     // si estamos en remate
+        let rematador = jugador.zonas.remate.at(-1);           // buscar el rematador en juego
+        if (!rematador || rematador.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
+          log("Tu rematador debe ser de Karasuno.");
+          return false;                                         // return false: habilidad no ejecutada
+        }
+        game.valorAtaque += 1;                                 // +1 al remate
+        log("Shimizu Kiyoko: +1 al remate de " + rematador.nombre + ".");
+      }
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P01-075",
+      fases: ["recepcion", "remate"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu receptor o rematador es de <strong>Karasuno</strong>, +1 a su parámetro según la fase. Si estás en <strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong>, además roba 1 carta.`
     }
   ),
   // ===================================================================================================================== P02
@@ -2102,7 +2316,7 @@ function inicializarCartas() {
       }
 
       game.valorDefensa += 2;                                                // +2 a la recepción
-      log("Habilidad Kosaku: +2 a la recepción 💪");
+      log("Habilidad Kosaku: +2 a la recepción.");
 
       renderMano();                                                          // actualizar mano
       renderCampo();                                                         // actualizar campo

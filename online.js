@@ -51,7 +51,6 @@ function crearPartida(mazo) {
     jugador2mazo:  null,
     jugador1nombre: miNombre, // nombre del jugador 1
   });
-
   console.log("Partida creada: " + codigo);
   return codigo;
 }
@@ -268,6 +267,11 @@ function arrancarPartidaOnline(mazoJ1, mazoJ2, nombreJ1, nombreJ2) {
   renderMano();
   renderManoRival()
   renderCampo();
+
+  // borrar sala si el jugador 1 se desconecta durante la partida
+  if (miNumero === 1) {
+    db.ref("partidas/" + salaActual).onDisconnect().remove(); // borrar sala al desconectarse
+  }
 }
 
 function construirMazo(mazoData) {

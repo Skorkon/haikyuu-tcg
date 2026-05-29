@@ -1675,7 +1675,8 @@ function inicializarCartas() {
         log("Shimizu Kiyoko: +1 a la recepción de " + receptor.nombre + ".");
         robarCarta(jugador, 1, true);                          // roba 1 carta solo en recepción
         log(jugador.nombre + " roba 1 carta.");              // log del robo
-      } else if (game.fase === "remate") {                     // si estamos en remate
+      } 
+      else if (game.fase === "remate") {                     // si estamos en remate
         let rematador = jugador.zonas.remate.at(-1);           // buscar el rematador en juego
         if (!rematador || rematador.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
           log("Tu rematador debe ser de Karasuno.");
@@ -1693,6 +1694,67 @@ function inicializarCartas() {
       escuela: "Karasuno",
       rareza: "N",
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu receptor o rematador es de <strong>Karasuno</strong>, +1 a su parámetro según la fase. Si estás en <strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong>, además roba 1 carta.`
+    }
+  ),
+  crearCarta("¡Ánimo!", // ============================================================== P01-076
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      if (jugador.mano.length > 4) {                            // comprobar 4 o menos cartas en mano
+        log("Necesitas 4 o menos cartas en la mano.");
+        return false;                                           // return false: habilidad no ejecutada
+      }
+
+      // buscar zonas con al menos 2 cartas en el GUTS
+      let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona =>
+        jugador.zonas[zona].length >= 2                        // al menos 2 cartas disponibles como GUTS
+      );
+
+      if (zonasValidas.length === 0) {                         // si no hay ninguna zona válida
+        log("No hay zonas con suficientes cartas en el GUTS.");
+        return false;                                          // return false: habilidad no ejecutada
+      }
+
+      // elegir zona
+      let eleccion = await mostrarEleccion(                    // mostrar selector de zonas
+        zonasValidas.map(zona => ({ texto: zona }))            // convertir zonas a opciones
+      );
+      let zonaElegida = zonasValidas[eleccion];                // zona elegida por el jugador
+
+      // elegir 2 cartas del GUTS de esa zona con el selector
+      let cartasGuts = jugador.zonas[zonaElegida].slice(0, -1); // todas menos la última (el GUTS)
+      if (cartasGuts.length < 2) {                             // comprobar que hay al menos 2
+        log("No hay suficientes cartas en el GUTS de " + zonaElegida + ".");
+        return false;                                          // return false: habilidad no ejecutada
+      }
+
+      for (let i = 0; i < 2; i++) {                            // repetir 2 veces
+        let disponibles = cartasGuts.filter(c =>               // filtrar las ya elegidas
+          !jugador.mano.includes(c)                            // que no estén ya en la mano
+        );
+        let cartaElegida = await mostrarSelectorCartas(        // abrir selector
+          "Elige una carta del GUTS de " + zonaElegida + " (" + (i + 1) + "/2):", // título
+          disponibles                                          // cartas disponibles
+        );
+        if (!cartaElegida) {                                   // si cancela
+          return false;                                        // return false: habilidad no ejecutada
+        }
+        let index = jugador.zonas[zonaElegida].indexOf(cartaElegida); // buscar en la zona
+        jugador.zonas[zonaElegida].splice(index, 1);           // sacar de la zona
+        añadirCartaAMano(jugador, cartaElegida);               // añadir a la mano
+        log(cartaElegida.nombre + " añadida a la mano desde el GUTS de " + zonaElegida + ".");
+      }
+
+      renderMano();                                            // actualizar mano
+      renderManoRival();                                       // actualizar mano rival
+      renderCampo();                                           // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-076",
+      fases: ["recepcion"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si tienes 4 o menos cartas en la mano, elige una de tus zonas y añade 2 cartas de su GUTS a tu mano.`
     }
   ),
   // ===================================================================================================================== P02

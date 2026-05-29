@@ -2178,7 +2178,7 @@ game.jugadores[0].mazo.push(gtsr); */
 });
 
 // MAZO J1
-["HV-D01-007", "HV-P01-074", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-D01-007", "HV-P01-076", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);

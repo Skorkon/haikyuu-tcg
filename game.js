@@ -133,7 +133,8 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
       rareza: info.rareza || null,  // rareza de la carta
       descripcion: info.descripcion || null,  // texto
       zonasProhibidas: info.zonasProhibidas || [],
-      activacionMano: info.activacionMano || false // cartas jugables desde la mano
+      activacionMano: info.activacionMano || false, // cartas jugables desde la mano
+      unica: info.unica || false,                // si la carta tiene la restricción 1 Única
     },
 
     habilidad, // esto será una función propia de cada carta
@@ -592,8 +593,8 @@ function colocarCarta(jugador, carta, zona) {
         let efecto = game.efectosActivos.find(e => e.tipo === "debilitarReceptor");
         if (efecto.activadoPor !== game.jugadorActivo) {
           if (!efecto.soloSinHabilidad || carta.habilidad === null) {
-            game.valorDefensa -= 1;
-            log("Efecto: -1 a la recepción de " + carta.nombre + ".");
+            game.valorDefensa -= efecto.valor;
+            log("Efecto: -" + efecto.valor + " a la recepción de " + carta.nombre + ".");
           }
         }
       }
@@ -1181,7 +1182,7 @@ function resolverBloqueo() {
       game.valorAtaque = efecto.valor;                  // potencia del contraataque
       log("Bloqueo ofensivo: el contraataque tiene potencia " + efecto.valor + ".");
     } else {
-      game.valorAtaque = 1;                             // contraataque normal
+      game.valorAtaque = 0;                             // contraataque normal
     }
 
     game.valorDefensa = 0;                              // resetear defensa
@@ -1279,10 +1280,12 @@ function usarHabilidad() {
 // ============================================================================================================================= BOTÓN
 // ====================================================================================================================== JUGAR EVENTO 
 function jugarEvento() {
+  // ==================================================================================================== Comprobaciones
   if (!game.cartaSeleccionada) {
     log("Selecciona una carta primero ❌");
     return;
   }
+  let jugador = game.jugadores[game.jugadorActivo];
   let carta = game.cartaSeleccionada;
   if (carta.info?.tipo !== "evento") {
     log("Esta carta no es un evento ❌");
@@ -1302,8 +1305,20 @@ function jugarEvento() {
       return;                                                                // cancelar
     }
   }
+  if (carta.info?.unica) {                                         // si la carta tiene restricción 1 Única
+    let yaJugada = jugador.zonas.eventos.some(                     // buscar en la zona de eventos
+      e => e.nombre === carta.nombre                               // si ya hay una carta con ese nombre
+    );
+    if (yaJugada) {                                                // si ya fue jugada este turno
+      log("Ya has jugado una carta de " + carta.nombre + " este turno ❌");
+      jugador.mano.push(carta);                                    // devolver a la mano
+      renderMano();                                                // actualizar mano
+      renderManoRival();                                           // actualizar mano rival
+      return;                                                      // cancelar
+    }
+  }
 
-  let jugador = game.jugadores[game.jugadorActivo];
+  
 
   let index = jugador.mano.indexOf(carta); 
   if (index !== -1) jugador.mano.splice(index, 1); // sacar de la mano
@@ -1956,15 +1971,16 @@ function debilitarColocador() {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log("Efecto activo Debilitar Colocador : el próximo colocador rival tendrá el pase reducido.");
 }
-function debilitarReceptor(soloSinHabilidad = false) {
+function debilitarReceptor(cantidad = 1, soloSinHabilidad = false) {
   game.efectosActivos.push({
     tipo: "debilitarReceptor",
     activadoPor: game.jugadorActivo,
+    valor: cantidad,
     soloSinHabilidad: soloSinHabilidad,
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo Debilitar Receptor: el próximo receptor rival tendrá -1 a la recepción.");
+  log("Efecto activo Debilitar Receptor: el próximo receptor rival tendrá -" + cantidad + "a la recepción.");
 }
 function doshat(potencia) { // bloqueo ofensivo
   game.efectosActivos.push({
@@ -2171,14 +2187,14 @@ game.jugadores[0].mazo.push(gtsr); */
 });*/
 
 // TRASH 
-["HV-P01-075", "HV-P02-033", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
+["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(carta);
   if (carta) game.jugadores[1].trash.push(carta);
 });
 
 // MAZO J1
-["HV-D01-007", "HV-P01-076", "HV-P02-019", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-P01-008", "HV-P01-079", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);
@@ -2186,7 +2202,7 @@ game.jugadores[0].mazo.push(gtsr); */
 
 // EVENTOS 
 for (let i = 0; i < 5; i++) {
-  let evento = todasLasCartas.find(c => c.info?.id === "HV-P02-087");
+  let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-078");
   game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO J2
@@ -2219,7 +2235,7 @@ game.jugadores[1].mazoPuntos.push(crearCarta("Punto J2-1"), crearCarta("Punto J2
 // GUTS de prueba para ambos jugadores
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-044"); // Sasaya, sin habilidad
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-010"); // Sasaya, sin habilidad
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }

@@ -1126,7 +1126,7 @@ function inicializarCartas() {
     },
     null,
     { tipo: "personaje",
-        id: "HV-P01-46",
+        id: "HV-P01-046",
         escuela: "Fukurodani",
         posicion: "S",
         anyo: 2,
@@ -1142,7 +1142,7 @@ function inicializarCartas() {
     },
     null,
     { tipo: "personaje",
-        id: "HV-P01-48",
+        id: "HV-P01-048",
         escuela: "Fukurodani",
         posicion: "WS",
         anyo: 3,
@@ -1631,6 +1631,7 @@ function inicializarCartas() {
       rareza: "N",
     }
   ),
+// ========================================================================================================================= KARASUNO Eventos
   crearCarta("Ukai Ikki", // ============================================================== P01-074
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
@@ -1696,7 +1697,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu receptor o rematador es de <strong>Karasuno</strong>, +1 a su parámetro según la fase. Si estás en <strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong>, además roba 1 carta.`
     }
   ),
-  crearCarta("¡Ánimo!", // ============================================================== P01-076
+  crearCarta("¡Ánimo!", // ======================================================================================= P01-076
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mano.length > 4) {                            // comprobar 4 o menos cartas en mano
@@ -1757,8 +1758,161 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si tienes 4 o menos cartas en la mano, elige una de tus zonas y añade 2 cartas de su GUTS a tu mano.`
     }
   ),
-  // ===================================================================================================================== P02
-  crearCarta("Miya Atsumu", // ============================================================ P02-015
+  crearCarta("¡Vamos a por ello!", // ============================================================================ P01-077
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      let receptor = jugador.zonas.recepcion.at(-1);            // buscar el receptor en juego
+      if (!receptor || receptor.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
+        log("Tu receptor debe ser de Karasuno.");
+        return false;                                           // return false: habilidad no ejecutada
+      }
+      game.valorDefensa += 2;                                   // +2 a la recepción
+      log("+2 a la recepción de " + receptor.nombre + ".");
+
+      if (receptor.nombre === "Nishinoya Yu") {                 // si el receptor es Nishinoya
+        robarCarta(jugador, 1, true);                           // roba 1 carta
+      }
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-077",
+      fases: ["recepcion"],
+      escuela: "Karasuno",
+      rareza: "N",
+      unica: true,                                              // solo se puede jugar 1 por turno
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> +2 a la recepción de un personaje de <strong>Karasuno</strong>. Si ese personaje es <strong>Nishinoya Yu</strong>, roba 1 carta.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
+    }
+  ),
+  crearCarta("Ataque abierto", // ================================================================================ P01-078
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 2, true);                                // roba 2 cartas
+      if (jugador.mano.length === 0) {                             // comprobar que hay cartas en mano
+        log("No tienes cartas en la mano para descartar.");
+        return false;                                              // return false: habilidad no ejecutada
+      }
+      let cartaDescarte = await mostrarSelectorCartas(             // abrir selector de descarte
+        "Elige una carta de tu mano para descartar:",              // título del selector
+        jugador.mano                                               // mostrar toda la mano
+      );
+      if (!cartaDescarte) return false;                            // return false: si cancela
+
+      let indexDescarte = jugador.mano.indexOf(cartaDescarte);     // buscar en la mano
+      jugador.mano.splice(indexDescarte, 1);                       // sacar de la mano
+      jugador.trash.push(cartaDescarte);                           // enviar al trash
+      log(cartaDescarte.nombre + " descartada de la mano.");
+
+      // comprobar cuántos "Ataque abierto" hay en la zona de eventos
+      let ataquesAbiertos = jugador.zonas.eventos.filter(c =>      // filtrar zona de eventos
+        c.nombre === "Ataque abierto"                              // solo "Ataque abierto"
+      );
+      if (ataquesAbiertos.length > 2) {                            // si hay más de 2
+        log("Ya hay 2 o más Ataque abierto en tu zona de eventos. No se activa el efecto adicional.");
+        return false;                                              // return false: habilidad no ejecutada
+      }
+
+      // buscar Hinata Shoyo en el trash
+      let hinatasEnTrash = jugador.trash.filter(c =>               // filtrar trash
+        c.nombre === "Hinata Shoyo"                                // solo Hinata
+      );
+      if (hinatasEnTrash.length === 0) {                           // si no hay ninguno
+        log("No hay ningún Hinata Shoyo en el trash.");
+        return false;                                              // return false: habilidad no ejecutada
+      }
+
+      let hinataElegido = await mostrarSelectorCartas(             // abrir selector
+        "Elige un Hinata Shoyo del trash para colocar en remate:", // título del selector
+        hinatasEnTrash                                             // solo Hinata
+      );
+      if (!hinataElegido) return false;                            // return false: si cancela
+
+      let rematadorActual = jugador.zonas.remate.at(-1);           // buscar rematador actual
+      if (rematadorActual && rematadorActual.recienJugada) {                                       // si hay rematador
+        game.valorAtaque -= rematadorActual.stats.remate;          // restar su remate al ataque
+        let indexActual = jugador.zonas.remate.indexOf(rematadorActual); // buscar en la zona
+        jugador.zonas.remate.splice(indexActual, 1);               // sacar de la zona
+        jugador.zonas.remate.unshift(rematadorActual);             // enviar al GUTS (principio)
+      }
+
+      let indexTrash = jugador.trash.indexOf(hinataElegido);       // buscar Hinata en el trash
+      jugador.trash.splice(indexTrash, 1);                         // sacar del trash
+      jugador.zonas.remate.push(hinataElegido);                    // colocar como último rematador
+      hinataElegido.zonaActual = "remate";                         // actualizar zona
+      hinataElegido.recienJugada = true;                           // marcar como recién jugado
+      hinataElegido.habilidadUsada = false;                        // habilidad no usada
+      game.ultimaCarta = hinataElegido;                            // actualizar última carta
+      game.ultimoJugador = jugador;                                // actualizar último jugador
+
+      game.valorAtaque += 1;          // sumar remate de Hinata + 1
+      log("Hinata Shoyo traído del trash al remate con + 1 al remate.");
+
+      renderMano();                                                // actualizar mano
+      renderManoRival();                                           // actualizar mano rival
+      renderCampo();                                               // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-078",
+      fases: ["remate"],
+      escuela: "Karasuno",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 2 cartas y descarta 1 de tu mano. </br>Si hay 2 o menos <strong>Ataque abierto</strong> en tu zona de eventos, puedes traer un <strong>Hinata Shoyo</strong> del trash a la zona de remate y añadir +1 a su remate.`
+    }
+  ),
+  crearCarta("Nunca pensé ni por un momento que podría ganar solo", // =========================================== P01-079
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
+
+      let bloqueador = game.bloqueoActual.central;                   // buscar el bloqueador central
+      if (!bloqueador || bloqueador.info?.escuela !== "Karasuno") {  // comprobar que es de Karasuno
+        log("Tu bloqueador central debe ser de Karasuno.");
+        return false;                                                 // return false: habilidad no ejecutada
+      }
+
+      game.valorDefensa += 1;                                        // +1 al bloqueo
+      log("Evento: +1 al bloqueo de " + bloqueador.nombre + ".");
+
+      if (bloqueador.nombre === "Tsukishima Kei") {                  // si el bloqueador es Tsukishima
+        let yamaguchisEnGuts = jugador.zonas.saque.filter(c =>       // buscar en toda la zona de saque
+          c.nombre === "Yamaguchi Tadashi"                            // solo Yamaguchi
+        );
+
+        if (yamaguchisEnGuts.length > 0) {                           // si hay alguno
+          let yamaguchi = await mostrarSelectorCartas(               // abrir selector directamente
+            "Elige un Yamaguchi Tadashi del GUTS de saque (opcional) para devolver a la mano:", 
+            yamaguchisEnGuts,                                        // solo Yamaguchi
+            true                                                     // permite cancelar clicando fuera
+          );
+          if (yamaguchi) {                                           // si elige uno
+            let index = jugador.zonas.saque.indexOf(yamaguchi);     // buscar en la zona
+            jugador.zonas.saque.splice(index, 1);                   // sacar de la zona
+            añadirCartaAMano(jugador, yamaguchi);                   // añadir a la mano
+            log("Yamaguchi Tadashi añadido a la mano desde el saque.");
+          }
+        } else {
+          log("No hay Yamaguchi Tadashi en la zona de saque.");
+        }
+
+        debilitarReceptor(2);                                        // -2 al receptor rival
+      }
+
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-079",
+      fases: ["bloqueo"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Roba 1 carta y +1 al bloqueo de un personaje de <strong>Karasuno</strong>. </br>Si ese bloqueador es <strong>Tsukishima Kei</strong>, puedes añadir un <strong>Yamaguchi Tadashi</strong> del GUTS de saque a tu mano. Además, durante el siguiente turno rival, el receptor tendrá <strong>-2 a la recepción</strong>.`
+    }
+  ),
+
+  // =================================================================================================================================== P02
+  crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {
       saque: 3,
       recepcion: 2,

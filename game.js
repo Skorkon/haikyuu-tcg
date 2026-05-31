@@ -2185,7 +2185,7 @@ game.jugadores[0].mazo.push(gtsr); */
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
 });*/
-
+/*
 // TRASH 
 ["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -2246,7 +2246,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-
+*/
 leerParametrosURL(); // conexión con la URL desde el lobby
 
 if (!modoOnline) {  // IF añadido para el modo online

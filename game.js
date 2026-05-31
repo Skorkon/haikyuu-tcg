@@ -339,12 +339,19 @@ function confirmarMulligan(jugador) {
   if (modoOnline) { // en online, cada jugador confirma su mulligan
     game.jugadorActivo = 0; // J1 siempre empieza 
     game.mulliganConfirmado[miNumero - 1] = true;
+    // separar 2 cartas del mazo para el mazoPuntos
+    let miJugador = game.jugadores[miNumero - 1];              // jugador local
+    miJugador.mazoPuntos = miJugador.mazo.splice(0, 2);        // sacar las 2 primeras cartas
+    log("Mazo de puntos preparado con 2 cartas.");             // log
     confirmarMulliganOnline();
   } else { // modo local: comportamiento original, un mulligan tras otro
     console.log("Jugador activo AL ENTRAR:", game.jugadorActivo);
     console.log("Mulligan confirmado:", game.mulliganConfirmado);
 
     game.mulliganConfirmado[game.jugadorActivo] = true;
+    // separar 2 cartas del mazo para el mazoPuntos
+    jugador.mazoPuntos = jugador.mazo.splice(0, 2);            // sacar las 2 primeras cartas
+    log(jugador.nombre + ": mazo de puntos preparado.");       // log
 
     if (game.jugadorActivo === 0 && !game.mulliganConfirmado[1]) {
       cambiarJugador(1);
@@ -2227,10 +2234,6 @@ game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el ú
 // mazos de prueba
 let aoneP01 = todasLasCartas.find(c => c.info?.id === "HV-P01-054");
 game.jugadores[0].trash.push(aoneP01);
-
-// mazo de puntos de prueba
-game.jugadores[0].mazoPuntos.push(crearCarta("Punto J1-1"), crearCarta("Punto J1-2"));
-game.jugadores[1].mazoPuntos.push(crearCarta("Punto J2-1"), crearCarta("Punto J2-2"));
 
 // GUTS de prueba para ambos jugadores
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {

@@ -69,7 +69,7 @@ function unirseAPartida(codigo, mazo) {
 
   // esperar un momento y redirigir
     setTimeout(function() {
-      window.location.href = "juego.html?sala=" + salaActual + "&jugador=" + miNumero;
+      window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
     }, 1000);
 }
 
@@ -234,8 +234,8 @@ function escucharSala() {
         const sala = snap.val();
         const miIndice = miNumero - 1;
         
-        // redirigir a juego.html con los parámetros de la partida
-        window.location.href = "juego.html?sala=" + salaActual + "&jugador=" + miNumero;
+        // redirigir a game.html con los parámetros de la partida
+        window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
       });
     }
   });

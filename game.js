@@ -1,6 +1,6 @@
 console.log("JS CARGADO"); // comprobar si funciona el JS
 
-// =========================================================================== MENSAJES DE TEXTO
+// ===================================================================== MENSAJES DE TEXTO (LOG)
 // =============================================================================================
 const logElement = document.getElementById("log");
 const logContainer = document.getElementById("log-container");

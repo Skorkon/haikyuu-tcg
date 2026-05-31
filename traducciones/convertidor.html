@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Convertidor CSV → JS</title>
+</head>
+<body>
+  <h2>Convertidor de traducciones</h2>
+
+  <!-- Campo para seleccionar el archivo CSV -->
+  <input type="file" id="archivo" accept=".csv">
+  <br><br>
+
+  <!-- Botón que lanza la conversión -->
+  <button onclick="convertir()">Convertir</button>
+  <br><br>
+
+  <button onclick="descargar()">Descargar traducciones.js</button>
+  <!-- Aquí aparecerá el resultado JavaScript generado -->
+  <textarea id="resultado" style="width:100%; height:500px;"></textarea>
+
+  <script>
+    function convertir() {
+
+      // Recuperar el archivo seleccionado por el usuario
+      let archivo = document.getElementById("archivo").files[0];
+      if (!archivo) {
+        alert("Selecciona un archivo CSV primero");
+        return;
+      }
+
+      // FileReader es una herramienta del navegador para leer archivos
+      let lector = new FileReader();
+
+      // Esta función se ejecuta cuando el archivo ha sido leído
+      lector.onload = function(e) {
+
+        // e.target.result contiene el texto completo del CSV
+        let texto = e.target.result;
+
+        // Separar el texto en líneas (cada fila del CSV es una línea)
+        let lineas = texto.split("\n");
+
+        // La primera línea es la cabecera: clave, es, en, fr
+        // La separamos por ";" para obtener cada columna
+        let cabecera = lineas[0].split(",");
+
+        // Quitamos la primera columna ("clave") y nos quedamos con los idiomas: es, en, fr
+        let idiomas = cabecera.slice(1).map(i => i.trim());
+
+        // Creamos un objeto vacío para cada idioma con su sección "log"
+        // Quedará así: { es: { log: {} }, en: { log: {} }, fr: { log: {} } }
+        let resultado = {};
+        idiomas.forEach(lang => resultado[lang] = { log: {} });
+
+        // Recorremos todas las filas del CSV saltando la cabecera (empezamos en 1)
+        for (let i = 1; i < lineas.length; i++) {
+          let columnas = lineas[i].split(",");
+
+          // Si la línea está vacía o incompleta, la ignoramos
+          if (columnas.length < 2) continue;
+
+          // La primera columna es la clave, por ejemplo "log.noEsTuTurno"
+          let clave = columnas[0].trim();
+
+          // Separamos la clave por puntos: ["log", "noEsTuTurno"]
+          let partes = clave.split(".");
+
+          // Para cada idioma, guardamos el valor correspondiente
+          idiomas.forEach((lang, j) => {
+
+            // El valor está en la columna j+1 (porque la columna 0 es la clave)
+            let valor = (columnas[j + 1] || "").trim();
+
+            // Navegamos por el objeto resultado hasta llegar al lugar correcto
+            let obj = resultado[lang];
+            for (let k = 0; k < partes.length - 1; k++) {
+              if (!obj[partes[k]]) obj[partes[k]] = {};
+              obj = obj[partes[k]];
+            }
+
+            // Guardamos el valor en la última parte de la clave
+            // Ejemplo: resultado["es"]["log"]["noEsTuTurno"] = "No es tu turno"
+            obj[partes[partes.length - 1]] = valor;
+          });
+        }
+
+        let js = "// Generado automáticamente — no editar manualmente\n";
+        js += "// Editar el archivo traducciones.csv y volver a convertir\n\n";
+        js += "const TRADUCCIONES = " + JSON.stringify(resultado, null, 2) + ";";
+
+        // Mostramos el resultado en el textarea
+        document.getElementById("resultado").value = js;
+      };
+
+      // Lanzar la lectura del archivo en formato UTF-8 (para que funcionen tildes y caracteres especiales)
+      lector.readAsText(archivo, "UTF-8");
+    }
+
+    function descargar() {
+        let contenido = document.getElementById("resultado").value;
+        if (!contenido) {
+            alert("Primero convierte el CSV");
+            return;
+        }
+        let blob = new Blob([contenido], { type: "text/javascript" });
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "traducciones.js";
+        a.click();
+    }
+  </script>
+</body>
+</html>

@@ -1733,22 +1733,28 @@ function renderCampo() {
       // ========================================================================================= RENDER TRASH
       let trashCont = document.getElementById(`${prefix}-trash`); // busca el div del trash
       trashCont.innerHTML = "";                                    // limpia antes de redibujar
-
-      if (jugador.trash.length > 0) {                             // solo dibuja si hay cartas
-        let carta = jugador.trash.at(-1);                         // coge solo la última carta
-        let div = document.createElement("div");                  // crea un div
-        div.classList.add("carta");                               // le aplica el CSS de carta
-        div.style.position = "absolute";                          // posición absoluta
-        div.style.top = "2px";                                    // margen superior
-        div.style.left = "2px";                                   // margen izquierdo
-
-        if (carta.info?.id) {                                     // si tiene imagen
-          div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // muestra su imagen
-        } else {
-          div.textContent = carta.nombre;                         // si no, muestra el nombre
+        if (jugador.trash.length > 0) {
+          let carta = jugador.trash.at(-1);                              // coge la última carta
+          let capas = Math.min(jugador.trash.length, 4);                 // máximo 4 capas visibles
+          for (let i = 0; i < capas; i++) {                              // una capa por cada carta simulada
+            let div = document.createElement("div");                     // crea un div
+            div.classList.add("carta");                                  // le aplica el CSS de carta
+            div.style.position = "absolute";                             // posición absoluta
+            div.style.top = (2 + i * -1) + "px";                         // cada capa un poco más abajo
+            div.style.right = (2 + i * 0.5) + "px";                        // cada capa un poco más a la derecha
+            div.style.zIndex = i;                                        // las últimas encima
+            if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
+              if (carta.info?.id) {
+                div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // imagen de la carta
+              } else {
+                div.textContent = carta.nombre;                          // si no, el nombre
+              }
+            } else {
+              div.style.backgroundImage = "url('img/cartas/cardback.png')"; // las demás muestran dorso
+            }
+            trashCont.appendChild(div);                                  // añade al contenedor
+          }
         }
-        trashCont.appendChild(div);                               // añade al contenedor
-      }
       trashCont.addEventListener("mouseover", (e) => mostrarTooltip(jugador.trash.at(-1), e));
       trashCont.addEventListener("mousemove", (e) => mostrarTooltip(jugador.trash.at(-1), e));
       trashCont.addEventListener("mouseout", () => {
@@ -1770,29 +1776,37 @@ function renderCampo() {
   let puntosCont = document.getElementById(`${prefix}-mazoPuntos`); // busca el div de puntos
   puntosCont.innerHTML = "";                                         // limpia antes de redibujar
 
-  if (jugador.mazoPuntos.length > 0) {                              // solo dibuja si hay cartas
-    let div = document.createElement("div");                        // crea un div
-    div.classList.add("carta");                                     // le aplica el CSS de carta
-    div.style.backgroundImage = "url('img/cartas/cardback-horizontal.png')";  // siempre muestra el dorso
-    div.style.position = "absolute";                                // posición absoluta
-    div.style.top = "2px";                                          // margen superior
-    div.style.left = "2px";                                         // margen izquierdo
-    puntosCont.appendChild(div);                                    // añade al contenedor
-  }
+    if (jugador.mazoPuntos.length > 0) {
+      let capas = Math.min(jugador.mazoPuntos.length, 4);            // máximo 4 capas visibles
+      for (let i = 0; i < capas; i++) {                              // una capa por cada carta simulada
+        let div = document.createElement("div");                     // crea un div
+        div.classList.add("carta");                                  // le aplica el CSS de carta
+        div.style.backgroundImage = "url('img/cartas/cardback-horizontal.png')"; // dorso horizontal
+        div.style.position = "absolute";                             // posición absoluta
+        div.style.top = (2 + i * 7) + "px";                         // cada capa un poco más abajo
+        div.style.left = (2 + i * 10) + "px";                        // cada capa un poco más a la derecha
+        div.style.zIndex = i;                                        // las últimas encima
+        puntosCont.appendChild(div);                                 // añade al contenedor
+      }
+    }
 
   actualizarContador(puntosCont, jugador.mazoPuntos.length);        // muestra el número de cartas
       // ================================================================================================ RENDER MAZO
       let mazoCont = document.getElementById(`${prefix}-mazo`); // busca el div del mazo en el HTML
       mazoCont.innerHTML = "";                                   // limpia antes de redibujar
 
-      if (jugador.mazo.length > 0) {                            // solo dibuja si hay cartas en el mazo
-        let div = document.createElement("div");                // crea un div para la carta de dorso
-        div.classList.add("carta");                             // le aplica el CSS de carta
-        div.style.backgroundImage = "url('img/cartas/cardback.png')"; // imagen de dorso
-        div.style.position = "absolute";                        // posición absoluta dentro de la zona
-        div.style.top = "2px";                                  // pequeño margen superior
-        div.style.left = "2px";                                 // pequeño margen izquierdo
-        mazoCont.appendChild(div);                              // añade el dorso al contenedor
+      if (jugador.mazo.length > 0) {
+        let capas = Math.min(jugador.mazo.length, 4);            // máximo 4 capas visibles
+        for (let i = 0; i < capas; i++) {                        // una capa por cada carta simulada
+          let div = document.createElement("div");               // crea un div
+          div.classList.add("carta");                            // le aplica el CSS de carta
+          div.style.backgroundImage = "url('img/cartas/cardback.png')"; // imagen de dorso
+          div.style.position = "absolute";                       // posición absoluta
+          div.style.top = (2 + i * -1) + "px";                   // cada capa un poco más abajo
+          div.style.right = (2 + i * 0.5) + "px";                  // cada capa un poco más a la derecha
+          div.style.zIndex = i;                                  // las últimas encima
+          mazoCont.appendChild(div);                             // añade al contenedor
+        }
       }
 
       actualizarContador(mazoCont, jugador.mazo.length);        // muestra el número de cartas del mazo
@@ -1800,20 +1814,27 @@ function renderCampo() {
       let eventosCont = document.getElementById(`${prefix}-eventos`); // busca el div de eventos
       if (eventosCont) {
         eventosCont.innerHTML = "";                                   // limpia antes de redibujar
-        if (jugador.zonas.eventos.length > 0) {                       // solo dibuja si hay imagen de la carta
-          let carta = jugador.zonas.eventos.at(-1);             // coge solo la última carta
-          let div = document.createElement("div");              // crea un div
-          div.classList.add("carta");                           // le aplica el CSS de carta
-          div.style.position = "absolute";                      // posición absoluta
-          div.style.top = "2px";                                // margen superior
-          div.style.left = "2px";                               // margen izquierdo
-          if (carta.info?.id) {                                 // si tiene imagen
-            div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // muestra su imagen
-
-          } else {
-            div.textContent = carta.nombre;                     // si no, muestra el nombre
+        if (jugador.zonas.eventos.length > 0) {
+          let carta = jugador.zonas.eventos.at(-1);                      // coge la última carta
+          let capas = Math.min(jugador.zonas.eventos.length, 4);         // máximo 4 capas visibles
+          for (let i = 0; i < capas; i++) {                              // una capa por cada carta simulada
+            let div = document.createElement("div");                     // crea un div
+            div.classList.add("carta");                                   // le aplica el CSS de carta
+            div.style.position = "absolute";                             // posición absoluta
+            div.style.top = (2 + i * -1) + "px";                         // cada capa un poco más abajo
+            div.style.right = (2 + i * 0.5) + "px";                        // cada capa un poco más a la derecha
+            div.style.zIndex = i;                                        // las últimas encima
+            if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
+              if (carta.info?.id) {
+                div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // imagen de la carta
+              } else {
+                div.textContent = carta.nombre;                          // si no, el nombre
+              }
+            } else {
+              div.style.backgroundImage = "url('img/cartas/cardback.png')"; // las demás muestran dorso
+            }
+            eventosCont.appendChild(div);                                // añade al contenedor
           }
-          eventosCont.appendChild(div);                                 // añade al contenedor
         }
 
         eventosCont.addEventListener("mouseover", (e) => mostrarTooltip(jugador.zonas.eventos.at(-1), e));

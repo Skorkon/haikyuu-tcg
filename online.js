@@ -186,7 +186,7 @@ function aplicarJugadaRival(jugada) {
       if (rivalPunto.mazoPuntos.length > 0) {
         let carta = rivalPunto.mazoPuntos.shift();            // roba del mazo de puntos
         rivalPunto.mano.push(carta);                          // va a la mano del rival
-        log("📛 Rival pierde un punto. Le quedan " + rivalPunto.mazoPuntos.length);
+        log("Rival pierde un punto. Le quedan " + rivalPunto.mazoPuntos.length);
       }
       actualizarMarcador();                                   // actualizar marcador
       renderMano();                                           // redibujar mano
@@ -195,16 +195,23 @@ function aplicarJugadaRival(jugada) {
       break;
 
     case "concederPunto":
-      const miIndiceConcede = miNumero - 1;                      // yo gané el punto, yo saco
-      game.jugadorActivo = miIndiceConcede;                      // actualizar jugador activo
-      game.valorAtaque = 0;                                      // resetear ataque
-      game.valorDefensa = 0;                                     // resetear defensa
-      game.fase = "saque";                                       // volver a saque
-      game.bloqueoActual = { central: null, apoyos: [] };       // limpiar bloqueo
-      actualizarMarcador();                                      // actualizar marcador
-      actualizarFaseUI();                                        // actualizar letrero
-      renderMano();                                              // redibujar mano
-      renderCampo();                                             // redibujar campo
+      limpiarJugada();                                         // limpiar estado de la jugada
+      const miIndiceConcede = miNumero - 1;                    // yo gané el punto, yo saco
+      game.jugadorActivo = miIndiceConcede;                    // actualizar jugador activo
+      game.fase = "saque";                                     // volver a saque
+      actualizarMarcador();                                    // actualizar marcador
+      actualizarFaseUI();                                      // actualizar letrero
+      renderMano();                                            // redibujar mano
+      renderManoRival();                                       // redibujar mano rival
+      renderCampo();                                           // redibujar campo
+      break;
+
+    case "limpiarBloqueadores":
+      const rivalIndiceBloq = miNumero === 1 ? 1 : 0;       // índice del rival
+      const rivalBloq = game.jugadores[rivalIndiceBloq];     // jugador rival
+      rivalBloq.zonas.bloqueoApoyo = [];                     // vaciar zona de apoyo
+      game.bloqueoActual = { central: null, apoyos: [] };    // limpiar bloqueo actual
+      renderCampo();                                         // redibujar campo
       break;
 
     case "finPartida":
@@ -335,6 +342,7 @@ function confirmarMulliganOnline() {
         escucharManoRival();        // escuchar cambios en mano rival
         escucharEfectos()           // escuchar los efectos que se vayan añadiendo al array
         escucharTrashRival()        // escuchar los cambios de cartas en el trash
+        escucharMazoPuntosRival()   // escuchar los cambios de el mazo de puntos
         actualizarFaseUI();         // actualizar el letrero
         renderMano();               // redibujar mano
         renderManoRival()
@@ -364,6 +372,7 @@ function escucharTurno() {
 // ── SINCRONIZAR FASE ──────────────────────────────────────
 function enviarFase(fase) {
   if (!modoOnline) return;                               // solo en modo online
+  console.log("Enviando fase:", fase);                       // debug
   db.ref("partidas/" + salaActual + "/fase").set({       // escribir en Firebase
     nombre: fase,                                        // nombre de la fase
     valorAtaque: game.valorAtaque,                       // valor de ataque actual
@@ -375,7 +384,7 @@ function escucharFase() {
   db.ref("partidas/" + salaActual + "/fase").on("value", function(snap) {
     const data = snap.val();                             // datos recibidos de Firebase
     if (!data) return;                                   // ignorar si no hay dato
-
+        console.log("Fase recibida:", data.nombre);              // debug
     game.fase = data.nombre;                             // actualizar fase
     game.valorAtaque = data.valorAtaque;                 // actualizar valor de ataque
     game.valorDefensa = data.valorDefensa;               // actualizar valor de defensa
@@ -451,6 +460,27 @@ function escucharTrashRival() {
       .filter(c => c);                                        // filtrar no encontradas
     
     renderCampo();                                            // redibujar campo
+  });
+}
+
+// ── SINCRONIZAR MAZO DE PUNTOS ────────────────────────────
+function enviarMazoPuntos() {
+  if (!modoOnline) return;                                    // solo en modo online
+  const miJugador = game.jugadores[miNumero - 1];            // jugador local
+  db.ref("partidas/" + salaActual + "/mazoPuntos/jugador" + miNumero)
+    .set(miJugador.mazoPuntos.length);                       // número de cartas en mazoPuntos
+}
+
+function escucharMazoPuntosRival() {
+  const rivalNumero = miNumero === 1 ? 2 : 1;               // número del rival
+  const rivalIndice = miNumero === 1 ? 1 : 0;               // índice del rival
+
+  db.ref("partidas/" + salaActual + "/mazoPuntos/jugador" + rivalNumero).on("value", function(snap) {
+    const cantidad = snap.val();                             // cantidad de cartas del rival
+    if (cantidad === null) return;                           // ignorar si no hay dato
+    game.jugadores[rivalIndice].mazoPuntos = Array(cantidad).fill({}); // simular mazoPuntos
+    actualizarMarcador();                                    // actualizar marcador
+    renderCampo();                                           // redibujar campo
   });
 }
 

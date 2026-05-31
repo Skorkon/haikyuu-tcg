@@ -1705,11 +1705,9 @@ function inicializarCartas() {
         return false;                                           // return false: habilidad no ejecutada
       }
 
-      // buscar zonas con al menos 2 cartas en el GUTS
       let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona =>
-        jugador.zonas[zona].length >= 2                        // al menos 2 cartas disponibles como GUTS
+        jugador.zonas[zona].length >= 2                        // buscar zonas con al menos 2 cartas en el GUTS
       );
-
       if (zonasValidas.length === 0) {                         // si no hay ninguna zona válida
         log("No hay zonas con suficientes cartas en el GUTS.");
         return false;                                          // return false: habilidad no ejecutada
@@ -1722,7 +1720,7 @@ function inicializarCartas() {
       let zonaElegida = zonasValidas[eleccion];                // zona elegida por el jugador
 
       // elegir 2 cartas del GUTS de esa zona con el selector
-      let cartasGuts = jugador.zonas[zonaElegida].slice(0, -1); // todas menos la última (el GUTS)
+      let cartasGuts = jugador.zonas[zonaElegida];  
       if (cartasGuts.length < 2) {                             // comprobar que hay al menos 2
         log("No hay suficientes cartas en el GUTS de " + zonaElegida + ".");
         return false;                                          // return false: habilidad no ejecutada

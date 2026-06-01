@@ -50,11 +50,14 @@ function log(texto) {
   logContainer.scrollTop = logContainer.scrollHeight; // autoscroll
 }
 
+// ================================================================================================== FUNCIONES ESTRUCTURALES
+// ==========================================================================================================================
+
 // ======================================================================== ESTRUCTURA DEL JUEGO
 // =============================================================================================
-const game = { // estado general del juego
-  jugadorActivo: 0, // 0 o 1
-  fase : "mulligan", // fase inicial
+const game = {         // estado general del juego
+  jugadorActivo: 0,    // 0 o 1
+  fase : "mulligan",   // fase inicial
   turno: 0, 
   valorAtaque: 0,
   valorDefensa: 0,
@@ -64,18 +67,18 @@ const game = { // estado general del juego
     crearJugador("Raul")
   ],
 
-  bloqueoActual: { // para diferenciar tipos de bloqueadores
+  bloqueoActual: {            // para diferenciar tipos de bloqueadores
     central: null,
     apoyos: []
   },
 
-  ultimaCarta : null, // para elegir la habilidad que se va a jugar
-  ultimoJugador: null, // para limpiar contador de habilidades, entre otras cosas
-  cartaSeleccionada: null, // para elegir la carta que se juega de la mano
-  mulliganConfirmado: [false, false], // mulligan no confirmado de inicio
-  efectosActivos: [], // para efectos que se acumulan de una fase a otra
-  gutsDescartados: [], // para saber los GUTS que se han descartado al usar una habilidad
-  jugadaActual: { // para guardar las cartas de la jugada actual
+  ultimaCarta : null,                   // para elegir la habilidad que se va a jugar
+  ultimoJugador: null,                  // para limpiar contador de habilidades, entre otras cosas
+  cartaSeleccionada: null,              // para elegir la carta que se juega de la mano
+  mulliganConfirmado: [false, false],   // mulligan no confirmado de inicio
+  efectosActivos: [],                   // para efectos que se acumulan de una fase a otra
+  gutsDescartados: [],                  // para saber los GUTS que se han descartado al usar una habilidad
+  jugadaActual: {                       // para guardar las cartas de la jugada actual
     saque: null,
     recepcion: null,
     pase: null,
@@ -113,7 +116,6 @@ function crearJugador(nombre) {
 function crearCarta(nombre, stats = {}, habilidad, info = {}) {
   return {
     nombre: nombre,
-
     stats: {
       saque: stats.saque || 0,
       recepcion: stats.recepcion || 0,
@@ -142,11 +144,14 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
     habilidadUsada: false // controlar si la habilidad se ha usado o no
   };
 }
+
+// ======================================================================================================== FUNCIONES BÁSICAS
+// ==========================================================================================================================
+
 // =========================================================================== SELECCIONAR CARTA
 // =============================================================================================
 function seleccionarCarta(carta) {
   game.cartaSeleccionada = carta;
-  // log("Carta seleccionada: " + carta.nombre); // no útil por el momento
 }
 // ============================================================================= CAMBIAR JUGADOR
 // ============================================================================================= 
@@ -159,14 +164,15 @@ function cambiarJugador(indice = null) {
   limpiarRecienJugadas(jugadorAnterior);
   limpiarHabilidades(jugadorAnterior);
 
-  if (indice !== null) { // si no se especifica un jugador en cocreto
-    game.jugadorActivo = indice; // ir al jugador activo
+  if (indice !== null) {             // si no se especifica un jugador en cocreto
+    game.jugadorActivo = indice;     // ir al jugador activo
   } else {
-      if (modoOnline) { // solo se ejecuta en online
+      if (modoOnline) {              
         const nuevoIndice = game.jugadorActivo === 0 ? 1 : 0;
         game.jugadorActivo = nuevoIndice;
         enviarCambioTurno(nuevoIndice);
-      } else { // modo local
+      } 
+      else {                          // modo local
         game.jugadorActivo++;
         if (game.jugadorActivo >= game.jugadores.length) {
           game.jugadorActivo = 0;
@@ -181,7 +187,7 @@ function cambiarJugador(indice = null) {
 // =============================================================================================
 function esResolverValido() {
   if (modoOnline && game.jugadorActivo !== miNumero - 1) { // comprobar si es tu turno
-    log("No es tu turno ❌");                              // mensaje de error
+    log(t("log.noEsTuTurno"));                              
     return false;                                          // turno no válido
   }
   return true;                                             // turno válido
@@ -190,11 +196,11 @@ function esResolverValido() {
 // =============================================================================================
 function esTurnoValido(zona) {
   if (modoOnline && game.jugadorActivo !== miNumero - 1) { // comprobación online del turno activo
-    log("No es tu turno ❌");
+    log(t("log.noEsTuTurno")); 
     return false;
   }
   if (game.fase === "mulligan") {
-    log("Primero hay que resolver el mulligan ❌");
+    log(t("log.mulliganPrimero"));
     return false;
   }
   if (zona === "saque" && game.fase !== "saque") { // si zona saque pero fase distinta de saque
@@ -217,12 +223,10 @@ function esTurnoValido(zona) {
 // =============================================================== LIMPIAR CARTAS RECIEN JUGADAS 
 // =============================================================================================
 function limpiarRecienJugadas(jugador) {
-  for (let zona in jugador.zonas) { // para todas las zonas del jugador activo
-
-    jugador.zonas[zona].forEach(carta => { // para todas y cada una de las cartas de esa zona
-      carta.recienJugada = false; // recién jugada pasa a false y ya podrá usarse en el próximo GUTS
+  for (let zona in jugador.zonas) {          // para todas las zonas del jugador activo
+    jugador.zonas[zona].forEach(carta => {   // para todas y cada una de las cartas de esa zona
+      carta.recienJugada = false;            // recién jugada pasa a false y ya podrá usarse en el próximo GUTS
     });
-
   }
 }
 // ========================================================================= LIMPIAR HABILIDADES 
@@ -257,7 +261,7 @@ function limpiarJugada() { // limpiar jugada actual
 // =============================================================================================
 function perderPunto(jugador) {
   if (jugador.mazoPuntos.length === 0) {
-    log(jugador.nombre + " no tiene cartas en su mazo de puntos. ¡Ha perdido el partido!");
+    log(t("log.pierdePartida", { jugador: jugador.nombre }));
     if (modoOnline) {
       const gane = jugador !== game.jugadores[miNumero - 1];   // gané si el que perdió no soy yo
       mostrarFinPartida(gane);                                 // mostrar panel al perdedor
@@ -281,7 +285,7 @@ function perderPunto(jugador) {
     // luego el que pierde roba del mazoPuntos
     let carta = jugador.mazoPuntos.shift();               // roba del mazo de puntos
     jugador.mano.push(carta);                             // va a la mano
-    log(jugador.nombre + " pierde un punto y roba una carta de su mazo de puntos. Le quedan " + jugador.mazoPuntos.length);
+    log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
     enviarJugada("perderPunto", {});                      // avisar al rival del punto perdido
 
   } else {
@@ -296,7 +300,7 @@ function perderPunto(jugador) {
     // luego robar del mazoPuntos
     let carta = jugador.mazoPuntos.shift();               // roba del mazo de puntos
     jugador.mano.push(carta);                             // va a la mano
-    log(jugador.nombre + " pierde un punto y roba una carta de su mazo de puntos. Le quedan " + jugador.mazoPuntos.length);
+    log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
   }
 
   renderMano();                                           // redibujar mano
@@ -324,11 +328,11 @@ function iniciarMano(jugador) {
 // =============================================================================================
 function hacerMulligan(jugador) {
   if (game.fase !== "mulligan") {
-    log("Solo puedes devolver cartas durante el mulligan ❌");
+    log(t("log.soloMulligan"));
     return;
   }
   if (!game.cartaSeleccionada) {
-    log("Selecciona una carta para devolver al mazo ❌");
+    log(t("log.seleccionaCartaMulligan"));
     return;
   }
   // devolver la carta seleccionada al mazo
@@ -344,7 +348,7 @@ function hacerMulligan(jugador) {
 // =============================================================================================
 function confirmarMulligan(jugador) {
   if (game.fase !== "mulligan") {
-    log("El mulligan ya ha sido confirmado ❌");
+    log(t("log.mulliganYaConfirmado"));
     return;
   }
 
@@ -354,7 +358,7 @@ function confirmarMulligan(jugador) {
     robarCarta(jugador, cartasQueNecesita);
   }
 
-  log(jugador.nombre + " confirma el mulligan.");
+  log(t("log.mulliganConfirmado", { jugador: jugador.nombre }));
 
   if (modoOnline) { // en online, cada jugador confirma su mulligan
     game.jugadorActivo = 0; // J1 siempre empieza 
@@ -376,14 +380,14 @@ function confirmarMulligan(jugador) {
 
     if (game.jugadorActivo === 0 && !game.mulliganConfirmado[1]) {
       cambiarJugador(1);
-      log("Mulligan de " + game.jugadores[1].nombre + " — devuelve las cartas que no quieras y confirma.");
+      log(t("log.mulliganRival", { jugador: game.jugadores[1].nombre }));
     } else if (game.jugadorActivo === 1 && !game.mulliganConfirmado[0]) {
       cambiarJugador(0);
-      log("Mulligan de " + game.jugadores[0].nombre + " — devuelve las cartas que no quieras y confirma.");
+      log(t("log.mulliganRival", { jugador: game.jugadores[0].nombre }));
     } else {
       cambiarJugador(0);
       game.fase = "saque";
-      log("¡Partida iniciada! Saca " + game.jugadores[0].nombre);
+      log(t("log.partidaIniciada", { jugador: game.jugadores[0].nombre }));
       actualizarFaseUI();
     }
     renderMano();
@@ -842,7 +846,7 @@ function colocarCarta(jugador, carta, zona) {
 function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador activo, cantidad, es robo de habilidad o normal
   for (let i = 0; i < cantidad; i++) {
     if (jugador.mazo.length === 0) {
-      log(jugador.nombre + " no tiene más cartas en el mazo.");
+      log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
       return;
     }
     let carta = jugador.mazo.shift();
@@ -852,10 +856,10 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador act
     if (esHabilidad && tieneEfecto("tendoSatori")) {
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
       robarCarta(game.jugadores[rivalIndex], 1); // el rival roba una carta como reacción
-      log("Tendo Satori: roba 1 carta por efecto 🃏");
+      log(t("log.tendoSatori"));
     }
   }
-  log(jugador.nombre + " roba " + cantidad + " carta(s).");
+  log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: cantidad }));
   renderMano();
   renderManoRival()
   renderCampo();
@@ -870,7 +874,7 @@ async function usarGuts(jugador, zona, cantidad) {
     : jugador.zonas[zona];                                   // incluir todas si no lo es
 
   if (cartasDisponibles.length < cantidad) {
-    log("No hay suficientes cartas en la zona de GUTS indicada.");
+    log(t("log.gutsInsuficiente"));
     return false;
   }
 
@@ -878,7 +882,8 @@ async function usarGuts(jugador, zona, cantidad) {
   for (let i = 0; i < cantidad; i++) {
     let disponibles = cartasDisponibles.filter(c => !cartasElegidas.includes(c));
     let elegida = await mostrarSelectorCartas(
-      "GUTS en " + zona + ":" + "</br>Descarta ( " + (i + 1) + " / " + cantidad + " ) ",
+      t("log.gutsTitulo", { zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)), actual: i + 1, total: cantidad }),
+                                                    //  coger la primera letra de pase y ponerla en mayúsculas
       disponibles
     );
     if (!elegida) return false;
@@ -895,7 +900,7 @@ async function usarGuts(jugador, zona, cantidad) {
   renderCampo(); 
   renderMano(); 
   renderManoRival() 
-  log("GUTS usado correctamente en " + zona);
+  log(t("log.gutsUsado", { zona: zona }));
   if (modoOnline) {
     enviarJugada("gutsUsado", {                          // enviar GUTS al rival
       zona: zona,                                        // zona donde se usó
@@ -996,18 +1001,18 @@ function jugarCarta() {
 // ==================================================================================================================== RESOLVER SAQUE 
 function resolverSaque() {
   if (game.fase !== "saque") {
-    log("No es fase de saque ❌");
+    log(t("log.noEsFaseSaque"));
     return;
   }
   if (!esResolverValido()) return; // comprobar turno en online
   let jugador = game.jugadores[game.jugadorActivo];
   let carta = jugador.zonas.saque.at(-1);
   if (!carta || !carta.recienJugada) {
-    log("No has jugado ninguna carta este turno en pase ❌");
+    log(t("log.noCartaEnZona", { zona: t("ui.zonaSaque") }));
     return;
   }
 
-  log(carta.nombre + " saca con una potencia de " + game.valorAtaque);
+  log(t("log.sacaConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
 
   game.gutsDescartados = [];
   game.fase = "recepcion";
@@ -1032,7 +1037,7 @@ function resolverSaque() {
 // ================================================================================================================ RESOLVER RECEPCIÓN 
 function resolverRecepcion() {
   if (game.fase !== "recepcion") {
-    log("No es fase de recepción.");
+    log(t("log.noEsFaseRecepcion"));
     return;
   }
   if (!esResolverValido()) return;                      // comprobar turno en online
@@ -1042,15 +1047,15 @@ function resolverRecepcion() {
   let carta = jugador.zonas.recepcion.at(-1);           // buscar carta en recepción
 
   if (!carta || !carta.recienJugada) {
-    log("No has jugado ninguna carta este turno en recepción.");
+    log(t("log.noCartaEnZona", { zona: t("ui.zonaRecepcion") }));
     return;
   }
 
   let valorRecepcion = carta.stats.recepcion + game.valorDefensa;
-  log("Recepción: " + valorRecepcion + " vs Ataque: " + defensa);
+  log(t("log.recepcionVsAtaque", { recepcion: valorRecepcion, ataque: defensa }));
 
   if (valorRecepcion >= defensa) { // ================================================================= Recepción exitosa
-    log(carta.nombre + " recibe con una potencia de " + valorRecepcion + " = Buena recepción.");
+    log(t("log.buenaRecepcion", { carta: carta.nombre, valor: valorRecepcion }));
     game.fase = "pase";                                 // cambiar fase a pase
     game.valorAtaque = 0;                               // resetear ataque
     game.valorDefensa = 0;                              // resetear defensa
@@ -1061,7 +1066,7 @@ function resolverRecepcion() {
     renderCampo();                                      // redibujar campo
 
   } else { // ========================================================================================= Recepción fallida
-    log(carta.nombre + " recibe con una potencia de " + valorRecepcion + " = Recepción fallida.");
+    log(t("log.recepcionFallida", { carta: carta.nombre, valor: valorRecepcion }));
 
     let rivalIndex = game.jugadorActivo === 0 ? 1 : 0; // índice del rival en local
     if (modoOnline) {
@@ -1070,7 +1075,7 @@ function resolverRecepcion() {
     let rival = game.jugadores[rivalIndex];             // jugador rival
 
     perderPunto(jugador);                               // el que falla pierde el punto
-    log("Punto para " + rival.nombre);
+    log(t("log.puntoParaRival", { jugador: rival.nombre }));
 
     limpiarJugada();                                    // limpiar estado de la jugada
     game.fase = "saque";                                // volver a fase de saque
@@ -1401,7 +1406,7 @@ function jugarHabilidadDesdeMano() {
 // ==================================================================================================================== CONCEDER PUNTO
 function concederPunto() {
   if (modoOnline && game.jugadorActivo !== miNumero - 1) { // comprobar turno en online
-    log("No es tu turno.");
+    log(t("log.noEsTuTurno")); 
     return;
   }
 
@@ -2252,7 +2257,7 @@ game.jugadores[0].mazo.push(gtsr); */
 });
 
 // MAZO J1
-["HV-P01-076", "HV-P01-079", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-D01-002", "HV-P01-079", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);

@@ -122,26 +122,30 @@ fusionarTraducciones();
 
 let idiomaActivo = "es"; // variable que guarda el idioma del jugador 
 
-function t(clave) {
-  const partes = clave.split("."); // Separa la clave por puntos: "ui.zonaSaque" → ["ui", "zonaSaque"]
+function t(clave, tokens = {}) {
+  // Separa la clave por puntos: "log.mulliganConfirmado" → ["log", "mulliganConfirmado"]
+  const partes = clave.split(".");
   
-  let texto = I18N[idiomaActivo]; // Empieza a buscar desde el idioma activo: I18N["es"] o I18N["en"] o I18N["fr"]
+  // Empieza a buscar desde el idioma activo
+  let texto = I18N[idiomaActivo];
   
   // Recorre cada parte para ir entrando en el objeto
-  // Primera vuelta: texto = I18N["es"]["ui"]
-  // Segunda vuelta: texto = I18N["es"]["ui"]["zonaSaque"]
   for (const parte of partes) {
-    texto = texto?.[parte]; // el ?. evita errores si la clave no existe
+    texto = texto?.[parte];
   }
   
-  // Si no encontró nada, avisa en la consola y devuelve la clave tal cual
-  // Así el juego no se rompe aunque falte una traducción
+  // Si no encuentra nada, avisa en la consola y devuelve la clave
   if (texto === undefined) {
     console.warn(`[i18n] Clave no encontrada: "${clave}"`);
     return clave;
   }
   
-  return texto; // Devuelve el texto traducido
+  // Reemplaza los tokens: {jugador} → el valor que venga en el objeto tokens
+  for (const [token, valor] of Object.entries(tokens)) {
+    texto = texto.replaceAll(`{${token}}`, valor);
+  }
+  
+  return texto;
 }
 
 function setLang(lang) {

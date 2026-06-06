@@ -2262,6 +2262,7 @@ game.jugadores[0].mazo.push(gtsr); */
 
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 // MANO J1
+/*
 ["HV-P02-087", "HV-P02-017", "HV-P02-022"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
@@ -2328,7 +2329,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-
+*/
 
 leerParametrosURL(); // conexión con la URL desde el lobby
 

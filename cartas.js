@@ -276,19 +276,19 @@ function inicializarCartas() {
       rareza: "D"
     }
   ),
-  crearCarta("¡El voleibol es un deporte que siempre mira hacia arriba!", // =================== D01-011
+  crearCarta("¡El voleibol es un deporte en el que siempre mira hacia arriba!", // =================== D01-011
     {saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0},
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true); // robar 1 carta
 
       let cartaRecepcion = jugador.zonas.recepcion.at(-1); // buscar carta en recepción
       if (!cartaRecepcion) {
-        log("No hay carta en recepción ❌");
+        log("No hay carta en recepción.");
         return;
       }
 
       game.valorDefensa += 1; 
-      log("Evento: +1 a la recepción 💫");
+      log("Evento: +1 a la recepción.");
 
       if (cartaRecepcion.stats.recepcion <= 4) { // si recepción era 4 o menos, +1 adicional
         game.valorDefensa += 1;
@@ -301,7 +301,7 @@ function inicializarCartas() {
       fases: ["recepcion"],
       escuela: "Karasuno",
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> +1 de recepción. Si la recepción de base del jugador es de 4 o menos, +1 de recepción adicional.`
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1. +1 de recepción. Si la recepción de base del jugador es de 4 o menos, +1 de recepción adicional.`
     }
   ),
   crearCarta("Ataque amplio", // ================================================================ D01-012
@@ -534,26 +534,26 @@ function inicializarCartas() {
       robarCarta(jugador, 1, true);
 
       let eleccion = await mostrarEleccion([
-        { texto: "+1 al bloqueo de Kuroo Tetsuro 🧱" },
-        { texto: "+1 a la recepción de tu receptor 💪" }
+        { texto: "+1 al bloqueo de Kuroo Tetsuro." },
+        { texto: "+1 a la recepción de tu receptor." }
       ]);
 
       if (eleccion === 0) {
         let kuroo = jugador.zonas.bloqueo.at(-1);
         if (!kuroo || kuroo.nombre !== "Kuroo Tetsuro") {
-          log("No hay ningún Kuroo Tetsuro en bloqueo ❌");
+          log("No hay ningún Kuroo Tetsuro en bloqueo.");
           return false;
         }
         game.valorAtaque -= 1;
-        log("Evento: +1 al bloqueo de Kuroo 🧱");
+        log("Evento: +1 al bloqueo de Kuroo.");
       } else {
         let receptor = jugador.zonas.recepcion.at(-1);
         if (!receptor) {
-          log("No hay ningún receptor en recepción ❌");
+          log("No hay ningún receptor en recepción.");
           return false;
         }
         game.valorDefensa += 1;
-        log("Evento: +1 a la recepción de " + receptor.nombre + " 💪");
+        log("Evento: +1 a la recepción de " + receptor.nombre + ".");
       }
     },
     {
@@ -569,14 +569,14 @@ function inicializarCartas() {
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mazo.length === 0) {
-        log("No hay cartas en el mazo ❌");
+        log("No hay cartas en el mazo.");
         return false;
       }
       robarCarta(jugador, 1, true);
       log(jugador.nombre + " roba 1 carta por efecto del evento.");
 
       if (jugador.mazo.length === 0) {
-        log("No hay cartas en el mazo ❌");
+        log("No hay cartas en el mazo.");
         return false;
       }
 
@@ -1450,7 +1450,7 @@ function inicializarCartas() {
 
       if (cartasValidas.length >= 5) {
         game.valorDefensa += 6;
-        log("Habilidad Kita: +6 a la recepción 💪");
+        log("Habilidad Kita: +6 a la recepción.");
       } else {
         log("El rival no tiene suficientes cartas de evento en pase/remate (necesitas 5, tiene " + cartasValidas.length + ") ❌");
       }
@@ -2959,7 +2959,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción. Si hay 2 o más cartas de <strong>Inarizaki</strong> jugables en <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong>, <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> o <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> en tu zona de eventos, +1 adicional a la recepción.`
     }
   ),
-  crearCarta("Omimi Taro", // ============================================================ P02-085
+  crearCarta("Omimi Taro", // ======================================================================= P02-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
 
@@ -2993,6 +2993,7 @@ function inicializarCartas() {
         jugador.mano.splice(index, 1);                                      // sacar de la mano
         jugador.trash.push(cartaDescarte);                                  // enviar al trash
         log(cartaDescarte.nombre + " descartada de la mano.");
+        if (modoOnline) enviarTrash(jugador);                               // sincronizar trash con el rival
 
         robarCarta(jugador, 2, true);                                        // robar 2 cartas
         log("Omimi Taro: roba 2 cartas.");
@@ -3111,6 +3112,13 @@ function inicializarCartas() {
             // sumar pase del nuevo atsumu
             game.valorAtaque += atsumuElegido.stats.pase;
             log("Miya Atsumu traído desde el GUTS de pase. Valor de ataque actualizado: " + game.valorAtaque + ".");
+            if (modoOnline) {
+              enviarJugada("cartaMovida", {                              // avisar al rival del movimiento
+                zona: "pase",                                           // zona donde se movió
+                cartaId: atsumuElegido.info.id,                         // id de la carta movida
+                posicion: "ultimo"                                      // va al final del array (arriba visual)
+              });
+            }
 
             // preguntar si usar habilidad
             if (atsumuElegido.habilidad) {
@@ -3119,7 +3127,7 @@ function inicializarCartas() {
                 { texto: "No usar habilidad" }
               ]);
               if (eleccionHab === 0) {
-                let resultado = atsumuElegido.habilidad(jugador, game, atsumuElegido);
+                let resultado = await atsumuElegido.habilidad(jugador, game, atsumuElegido);
                 if (resultado !== false) atsumuElegido.habilidadUsada = true;
               }
             }
@@ -3161,6 +3169,13 @@ function inicializarCartas() {
             // sumar remate del nuevo osamu
             game.valorAtaque += osamuElegido.stats.remate;
             log("Miya Osamu traído desde el GUTS de remate. Valor de ataque actualizado: " + game.valorAtaque + ".");
+            if (modoOnline) {
+              enviarJugada("cartaMovida", {                              // avisar al rival del movimiento
+                zona: "remate",                                         // zona donde se movió
+                cartaId: osamuElegido.info.id,                          // id de la carta movida
+                posicion: "ultimo"                                      // va al final del array
+              });
+            }
 
             // preguntar si usar habilidad
             if (osamuElegido.habilidad) {
@@ -3169,7 +3184,7 @@ function inicializarCartas() {
                 { texto: "No usar habilidad" }
               ]);
               if (eleccionHab === 0) {
-                let resultado = osamuElegido.habilidad(jugador, game, osamuElegido);
+                let resultado = await osamuElegido.habilidad(jugador, game, osamuElegido);
                 if (resultado !== false) osamuElegido.habilidadUsada = true;
               }
             }

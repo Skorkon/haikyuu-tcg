@@ -441,14 +441,17 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
     contenedor.innerHTML = "";
     selector.style.display = "flex";
 
-    if (cancelable) { // permitir el clic fuera para cerrar el selector, si no es una habilidad
-      document.addEventListener("click", function cerrarFuera(e) {
-        if (!selector.contains(e.target)) {
-          cerrarSelector();
-          resolve(null);
-          document.removeEventListener("click", cerrarFuera);
+    // ejemplo creado para el evento de los Miya (no he entendido mucho esto)
+    if (cancelable) {                                                         // si se puede cerrar clicando fuera
+      window._cerrarFuera = function(e) {                                     // guardar referencia global
+        if (!selector.contains(e.target)) {                                   // si el clic es fuera del selector
+          cerrarSelector();                                                    // cerrar selector
+          resolve(null);                                                        // resolver con null (cancelado)
+          document.removeEventListener("click", window._cerrarFuera, { capture: true }); // limpiar listener
+          window._cerrarFuera = null;                                           // limpiar referencia global
         }
-      }, { capture: true });
+      };
+      document.addEventListener("click", window._cerrarFuera, { capture: true }); // añadir listener
     }
 
     cartas.forEach(carta => {
@@ -468,15 +471,14 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       });
 
       div.onclick = () => {
-        cerrarSelector();
-        resolve(carta);
+        cerrarSelector();           
+        resolve(carta);                     // resolver con la carta elegida
       };
 
-      contenedor.appendChild(div);
+      contenedor.appendChild(div);           // añadir al contenedor
     });
 
-    // guardar resolve para el botón cancelar
-    window._selectorResolve = resolve;
+    window._selectorResolve = resolve;       // guardar resolve para el botón cancelar (a verificar si borrar)
   });
 }
 
@@ -739,7 +741,7 @@ function colocarCarta(jugador, carta, zona) {
         if (tieneEfecto("blockout")) {
           let efecto = game.efectosActivos.find(e => e.tipo === "blockout"); // buscar efecto
           if (carta.stats.bloqueo <= efecto.valor) {                         // si bloqueo insuficiente
-            log("Blockout: " + carta.nombre + " tiene bloqueo ≤ " + efecto.valor + " y va al trash ❌");
+            log("Blockout: " + carta.nombre + " tiene bloqueo ≤ " + efecto.valor + " y va al trash.");
             jugador.trash.push(carta);                                        // carta al trash
             renderMano();
             renderManoRival()
@@ -765,9 +767,9 @@ function colocarCarta(jugador, carta, zona) {
           });
         }
 
-        // detectar Lev en remate para añadirlo como apoyo
-        let levEnRemate = jugador.zonas.remate.at(-1);                        // buscar Lev en remate
-        if (levEnRemate?.nombre === "Haiba Lev" && game.bloqueoActual.apoyos.length < 2) {
+        // Especial : -------------------------------------------------- detectar Lev en remate para añadirlo como apoyo
+        let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev en cualquier posición
+        if (levEnRemate?.nombre === "Haiba Lev" && game.bloqueoActual.apoyos.length < 2 && jugador.zonas.remate.length >= 3) {
           let confirmar = confirm("Haiba Lev está en la zona de remate. ¿Quieres añadirlo como bloqueador de apoyo? (Cuesta 2 GUTS de remate)");
           if (confirmar) {
             if (usarGuts(jugador, "remate", 2)) {
@@ -777,6 +779,16 @@ function colocarCarta(jugador, carta, zona) {
               let index = jugador.zonas.remate.indexOf(levEnRemate);
               if (index !== -1) jugador.zonas.remate.splice(index, 1); // sacar de remate
               log("Haiba Lev se une al bloqueo como apoyo desde remate.");
+              if (modoOnline) {
+                enviarJugada("cartaJugada", {                        // avisar al rival del movimiento de Lev
+                  zona: "bloqueoApoyo",                              // zona destino
+                  cartaId: levEnRemate.info.id                       // id de Lev
+                });
+                enviarJugada("quitarCartaZona", {                    // avisar que Lev sale de remate
+                  zona: "remate",                                    // zona origen
+                  cartaId: levEnRemate.info.id                       // id de Lev
+                });
+              }
               renderCampo();
             }
           }
@@ -868,6 +880,13 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador act
 // ======================================================================================================================= USAR GUTS 
 // ============================================== GUTS SIN SELECTOR
 async function usarGuts(jugador, zona, cantidad) {
+    // limpiar listener de cancelable si existe, evita que un selector cancelable anterior interfiera con el selector de GUTS que se va a abrir
+    // ejemplo creado para el evento de los Miya
+  if (window._cerrarFuera) {
+    document.removeEventListener("click", window._cerrarFuera, { capture: true }); // eliminar listener
+    window._cerrarFuera = null;                                                     // limpiar referencia global
+  }
+
   const ultimaCartaZona = jugador.zonas[zona].at(-1);         // detectar última carta zona
   const cartasDisponibles = ultimaCartaZona?.recienJugada
     ? jugador.zonas[zona].slice(0, -1)                       // excluir del guts si es recienJugada
@@ -2243,12 +2262,12 @@ game.jugadores[0].mazo.push(gtsr); */
 
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 // MANO J1
-/*["HV-P02-027", "HV-P02-036", "HV-P02-031", "HV-P02-031"].forEach(id => {
+["HV-P02-087", "HV-P02-017", "HV-P02-022"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
-});*/
-/*
+});
+
 // TRASH 
 ["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -2257,7 +2276,7 @@ game.jugadores[0].mazo.push(gtsr); */
 });
 
 // MAZO J1
-["HV-D01-002", "HV-P01-079", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
+["HV-D01-002", "HV-P02-085", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.unshift(carta);
   if (carta) game.jugadores[1].mazo.unshift(carta);
@@ -2279,12 +2298,16 @@ let atsumuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-063"); // Atsum
 let atsumuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-016"); // Atsumu con habilidad
 game.jugadores[1].zonas.pase.push(atsumuTP); // GUTS
 game.jugadores[1].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
+game.jugadores[0].zonas.pase.push(atsumuTP); // GUTS
+game.jugadores[0].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
 
 // GUTS de remate — Osamu sin habilidad primero, luego el P02-020 en el GUTS
 let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad
 let osamuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-020"); // Osamu con habilidad
 game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
 game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
+game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
+game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 
 // mazos de prueba
@@ -2294,7 +2317,7 @@ game.jugadores[0].trash.push(aoneP01);
 // GUTS de prueba para ambos jugadores
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-010"); // Sasaya, sin habilidad
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); // Sasaya, sin habilidad
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
@@ -2305,7 +2328,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-*/
+
 
 leerParametrosURL(); // conexión con la URL desde el lobby
 

@@ -213,6 +213,34 @@ function aplicarJugadaRival(jugada) {
       game.bloqueoActual = { central: null, apoyos: [] };    // limpiar bloqueo actual
       renderCampo();                                         // redibujar campo
       break;
+    
+    case "quitarCartaZona":
+      const rivalIndiceQuitar = miNumero === 1 ? 1 : 0;   // índice del rival
+      const rivalQuitar = game.jugadores[rivalIndiceQuitar]; // jugador rival
+      const zonaQuitar = jugada.zona;                      // zona de donde sacar
+      const indexQuitar = rivalQuitar.zonas[zonaQuitar]    // buscar carta por id
+        .findIndex(c => c.info?.id === jugada.cartaId);
+      if (indexQuitar !== -1) {
+        rivalQuitar.zonas[zonaQuitar].splice(indexQuitar, 1); // sacar de la zona
+      }
+      renderCampo();                                       // redibujar campo
+      break;
+
+    case "cartaMovida":
+      const rivalIndiceMovida = miNumero === 1 ? 1 : 0;         // índice del rival
+      const rivalMovida = game.jugadores[rivalIndiceMovida];     // jugador rival
+      const zonaMovida = jugada.zona;                            // zona donde se movió
+
+      const indexMovida = rivalMovida.zonas[zonaMovida]          // buscar carta por id
+        .findIndex(c => c.info?.id === jugada.cartaId);
+      if (indexMovida !== -1) {
+        let carta = rivalMovida.zonas[zonaMovida]                // extraer carta
+          .splice(indexMovida, 1)[0];
+        rivalMovida.zonas[zonaMovida].push(carta);               // poner al final del array
+        carta.recienJugada = true;                               // marcar como recién jugada
+      }
+      renderCampo();                                             // redibujar campo
+      break;
 
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste

@@ -170,7 +170,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                       // redibujar campo
       break;
 
-    case "robarHasta6":
+    case "robarHasta6": // ====================================================================== ROBAR HASTA 6
       const miJugadorRobo = game.jugadores[miNumero - 1];    // jugador local
       let necesita = 6 - miJugadorRobo.mano.length;          // cartas que necesita
       if (necesita > 0) {
@@ -180,7 +180,7 @@ function aplicarJugadaRival(jugada) {
       renderManoRival()
       break;
 
-    case "perderPunto":
+    case "perderPunto": // ====================================================================== PERDER PUNTO
       const rivalIndicePunto = miNumero === 1 ? 1 : 0;       // índice del rival
       const rivalPunto = game.jugadores[rivalIndicePunto];    // jugador rival
       if (rivalPunto.mazoPuntos.length > 0) {
@@ -194,7 +194,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                          // redibujar campo
       break;
 
-    case "concederPunto":
+    case "concederPunto": // ====================================================================== CONCEDER PUNTO
       limpiarJugada();                                         // limpiar estado de la jugada
       const miIndiceConcede = miNumero - 1;                    // yo gané el punto, yo saco
       game.jugadorActivo = miIndiceConcede;                    // actualizar jugador activo
@@ -206,7 +206,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                           // redibujar campo
       break;
 
-    case "limpiarBloqueadores":
+    case "limpiarBloqueadores": // ========================================================= LIMPIAR BLOQUEADORES
       const rivalIndiceBloq = miNumero === 1 ? 1 : 0;       // índice del rival
       const rivalBloq = game.jugadores[rivalIndiceBloq];     // jugador rival
       rivalBloq.zonas.bloqueoApoyo = [];                     // vaciar zona de apoyo
@@ -214,7 +214,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                         // redibujar campo
       break;
     
-    case "quitarCartaZona":
+    case "quitarCartaZona": // ================================================================= QUITAR CARTA ZONA
       const rivalIndiceQuitar = miNumero === 1 ? 1 : 0;   // índice del rival
       const rivalQuitar = game.jugadores[rivalIndiceQuitar]; // jugador rival
       const zonaQuitar = jugada.zona;                      // zona de donde sacar
@@ -226,7 +226,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                       // redibujar campo
       break;
 
-    case "cartaMovida":
+    case "cartaMovida": // ====================================================================== CARTA MOVIDA
       const rivalIndiceMovida = miNumero === 1 ? 1 : 0;         // índice del rival
       const rivalMovida = game.jugadores[rivalIndiceMovida];     // jugador rival
       const zonaMovida = jugada.zona;                            // zona donde se movió
@@ -239,6 +239,21 @@ function aplicarJugadaRival(jugada) {
         rivalMovida.zonas[zonaMovida].push(carta);               // poner al final del array
         carta.recienJugada = true;                               // marcar como recién jugada
       }
+      renderCampo();                                             // redibujar campo
+      break;
+
+    case "habilidadDesdeMano": // ================================================================= HABILIDAD DESDE MANO
+      const rivalIndiceHab = miNumero === 1 ? 1 : 0;            // índice del rival
+      const rivalHab = game.jugadores[rivalIndiceHab];           // jugador rival
+      const todasHab = inicializarCartas();                      // cargar catálogo
+      const cartaHab = todasHab.find(c => c.info?.id === jugada.cartaId); // buscar carta
+      if (!cartaHab) return;
+
+      // sacar carta de la mano del rival
+      const indexHab = rivalHab.mano.findIndex(c => c.info?.id === jugada.cartaId);
+      if (indexHab !== -1) rivalHab.mano.splice(indexHab, 1);   // sacar de la mano
+      rivalHab.trash.push(cartaHab);                             // enviar al trash
+
       renderCampo();                                             // redibujar campo
       break;
 
@@ -371,6 +386,7 @@ function confirmarMulliganOnline() {
         escucharEfectos()           // escuchar los efectos que se vayan añadiendo al array
         escucharTrashRival()        // escuchar los cambios de cartas en el trash
         escucharMazoPuntosRival()   // escuchar los cambios de el mazo de puntos
+        escucharMazoRival()         // escuchar los cambios de el mazo del rival
         actualizarFaseUI();         // actualizar el letrero
         renderMano();               // redibujar mano
         renderManoRival()
@@ -511,6 +527,27 @@ function escucharMazoPuntosRival() {
     renderCampo();                                           // redibujar campo
   });
 }
+
+// ── SINCRONIZAR MAZO ─────────────────────────────────────
+function enviarMazo() {
+  if (!modoOnline) return;                                    // solo en modo online
+  const miJugador = game.jugadores[miNumero - 1];            // jugador local
+  db.ref("partidas/" + salaActual + "/mazo/jugador" + miNumero)
+    .set(miJugador.mazo.length);                             // número de cartas en mazo
+}
+
+function escucharMazoRival() {
+  const rivalNumero = miNumero === 1 ? 2 : 1;               // número del rival
+  const rivalIndice = miNumero === 1 ? 1 : 0;               // índice del rival
+
+  db.ref("partidas/" + salaActual + "/mazo/jugador" + rivalNumero).on("value", function(snap) {
+    const cantidad = snap.val();                             // cantidad de cartas del rival
+    if (cantidad === null) return;                           // ignorar si no hay dato
+    game.jugadores[rivalIndice].mazo = Array(cantidad).fill({}); // simular mazo
+    renderCampo();                                           // redibujar campo
+  });
+}
+
 
 // ── BORRAR PARTIDA TERMINADA ──────────────────────────────
 function borrarPartida() {

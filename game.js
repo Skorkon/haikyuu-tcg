@@ -369,6 +369,7 @@ function confirmarMulligan(jugador) {
     log("Mazo de puntos preparado con 2 cartas.");             // log
     confirmarMulliganOnline();
     enviarMazoPuntos();                                         // sincronizar mazoPuntos inicial
+    enviarMazo();                                               // sincronizar mazo actualizado
   } else { // modo local: comportamiento original, un mulligan tras otro
     console.log("Jugador activo AL ENTRAR:", game.jugadorActivo);
     console.log("Mulligan confirmado:", game.mulliganConfirmado);
@@ -515,8 +516,7 @@ function resolverLog(jugador, carta, zona, resultado) {
 function colocarCarta(jugador, carta, zona) { 
   // ========================================================================================================== 1: Comprobaciones
   if (carta.info?.tipo === "evento") { // Para evitar que se juegen eventos en la zona de los personajes
-    log("Los eventos se juegan con el botón 'Jugar Evento' ❌");
-    jugador.mano.push(carta);
+    log("Los eventos se juegan con el botón 'Jugar Evento'.");
     renderMano();
     renderManoRival()
     return;
@@ -872,6 +872,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador act
     }
   }
   log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: cantidad }));
+  if (modoOnline) enviarMazo();                                // sincronizar mazo con el rival
   renderMano();
   renderManoRival()
   renderCampo();
@@ -1383,7 +1384,7 @@ function jugarEvento() {
 // ================================================================================================================== JUGAR DESDE MANO 
 function jugarHabilidadDesdeMano() {
   if (!game.cartaSeleccionada) {
-    log("Selecciona una carta primero ❌");
+    log("Selecciona una carta primero.");
     return;
   }
   // ============================================== Efectos de  habilidades
@@ -1417,6 +1418,14 @@ function jugarHabilidadDesdeMano() {
   }
 
   game.cartaSeleccionada = null;
+
+  if (modoOnline) {
+    enviarJugada("habilidadDesdeMano", {                       // avisar al rival
+      cartaId: carta.info.id                                   // id de la carta usada
+    });
+    enviarTrash(jugador);                                      // sincronizar trash
+  }
+
   renderMano();
   renderManoRival()
   renderCampo();
@@ -2260,10 +2269,12 @@ let gtsr = todasLasCartas.find(c => c.info?.id === "HV-P01-058");
 game.jugadores[0].mazo.push(gtsr); */
 
 
-// PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // MANO J1
 /*
-["HV-P02-087", "HV-P02-017", "HV-P02-022"].forEach(id => {
+["HV-P01-013", "HV-P02-017", "HV-P02-022"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2330,6 +2341,9 @@ for (let i = 0; i < 5; i++) {
   game.jugadores[1].zonas.eventos.push(evento);
 }
 */
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
+// PRUEBAS -----------------------------------------------------------------------------------------------------------------
 
 leerParametrosURL(); // conexión con la URL desde el lobby
 

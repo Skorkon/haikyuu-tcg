@@ -2959,7 +2959,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción. Si hay 2 o más cartas de <strong>Inarizaki</strong> jugables en <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong>, <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> o <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> en tu zona de eventos, +1 adicional a la recepción.`
     }
   ),
-  crearCarta("Omimi Taro", // ======================================================================= P02-085
+  crearCarta("Omimi Taro", // ============================================================================ P02-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
 
@@ -3012,7 +3012,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> +1 a la recepción. Si descartas 1 carta de <strong>Inarizaki</strong> de tu mano, roba 2 cartas.`
     }
   ),
-  crearCarta("Hinchada de Inarizaki", // ============================================================ P02-086
+  crearCarta("Hinchada de Inarizaki", // ================================================================= P02-086
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) { // comprobar que todos los personajes en juego son de Inarizaki
       let cartasEnJuego = [

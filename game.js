@@ -360,10 +360,10 @@ function confirmarMulligan(jugador) {
 
   log(t("log.mulliganConfirmado", { jugador: jugador.nombre }));
 
-  if (modoOnline) { // en online, cada jugador confirma su mulligan
-    game.jugadorActivo = 0; // J1 siempre empieza 
+  if (modoOnline) {
+    // no resetear jugadorActivo (ya fue decidido por el sorteo)
     game.mulliganConfirmado[miNumero - 1] = true;
-    // separar 2 cartas del mazo para el mazoPuntos
+    document.getElementById("btn-confirmar-mulligan").disabled = true; // bloquear botón tras confirmar
     let miJugador = game.jugadores[miNumero - 1];              // jugador local
     miJugador.mazoPuntos = miJugador.mazo.splice(0, 2);        // sacar las 2 primeras cartas
     log("Mazo de puntos preparado con 2 cartas.");             // log
@@ -1553,9 +1553,13 @@ function renderMano() {
     }
 
     div.onclick = () => {
-      if (game.fase === "mulligan") {          // si estamos en mulligan
-        seleccionarCarta(carta);               // selecciona la carta
-        hacerMulligan(game.jugadores[game.jugadorActivo]); // la devuelve al mazo
+      if (game.fase === "mulligan") {
+        if (modoOnline && game.mulliganConfirmado[miNumero - 1]) return; // bloqueado tras confirmar
+        seleccionarCarta(carta);
+        const jugadorMulligan = modoOnline 
+          ? game.jugadores[miNumero - 1]
+          : game.jugadores[game.jugadorActivo];
+        hacerMulligan(jugadorMulligan);
         return;
       }
       seleccionarCarta(carta);

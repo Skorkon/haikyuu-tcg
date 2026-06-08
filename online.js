@@ -310,13 +310,8 @@ function arrancarPartidaOnline(mazoJ1, mazoJ2, nombreJ1, nombreJ2) {
   console.log("Mazo rival cargado: " + game.jugadores[rivalIndice].mazo.length + " cartas");
 
   escucharPartida();
-  // iniciar manos y mulligan
-  game.jugadorActivo = miNumero - 1;
-  iniciarMano(game.jugadores[0]);
-  iniciarMano(game.jugadores[1]);
-  renderMano();
+  iniciarSorteo();                                             // iniciar sorteo antes del mulligan
   renderManoRival()
-  renderCampo();
 
   // borrar sala si el jugador 1 se desconecta durante la partida
   if (miNumero === 1) {
@@ -379,7 +374,8 @@ function confirmarMulliganOnline() {
     if (mulligan.jugador1 && mulligan.jugador2) {
       log("¡Ambos jugadores listos! Arrancando partida...");
         game.fase = "saque";        // fase inicial
-        game.jugadorActivo = 0;     // J1 siempre empieza
+        // game.jugadorActivo = 0;     // el jugador activo ya se decide por sorteo
+        document.getElementById("btn-confirmar-mulligan").disabled = false; // desbloquear boton mulligan por si acaso
         escucharTurno();            // empezar a escuchar cambios de turno
         escucharFase();             // empezar a escuchar cambios de fase
         escucharManoRival();        // escuchar cambios en mano rival
@@ -555,4 +551,63 @@ function borrarPartida() {
   db.ref("partidas/" + salaActual).remove()             // borrar la sala de Firebase
     .then(() => console.log("Partida borrada de Firebase ✅")) // confirmación
     .catch(e => console.log("Error al borrar partida: " + e)); // error
+}
+
+// ── SORTEO INICIAL ────────────────────────────────────────
+function iniciarSorteo() {
+  document.getElementById("btn-confirmar-mulligan").style.display = "none"; // ocultar botón confirmar mulligan
+  const miNumeroSorteo = Math.random();                      // número aleatorio para el sorteo
+  db.ref("partidas/" + salaActual + "/sorteo/jugador" + miNumero).set(miNumeroSorteo); // subir a Firebase
+
+  db.ref("partidas/" + salaActual + "/sorteo").on("value", async function(snap) {
+    const sorteo = snap.val();                               // datos del sorteo
+    if (!sorteo || !sorteo.jugador1 || !sorteo.jugador2) return; // esperar a los dos
+
+    // desactivar listener
+    db.ref("partidas/" + salaActual + "/sorteo").off();
+
+    const yoGano = sorteo["jugador" + miNumero] > sorteo["jugador" + (miNumero === 1 ? 2 : 1)]; // comparar números
+
+    if (yoGano) {                                            // si gano el sorteo
+      log("¡Has ganado el sorteo!");
+      let eleccion = await mostrarEleccion([                 // mostrar opciones
+        { texto: "Saco yo primero" },
+        { texto: "Saca el rival primero" }
+      ]);
+
+      const miIndice = miNumero - 1;                               // mi índice
+      const rivalIndice = miNumero === 1 ? 1 : 0;                  // índice del rival
+      const j1Saca = eleccion === 0 ? miIndice : rivalIndice;      // 0: saco yo, 1: saca el rival
+      db.ref("partidas/" + salaActual + "/sorteo/j1Saca").set(j1Saca); // subir decisión
+
+    } else {                                                 // si pierdo el sorteo
+      log("El rival ha ganado el sorteo. Esperando su decisión...");
+
+      db.ref("partidas/" + salaActual + "/sorteo/j1Saca").on("value", function(snap2) {
+        const j1Saca = snap2.val();                          // quién saca según el ganador
+        if (j1Saca === null) return;                         // esperar decisión
+        db.ref("partidas/" + salaActual + "/sorteo/j1Saca").off(); // desactivar listener
+        arrancarMulligan(j1Saca);                            // arrancar mulligan
+      });
+    }
+
+    if (yoGano) {                                            // el ganador también arranca
+      db.ref("partidas/" + salaActual + "/sorteo/j1Saca").on("value", function(snap2) {
+        const j1Saca = snap2.val();
+        if (j1Saca === null) return;
+        db.ref("partidas/" + salaActual + "/sorteo/j1Saca").off();
+        arrancarMulligan(j1Saca);
+      });
+    }
+  });
+}
+
+function arrancarMulligan(indicePrimerSacador) {
+  document.getElementById("btn-confirmar-mulligan").style.display = "block"; // mostrar botón
+  game.jugadorActivo = indicePrimerSacador;                  // el que saca primero
+  iniciarMano(game.jugadores[0]);                            // repartir mano al jugador 0
+  iniciarMano(game.jugadores[1]);                            // repartir mano al jugador 1
+  log("Saca primero: " + game.jugadores[indicePrimerSacador].nombre);
+  renderMano();
+  renderCampo();
 }

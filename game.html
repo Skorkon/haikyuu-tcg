@@ -447,7 +447,7 @@ button {
   <button onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano">Habilidad desde mano</button>
   <button onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
   <button onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
-  <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
+  <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
   <!-- <button onclick="mostrarEstado()" data-i18n="ui.btnEstado">Mostrar estado</button> -->
 </div>
 <div class="panel">

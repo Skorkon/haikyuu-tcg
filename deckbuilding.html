@@ -235,15 +235,15 @@
   .pre-tag { font-size: 10px; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border2); color: var(--text2); }
   .pre-deck-load { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-family: var(--font-body); font-size: 12px; cursor: pointer; transition: all .15s; }
   .pre-deck-load:hover { background: var(--accent); color: #fff; }
-
+ 
   /* PREVIEW MODAL */
   .card-preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; align-items: center; justify-content: center; }
   .card-preview-overlay.show { display: flex; }
-  .card-preview { background: var(--surface2); border: 1px solid var(--border2); border-radius: 12px; width: 380px; max-width: 95vw; overflow: hidden; }
-  .preview-art { height: 500px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .card-preview { background: var(--surface2); border: 1px solid var(--border2); border-radius: 12px; width: 380px; max-width: 95vw; height: 95vh; overflow: hidden; display: flex; flex-direction: column; }
+  .preview-art { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 0; }
   .preview-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .preview-art .fallback-big { position: absolute; font-size: 80px; pointer-events: none; }
-  .preview-body { padding: 18px; }
+  .preview-body { padding: 18px; display: flex; flex-direction: column; flex-shrink: 0; }
   .preview-name { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
   .preview-id   { font-size: 11px; color: var(--text3); margin-bottom: 12px; }
   .preview-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -792,14 +792,10 @@ function closePreview(e) {
 
 // ── PREDEFINED ────────────────────────────────────────────
 const PREDEFINED_DECKS = [
-  { nombre:'Karasuno Clásico', desc:'El combo legendario de Kageyama y Hinata apoyado por la solidez defensiva de Karasuno. Alto potencial de remate con sinergia de eventos.', banner:'🔴', bannerClass:'art-Karasuno', tags:['Karasuno','Combo','Remate'],
-    entries:[{id:'HV-D01-001',qty:3},{id:'HV-D01-002',qty:3},{id:'HV-D01-003',qty:2},{id:'HV-D01-004',qty:2},{id:'HV-D01-005',qty:2},{id:'HV-D01-006',qty:2},{id:'HV-D01-008',qty:2},{id:'HV-D01-010',qty:2},{id:'HV-P01-002',qty:2},{id:'HV-P01-006',qty:2},{id:'HV-P01-004',qty:2},{id:'HV-P01-007',qty:2},{id:'HV-D01-011',qty:4},{id:'HV-D01-012',qty:4}] },
-  { nombre:'Nekoma — El muro del gato', desc:'La defensa de Nekoma en estado puro. Kuroo y Kenma coordinan para debilitar al rival mientras Lev cierra el muro.', banner:'🐱', bannerClass:'art-Nekoma', tags:['Nekoma','Defensa','Bloqueo'],
-    entries:[{id:'HV-D02-001',qty:3},{id:'HV-D02-002',qty:3},{id:'HV-D02-004',qty:3},{id:'HV-D02-005',qty:2},{id:'HV-D02-006',qty:2},{id:'HV-D02-007',qty:2},{id:'HV-D02-008',qty:2},{id:'HV-D02-009',qty:3},{id:'HV-P01-060',qty:2},{id:'HV-P01-054',qty:2},{id:'HV-D01-011',qty:4}] },
-  { nombre:'Shiratorizawa', desc:'Ushijima marca el ritmo con potencia bruta en saque y remate. Tendo vigila el bloqueo con su intuición sobrenatural.', banner:'🦁', bannerClass:'art-Shiratorizawa', tags:['Shiratorizawa','Potencia','Saque'],
-    entries:[{id:'HV-P01-056',qty:3},{id:'HV-P01-057',qty:3},{id:'HV-P01-058',qty:3},{id:'HV-P01-009',qty:2},{id:'HV-D01-006',qty:2},{id:'HV-D01-008',qty:2},{id:'HV-D01-004',qty:2},{id:'HV-D01-010',qty:2},{id:'HV-D01-011',qty:4},{id:'HV-D01-012',qty:3}] },
-  { nombre:'Multi-escuela — Sakusa', desc:'Aprovecha la condición de 4+ escuelas de Sakusa y Hoshiumi. Deck de alto riesgo y altísima recompensa.', banner:'🏆', bannerClass:'art-Itachiyama', tags:['Multi-escuela','Avanzado','Remate'],
-    entries:[{id:'HV-P01-068',qty:3},{id:'HV-P01-066',qty:3},{id:'HV-P01-065',qty:2},{id:'HV-D02-001',qty:2},{id:'HV-P01-045',qty:2},{id:'HV-P01-056',qty:2},{id:'HV-D01-005',qty:2},{id:'HV-D02-009',qty:2},{id:'HV-P01-054',qty:2},{id:'HV-D01-011',qty:4},{id:'HV-D01-012',qty:4}] },
+  { nombre:'Karasuno Inicial', desc:'El combo de velocidad negativa de Kageyama y Hinata apoyado por la verstalidad del Karasuno. Alto potencial de remate con sinergia de eventos.', banner:'🔴', bannerClass:'art-Karasuno', tags:['Karasuno','Combo','Remate'],
+    entries:[{id:'HV-D01-001',qty:3},{id:'HV-D01-002',qty:3},{id:'HV-D01-003',qty:3},{id:'HV-D01-004',qty:3},{id:'HV-D01-005',qty:3},{id:'HV-D01-006',qty:3},{id:'HV-D01-007',qty:2},{id:'HV-D01-008',qty:3},{id:'HV-D01-009',qty:3},{id:'HV-D01-010',qty:2},{id:'HV-P01-002',qty:2},{id:'HV-P01-006',qty:2},{id:'HV-D01-011',qty:4},{id:'HV-D01-012',qty:4}] },
+  { nombre:'Nekoma Inicial', desc:'La defensa de Nekoma en estado puro. Equipo de desgaste con buenas recepciones y bloqueos.', banner:'🐱', bannerClass:'art-Nekoma', tags:['Nekoma','Defensa','Bloqueo'],
+    entries:[{id:'HV-D02-001',qty:5},{id:'HV-D02-002',qty:5},{id:'HV-D02-004',qty:3},{id:'HV-D02-005',qty:3},{id:'HV-D02-006',qty:3},{id:'HV-D02-007',qty:3},{id:'HV-D02-008',qty:3},{id:'HV-D02-009',qty:3},{id:'HV-D02-010',qty:3},{id:'HV-D02-011',qty:4},{id:'HV-D02-012',qty:4}] },
 ];
 
 function renderPredefined() {

@@ -20,13 +20,13 @@ const TRADUCCIONES = {
       "cartaDuplicada": "Ya has jugado a {carta} este turno",
       "noColocador": "No puedes colocar un colocador (S) este turno",
       "yaHayCartaEnZona": "Ya hay una carta en {zona}",
-      "cartaColocadaEn": "{jugador} juega a {carta} en {zona}",
+      "cartaColocadaEn": "{jugador} juega a {carta} en {zona} ({stat})",
       "noReceptorAlto": "No puedes colocar un receptor con recepción de 6 o más este turno",
       "sinCartasEnMazo": "{jugador} no tiene más cartas en el mazo",
       "robarCartas": "{jugador} roba {cantidad} carta(s)",
       "gutsInsuficiente": "No hay suficientes cartas en la zona de GUTS indicada",
       "gutsUsado": "GUTS usado correctamente en {zona}",
-      "gutsTitulo": "GUTS en {zona}: </br>Descarta ( {actual} / {total} )",
+      "gutsTitulo": "GUTS en {zona}: Descarta ( {actual} / {total} )",
       "sacaConPotencia": "{carta} saca con una potencia de {valor}",
       "paseConPotencia": "{carta} realiza un pase con una potencia de {valor}",
       "remataConPotencia": "{carta} remata con una potencia de {valor}",
@@ -56,13 +56,17 @@ const TRADUCCIONES = {
       "efectoAnularBloqueadorCentral": "Efecto activo: bloqueo del bloqueador central anulado",
       "negarBloqueadoresApoyo": "Efecto: el rival solo puede colocar al bloqueador central este turno",
       "negarReceptorAlto": "Efecto: el rival no puede colocar un receptor con recepción original de 6 o más",
-      "negarColocador": "Efecto activo: el rival no podrá jugar un colocador el próximo turno",
+      "negarColocador": "Efecto activo: No puedes jugar un colocador este turno",
       "negarOneTouch": "Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo",
       "negarCartaDesdeMano": "Efecto activo: el rival no podrá usar habilidades desde la mano en {fases}",
       "negarEventosBloqueo": "Efecto activo: el rival no podrá jugar eventos de bloqueo",
       "anularHabilidadReceptor": "Efecto activo: el siguiente receptor rival no podrá usar su habilidad",
       "limitarBloqueadores": "Efecto: el rival solo puede colocar hasta {max} bloqueadores",
-      "blockoutTrash": "Blockout: {carta} tiene bloqueo menor o igual a {valor} y va al trash"
+      "blockoutTrash": "Blockout: {carta} tiene bloqueo menor o igual a {valor} y va al trash",
+      "mazoPuntosPreparado": "{jugador}: mazo de puntos preparado con 2 cartas",
+      "cartaColocadaBloqueo": "{jugador} juega a {carta} como {tipo} ({stat})",
+      "bloqueadorCentral": "Bloqueador central",
+      "apoyoBloqueo": "Bloqueo de apoyo"
     }
   },
   "en": {
@@ -83,13 +87,13 @@ const TRADUCCIONES = {
       "cartaDuplicada": "You already played {carta} this turn",
       "noColocador": "You cannot place a setter (S) this turn",
       "yaHayCartaEnZona": "There is already a card in {zona}",
-      "cartaColocadaEn": "{jugador} plays {carta} in {zona}",
+      "cartaColocadaEn": "{jugador} plays {carta} in {zona} ({stat})",
       "noReceptorAlto": "You cannot place a receiver with reception 6 or more this turn",
       "sinCartasEnMazo": "{jugador} has no more cards in the deck",
       "robarCartas": "{jugador} draws {cantidad} card(s)",
       "gutsInsuficiente": "Not enough cards in the indicated GUTS zone",
       "gutsUsado": "GUTS used correctly in {zona}",
-      "gutsTitulo": "GUTS in {zona}: </br>Discard ( {actual} / {total} )",
+      "gutsTitulo": "GUTS in {zona}: Discard ( {actual} / {total} )",
       "sacaConPotencia": "{carta} serves with a power of {valor}",
       "paseConPotencia": "{carta} sets with a power of {valor}",
       "remataConPotencia": "{carta} spikes with a power of {valor}",
@@ -119,13 +123,17 @@ const TRADUCCIONES = {
       "efectoAnularBloqueadorCentral": "Active effect: central blocker block nullified",
       "negarBloqueadoresApoyo": "Effect: rival can only place the central blocker this turn",
       "negarReceptorAlto": "Effect: rival cannot place a receiver with base reception of 6 or more",
-      "negarColocador": "Active effect: rival cannot place a setter next turn",
+      "negarColocador": "Active effect: You cannot place a setter this turn",
       "negarOneTouch": "Active effect: rival cannot use One Touch in their next block",
       "negarCartaDesdeMano": "Active effect: rival cannot use hand abilities in {fases}",
       "negarEventosBloqueo": "Active effect: rival cannot play block events",
       "anularHabilidadReceptor": "Active effect: next rival receiver cannot use their ability",
       "limitarBloqueadores": "Effect: rival can only place up to {max} blockers",
-      "blockoutTrash": "Blockout: {carta} has block equal or less than {valor} and goes to discard"
+      "blockoutTrash": "Blockout: {carta} has block equal or less than {valor} and goes to discard",
+      "mazoPuntosPreparado": "{jugador}: point deck prepared with 2 cards",
+      "cartaColocadaBloqueo": "{jugador} plays {carta} as {tipo} ({stat})",
+      "bloqueadorCentral": "Central blocker",
+      "apoyoBloqueo": "Support blocker"
     }
   },
   "fr": {
@@ -146,13 +154,13 @@ const TRADUCCIONES = {
       "cartaDuplicada": "Tu as déjà joué {carta} ce tour",
       "noColocador": "Tu ne peux pas placer un passeur (S) ce tour",
       "yaHayCartaEnZona": "Il y a déjà une carte en {zona}",
-      "cartaColocadaEn": "{jugador} joue {carta} en {zona}",
+      "cartaColocadaEn": "{jugador} joue {carta} en {zona} ({stat})",
       "noReceptorAlto": "Tu ne peux pas placer un receveur avec réception 6 ou plus ce tour",
       "sinCartasEnMazo": "{jugador} n'a plus de cartes dans le deck",
       "robarCartas": "{jugador} pioche {cantidad} carte(s)",
       "gutsInsuficiente": "Pas assez de cartes dans la zone GUTS indiquée",
       "gutsUsado": "GUTS utilisé correctement en {zona}",
-      "gutsTitulo": "GUTS en {zona} : </br>Défaussez ( {actual} / {total} )",
+      "gutsTitulo": "GUTS en {zona} : Défaussez ( {actual} / {total} )",
       "sacaConPotencia": "{carta} sert avec une puissance de {valor}",
       "paseConPotencia": "{carta} effectue une passe avec une puissance de {valor}",
       "remataConPotencia": "{carta} attaque avec une puissance de {valor}",
@@ -182,13 +190,17 @@ const TRADUCCIONES = {
       "efectoAnularBloqueadorCentral": "Effet actif : bloc du bloqueur central annulé",
       "negarBloqueadoresApoyo": "Effet : le rival ne peut placer que le bloqueur central ce tour",
       "negarReceptorAlto": "Effet : le rival ne peut pas placer un receveur avec réception de base de 6 ou plus",
-      "negarColocador": "Effet actif : le rival ne pourra pas placer un passeur au prochain tour",
+      "negarColocador": "Effet actif : Tu ne peux pas jouer un passeur ce tour",
       "negarOneTouch": "Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc",
       "negarCartaDesdeMano": "Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases}",
       "negarEventosBloqueo": "Effet actif : le rival ne pourra pas jouer d'événements de bloc",
       "anularHabilidadReceptor": "Effet actif : le prochain receveur rival ne pourra pas utiliser sa capacité",
       "limitarBloqueadores": "Effet : le rival ne peut placer que {max} bloqueurs",
-      "blockoutTrash": "Blockout : {carta} a un bloc inférieur ou égal à {valor} et va à la défausse"
+      "blockoutTrash": "Blockout : {carta} a un bloc inférieur ou égal à {valor} et va à la défausse",
+      "mazoPuntosPreparado": "{jugador} : deck de points préparé avec 2 cartes",
+      "cartaColocadaBloqueo": "{jugador} joue {carta} en tant que {tipo} ({stat})",
+      "bloqueadorCentral": "Bloqueur central",
+      "apoyoBloqueo": "Bloqueur de soutien"
     }
   },
   "": {
@@ -251,7 +263,11 @@ const TRADUCCIONES = {
       "negarEventosBloqueo": "",
       "anularHabilidadReceptor": "",
       "limitarBloqueadores": "",
-      "blockoutTrash": ""
+      "blockoutTrash": "",
+      "mazoPuntosPreparado": "",
+      "cartaColocadaBloqueo": "",
+      "bloqueadorCentral": "",
+      "apoyoBloqueo": ""
     }
   }
 };

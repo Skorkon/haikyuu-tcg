@@ -288,16 +288,14 @@ function perderPunto(jugador) {
     log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
     enviarJugada("perderPunto", {});                      // avisar al rival del punto perdido
 
-  } else {
-    // en local primero robar hasta 6
+  } else { // ------------------------------------------- // Modo local                                            
     game.jugadores.forEach(j => {
-      let cartasQueNecesita = 6 - j.mano.length;         // cartas que necesita hasta 6
+      let cartasQueNecesita = 6 - j.mano.length;          // cartas que necesita hasta 6
       if (cartasQueNecesita > 0) {
         robarCarta(j, cartasQueNecesita);                 // robar hasta 6
       }
     });
-
-    // luego robar del mazoPuntos
+    // luego robar del mazo de puntos
     let carta = jugador.mazoPuntos.shift();               // roba del mazo de puntos
     jugador.mano.push(carta);                             // va a la mano
     log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
@@ -311,8 +309,8 @@ function perderPunto(jugador) {
 // ================================================================================ BARAJAR MAZO
 // =============================================================================================
 function barajarMazo(jugador) {
-  for (let i = jugador.mazo.length - 1; i > 0; i--) { // recorre el mazo de atrás hacia adelante para ver la longitud
-    let j = Math.floor(Math.random() * (i + 1)); // elije una posición aleatoria entre 0 e i
+  for (let i = jugador.mazo.length - 1; i > 0; i--) {               // recorre el mazo de atrás hacia adelante para ver la longitud
+    let j = Math.floor(Math.random() * (i + 1));                    // elije una posición aleatoria entre 0 e i
     [jugador.mazo[i], jugador.mazo[j]] = [jugador.mazo[j], jugador.mazo[i]]; // intercambia las dos cartas de posición
   }
 }
@@ -338,46 +336,41 @@ function hacerMulligan(jugador) {
   // devolver la carta seleccionada al mazo
   jugador.mano.splice(jugador.mano.indexOf(game.cartaSeleccionada), 1);
   jugador.mazo.push(game.cartaSeleccionada);
-  log(game.cartaSeleccionada.nombre + " devuelta al mazo.");
+  log(t("log.cartaDevuelta", { carta: game.cartaSeleccionada.nombre }));
   game.cartaSeleccionada = null;
-
   renderMano();
   renderManoRival()
 }
 // ========================================================================== CONFIRMAR MULLIGAN
 // =============================================================================================
 function confirmarMulligan(jugador) {
-  if (game.fase !== "mulligan") {
+  if (game.fase !== "mulligan") {                             // si no es fase de mulligan
     log(t("log.mulliganYaConfirmado"));
     return;
   }
 
-  let cartasQueNecesita = 6 - jugador.mano.length;
-  if (cartasQueNecesita > 0) {
+  let cartasQueNecesita = 6 - jugador.mano.length;            // cartas restantes hasta 6
+  if (cartasQueNecesita > 0) {                                // si faltan
     barajarMazo(jugador);
     robarCarta(jugador, cartasQueNecesita);
   }
 
   log(t("log.mulliganConfirmado", { jugador: jugador.nombre }));
 
-  if (modoOnline) {
+  if (modoOnline) { // --------------------------------------- // ONLINE
     // no resetear jugadorActivo (ya fue decidido por el sorteo)
     game.mulliganConfirmado[miNumero - 1] = true;
     document.getElementById("btn-confirmar-mulligan").disabled = true; // bloquear botón tras confirmar
     let miJugador = game.jugadores[miNumero - 1];              // jugador local
     miJugador.mazoPuntos = miJugador.mazo.splice(0, 2);        // sacar las 2 primeras cartas
-    log("Mazo de puntos preparado con 2 cartas.");             // log
+    log(t("log.mazoPuntosPreparado", {jugador: miJugador.nombre}));          
     confirmarMulliganOnline();
     enviarMazoPuntos();                                         // sincronizar mazoPuntos inicial
     enviarMazo();                                               // sincronizar mazo actualizado
-  } else { // modo local: comportamiento original, un mulligan tras otro
-    console.log("Jugador activo AL ENTRAR:", game.jugadorActivo);
-    console.log("Mulligan confirmado:", game.mulliganConfirmado);
-
+  } else { // ------------------------------------------------- // LOCAL: comportamiento original, un mulligan tras otro
     game.mulliganConfirmado[game.jugadorActivo] = true;
-    // separar 2 cartas del mazo para el mazoPuntos
-    jugador.mazoPuntos = jugador.mazo.splice(0, 2);            // sacar las 2 primeras cartas
-    log(jugador.nombre + ": mazo de puntos preparado.");       // log
+    jugador.mazoPuntos = jugador.mazo.splice(0, 2);            // sacar las 2 primeras cartas para el mazo de puntos
+    log(t("log.mazoPuntosPreparado", {jugador: miJugador.nombre}));  
 
     if (game.jugadorActivo === 0 && !game.mulliganConfirmado[1]) {
       cambiarJugador(1);
@@ -400,7 +393,7 @@ function confirmarMulligan(jugador) {
 // =============================================================================================
 function añadirEfecto(tipo, valor) {
   game.efectosActivos.push({ tipo, valor });
-  log("Efecto activo: " + tipo);
+  log(t("log.efectoActivo", { tipo: tipo }));
 }
 
 function tieneEfecto(tipo) {
@@ -412,17 +405,17 @@ function limpiarEfectos() {
 }
 
 function mostrarEleccion(opciones) { // ===================================== MOSTRAR ELECCIONES
-  return new Promise(resolve => { // acción que se resuelve cuando una condición se cumpla
-    let panel = document.getElementById("panel-eleccion"); // recuperar el panel
+  return new Promise(resolve => {                           // acción que se resuelve cuando una condición se cumpla
+    let panel = document.getElementById("panel-eleccion");  // recuperar el panel
     let contenedor = document.getElementById("opciones-eleccion"); // recuperar las opciones
-    contenedor.innerHTML = ""; // opciones vacías por defecto
+    contenedor.innerHTML = "";                              // opciones vacías por defecto
 
     opciones.forEach((opcion, index) => { 
-      let btn = document.createElement("button"); // meter en cada botón de opciones...
-      btn.textContent = opcion.texto; // ...el texto descrito en la habilidad de la carta
-      btn.onclick = () => { // haciendo clic en el botón 
-        panel.style.display = "none"; // ocultamos el panel
-        resolve(index); // y el resolvemos el Promise con el nuevo valor seleccionado
+      let btn = document.createElement("button");           // meter en cada botón de opciones...
+      btn.textContent = opcion.texto;                       // ...el texto descrito en la habilidad de la carta
+      btn.onclick = () => {                                 // haciendo clic en el botón 
+        panel.style.display = "none";                       // ocultamos el panel
+        resolve(index);                                     // y el resolvemos el Promise con el nuevo valor seleccionado
       };
       contenedor.appendChild(btn);
     });
@@ -475,7 +468,6 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
         cerrarSelector();           
         resolve(carta);                     // resolver con la carta elegida
       };
-
       contenedor.appendChild(div);           // añadir al contenedor
     });
 
@@ -496,6 +488,7 @@ function cancelarSelector() {
 }
 // ===================================================================== RESOLVER LOG : ESCRIBIR 
 // =============================================================================================
+// A BORRAR cuando tenga terminado el excel
 function resolverLog(jugador, carta, zona, resultado) {
   let stat = carta.stats[zona]; // recuperar stats de la zona del jugador
   log(
@@ -515,73 +508,68 @@ function resolverLog(jugador, carta, zona, resultado) {
 // ==================================================================================================================================================================================
 function colocarCarta(jugador, carta, zona) { 
   // ========================================================================================================== 1: Comprobaciones
-  if (carta.info?.tipo === "evento") { // Para evitar que se juegen eventos en la zona de los personajes
-    log("Los eventos se juegan con el botón 'Jugar Evento'.");
+  if (carta.info?.tipo === "evento") {                              // Para evitar que se juegen eventos en la zona de los personajes
+    log(t("log.eventoUsarBoton"));
     renderMano();
     renderManoRival()
     return;
   }
-  // comprobar zonas prohibidas
-  if (carta.info?.zonasProhibidas?.includes(zona)) {
-    log(carta.nombre + " no puede jugar en " + zona + " ❌");
+  
+  if (carta.info?.zonasProhibidas?.includes(zona)) {                // Comprobar zonas prohibidas 
+    log(t("log.zonaProhibida", { carta: carta.nombre, zona: zona }));
     return;
   }
-  // comprobar nombre duplicado en el campo este turno
-  let nombreDuplicado = Object.values(jugador.zonas).some(zona => 
+  
+  let nombreDuplicado = Object.values(jugador.zonas).some(zona =>   // comprobar nombre duplicado en el campo este turno
     zona.some(c => c.recienJugada && c.nombre === carta.nombre)
   );
   if (nombreDuplicado) {
-    log("Ya has jugado a " + carta.nombre + " este turno ❌");
+    log(t("log.cartaDuplicada", { carta: carta.nombre }));
     renderMano();
     renderManoRival()
     return;
   }
-  // ================================================== Efectos
+  // ================================================================================= 1.1: Efectos
   if (tieneEfecto("negarColocador")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "negarColocador");
     if (efecto.activadoPor !== game.jugadorActivo && carta.info?.posicion === "S") {
-      log("No puedes colocar un colocador este turno ❌");
+      log(t("log.negarColocador"));
       renderMano();
       renderManoRival()
       return;
     }
   }
   // ========================================================================================================= 2: Colocar carta normal
-    let index = jugador.mano.indexOf(carta); // para sacar la carta de la mano
-    if (index === -1) { // si no hay carta seleccionada
-      console.log("Carta no encontrada en la mano");
+    let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
+    if (index === -1) {                         // si no hay carta seleccionada
     } else {
-      jugador.mano.splice(index, 1); // el jugador saca la carta de su mano
+      jugador.mano.splice(index, 1);            // el jugador saca la carta de su mano
     }
 // =======================================================================================================================================================
   if (game.fase === "saque"){ // ============================================================================================================ FASE : SAQUE
     // verificar si ya se ha jugado una carta este turno en saque
     let ultimaCarta = jugador.zonas.saque.at(-1);
     if (ultimaCarta && ultimaCarta.recienJugada){
-      log("Ya hay una carta en saque ❌");
+      log(t("log.yaHayCartaEnZona", { zona: "saque" }));
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
       return
     }
-    // función a ejecutar
-    jugador.zonas.saque.push(carta); // el jugador pone una carta en la zona de saque
-    // estado de la carta
+    jugador.zonas.saque.push(carta);        // el jugador pone una carta en la zona de saque
     carta.zonaActual = "saque";
     carta.recienJugada = true;
     carta.habilidadUsada = false;
-    // estado del juego  
     game.ultimaCarta = carta;
     game.ultimoJugador = jugador;
     game.jugadaActual.saque = carta;
-    game.valorAtaque = carta.stats.saque; // el valor del contador sube al saque de la carta jugada
-    resolverLog(jugador, carta, "saque", "Carta colocada en saque");
-    // actualizar UI
-    actualizarFaseUI(); // texto en el letrero de arriba
-    renderMano(); // mostrar la mano del jugador en pantalla
+    game.valorAtaque = carta.stats.saque;   
+    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "saque", stat: carta.stats.saque }));
+    actualizarFaseUI(); 
+    renderMano(); 
     renderManoRival()
     renderCampo();
-    // ======================== Modo online
+    // ================================================ ONLINE
     if (modoOnline) {
       enviarJugada("cartaJugada", {
       zona: "saque",

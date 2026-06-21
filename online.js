@@ -226,20 +226,25 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                       // redibujar campo
       break;
 
-    case "cartaMovida": // ====================================================================== CARTA MOVIDA
-      const rivalIndiceMovida = miNumero === 1 ? 1 : 0;         // índice del rival
-      const rivalMovida = game.jugadores[rivalIndiceMovida];     // jugador rival
-      const zonaMovida = jugada.zona;                            // zona donde se movió
+    case "cartaMovida":
+      const rivalIndiceMovida = miNumero === 1 ? 1 : 0;
+      const rivalMovida = game.jugadores[rivalIndiceMovida];
+      const zonaMovida = jugada.zona;
 
-      const indexMovida = rivalMovida.zonas[zonaMovida]          // buscar carta por id
+      const indexMovida = rivalMovida.zonas[zonaMovida]
         .findIndex(c => c.info?.id === jugada.cartaId);
       if (indexMovida !== -1) {
-        let carta = rivalMovida.zonas[zonaMovida]                // extraer carta
+        let carta = rivalMovida.zonas[zonaMovida]
           .splice(indexMovida, 1)[0];
-        rivalMovida.zonas[zonaMovida].push(carta);               // poner al final del array
-        carta.recienJugada = true;                               // marcar como recién jugada
+        if (jugada.posicion === "guts") {                        // si va al GUTS
+          rivalMovida.zonas[zonaMovida].unshift(carta);          // poner al inicio
+          carta.recienJugada = false;                            // ya no es recién jugada
+        } else {                                                 // si va al frente
+          rivalMovida.zonas[zonaMovida].push(carta);             // poner al final
+          carta.recienJugada = true;                             // marcar como recién jugada
+        }
       }
-      renderCampo();                                             // redibujar campo
+      renderCampo();
       break;
 
     case "habilidadDesdeMano": // ================================================================= HABILIDAD DESDE MANO

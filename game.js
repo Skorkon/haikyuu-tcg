@@ -693,13 +693,18 @@ function colocarCarta(jugador, carta, zona) {
     game.jugadaActual.remate = carta;
     resolverLog(jugador, carta, "remate", "Carta colocada en remate");
 
-    // -------------------------------------------- comprobar efectos
-      // comprobar efecto Kageyama SP
+    // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
+    // ------------------------------------------------------------------------- Kageyama SP
     if (tieneEfecto("kageyamaSP") && carta.nombre === "Hinata Shoyo") {
       game.valorAtaque += 2;
-      log("Efecto Kageyama SP: +2 al remate de Hinata 💫");
+      log("Efecto Kageyama SP: +2 al remate de Hinata.");
     }
-      // comprobar efecto debilitarRematador
+    // ------------------------------------------------------------------------- Kenma P01-019
+    if (tieneEfecto("kenma019") && carta.stats.remate === 3) {    // si efecto activo y remate base 3
+      aplicarKenma019(jugador, carta);                            // lanzar habilidad de Kenma (sin await)
+    }
+    // ------------------------------------------------------------------------- COMPROBAR EFECTOS GENÉRICOS
+    // ------------------------------------------------------------------------- EFECTO : DEBILITAR REMATADOR
     if (tieneEfecto("debilitarRematador")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarRematador");
       if (efecto.activadoPor !== game.jugadorActivo) { // solo si es el rival
@@ -2050,7 +2055,7 @@ function blockout(nivelBloqueo) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto Blockout(" + nivelBloqueo + "): los bloqueadores del rival con bloqueo ≤ " + nivelBloqueo + " irán al trash 🚫");
+  log("Efecto Blockout(" + nivelBloqueo + "): los bloqueadores del rival con bloqueo ≤ " + nivelBloqueo + " irán al trash.");
 }
 function debilitarRematador() {
   game.efectosActivos.push({
@@ -2191,6 +2196,83 @@ async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porq
 }
 
 // ===================================================================================================================================
+// ================================================================================================================ HABILIDADES ÚNICAS
+async function aplicarKenma019(jugador, carta) { // ======================================== KENMA P01-019
+  // preguntar si quiere activar la habilidad
+  let eleccion = await mostrarEleccion([
+    { texto: "Activar habilidad de Kozume Kenma: GUTS-2 en pase para traer un jugador del Nekoma del GUTS de remate con +2." },
+    { texto: "No activar" }
+  ]);
+  if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
+
+  // pagar 2 GUTS de pase
+  if (!await usarGuts(jugador, "pase", 2)) {                      // pagar 2 GUTS de pase
+    return;                                                       // return: GUTS insuficientes
+  }
+
+  // buscar personajes de Nekoma en el GUTS de remate (excluyendo recién jugadas)
+  let gutRemate = jugador.zonas.remate.filter(c => !c.recienJugada && c.info?.escuela === "Nekoma");
+  if (gutRemate.length === 0) {                                   // si no hay ninguno
+    log("No hay personajes de Nekoma en el GUTS de remate.");
+    return;                                                       // ignorar
+  }
+
+  // elegir carta del GUTS de remate
+  let cartaElegida = await mostrarSelectorCartas(                 // abrir selector
+    "Elige un personaje de Nekoma del GUTS de remate:",           // título
+    gutRemate                                                     // cartas disponibles
+  );
+  if (!cartaElegida) return;                                      // si cancela, ignorar
+
+  // sacar la carta elegida del GUTS y colocarla como rematador activo
+  let indexElegida = jugador.zonas.remate.indexOf(cartaElegida);  // buscar en la zona
+  jugador.zonas.remate.splice(indexElegida, 1);                   // sacar del GUTS
+
+  // el rematador actual pasa al GUTS
+  let rematadorActual = jugador.zonas.remate.at(-1);              // rematador actual
+  if (rematadorActual?.recienJugada) {                            // si hay rematador activo
+    game.valorAtaque -= rematadorActual.stats.remate;             // restar su remate al ataque
+    let indexActual = jugador.zonas.remate.indexOf(rematadorActual);
+    jugador.zonas.remate.splice(indexActual, 1);                  // sacar de la zona
+    jugador.zonas.remate.unshift(rematadorActual);                // enviar al GUTS
+  }
+
+  // colocar la carta elegida como rematador activo
+  jugador.zonas.remate.push(cartaElegida);                        // colocar al final
+  cartaElegida.zonaActual = "remate";                             // actualizar zona
+  cartaElegida.recienJugada = true;                               // marcar como recién jugada
+  cartaElegida.habilidadUsada = false;                            // habilidad no usada
+  game.ultimaCarta = cartaElegida;                                // actualizar última carta
+  game.ultimoJugador = jugador;                                   // actualizar último jugador
+
+  game.valorAtaque += cartaElegida.stats.remate + 2;              // sumar remate + 2 de bonus
+  log("Efecto Kenma Kozume: " + cartaElegida.nombre + " colocado como rematador con +2 al remate.");
+
+  let kenma = jugador.zonas.pase.at(-1);                           // buscar Kenma en pase
+  if (kenma) kenma.habilidadUsada = true;                          // marcar habilidad como usada
+
+  // limpiar efecto
+  game.efectosActivos = game.efectosActivos.filter(e => e.tipo !== "kenma019");
+
+  if (modoOnline && rematadorActual?.recienJugada) {
+    enviarJugada("cartaMovida", {                              // rematador anterior al GUTS
+      zona: "remate",
+      cartaId: rematadorActual.info?.id,
+      posicion: "guts"                                        // va al inicio
+    });
+  }
+  if (modoOnline) {
+    enviarJugada("cartaMovida", {                              // nueva carta al frente
+      zona: "remate",
+      cartaId: cartaElegida.info.id,
+      posicion: "ultimo"                                      // va al final
+    });
+  }
+  renderMano();                                                   // actualizar mano
+  renderManoRival();                                              // actualizar mano rival
+  renderCampo();                                                  // actualizar campo
+}
+// ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 function mostrarFinPartida(gane) {
   const panel = document.getElementById("panel-fin");       // recuperar panel
@@ -2282,7 +2364,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO J1
-["HV-P01-018", "HV-D02-003", "HV-P01-032"].forEach(id => {
+["HV-P01-018", "HV-D02-003", "HV-P01-032", "HV-P01-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);

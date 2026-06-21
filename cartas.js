@@ -1188,7 +1188,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 3</strong>: +1 al pase. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes añadir 1 carta de tu zona de eventos a tu mano.`
     }
   ),
-  crearCarta("Kozume Kenma", // ================================================================ P01-019 // FALTA POR HACER LA HABILIDAD
+  crearCarta("Kozume Kenma", // ================================================================ P01-019
     {
       saque: 1,
       recepcion: 2,
@@ -1196,14 +1196,27 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 1
     },
-    null, // habilidad pendiente: se activa al colocar un rematador con remate base 3
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                            // comprobar que está en pase
+        log("Solo puedes usar esta habilidad en pase.");
+        return false;                                               // return false: condición no cumplida
+      }
+      // añadir efecto kenma019 al array
+      game.efectosActivos.push({
+        tipo: "kenma019",                                           // tipo del efecto
+        expira: game.turno + 1                                      // dura hasta el próximo remate
+      });
+      if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
+      log("Habilidad Kenma: efecto activo — si el rematador de esta jugada tiene remate base 3, se activará la habilidad.");
+    },
     {
       tipo: "personaje",
       id: "HV-P01-019",
       escuela: "Nekoma",
       posicion: "S",
       anyo: 2,
-      rareza: "R"
+      rareza: "R",
+      descripcion: `Si tu rematador de esta jugada tiene un remate base de 3, puedes gastar <strong><span style="color:#2e7d32">GUTS - 2</span></strong> de <strong><span style="color:#2e7d32">pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.`
     }
   ),
   crearCarta("Kuroo Tetsuro", // =============================================================== P01-021

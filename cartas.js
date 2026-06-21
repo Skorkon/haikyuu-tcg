@@ -328,8 +328,8 @@ function inicializarCartas() {
    
     }
   ),
-  // ========================================================================================= D02 : NEKOMA
-  crearCarta("Kozume Kenma", // =============================================================== D02-001
+  // ======================================================================================================== D02 : NEKOMA
+  crearCarta("Kozume Kenma", // ================================================================= D02-001
     {
       saque: 1,
       recepcion: 1,
@@ -360,7 +360,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong> : +1 al pase. Durante el próximo turno, el rematador rival tendrá -2 al remate.`
     }
   ),
-  crearCarta("Kuroo Tetsuro", // =============================================================== D02-002
+  crearCarta("Kuroo Tetsuro", // ================================================================ D02-002
     {
       saque: 1,
       recepcion: 1,
@@ -389,7 +389,53 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> GUTS - 1</strong>: Si el bloqueo es exitoso : </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (5)</strong></span> : Devuelve un contraataque con potencia de 5.`
     }
   ),
-  crearCarta("Haiba Lev", // =============================================================== D02-004
+  crearCarta("Yaku Morisuke", // ================================================================ D02-003
+    {
+      saque: 0,       
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0      
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {               // comprobar que está en recepción
+        log("Solo puedes usar esta habilidad en recepción ❌");
+        return false;                                       
+      }
+      if (jugador.mano.length === 0) {                      // comprobar que hay cartas en mano
+        log("No tienes cartas en la mano para descartar ❌");
+        return false;                                       
+      }
+      let cartaDescarte = await mostrarSelectorCartas(      // abrir selector para elegir qué descartar
+        "Elige una carta de tu mano para descartar:",       // título del selector
+        jugador.mano                                        // mostrar toda la mano
+      );
+      if (!cartaDescarte) {                                 // si cancela el selector
+        return false;                                       // return false: habilidad cancelada
+      }
+      let index = jugador.mano.indexOf(cartaDescarte);      // buscar la carta elegida en la mano
+      jugador.mano.splice(index, 1);                        // sacarla de la mano
+      jugador.trash.push(cartaDescarte);                    // enviarla al trash
+      log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+      game.valorDefensa += 2;                               // añadir +2 a la recepción de esta jugada
+      log("Habilidad Yaku: +2 a la recepción.");
+      renderMano();                                         // actualizar la mano tras el descarte
+      renderManoRival();                                    // actualizar la mano del rival
+      renderCampo();                                        // actualizar el campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-D02-003",
+      escuela: "Nekoma",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "D",
+      zonasProhibidas: ["saque", "bloqueo"],                
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Descarta 1 carta de tu mano para añadir +2 a la recepción.`
+    }
+  ),
+  crearCarta("Haiba Lev", // ==================================================================== D02-004
     {
       saque: 1,
       recepcion: 1,
@@ -408,7 +454,7 @@ function inicializarCartas() {
       descripcion: `Durante un bloqueo, una vez que jueges un bloqueador central, si Lev carta está en tu zona de <strong><span style= color:#c62828>remate</span></strong>, puedes <strong>GUTS - 2</strong> de tu zona de remate, para desplazar esta carta como bloqueador de apoyo.`
     }
   ),
-  crearCarta("Kai Nobuyuki", // =============================================================== D02-005
+  crearCarta("Kai Nobuyuki", // ================================================================= D02-005
     {
       saque: 1,
       recepcion: 5,
@@ -426,7 +472,7 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("Yamamoto Taketora", // =============================================================== D02-006
+  crearCarta("Yamamoto Taketora", // ============================================================ D02-006
     {
       saque: 5,
       recepcion: 2,
@@ -444,7 +490,7 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("Fukunaga Shohei", // =============================================================== D02-007
+  crearCarta("Fukunaga Shohei", // ============================================================== D02-007
     {
       saque: 1,
       recepcion: 4,
@@ -462,7 +508,7 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("Inouka So", // =============================================================== D02-008
+  crearCarta("Inouka So", // ==================================================================== D02-008
     {
       saque: 2,
       recepcion: 3,
@@ -510,7 +556,7 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-  crearCarta("Teshiro Tamahiko", // =============================================================== D02-010
+  crearCarta("Teshiro Tamahiko", // ============================================================= D02-010
     {
       saque: 4,
       recepcion: 4,
@@ -528,7 +574,7 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("¡Las manos al frente, Lev!", // =============================================================== D02-011
+  crearCarta("¡Las manos al frente, Lev!", // =================================================== D02-011
     {saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0},
     async function(jugador, game, carta) { // async porque hay que esperar a que se cumpla el Promise
       robarCarta(jugador, 1, true);
@@ -565,7 +611,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong><strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Elige: </br><strong>· +1 al bloqueo de Kuroo</strong> </br><strong>· +1 a la recepción</strong>.`
     }
   ),
-  crearCarta("Basta con golpear físicamente, ¿verdad?",  // =============================================================== D02-012
+  crearCarta("Basta con golpear físicamente, ¿verdad?",  // ===================================== D02-012
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mazo.length === 0) {
@@ -624,8 +670,8 @@ function inicializarCartas() {
       descripcion: `Roba 1 carta. Después, mira las 3 primeras de tu mazo: si hay un <strong>Haiba Lev</strong> o un <strong>Inuoka So</strong>, puedes añadir 1 de ellos a tu mano. </br>Devuelve las otras cartas al fondo del mazo.`
     }
   ),
-  // =============================================================================================== P01
-  crearCarta("Hinata Shoyo", // =============================================================== P01-001
+  // ========================================================================================================= P01
+  crearCarta("Hinata Shoyo", // ================================================================= P01-001
     {saque: 2, recepcion: 4, pase: 0, remate: 2, bloqueo: 3},
     null, // habilidad
     {
@@ -1058,7 +1104,422 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 4</strong>: Si tu colocador es un <strong>colocador (S) de Karasuno</strong>, +2 al remate.`
     }
   ),
-  crearCarta("Kotaro Bokuto", // ============================================================== P01-044
+  crearCarta("Kozume Kenma", // ================================================================ P01-017
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 2,
+      remate: 1,
+      bloqueo: 2
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-017",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 2,
+      rareza: "HI"
+    }
+  ),
+  crearCarta("Kozume Kenma", // ================================================================ P01-018
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 1,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                              // comprobar que está en pase
+        log("Solo puedes usar esta habilidad en pase.");
+        return false;                                                 // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "pase", 3)) {                      // pagar 3 GUTS de pase
+        return false;                                                 // return false: GUTS insuficientes
+      }
+
+      game.valorAtaque += 1;                                          // +1 al pase
+      log("Habilidad Kenma: +1 al pase.");
+
+      // comprobar que todos los personajes en juego son de Nekoma
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                   // último sacador
+        jugador.zonas.recepcion.at(-1),                               // último receptor
+        jugador.zonas.pase.at(-1),                                    // último colocador
+        jugador.zonas.remate.at(-1),                                  // último rematador
+        jugador.zonas.bloqueo.at(-1)                                  // último bloqueador
+      ].filter(c => c !== null && c !== undefined);                   // filtrar zonas vacías
+
+      let todasNekoma = cartasEnJuego.every(c => c.info?.escuela === "Nekoma"); // comprobar escuela
+      if (!todasNekoma) {                                             // si no todas son de Nekoma
+        log("No todos tus personajes en juego son de Nekoma. Efecto adicional no activado.");
+        return;                                                       // termina sin el bonus
+      }
+
+      // buscar cartas en zona de eventos
+      if (jugador.zonas.eventos.length === 0) {                       // si no hay eventos
+        log("No hay cartas en tu zona de eventos.");
+        return;                                                       // termina sin el bonus
+      }
+
+      let cartaElegida = await mostrarSelectorCartas(                 // abrir selector
+        "Elige una carta de tu zona de eventos para añadir a tu mano:",
+        jugador.zonas.eventos                                         // mostrar zona de eventos
+      );
+      if (!cartaElegida) return false;                                // return false: cancelado
+
+      let index = jugador.zonas.eventos.indexOf(cartaElegida);        // buscar en zona de eventos
+      jugador.zonas.eventos.splice(index, 1);                         // sacar de la zona de eventos
+      añadirCartaAMano(jugador, cartaElegida);                        // añadir a la mano
+      log(cartaElegida.nombre + " añadida a la mano desde la zona de eventos.");
+
+      renderMano();                                                   // actualizar mano
+      renderManoRival();                                              // actualizar mano rival
+      renderCampo();                                                  // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-018",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 2,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 3</strong>: +1 al pase. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes añadir 1 carta de tu zona de eventos a tu mano.`
+    }
+  ),
+  crearCarta("Kozume Kenma", // ================================================================ P01-019 // FALTA POR HACER LA HABILIDAD
+    {
+      saque: 1,
+      recepcion: 2,
+      pase: 1,
+      remate: 1,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente: se activa al colocar un rematador con remate base 3
+    {
+      tipo: "personaje",
+      id: "HV-P01-019",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R"
+    }
+  ),
+  crearCarta("Kuroo Tetsuro", // =============================================================== P01-021
+    {
+      saque: 2,
+      recepcion: 3,
+      pase: 0,
+      remate: 1,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                            // comprobar que está en remate
+        log("Solo puedes usar esta habilidad en remate.");
+        return false;                                                 // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "remate", 3)) {                    // pagar 3 GUTS de remate
+        return false;                                                 // return false: GUTS insuficientes
+      }
+
+      game.valorAtaque += 3;                                          // +3 al remate
+      log("Habilidad Kuroo: +3 al remate.");
+
+      // buscar zonas con al menos 1 carta de Nekoma en el GUTS (excluyendo recién jugadas)
+      let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona => {
+        let guts = jugador.zonas[zona].filter(c => !c.recienJugada);  // excluir todas las recién jugadas
+        return guts.some(c => c.info?.escuela === "Nekoma");           // al menos 1 Nekoma en el GUTS
+      });
+
+      if (zonasValidas.length === 0) {                                // si no hay ninguna zona válida
+        log("No hay cartas de Nekoma disponibles en el GUTS.");
+        return false;                                                 // return false: condición no cumplida
+      }
+
+      // elegir zona
+      let eleccion = await mostrarEleccion(                           // mostrar selector de zonas
+        zonasValidas.map(zona => ({ texto: zona }))                   // convertir zonas a opciones
+      );
+      let zonaElegida = zonasValidas[eleccion];                       // zona elegida por el jugador
+
+      // calcular GUTS de esa zona (excluyendo todas las recién jugadas)
+      let cartasGuts = jugador.zonas[zonaElegida].filter(c => !c.recienJugada); // excluir recién jugadas
+
+      // filtrar solo Nekoma
+      let gutNekoma = cartasGuts.filter(c => c.info?.escuela === "Nekoma");     // solo Nekoma
+      if (gutNekoma.length === 0) {                                   // si no hay ninguna de Nekoma
+        log("No hay cartas de Nekoma en el GUTS de " + zonaElegida + ".");
+        return false;                                                 // return false: condición no cumplida
+      }
+
+      // elegir hasta 2 cartas con nombres distintos
+      let cartasElegidas = [];                                        // array de cartas elegidas
+      for (let i = 0; i < 2; i++) {                                   // repetir hasta 2 veces
+        let disponibles = gutNekoma.filter(c =>                       // filtrar las ya elegidas
+          !cartasElegidas.some(e => e.nombre === c.nombre)            // excluir nombres ya elegidos
+        );
+        if (disponibles.length === 0) {                               // si no quedan disponibles
+          log("No hay más cartas de Nekoma con nombres distintos disponibles.");
+          break;                                                      // salir del bucle sin error
+        }
+        let cartaElegida = await mostrarSelectorCartas(               // abrir selector
+          "Elige una carta de Nekoma del GUTS de " + zonaElegida + " (" + (i + 1) + "/2):",
+          disponibles                                                 // cartas disponibles
+        );
+        if (!cartaElegida) return false;                              // return false: cancelado
+        cartasElegidas.push(cartaElegida);                            // añadir a las elegidas
+      }
+
+      // sacar las cartas elegidas del GUTS y añadirlas a la mano
+      cartasElegidas.forEach(c => {
+        let index = jugador.zonas[zonaElegida].indexOf(c);            // buscar en la zona
+        jugador.zonas[zonaElegida].splice(index, 1);                  // sacar de la zona
+        añadirCartaAMano(jugador, c);                                 // añadir a la mano
+        log(c.nombre + " añadida a la mano desde el GUTS de " + zonaElegida + ".");
+      });
+      renderMano();                                                   // actualizar mano
+      renderManoRival();                                              // actualizar mano rival
+      renderCampo();                                                  // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-021",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 3</strong>: +3 al remate. Después, elige una zona de tu campo y añade a tu mano hasta 2 cartas de <strong>Nekoma</strong> del GUTS de esa zona con nombres distintos entre sí.`
+    }
+  ),
+  crearCarta("Kuroo Tetsuro", // =============================================================== P01-022
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 3,
+      bloqueo: 1
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-022",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "S"
+    }
+  ),
+  crearCarta("Yaku Morisuke", // =============================================================== P01-023 // FALTA POR HACER LA HABILIDAD
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // null por el momento
+    {
+      tipo: "personaje",
+      id: "HV-P01-023",
+      escuela: "Nekoma",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "S",
+      zonasProhibidas: ["saque", "bloqueo"]
+    }
+  ),
+  crearCarta("Yaku Morisuke", // =============================================================== P01-024
+    {
+      saque: 0,
+      recepcion: 6,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-024",
+      escuela: "Nekoma",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"]
+    }
+  ),
+  crearCarta("Haiba Lev", // =================================================================== P01-025 // FALTA POR HACER LA HABILIDAD
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    null, // habilidad pendiente: GUTS-2 en remate, efectos vinculados a Kenma y debilitarBloqueadorCentral
+    {
+      tipo: "personaje",
+      id: "HV-P01-025",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "S"
+    }
+  ),
+  crearCarta("Haiba Lev", // =================================================================== P01-026
+    {
+      saque: 2,
+      recepcion: 3,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-026",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Kai Nobuyuki", // ================================================================ P01-027
+    {
+      saque: 1,
+      recepcion: 4,
+      pase: 1,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-027",
+      escuela: "Nekoma",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R"
+    }
+  ),
+  crearCarta("Yamamoto Taketora", // =========================================================== P01-028 // FALTA POR HACER LA HABILIDAD
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, // habilidad pendiente: se activa al colocar Haiba Lev encima de este rematador
+    {
+      tipo: "personaje",
+      id: "HV-P01-028",
+      escuela: "Nekoma",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Fukunaga Shohei", // ============================================================= P01-029
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 1,
+      remate: 0,
+      bloqueo: 1
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-029",
+      escuela: "Nekoma",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "R"
+    }
+  ),
+  crearCarta("Inuoka So", // =================================================================== P01-030
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 3
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-030",
+      escuela: "Nekoma",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Shibayama Yuki", // ============================================================== P01-031
+    {
+      saque: 0,
+      recepcion: 4,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    function(jugador, game, carta) {
+      let receptor = jugador.zonas.recepcion.at(-1);              // buscar carta en recepción
+      if (!receptor) {                                            // si no hay receptor en juego
+        log("No hay ningún personaje en recepción.");
+        return false;                                             // return false: condición no cumplida
+      }
+      if (receptor.info?.escuela !== "Nekoma") {                  // comprobar que es de Nekoma
+        log("El receptor debe ser de Nekoma.");
+        return false;                                             // return false: condición no cumplida
+      }
+      game.valorDefensa += 2;                                     // +2 a la recepción
+      log("Habilidad Shibayama: +2 a la recepción de " + receptor.nombre + ".");
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-031",
+      escuela: "Nekoma",
+      posicion: "Li",
+      anyo: 1,
+      rareza: "N",
+      activacionMano: true,                                       // se activa desde la mano
+      fases: ["recepcion"],                                       // solo en recepción
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta desde tu mano para añadir +2 a la recepción de un personaje de <strong>Nekoma</strong> en juego.`
+    }
+  ),
+  crearCarta("Teshiro Tamahiko", // ============================================================ P01-032
+    {
+      saque: 3,
+      recepcion: 1,
+      pase: 1,
+      remate: 0,
+      bloqueo: 1
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque") {                         // comprobar que está en saque
+        log("Solo puedes usar esta habilidad en saque.");
+        return false;                                             // return false: condición no cumplida
+      }
+      anularHabilidadReceptor();                                  // anular habilidad del receptor rival
+      anularHabilidadColocador();                                 // anular habilidad del colocador rival
+      log("Habilidad Teshiro: habilidades del receptor y colocador rival anuladas el próximo turno.");
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-032",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Durante el próximo turno rival, las habilidades del <strong>receptor</strong> y del <strong>colocador</strong> quedan anuladas.`
+    }
+  ),
+
+
+  crearCarta("Kotaro Bokuto", // =============================================================== P01-044
     {
       saque: 5,
       recepcion: 2,

@@ -370,7 +370,7 @@ function confirmarMulligan(jugador) {
   } else { // ------------------------------------------------- // LOCAL: comportamiento original, un mulligan tras otro
     game.mulliganConfirmado[game.jugadorActivo] = true;
     jugador.mazoPuntos = jugador.mazo.splice(0, 2);            // sacar las 2 primeras cartas para el mazo de puntos
-    log(t("log.mazoPuntosPreparado", {jugador: miJugador.nombre}));  
+    log(t("log.mazoPuntosPreparado", {jugador: jugador.nombre})); 
 
     if (game.jugadorActivo === 0 && !game.mulliganConfirmado[1]) {
       cambiarJugador(1);
@@ -1273,6 +1273,13 @@ function usarHabilidad() {
       return;
     }
   }
+  if (tieneEfecto("anularHabilidadColocador")) {
+    let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadColocador");
+    if (efecto.activadoPor !== game.jugadorActivo && carta.zonaActual === "pase") {
+      log("La habilidad del colocador ha sido anulada este turno por una habilidad del rival.");
+      return;
+    }
+  }
   // =================================================== comprobaciones básicas
   if (carta.info?.activacionMano && carta.zonaActual !== null) { // ---- si habilidad desde mano
     log("Esta carta solo puede usar su habilidad desde la mano ❌");
@@ -1973,6 +1980,15 @@ function anularHabilidadReceptor() {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log("Efecto activo: el siguiente receptor rival no podrá usar su habilidad.");
 }
+function anularHabilidadColocador() {
+  game.efectosActivos.push({
+    tipo: "anularHabilidadColocador",
+    activadoPor: game.jugadorActivo,
+    expira: game.turno + 2
+  });
+  if (modoOnline) enviarEfectos();
+  log("Efecto activo: el siguiente colocador rival no podrá usar su habilidad.");
+}
 function negarColocador() {
   game.efectosActivos.push({
     tipo: "negarColocador",
@@ -2264,9 +2280,9 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-// MANO J1
 /*
-["HV-P01-013", "HV-P02-017", "HV-P02-022"].forEach(id => {
+// MANO J1
+["HV-P01-018", "HV-D02-003", "HV-P01-032"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2304,6 +2320,10 @@ game.jugadores[1].zonas.pase.push(atsumuTP); // GUTS
 game.jugadores[1].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
 game.jugadores[0].zonas.pase.push(atsumuTP); // GUTS
 game.jugadores[0].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
+let kenPas = todasLasCartas.find(c => c.info?.id === "HV-D02-001"); // Osamu sin habilidad
+let yakuPas = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); // Osamu con habilidad
+game.jugadores[1].zonas.pase.push(kenPas); 
+game.jugadores[1].zonas.pase.push(yakuPas); 
 
 // GUTS de remate — Osamu sin habilidad primero, luego el P02-020 en el GUTS
 let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad

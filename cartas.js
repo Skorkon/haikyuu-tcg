@@ -1196,19 +1196,7 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 1
     },
-    function(jugador, game, carta) {
-      if (carta.zonaActual !== "pase") {                            // comprobar que está en pase
-        log("Solo puedes usar esta habilidad en pase.");
-        return false;                                               // return false: condición no cumplida
-      }
-      // añadir efecto kenma019 al array
-      game.efectosActivos.push({
-        tipo: "kenma019",                                           // tipo del efecto
-        expira: game.turno + 1                                      // dura hasta el próximo remate
-      });
-      if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
-      log("Habilidad Kenma: efecto activo — si el rematador de esta jugada tiene remate base 3, se activará la habilidad.");
-    },
+    null, // habilidad gestionada automáticamente en colocarCarta()
     {
       tipo: "personaje",
       id: "HV-P01-019",
@@ -1216,7 +1204,7 @@ function inicializarCartas() {
       posicion: "S",
       anyo: 2,
       rareza: "R",
-      descripcion: `Si tu rematador de esta jugada tiene un remate base de 3, puedes gastar <strong><span style="color:#2e7d32">GUTS - 2</span></strong> de <strong><span style="color:#2e7d32">pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.`
+      descripcion: `Si tu rematador esta jugada tiene un remate base de 3, puedes gastar <strong>GUTS - 2</strong> de <strong><span style="color:#2e7d32">pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.`
     }
   ),
   crearCarta("Kuroo Tetsuro", // =============================================================== P01-021
@@ -1323,7 +1311,7 @@ function inicializarCartas() {
       rareza: "S"
     }
   ),
-  crearCarta("Yaku Morisuke", // =============================================================== P01-023 // FALTA POR HACER LA HABILIDAD
+  crearCarta("Yaku Morisuke", // =============================================================== P01-023
     {
       saque: 0,
       recepcion: 5,
@@ -1331,7 +1319,7 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 0
     },
-    null, // null por el momento
+    null, // habilidad gestionada automáticamente en colocarCarta()
     {
       tipo: "personaje",
       id: "HV-P01-023",
@@ -1339,7 +1327,8 @@ function inicializarCartas() {
       posicion: "Li",
       anyo: 3,
       rareza: "S",
-      zonasProhibidas: ["saque", "bloqueo"]
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `Cuando coloques un personaje de <strong>Nekoma</strong> encima de esta carta en <strong><span style="color:#1565c0">recepción</span></strong>, puedes descartar 1 carta de <strong>Nekoma</strong> de tu mano para añadir +2 a su recepción.`
     }
   ),
   crearCarta("Yaku Morisuke", // =============================================================== P01-024
@@ -1415,7 +1404,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Yamamoto Taketora", // =========================================================== P01-028 // FALTA POR HACER LA HABILIDAD
+  crearCarta("Yamamoto Taketora", // =========================================================== P01-028
     {
       saque: 1,
       recepcion: 0,
@@ -1423,14 +1412,15 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 2
     },
-    null, // habilidad pendiente: se activa al colocar Haiba Lev encima de este rematador
+    null, // habilidad gestionada automáticamente en colocarCarta()
     {
       tipo: "personaje",
       id: "HV-P01-028",
       escuela: "Nekoma",
       posicion: "WS",
       anyo: 2,
-      rareza: "N"
+      rareza: "N",
+      descripcion: `Cuando coloques a <strong>Haiba Lev</strong> encima de esta carta en <strong><span style="color:#c62828">remate</span></strong>, puedes descartar 1 carta de <strong>Nekoma</strong> de tu mano para añadir +1 a su remate.`
     }
   ),
   crearCarta("Fukunaga Shohei", // ============================================================= P01-029

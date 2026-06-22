@@ -583,7 +583,7 @@ function colocarCarta(jugador, carta, zona) {
     // comprobar si ya se ha jugado un receptor este turno
     let ultimaCarta = jugador.zonas.recepcion.at(-1);
     if (ultimaCarta && ultimaCarta.recienJugada) {
-      log("Ya hay una carta en recepción ❌");
+      log("Ya hay una carta en recepción.");
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
@@ -591,12 +591,13 @@ function colocarCarta(jugador, carta, zona) {
     }
     // ================================================== Efectos
     if (tieneEfecto("negarReceptorAlto") && carta.stats.recepcion >= 6) { // negar receptor alto
-      log("No puedes colocar un receptor con recepción de 6 o más este turno ❌");
+      log("No puedes colocar un receptor con recepción de 6 o más este turno.");
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
       return;
     }
+
     // ================================================== función a ejecutar
     let resultadoRecepcion = ""; // variable para guardar si buena recepción (no usada por el momento)
     jugador.zonas.recepcion.push(carta); // el jugador pone la carta en la zona de recepción
@@ -625,6 +626,12 @@ function colocarCarta(jugador, carta, zona) {
       renderMano(); // mostrar la mano del jugador en pantalla
       renderManoRival()
       renderCampo();
+      // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
+      // comprobar efecto Yaku P01-023
+      let cartaDebajo = jugador.zonas.recepcion.at(-2);             // carta debajo de la recién jugada
+      if (cartaDebajo?.info?.id === "HV-P01-023") {                 // si es Yaku P01-023
+        aplicarYaku023(jugador, carta);                             // lanzar habilidad de Yaku
+      }
       if (modoOnline) {
         enviarJugada("cartaJugada", {      // enviar jugada al rival
           zona: "recepcion",               // zona donde se jugó
@@ -700,8 +707,12 @@ function colocarCarta(jugador, carta, zona) {
       log("Efecto Kageyama SP: +2 al remate de Hinata.");
     }
     // ------------------------------------------------------------------------- Kenma P01-019
-    if (tieneEfecto("kenma019") && carta.stats.remate === 3) {    // si efecto activo y remate base 3
-      aplicarKenma019(jugador, carta);                            // lanzar habilidad de Kenma (sin await)
+    if (jugador.zonas.pase.at(-1)?.info?.id === "HV-P01-019" && carta.stats.remate === 3) {
+      aplicarKenma019(jugador, carta);                            // lanzar habilidad de Kenma
+    }
+    // ------------------------------------------------------------------------- Yamamoto P01-028
+    if (jugador.zonas.remate.at(-2)?.info?.id === "HV-P01-028" && carta.nombre === "Haiba Lev") {
+      aplicarYamamoto028(jugador, carta);
     }
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS GENÉRICOS
     // ------------------------------------------------------------------------- EFECTO : DEBILITAR REMATADOR
@@ -2197,10 +2208,10 @@ async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porq
 
 // ===================================================================================================================================
 // ================================================================================================================ HABILIDADES ÚNICAS
-async function aplicarKenma019(jugador, carta) { // ======================================== KENMA P01-019
+async function aplicarKenma019(jugador, carta) { // ========================================== KENMA P01-019
   // preguntar si quiere activar la habilidad
   let eleccion = await mostrarEleccion([
-    { texto: "Activar habilidad de Kozume Kenma: GUTS-2 en pase para traer un jugador del Nekoma del GUTS de remate con +2." },
+    { texto: "Activar habilidad de Kozume Kenma: GUTS-2 en pase para traer un jugador de Nekoma del GUTS de remate con +2." },
     { texto: "No activar" }
   ]);
   if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
@@ -2224,14 +2235,13 @@ async function aplicarKenma019(jugador, carta) { // ============================
   );
   if (!cartaElegida) return;                                      // si cancela, ignorar
 
-  // sacar la carta elegida del GUTS y colocarla como rematador activo
+  // sacar la carta elegida del GUTS
   let indexElegida = jugador.zonas.remate.indexOf(cartaElegida);  // buscar en la zona
   jugador.zonas.remate.splice(indexElegida, 1);                   // sacar del GUTS
 
   // el rematador actual pasa al GUTS
   let rematadorActual = jugador.zonas.remate.at(-1);              // rematador actual
   if (rematadorActual?.recienJugada) {                            // si hay rematador activo
-    game.valorAtaque -= rematadorActual.stats.remate;             // restar su remate al ataque
     let indexActual = jugador.zonas.remate.indexOf(rematadorActual);
     jugador.zonas.remate.splice(indexActual, 1);                  // sacar de la zona
     jugador.zonas.remate.unshift(rematadorActual);                // enviar al GUTS
@@ -2248,26 +2258,102 @@ async function aplicarKenma019(jugador, carta) { // ============================
   game.valorAtaque += cartaElegida.stats.remate + 2;              // sumar remate + 2 de bonus
   log("Efecto Kenma Kozume: " + cartaElegida.nombre + " colocado como rematador con +2 al remate.");
 
-  let kenma = jugador.zonas.pase.at(-1);                           // buscar Kenma en pase
-  if (kenma) kenma.habilidadUsada = true;                          // marcar habilidad como usada
-
-  // limpiar efecto
-  game.efectosActivos = game.efectosActivos.filter(e => e.tipo !== "kenma019");
+  let kenma = jugador.zonas.pase.at(-1);                          // buscar Kenma en pase
+  if (kenma) kenma.habilidadUsada = true;                         // marcar habilidad como usada
 
   if (modoOnline && rematadorActual?.recienJugada) {
-    enviarJugada("cartaMovida", {                              // rematador anterior al GUTS
+    enviarJugada("cartaMovida", {                                  // rematador anterior al GUTS
       zona: "remate",
       cartaId: rematadorActual.info?.id,
-      posicion: "guts"                                        // va al inicio
+      posicion: "guts"
     });
   }
   if (modoOnline) {
-    enviarJugada("cartaMovida", {                              // nueva carta al frente
+    enviarJugada("cartaMovida", {                                  // nueva carta al frente
       zona: "remate",
       cartaId: cartaElegida.info.id,
-      posicion: "ultimo"                                      // va al final
+      posicion: "ultimo"
     });
   }
+
+  renderMano();                                                   // actualizar mano
+  renderManoRival();                                              // actualizar mano rival
+  renderCampo();                                                  // actualizar campo
+}
+async function aplicarYaku023(jugador, carta) { // =========================================== YAKU P01-023
+  // preguntar si quiere activar la habilidad
+  let eleccion = await mostrarEleccion([
+    { texto: "Activar habilidad de Yaku Morisuke: descarta 1 carta de Nekoma de tu mano para +2 a la recepción." },
+    { texto: "No activar" }
+  ]);
+  if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
+
+  // comprobar que hay cartas de Nekoma en la mano
+  let nekomanEnMano = jugador.mano.filter(c => c.info?.escuela === "Nekoma"); // filtrar Nekoma
+  if (nekomanEnMano.length === 0) {                               // si no hay ninguna
+    log("No tienes cartas de Nekoma en la mano para descartar.");
+    return;                                                       // ignorar
+  }
+
+  // elegir carta de Nekoma para descartar
+  let cartaDescarte = await mostrarSelectorCartas(                // abrir selector
+    "Elige una carta de Nekoma de tu mano para descartar:",       // título
+    nekomanEnMano                                                 // solo Nekoma
+  );
+  if (!cartaDescarte) return;                                     // si cancela, ignorar
+
+  let index = jugador.mano.indexOf(cartaDescarte);                // buscar en la mano
+  jugador.mano.splice(index, 1);                                  // sacar de la mano
+  jugador.trash.push(cartaDescarte);                              // enviar al trash
+  log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+  game.valorDefensa += 2;                                         // +2 a la recepción
+  log("Efecto Yaku Morisuke: +2 a la recepción de " + carta.nombre + ".");
+
+  let yaku = jugador.zonas.recepcion.at(-2);                      // buscar Yaku en recepción
+  if (yaku) yaku.habilidadUsada = true;                           // marcar habilidad como usada
+
+  if (modoOnline) enviarTrash(jugador);                           // sincronizar trash con el rival
+
+  renderMano();                                                   // actualizar mano
+  renderManoRival();                                              // actualizar mano rival
+  renderCampo();                                                  // actualizar campo
+}
+async function aplicarYamamoto028(jugador, carta) { // ======================================= YAMAMOTO P01-028
+  // preguntar si quiere activar la habilidad
+  let eleccion = await mostrarEleccion([
+    { texto: "Activar habilidad de Yamamoto Taketora: descarta 1 carta de Nekoma de tu mano para +1 al remate de " + carta.nombre + "." },
+    { texto: "No activar" }
+  ]);
+  if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
+
+  // comprobar que hay cartas de Nekoma en la mano
+  let nekomaEnMano = jugador.mano.filter(c => c.info?.escuela === "Nekoma"); // filtrar Nekoma
+  if (nekomaEnMano.length === 0) {                                // si no hay ninguna
+    log("No tienes cartas de Nekoma en la mano para descartar.");
+    return;                                                       // ignorar
+  }
+
+  // elegir carta de Nekoma para descartar
+  let cartaDescarte = await mostrarSelectorCartas(                // abrir selector
+    "Elige una carta de Nekoma de tu mano para descartar:",       // título
+    nekomaEnMano                                                  // solo Nekoma
+  );
+  if (!cartaDescarte) return;                                     // si cancela, ignorar
+
+  let index = jugador.mano.indexOf(cartaDescarte);                // buscar en la mano
+  jugador.mano.splice(index, 1);                                  // sacar de la mano
+  jugador.trash.push(cartaDescarte);                              // enviar al trash
+  log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+  game.valorAtaque += 1;                                          // +1 al remate
+  log("Efecto Yamamoto Taketora: +1 al remate de " + carta.nombre + ".");
+
+  let yamamoto = jugador.zonas.remate.at(-2);                     // buscar Yamamoto en remate
+  if (yamamoto) yamamoto.habilidadUsada = true;                   // marcar habilidad como usada
+
+  if (modoOnline) enviarTrash(jugador);                           // sincronizar trash con el rival
+
   renderMano();                                                   // actualizar mano
   renderManoRival();                                              // actualizar mano rival
   renderCampo();                                                  // actualizar campo
@@ -2364,7 +2450,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO J1
-["HV-P01-018", "HV-D02-003", "HV-P01-032", "HV-P01-019"].forEach(id => {
+["HV-P01-018", "HV-D02-003", "HV-P01-032", "HV-P01-026"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2423,7 +2509,7 @@ game.jugadores[0].trash.push(aoneP01);
 // GUTS de prueba para ambos jugadores
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); // Sasaya, sin habilidad
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }

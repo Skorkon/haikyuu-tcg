@@ -763,6 +763,15 @@ function colocarCarta(jugador, carta, zona) {
         carta.recienJugada = true;                    // marcada como recién jugada
         carta.habilidadUsada = false;                 // habilidad no usada
 
+            // comprobar efecto debilitarBloqueadorCentral
+        if (tieneEfecto("debilitarBloqueadorCentral")) {
+          let efecto = game.efectosActivos.find(e => e.tipo === "debilitarBloqueadorCentral");
+          if (efecto.activadoPor !== game.jugadorActivo) {          // si lo activó el rival
+            game.valorDefensa -= efecto.valor;                      // restar al bloqueo
+            log("Efecto: -" + efecto.valor + " al bloqueo de " + carta.nombre + ".");
+          }
+        }
+
         // avisar al rival de la carta colocada en bloqueo
         if (modoOnline) {
           enviarJugada("cartaJugada", {               // enviar jugada al rival
@@ -2097,6 +2106,16 @@ function debilitarReceptor(cantidad = 1, soloSinHabilidad = false) {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log("Efecto activo Debilitar Receptor: el próximo receptor rival tendrá -" + cantidad + "a la recepción.");
 }
+function debilitarBloqueadorCentral(cantidad) {
+  game.efectosActivos.push({
+    tipo: "debilitarBloqueadorCentral",
+    activadoPor: game.jugadorActivo,
+    valor: cantidad,
+    expira: game.turno + 2
+  });
+  if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
+  log("Efecto activo: el próximo bloqueador central rival tendrá -" + cantidad + " al bloqueo.");
+}
 function doshat(potencia) { // bloqueo ofensivo
   game.efectosActivos.push({
     tipo: "doshat",
@@ -2255,7 +2274,7 @@ async function aplicarKenma019(jugador, carta) { // ============================
   game.ultimaCarta = cartaElegida;                                // actualizar última carta
   game.ultimoJugador = jugador;                                   // actualizar último jugador
 
-  game.valorAtaque += cartaElegida.stats.remate + 2;              // sumar remate + 2 de bonus
+  game.valorAtaque += 2;              // sumar remate + 2 de bonus
   log("Efecto Kenma Kozume: " + cartaElegida.nombre + " colocado como rematador con +2 al remate.");
 
   let kenma = jugador.zonas.pase.at(-1);                          // buscar Kenma en pase
@@ -2450,7 +2469,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO J1
-["HV-P01-018", "HV-D02-003", "HV-P01-032", "HV-P01-026"].forEach(id => {
+["HV-P01-018", "HV-D02-003", "HV-P01-019", "HV-P01-025"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2496,10 +2515,13 @@ game.jugadores[1].zonas.pase.push(yakuPas);
 // GUTS de remate — Osamu sin habilidad primero, luego el P02-020 en el GUTS
 let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad
 let osamuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-020"); // Osamu con habilidad
+let levT = todasLasCartas.find(c => c.info?.id === "HV-P01-025"); // Lev con habilidad
 game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
 game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
 game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
 game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
+game.jugadores[0].zonas.remate.push(levT); // GUTS
+game.jugadores[1].zonas.remate.push(levT); // el "jugado" — siempre el último
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 
 // mazos de prueba

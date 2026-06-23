@@ -1350,7 +1350,7 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-  crearCarta("Haiba Lev", // =================================================================== P01-025 // FALTA POR HACER LA HABILIDAD
+  crearCarta("Haiba Lev", // =================================================================== P01-025
     {
       saque: 1,
       recepcion: 1,
@@ -1358,14 +1358,31 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 3
     },
-    null, // habilidad pendiente: GUTS-2 en remate, efectos vinculados a Kenma y debilitarBloqueadorCentral
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                        // comprobar que está en remate
+        log("Solo puedes usar esta habilidad en remate.");
+        return false;                                             // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "remate", 2)) {                // pagar 2 GUTS de remate
+        return false;                                             // return false: GUTS insuficientes
+      }
+
+      // comprobar si fue traído por Kenma P01-019
+      let kenma = jugador.zonas.pase.at(-1);                      // buscar colocador en pase
+      if (kenma?.info?.id === "HV-P01-019" && kenma?.habilidadUsada) { // si es Kenma y usó habilidad
+        game.valorAtaque += 2;                                    // +2 al remate
+        log("Habilidad Lev: +2 al remate por haber sido traído por Kenma.");
+      }
+      debilitarBloqueadorCentral(3);                              // -3 al próximo bloqueador central rival
+    },
     {
       tipo: "personaje",
       id: "HV-P01-025",
       escuela: "Nekoma",
       posicion: "MB",
       anyo: 1,
-      rareza: "S"
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 2</strong>: Si esta carta fue traída por la habilidad de <strong><span style="color:#2e7d32">Kozume Kenma</span></strong>, +2 al remate. Durante el próximo turno rival, cada bloqueador central que coloque tendrá <strong>-3 al bloqueo</strong>.`
     }
   ),
   crearCarta("Haiba Lev", // =================================================================== P01-026

@@ -405,6 +405,7 @@ function limpiarEfectos() {
 }
 
 function mostrarEleccion(opciones) { // ===================================== MOSTRAR ELECCIONES
+  bloquearUI();
   return new Promise(resolve => {                           // acción que se resuelve cuando una condición se cumpla
     let panel = document.getElementById("panel-eleccion");  // recuperar el panel
     let contenedor = document.getElementById("opciones-eleccion"); // recuperar las opciones
@@ -415,6 +416,7 @@ function mostrarEleccion(opciones) { // ===================================== MO
       btn.textContent = opcion.texto;                       // ...el texto descrito en la habilidad de la carta
       btn.onclick = () => {                                 // haciendo clic en el botón 
         panel.style.display = "none";                       // ocultamos el panel
+        desbloquearUI();
         resolve(index);                                     // y el resolvemos el Promise con el nuevo valor seleccionado
       };
       contenedor.appendChild(btn);
@@ -426,6 +428,7 @@ function mostrarEleccion(opciones) { // ===================================== MO
 // ========================================================================== SELECTOR DE CARTAS 
 // =============================================================================================
 function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
+  bloquearUI();
   return new Promise(resolve => {
     let selector = document.getElementById("selector-cartas");
     let contenedor = document.getElementById("selector-mano");
@@ -440,6 +443,7 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       window._cerrarFuera = function(e) {                                     // guardar referencia global
         if (!selector.contains(e.target)) {                                   // si el clic es fuera del selector
           cerrarSelector();                                                    // cerrar selector
+          desbloquearUI();
           resolve(null);                                                        // resolver con null (cancelado)
           document.removeEventListener("click", window._cerrarFuera, { capture: true }); // limpiar listener
           window._cerrarFuera = null;                                           // limpiar referencia global
@@ -465,7 +469,8 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       });
 
       div.onclick = () => {
-        cerrarSelector();           
+        cerrarSelector();
+        desbloquearUI();           
         resolve(carta);                     // resolver con la carta elegida
       };
       contenedor.appendChild(div);           // añadir al contenedor
@@ -482,6 +487,7 @@ function cerrarSelector() {
 
 function cancelarSelector() {
   cerrarSelector();
+  desbloquearUI();
   if (window._selectorResolve) {
     window._selectorResolve(null); // null = cancelado
   }
@@ -771,6 +777,15 @@ function colocarCarta(jugador, carta, zona) {
             log("Efecto: -" + efecto.valor + " al bloqueo de " + carta.nombre + ".");
           }
         }
+        
+      // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
+      // ------------------------------------------------------------------------- LEV D02-004
+        let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev
+        let levEnBloqueo = [...jugador.zonas.bloqueo, ...jugador.zonas.bloqueoApoyo]
+           .some(c => c.nombre === "Haiba Lev");                             // comprobar si ya hay un Lev en bloqueo
+        if (levEnRemate && !levEnBloqueo && game.bloqueoActual.apoyos.length < 2) {
+          aplicarLevApoyo(jugador);
+        }
 
         // avisar al rival de la carta colocada en bloqueo
         if (modoOnline) {
@@ -778,33 +793,6 @@ function colocarCarta(jugador, carta, zona) {
             zona: "bloqueo",                          // zona donde se jugó
             cartaId: carta.info.id                    // id de la carta
           });
-        }
-
-        // Especial : -------------------------------------------------- detectar Lev en remate para añadirlo como apoyo
-        let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev en cualquier posición
-        if (levEnRemate?.nombre === "Haiba Lev" && game.bloqueoActual.apoyos.length < 2 && jugador.zonas.remate.length >= 3) {
-          let confirmar = confirm("Haiba Lev está en la zona de remate. ¿Quieres añadirlo como bloqueador de apoyo? (Cuesta 2 GUTS de remate)");
-          if (confirmar) {
-            if (usarGuts(jugador, "remate", 2)) {
-              game.bloqueoActual.apoyos.push(levEnRemate);  // añadir Lev al conteo de bloqueo
-              jugador.zonas.bloqueoApoyo.push(levEnRemate); // añadir Lev a la zona de apoyo
-              levEnRemate.zonaActual = "bloqueoApoyo";      // cambio de zona
-              let index = jugador.zonas.remate.indexOf(levEnRemate);
-              if (index !== -1) jugador.zonas.remate.splice(index, 1); // sacar de remate
-              log("Haiba Lev se une al bloqueo como apoyo desde remate.");
-              if (modoOnline) {
-                enviarJugada("cartaJugada", {                        // avisar al rival del movimiento de Lev
-                  zona: "bloqueoApoyo",                              // zona destino
-                  cartaId: levEnRemate.info.id                       // id de Lev
-                });
-                enviarJugada("quitarCartaZona", {                    // avisar que Lev sale de remate
-                  zona: "remate",                                    // zona origen
-                  cartaId: levEnRemate.info.id                       // id de Lev
-                });
-              }
-              renderCampo();
-            }
-          }
         }
 
         resolverLog(jugador, carta, "bloqueo", "Bloqueador central"); // log
@@ -1618,7 +1606,13 @@ function renderManoRival() {
     contenedor.appendChild(div);                         // añadir al contenedor
   });
 }
-
+// ======================================================================================================= BLOQUEAR / DESBLOQUEAR BOTONES
+function bloquearUI() {
+  document.querySelectorAll("button").forEach(btn => btn.disabled = true); // deshabilitar todos los botones
+}
+function desbloquearUI() {
+  document.querySelectorAll("button").forEach(btn => btn.disabled = false); // habilitar todos los botones
+}
 // ===================================================================================================================================
 // ================================================================================================================ ACTUALIZAR MARCADOR
 function actualizarMarcador() {
@@ -2377,6 +2371,38 @@ async function aplicarYamamoto028(jugador, carta) { // =========================
   renderManoRival();                                              // actualizar mano rival
   renderCampo();                                                  // actualizar campo
 }
+async function aplicarLevApoyo(jugador) { // ================================================ LEV D02-004
+  let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev en remate
+
+  let eleccion = await mostrarEleccion([                                    // preguntar al jugador
+    { texto: "Añadir Haiba Lev como bloqueador de apoyo (GUTS - 2 de remate)" },
+    { texto: "No" }
+  ]);
+  if (eleccion !== 0) return;                                               // si no quiere, ignorar
+
+  if (!await usarGuts(jugador, "remate", 2)) {                              // pagar 2 GUTS de remate
+    return;                                                                 // return: GUTS insuficientes
+  }
+
+  game.bloqueoActual.apoyos.push(levEnRemate);                              // añadir Lev al conteo de bloqueo
+  jugador.zonas.bloqueoApoyo.push(levEnRemate);                             // añadir Lev a la zona de apoyo
+  levEnRemate.zonaActual = "bloqueoApoyo";                                  // cambio de zona
+  let index = jugador.zonas.remate.indexOf(levEnRemate);                    // buscar en remate
+  if (index !== -1) jugador.zonas.remate.splice(index, 1);                 // sacar de remate
+  log("Haiba Lev se une al bloqueo como apoyo desde remate.");
+
+  if (modoOnline) {
+    enviarJugada("cartaJugada", {                                            // avisar al rival
+      zona: "bloqueoApoyo",                                                 // zona destino
+      cartaId: levEnRemate.info.id                                          // id de Lev
+    });
+    enviarJugada("quitarCartaZona", {                                       // avisar que Lev sale de remate
+      zona: "remate",                                                       // zona origen
+      cartaId: levEnRemate.info.id                                          // id de Lev
+    });
+  }
+  renderCampo();                                                            // actualizar campo
+}
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 function mostrarFinPartida(gane) {
@@ -2469,7 +2495,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO J1
-["HV-P01-018", "HV-D02-003", "HV-P01-019", "HV-P01-025"].forEach(id => {
+["HV-P01-080", "HV-D02-003", "HV-P01-019", "HV-P01-025", "HV-P01-081"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2516,12 +2542,15 @@ game.jugadores[1].zonas.pase.push(yakuPas);
 let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad
 let osamuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-020"); // Osamu con habilidad
 let levT = todasLasCartas.find(c => c.info?.id === "HV-P01-025"); // Lev con habilidad
+let levT2 = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); // Lev con habilidad
 game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
 game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
 game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
 game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
 game.jugadores[0].zonas.remate.push(levT); // GUTS
 game.jugadores[1].zonas.remate.push(levT); // el "jugado" — siempre el último
+game.jugadores[0].zonas.remate.push(levT2); // GUTS
+game.jugadores[1].zonas.remate.push(levT2); // el "jugado" — siempre el último
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 
 // mazos de prueba

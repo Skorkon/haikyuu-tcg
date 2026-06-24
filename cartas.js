@@ -451,7 +451,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "D",
-      descripcion: `Durante un bloqueo, una vez que jueges un bloqueador central, si Lev carta está en tu zona de <strong><span style= color:#c62828>remate</span></strong>, puedes <strong>GUTS - 2</strong> de tu zona de remate, para desplazar esta carta como bloqueador de apoyo.`
+      descripcion: `Durante un bloqueo, una vez que jueges un bloqueador central, si esta carta está en tu zona de <strong><span style= color:#c62828>remate</span></strong>, puedes <strong>GUTS - 2</strong> de tu zona de remate para desplazar esta carta como bloqueador de apoyo.`
     }
   ),
   crearCarta("Kai Nobuyuki", // ================================================================= D02-005
@@ -688,7 +688,7 @@ function inicializarCartas() {
 
     async function(jugador,game,carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log("Solo puedes usar esta habilidad en remate.");
         return;
       }
       if (!await usarGuts(jugador, "remate", 3)) {
@@ -1382,7 +1382,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "S",
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 2</strong>: Si esta carta fue traída por la habilidad de <strong><span style="color:#2e7d32">Kozume Kenma</span></strong>, +2 al remate. Durante el próximo turno rival, cada bloqueador central que coloque tendrá <strong>-3 al bloqueo</strong>.`
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 2</strong>: </br>· Durante el próximo turno rival, cada bloqueador central que coloque tendrá <strong>-3 al bloqueo</strong>.</br>· Si esta carta fue traída por la habilidad de <strong><span style="color:#2e7d32">Kozume Kenma</span></strong>, +2 al remate.`
     }
   ),
   crearCarta("Haiba Lev", // =================================================================== P01-026
@@ -1537,7 +1537,67 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Durante el próximo turno rival, las habilidades del <strong>receptor</strong> y del <strong>colocador</strong> quedan anuladas.`
     }
   ),
+  // =================================================================================================== AOBA JOSAI
+  crearCarta("Oikawa Toru", // ================================================================= P01-033
+    {
+      saque: 5,
+      recepcion: 0,
+      pase: 1,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque" && carta.zonaActual !== "pase") { // comprobar zona válida
+        log("Solo puedes usar esta habilidad en saque o pase ❌");
+        return false;                                                     // return false: zona incorrecta
+      }
 
+      // buscar cartas de Aoba Jōsai en la mano
+      let aobaEnMano = jugador.mano.filter(c => c.info?.escuela === "Aoba Jōsai"); // filtrar por escuela
+      if (aobaEnMano.length === 0) {                                     // si no hay ninguna
+        log("Necesitas una carta de Aoba Jōsai en la mano para activar esta habilidad ❌");
+        return false;                                                     // return false: coste no pagable
+      }
+
+      // elegir carta de Aoba Jōsai para descartar
+      let cartaDescarte = await mostrarSelectorCartas(                   // abrir selector
+        "Elige una carta de Aoba Jōsai para descartar:",                 // título
+        aobaEnMano                                                        // solo Aoba Jōsai
+      );
+      if (!cartaDescarte) return false;                                  // return false: cancelado
+
+      let index = jugador.mano.indexOf(cartaDescarte);                   // buscar en la mano
+      jugador.mano.splice(index, 1);                                     // sacar de la mano
+      jugador.trash.push(cartaDescarte);                                 // enviar al trash
+      log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+      game.valorAtaque += 1;                                             // +1 al ataque
+      log("Habilidad Oikawa: +1 al " + (carta.zonaActual === "saque" ? "saque" : "pase") + ".");
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+
+      // comprobar si el rival tiene 4 o más cartas
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;   // índice del rival
+      let rival = game.jugadores[rivalIndex];                            // jugador rival
+
+      if (rival.mano.length >= 4) {                                      // si el rival tiene 4+ cartas
+        await aplicarOikawa033Descarte(rival, rivalIndex);               // forzar descarte del rival
+      }
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                  // actualizar mano rival
+      renderCampo();                                                      // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-033",
+      escuela: "Aoba Jōsai",
+      posicion: "S",
+      anyo: 3,
+      rareza: "TP",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Descarta 1 carta de <strong>Aoba Jōsai</strong> de tu mano para +1 al saque o al pase. Si el rival tiene 4 o más cartas en la mano, debe descartar 1 carta de su mano.`
+    }
+  ),
 
   crearCarta("Kotaro Bokuto", // =============================================================== P01-044
     {
@@ -2389,7 +2449,86 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Roba 1 carta y +1 al bloqueo de un personaje de <strong>Karasuno</strong>. </br>Si ese bloqueador es <strong>Tsukishima Kei</strong>, puedes añadir un <strong>Yamaguchi Tadashi</strong> del GUTS de saque a tu mano. Además, durante el siguiente turno rival, el receptor tendrá <strong>-2 a la recepción</strong>.`
     }
   ),
+  crearCarta("Nekomata Yasufumi", // ============================================================================= P01-080 (POR PROBAR)
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+      log("Nekomata Yasufumi: roba 1 carta.");
 
+      game.valorDefensa += 1;                                                // +1 a la recepción
+      log("Nekomata Yasufumi: +1 a la recepción.");
+
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;        // índice del rival
+      let rival = game.jugadores[rivalIndex];                                // jugador rival
+
+      let cartasValidas = rival.zonas.eventos.filter(c =>                    // filtrar eventos del rival
+        c.info?.fases?.includes("pase") ||                                   // jugables en pase
+        c.info?.fases?.includes("remate")                                    // o en remate
+      );
+
+      if (cartasValidas.length >= 5) {                                       // si hay 5 o más
+        game.valorDefensa += 2;                                              // +2 adicional a la recepción
+        log("Efecto adicional Nekomata: +2 a la recepción por condición cumplida.");
+      }
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P01-080",
+      fases: ["recepcion"],
+      escuela: "Nekoma",
+      rareza: "NP",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción. Si el rival tiene 5 o más cartas de eventos en <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> o <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> en su zona de eventos, +2 adicional a la recepción.`
+    }
+  ),
+  crearCarta("Yamamoto Akane", // ============================================================== P01-081
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+      log("Yamamoto Akane: roba 1 carta.");
+
+      // comprobar que el rematador es de Nekoma
+      let rematador = jugador.zonas.remate.at(-1);                           // último rematador
+      if (!rematador || rematador.info?.escuela !== "Nekoma") {              // si no es de Nekoma
+        log("Tu rematador no es de Nekoma. Efectos adicionales no activados.");
+        return false;                                                        // return false: condición no cumplida
+      }
+
+      game.valorAtaque += 1;                                                 // +1 al remate
+      log("Yamamoto Akane: +1 al remate.");
+
+      // comprobar que todos los personajes en juego son de Nekoma
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                          // último sacador
+        jugador.zonas.recepcion.at(-1),                                      // último receptor
+        jugador.zonas.pase.at(-1),                                           // último colocador
+        jugador.zonas.remate.at(-1),                                         // último rematador
+        jugador.zonas.bloqueo.at(-1)                                         // último bloqueador
+      ].filter(c => c !== null && c !== undefined);                           // filtrar zonas vacías
+
+      let todasNekoma = cartasEnJuego.every(c => c.info?.escuela === "Nekoma"); // comprobar escuela
+      if (!todasNekoma) {                                                    // si no todas son de Nekoma
+        log("No todos tus personajes en juego son de Nekoma. Efecto adicional no activado.");
+        return;                                                              // termina sin el bonus
+      }
+
+      // pagar 3 GUTS de recepción
+      if (!await usarGuts(jugador, "recepcion", 3)) {                        // pagar 3 GUTS de recepción
+        return;                                                              // return: GUTS insuficientes
+      }
+
+      game.valorAtaque += 1;                                                 // +1 adicional al remate
+      log("Efecto adicional Yamamoto Akane: +1 al remate por condición cumplida.");
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-081",
+      fases: ["remate"],
+      escuela: "Nekoma",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong><span style="color:#c62828">Nekoma</span></strong>. </br>Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar en <strong><span style="color:#1565c0">Recepción</span> GUTS - 3</strong> para añadir +1 adicional al remate.`
+    }
+  ),
   // =================================================================================================================================== P02
   crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {

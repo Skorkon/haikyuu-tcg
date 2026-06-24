@@ -2529,6 +2529,133 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong><span style="color:#c62828">Nekoma</span></strong>. </br>Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar en <strong><span style="color:#1565c0">Recepción</span> GUTS - 3</strong> para añadir +1 adicional al remate.`
     }
   ),
+  crearCarta("Esto es lo que significa conectar", // ================================================= P01-082
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+      log("Evento: roba 1 carta.");
+
+      // comprobar que el receptor es de Nekoma
+      let receptor = jugador.zonas.recepcion.at(-1);                        // buscar receptor
+      if (!receptor || receptor.info?.escuela !== "Nekoma") {               // comprobar que es de Nekoma
+        log("Tu receptor no es de Nekoma.");
+        return false;                                                        // return false: condición no cumplida
+      }
+
+      let eleccion = await mostrarEleccion([                                 // mostrar opciones
+        { texto: "+1 a la recepción de un personaje de Nekoma." },          // opción 1
+        { texto: "Fijar la recepción de un personaje de Nekoma con recepción 5 o más en 7." } // opción 2
+      ]);
+
+      if (eleccion === 0) {                                                  // opción 1: +1 a la recepción
+        game.valorDefensa += 1;                                             // +1 a la recepción
+        log("Evento: +1 a la recepción de " + receptor.nombre + ".");
+
+      } else {                                                               // opción 2: fijar recepción en 7
+        if (receptor.stats.recepcion < 5) {                                 // comprobar recepción base 5 o más
+          log("Tu receptor no tiene recepción de base 5 o más.");
+          return false;                                                      // return false: condición no cumplida
+        }
+        let recepcionActual = receptor.stats.recepcion + game.valorDefensa;  // recepción actual
+        game.valorDefensa += 7 - recepcionActual;                            // ajustar para llegar a 7
+        log("Evento: recepción de " + receptor.nombre + " fijada en 7.");
+      }
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-082",
+      fases: ["recepcion"],
+      escuela: "Nekoma",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Elige: </br><strong>· +1 a la recepción</strong> de un personaje de <strong>Nekoma</strong>. </br><strong>· Fija la recepción en 7</strong> de un personaje de <strong>Nekoma</strong> con recepción de base 5 o más.`
+    }
+  ),
+  crearCarta("Ataque sincronizado en primer tiempo", // ============================================== P01-083
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+      log("Evento: roba 1 carta.");
+
+      // comprobar que todos los personajes en juego son de Nekoma
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);                           // filtrar zonas vacías
+
+      let todasNekoma = cartasEnJuego.every(c => c.info?.escuela === "Nekoma"); // comprobar escuela
+      if (!todasNekoma) {                                                    // si no todas son de Nekoma
+        log("No todos tus personajes en juego son del Nekoma.");
+        return false;                                                        // return false: condición no cumplida
+      }
+
+      // recopilar todos los GUTS disponibles de todas las zonas
+      let todasGuts = [];                                                    // array de {carta, zona}
+      ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
+        jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {     // excluir recién jugadas
+          todasGuts.push({ carta: c, zona: zona });                          // guardar carta + zona
+        });
+      });
+
+      if (todasGuts.length < 6) {                                            // comprobar que hay al menos 6
+        log("No hay suficientes GUTS en el campo (necesitas 6, tienes " + todasGuts.length + ").");
+        return false;                                                        // return false: condición no cumplida
+      }
+
+      // elegir 6 cartas una a una
+      let elegidas = [];                                                     // array de {carta, zona} elegidas
+      for (let i = 0; i < 6; i++) {
+        let disponiblesItems = todasGuts.filter(item => !elegidas.includes(item)); // filtrar items no elegidos
+
+        // crear proxies únicos para el selector (esto no lo entiendo mucho)
+        let proxies = disponiblesItems.map(item => ({                        // un proxy por item
+          ...item.carta,                                                     // copiar propiedades de la carta
+          _item: item                                                        // referencia al item original
+        }));
+
+        let proxyElegido = await mostrarSelectorCartas(                      // abrir selector con proxies
+          "Elige una carta del GUTS (" + (i + 1) + "/6):",
+          proxies
+        );
+        if (!proxyElegido) return false;                                     // return false: cancelado
+
+        elegidas.push(proxyElegido._item);                                   // añadir el item original
+      }
+
+      // sacar cada carta elegida de su zona y enviarla al trash
+      elegidas.forEach(item => {
+        let index = jugador.zonas[item.zona].indexOf(item.carta);            // buscar en su zona
+        jugador.zonas[item.zona].splice(index, 1);                          // sacar de la zona
+        jugador.trash.push(item.carta);                                      // enviar al trash
+        game.gutsDescartados.push(item.carta);                               // registrar como GUTS usado
+      });
+
+      game.valorAtaque += 3;                                                 // +3 al remate
+      log("Evento 1st Tempo: +3 al remate.");
+
+      if (modoOnline) {
+        elegidas.forEach(item => {                                            // para cada carta elegida
+          enviarJugada("gutsUsado", {                                         // avisar al rival
+            zona: item.zona,                                                  // zona de origen
+            cartasIds: [item.carta.info?.id]                                  // id de la carta
+          });
+        });
+      }
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-083",
+      fases: ["remate"],
+      escuela: "Nekoma",
+      rareza: "R",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar <strong>6 GUTS</strong> de cualquier zona de tu campo para añadir <strong>+3 al remate</strong>.`
+    }
+  ),
   // =================================================================================================================================== P02
   crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {

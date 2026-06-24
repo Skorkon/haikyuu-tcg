@@ -492,7 +492,7 @@ function cancelarSelector() {
     window._selectorResolve(null); // null = cancelado
   }
 }
-// ===================================================================== RESOLVER LOG : ESCRIBIR 
+// ===================================================================== RESOLVER LOG : ESCRIBIR (POR BORRAR)
 // =============================================================================================
 // A BORRAR cuando tenga terminado el excel
 function resolverLog(jugador, carta, zona, resultado) {
@@ -589,7 +589,7 @@ function colocarCarta(jugador, carta, zona) {
     // comprobar si ya se ha jugado un receptor este turno
     let ultimaCarta = jugador.zonas.recepcion.at(-1);
     if (ultimaCarta && ultimaCarta.recienJugada) {
-      log("Ya hay una carta en recepción.");
+      log(t("log.yaHayCartaEnZona", { zona: t("ui.zonaRecepcion") }));
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
@@ -597,7 +597,7 @@ function colocarCarta(jugador, carta, zona) {
     }
     // ================================================== Efectos
     if (tieneEfecto("negarReceptorAlto") && carta.stats.recepcion >= 6) { // negar receptor alto
-      log("No puedes colocar un receptor con recepción de 6 o más este turno.");
+      log(t("log.noReceptorAlto"));
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
@@ -607,15 +607,13 @@ function colocarCarta(jugador, carta, zona) {
     // ================================================== función a ejecutar
     let resultadoRecepcion = ""; // variable para guardar si buena recepción (no usada por el momento)
     jugador.zonas.recepcion.push(carta); // el jugador pone la carta en la zona de recepción
-      // estado de la carta
       carta.zonaActual = "recepcion";
       carta.recienJugada = true;
       carta.habilidadUsada = false;
-      // estado del juego
       game.ultimaCarta = carta;
       game.ultimoJugador = jugador;
       game.jugadaActual.recepcion = carta;
-      resolverLog(jugador, carta, "recepcion", "Carta colocada en recepción");
+      log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "recepcion", stat: carta.stats.recepcion }));
 
       // ================================================== Efectos
       if (tieneEfecto("debilitarReceptor")) {
@@ -623,13 +621,12 @@ function colocarCarta(jugador, carta, zona) {
         if (efecto.activadoPor !== game.jugadorActivo) {
           if (!efecto.soloSinHabilidad || carta.habilidad === null) {
             game.valorDefensa -= efecto.valor;
-            log("Efecto: -" + efecto.valor + " a la recepción de " + carta.nombre + ".");
+            log(t("log.efectoDebilitarReceptor", { valor: efecto.valor, carta: carta.nombre }));
           }
         }
       }
-      // actualizar UI
       actualizarFaseUI();
-      renderMano(); // mostrar la mano del jugador en pantalla
+      renderMano();
       renderManoRival()
       renderCampo();
       // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
@@ -651,7 +648,7 @@ function colocarCarta(jugador, carta, zona) {
     // verificar si ya se ha jugado una carta este turno en pase
     let ultimaCarta = jugador.zonas.pase.at(-1);
     if (ultimaCarta && ultimaCarta.recienJugada){
-      log("Ya hay una carta colocada este turno para el pase.")
+      log(t("log.yaHayCartaEnZona", { zona: t("ui.zonaPase") }));
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
@@ -660,34 +657,31 @@ function colocarCarta(jugador, carta, zona) {
     // ================================================== Efectos
 
     // ================================================== función a ejecutar
-    jugador.zonas.pase.push(carta); // el jugador pone la carta en la zona de pase
-    // estado de la carta
+    jugador.zonas.pase.push(carta); 
     carta.zonaActual = "pase";
     carta.recienJugada = true;
     carta.habilidadUsada = false;
-    // estado del juego
     game.ultimaCarta = carta;
     game.ultimoJugador = jugador;
     game.jugadaActual.pase = carta;
-    game.valorAtaque = carta.stats.pase; // recupero el valor del pase del personaje 
-    resolverLog(jugador, carta, "pase", "Carta colocada en pase.");
+    game.valorAtaque = carta.stats.pase; 
+    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "pase", stat: carta.stats.pase }));
 
     // ================================================== Efectos
     if (tieneEfecto("debilitarColocador")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarColocador");
       if (efecto.activadoPor !== game.jugadorActivo) {
         game.valorAtaque -= 2;
-        log("Efecto colocador debilitado: -2 al pase de " + carta.nombre + ".");
+        log(t("log.efectoDebilitarColocador", { valor: 2, carta: carta.nombre }));
       }
     }
-    // actualizar UI
     actualizarFaseUI();
-    renderMano(); // mostrar la mano del jugador en pantalla
+    renderMano();
     renderManoRival()
     renderCampo();
     if (modoOnline) {
       enviarJugada("cartaJugada", {      // enviar jugada al rival
-        zona: "pase",               // zona donde se jugó
+        zona: "pase",                     // zona donde se jugó
         cartaId: carta.info.id           // id de la carta jugada
       });
     }
@@ -704,13 +698,13 @@ function colocarCarta(jugador, carta, zona) {
     game.ultimaCarta = carta;
     game.ultimoJugador = jugador;
     game.jugadaActual.remate = carta;
-    resolverLog(jugador, carta, "remate", "Carta colocada en remate");
+    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "remate", stat: carta.stats.remate }));
 
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
     // ------------------------------------------------------------------------- Kageyama SP
     if (tieneEfecto("kageyamaSP") && carta.nombre === "Hinata Shoyo") {
       game.valorAtaque += 2;
-      log("Efecto Kageyama SP: +2 al remate de Hinata.");
+      log(t("log.efectoKageyamaSP"));
     }
     // ------------------------------------------------------------------------- Kenma P01-019
     if (jugador.zonas.pase.at(-1)?.info?.id === "HV-P01-019" && carta.stats.remate === 3) {
@@ -726,18 +720,16 @@ function colocarCarta(jugador, carta, zona) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarRematador");
       if (efecto.activadoPor !== game.jugadorActivo) { // solo si es el rival
         game.valorAtaque -= 2;
-        log("Efecto rematador debilitado: -2 al remate de " + carta.nombre + ".");
+        log(t("log.efectoDebilitarRematador", { valor: 2, carta: carta.nombre }));
       }
     }
-
-    // actualizar UI
     actualizarFaseUI();
-    renderMano(); // mostrar la mano del jugador en pantalla
+    renderMano(); 
     renderManoRival()
     renderCampo();
     if (modoOnline) {
       enviarJugada("cartaJugada", {      // enviar jugada al rival
-        zona: "remate",               // zona donde se jugó
+        zona: "remate",                  // zona donde se jugó
         cartaId: carta.info.id           // id de la carta jugada
       });
     }
@@ -769,12 +761,12 @@ function colocarCarta(jugador, carta, zona) {
         carta.recienJugada = true;                    // marcada como recién jugada
         carta.habilidadUsada = false;                 // habilidad no usada
 
-            // comprobar efecto debilitarBloqueadorCentral
+        // comprobar efecto debilitarBloqueadorCentral
         if (tieneEfecto("debilitarBloqueadorCentral")) {
           let efecto = game.efectosActivos.find(e => e.tipo === "debilitarBloqueadorCentral");
           if (efecto.activadoPor !== game.jugadorActivo) {          // si lo activó el rival
             game.valorDefensa -= efecto.valor;                      // restar al bloqueo
-            log("Efecto: -" + efecto.valor + " al bloqueo de " + carta.nombre + ".");
+            log(t("log.efectoDebilitarBloqueo", { valor: efecto.valor, carta: carta.nombre }));
           }
         }
         
@@ -794,14 +786,13 @@ function colocarCarta(jugador, carta, zona) {
             cartaId: carta.info.id                    // id de la carta
           });
         }
-
         resolverLog(jugador, carta, "bloqueo", "Bloqueador central"); // log
       }
       else { // ============================================================ BLOQUEADOR DE APOYO
         // ============================================ Comprobar efectos
         // comprobar efecto negarBloqueadoresApoyo
         if (tieneEfecto("negarBloqueadoresApoyo")) {
-          log("No puedes colocar bloqueadores de apoyo este turno ❌");
+          log(t("log.negarBloqueadoresApoyo"));
           jugador.mano.push(carta);                   // devolver carta a la mano
           renderMano();
           renderManoRival()
@@ -814,7 +805,7 @@ function colocarCarta(jugador, carta, zona) {
           if (efecto.activadoPor !== game.jugadorActivo) {              // si lo activó el rival
             let totalBloqueadores = 1 + game.bloqueoActual.apoyos.length; // central + apoyos
             if (totalBloqueadores >= efecto.valor) {
-              log("No puedes colocar más de " + efecto.valor + " bloqueadores este turno ❌");
+              log(t("log.limitarBloqueadores", { max: efecto.valor }));
               jugador.mano.push(carta);               // devolver carta a la mano
               renderMano();
               renderManoRival()
@@ -823,9 +814,8 @@ function colocarCarta(jugador, carta, zona) {
           }
         }
 
-        // comprobar máximo de bloqueadores de apoyo
-        if (game.bloqueoActual.apoyos.length >= 2) {
-          log("Máximo 2 bloqueadores de apoyo.");
+        if (game.bloqueoActual.apoyos.length >= 2) {  // comprobar máximo de bloqueadores de apoyo
+          log(t("log.maximoBloqueadores"));
           jugador.mano.push(carta);                   // devolver carta a la mano
           return;
         }
@@ -845,18 +835,17 @@ function colocarCarta(jugador, carta, zona) {
             cartaId: carta.info.id                    // id de la carta
           });
         }
-
-        resolverLog(jugador, carta, "bloqueo", "Apoyo de bloqueo"); // log
+        log(t("log.cartaColocadaBloqueo", { jugador: jugador.nombre, carta: carta.nombre, stat: carta.stats.bloqueo, tipo: t("log.apoyoBloqueo") }));
       }
-      renderMano();  // redibujar mano
+      renderMano(); 
       renderManoRival()
-      renderCampo(); // redibujar campo
+      renderCampo(); 
       return;
     }
   }
 // =================================================================================================================================
 // ==================================================================================================================== ROBAR CARTAS
-function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador activo, cantidad, es robo de habilidad o normal
+function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugador activo, cantidad, es robo de habilidad o robo normal
   for (let i = 0; i < cantidad; i++) {
     if (jugador.mazo.length === 0) {
       log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
@@ -865,15 +854,14 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) { // jugador act
     let carta = jugador.mazo.shift();
     jugador.mano.push(carta);
 
-    // si es por habilidad, activar Tendo si está activo
-    if (esHabilidad && tieneEfecto("tendoSatori")) {
+    if (esHabilidad && tieneEfecto("tendoSatori")) {                    // si es por habilidad, activar Tendo si está activo
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
-      robarCarta(game.jugadores[rivalIndex], 1); // el rival roba una carta como reacción
+      robarCarta(game.jugadores[rivalIndex], 1);                        // el rival roba una carta como reacción
       log(t("log.tendoSatori"));
     }
   }
   log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: cantidad }));
-  if (modoOnline) enviarMazo();                                // sincronizar mazo con el rival
+  if (modoOnline) enviarMazo();                                         // sincronizar mazo con el rival
   renderMano();
   renderManoRival()
   renderCampo();
@@ -904,7 +892,7 @@ async function usarGuts(jugador, zona, cantidad) {
     let disponibles = cartasDisponibles.filter(c => !cartasElegidas.includes(c));
     let elegida = await mostrarSelectorCartas(
       t("log.gutsTitulo", { zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)), actual: i + 1, total: cantidad }),
-                                                    //  coger la primera letra de pase y ponerla en mayúsculas
+                                                    //  coger la primera letra de la zona y ponerla en mayúsculas
       disponibles
     );
     if (!elegida) return false;
@@ -930,12 +918,14 @@ async function usarGuts(jugador, zona, cantidad) {
   }
   return true;
 }
-
+// ==================================================================================================================================================== PRIMEROS EJEMPLOS DE JUGAR CARTA
+// ==================================================================================================================================================== A BORRAR DESDE AQUI
+/*
 // ============================================================================================================================= BOTÓN
 // ============================================================================================================================= SAQUE 
 function jugarSaque() { // al hacer clic en el botón con este nombre
   if (!esTurnoValido("saque")) { // si no estamos en el turno de saque
-    log("No puedes jugar saque ahora ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
     return;
   }
   if (!game.cartaSeleccionada) {
@@ -1017,12 +1007,15 @@ function jugarCarta() {
     default: log("No puedes jugar una carta en esta fase ❌");
   }
 }
+*/
+// ==================================================================================================================================================== A BORRAR HASTA AQUI
 
-// ============================================================================================================================= BOTÓN
+
+// =========================================================================================================================== BOTONES
 // ==================================================================================================================== RESOLVER SAQUE 
 function resolverSaque() {
   if (game.fase !== "saque") {
-    log(t("log.noEsFaseSaque"));
+    log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
     return;
   }
   if (!esResolverValido()) return; // comprobar turno en online
@@ -1040,14 +1033,12 @@ function resolverSaque() {
 
   // en online el que roba tras el saque es siempre el rival local
   if (modoOnline) {
-    enviarJugada("robarCarta", { cantidad: 1 }); // avisar al rival que debe robar
+    enviarJugada("robarCarta", { cantidad: 1 });          // avisar al rival que debe robar
   } else {
-    let rivalIndex = game.jugadorActivo === 0 ? 1 : 0; // índice del rival
-    robarCarta(game.jugadores[rivalIndex], 1);           // el rival roba
+    let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;    // índice del rival
+    robarCarta(game.jugadores[rivalIndex], 1);            // el rival roba
   }
-
   if (modoOnline) enviarFase("recepcion"); // avisar al rival del cambio de fase
-
   cambiarJugador();
   actualizarFaseUI();
   renderCampo();
@@ -1058,7 +1049,7 @@ function resolverSaque() {
 // ================================================================================================================ RESOLVER RECEPCIÓN 
 function resolverRecepcion() {
   if (game.fase !== "recepcion") {
-    log(t("log.noEsFaseRecepcion"));
+    log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
     return;
   }
   if (!esResolverValido()) return;                      // comprobar turno en online
@@ -1082,9 +1073,9 @@ function resolverRecepcion() {
     game.valorDefensa = 0;                              // resetear defensa
     if (modoOnline) enviarFase("pase");                 // avisar al rival del cambio de fase
     actualizarFaseUI();                                 // actualizar letrero
-    renderMano();                                       // redibujar mano
+    renderMano();                                       
     renderManoRival()
-    renderCampo();                                      // redibujar campo
+    renderCampo();                                      
 
   } else { // ========================================================================================= Recepción fallida
     log(t("log.recepcionFallida", { carta: carta.nombre, valor: valorRecepcion }));
@@ -1122,19 +1113,19 @@ function resolverRecepcion() {
 // ===================================================================================================================== RESOLVER PASE 
 function resolverPase(){
   if (game.fase !== "pase"){
-    log("No es fase de pase ❌")
+    log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
     return;
   }
-  if (!esResolverValido()) return; // comprobar turno en online
-  let jugador = game.jugadores[game.jugadorActivo]; // jugador activo
-  let carta = jugador.zonas.pase.at(-1); // última carta colocada en la zona
+  if (!esResolverValido()) return;                    // comprobar turno en online
+  let jugador = game.jugadores[game.jugadorActivo];   // jugador activo
+  let carta = jugador.zonas.pase.at(-1);              // última carta colocada en la zona
 
   if (!carta || !carta.recienJugada) {
-    log("No has jugado ninguna carta este turno en pase ❌");
+    log(t("log.noCartaEnZona", { zona: t("ui.zonaPase") }));
     return;
   }
 
-  log(jugador.nombre + " realiza un pase con una potencia de " + game.valorAtaque + " con " + carta.nombre);
+  log(t("log.paseConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
   game.fase = "remate";
   if (modoOnline) enviarFase("remate"); // avisar al rival del cambio de fase
@@ -1147,20 +1138,20 @@ function resolverPase(){
 // =================================================================================================================== RESOLVER REMATE
 function resolverRemate() {
   if (game.fase !== "remate") {
-    log("No es fase de remate ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
     return;
   }
-  if (!esResolverValido()) return; // comprobar turno en online
-  let atacante = game.valorAtaque; // valor del pase que se ha enviado al atacante
+  if (!esResolverValido()) return;                  // comprobar turno en online
+  let atacante = game.valorAtaque;                  // valor del pase que se ha enviado al atacante
   let jugador = game.jugadores[game.jugadorActivo]; // jugador activo
-  let carta = jugador.zonas.remate.at(-1); // carta colocada en la zona
-  let valorRemate = carta.stats.remate; // remate del atacante
+  let carta = jugador.zonas.remate.at(-1);          // carta colocada en la zona
+  let valorRemate = carta.stats.remate;             // remate del atacante
   if (!carta || !carta.recienJugada) {
-    log("No has jugado ninguna carta este turno en remate ❌");
+    log(t("log.noCartaEnZona", { zona: t("ui.zonaRemate") }));
     return;
   }
   game.valorAtaque = atacante + valorRemate;
-  log(jugador.nombre + " remata con una potencia de " + game.valorAtaque + " con " + carta.nombre);
+  log(t("log.remataConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
   game.fase = "bloqueo";
   if (modoOnline) enviarFase("bloqueo"); // avisar al rival del cambio de fase
@@ -1174,7 +1165,7 @@ function resolverRemate() {
 // ================================================================================================================== RESOLVER BLOQUEO 
 function resolverBloqueo() {
   if (game.fase !== "bloqueo") {
-    log("No es momento de resolver bloqueo ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
     return;
   }
   if (!esResolverValido()) return;                      // comprobar turno en online
@@ -1185,7 +1176,7 @@ function resolverBloqueo() {
   if (game.bloqueoActual.central) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularBloqueadorCentral");
     if (efecto && efecto.activadoPor !== game.jugadorActivo) {
-      log("Efecto activo: bloqueo del bloqueador central anulado.");
+      log(t("log.efectoAnularBloqueadorCentral"));
       game.valorDefensa = 0;                            // resetear defensa
       defensaTotal = 0;                                 // resetear defensaTotal
     } else {
@@ -1197,22 +1188,21 @@ function resolverBloqueo() {
     defensaTotal += carta.stats.bloqueo;                // sumar bloqueo de apoyos
   });
 
-  log("Defensa total: " + defensaTotal);
+  log(t("log.defensaTotal", { valor: defensaTotal }));
 
   if (tieneEfecto("bloqueoMinimo")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "bloqueoMinimo");
     if (defensaTotal <= efecto.valor) {
-      log("Efecto de bloqueo mínimo: bloqueo insuficiente forzado.");
+      log(t("log.bloqueoMinimoForzado"));
     }
   }
 
   if (defensaTotal >= game.valorAtaque) { // ================================= BLOQUEO EXITOSO
-    log("Bloqueo exitoso.");
-
+    log(t("log.bloqueoExitoso"));
     if (tieneEfecto("doshat")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "doshat");
       game.valorAtaque = efecto.valor;                  // potencia del contraataque
-      log("Bloqueo ofensivo: el contraataque tiene potencia " + efecto.valor + ".");
+      log(t("log.bloqueoOfensivo", { valor: efecto.valor }));
     } else {
       game.valorAtaque = 0;                             // contraataque normal
     }
@@ -1236,7 +1226,7 @@ function resolverBloqueo() {
     renderCampo();                                      // redibujar campo
 
   } else { // ================================================================ BLOQUEO FALLIDO
-    log("Bloqueo insuficiente ❌");
+    log(t("log.bloqueoFallido"));
     game.valorDefensa = 0;                              // resetear defensa
     game.gutsDescartados = [];                          // limpiar GUTS descartados
 
@@ -1282,20 +1272,20 @@ function usarHabilidad() {
   if (tieneEfecto("anularHabilidadReceptor")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadReceptor");
     if (efecto.activadoPor !== game.jugadorActivo && carta.zonaActual === "recepcion") {
-      log("La habilidad del receptor ha sido anulada este turno por una habilidad del rival.");
+      log(t("log.anularHabilidadReceptor"));
       return;
     }
   }
   if (tieneEfecto("anularHabilidadColocador")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadColocador");
     if (efecto.activadoPor !== game.jugadorActivo && carta.zonaActual === "pase") {
-      log("La habilidad del colocador ha sido anulada este turno por una habilidad del rival.");
+      log(t("log.anularHabilidadColocador"));
       return;
     }
   }
   // =================================================== comprobaciones básicas
   if (carta.info?.activacionMano && carta.zonaActual !== null) { // ---- si habilidad desde mano
-    log("Esta carta solo puede usar su habilidad desde la mano ❌");
+    log(t("log.soloDesdeMano"));
     return;
   }
   if (jugador.zonas[carta.zonaActual]?.at(-1) !== carta) { // ------------ si carta en el GUTS
@@ -2495,7 +2485,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO J1
-["HV-P01-080", "HV-D02-003", "HV-P01-019", "HV-P01-025", "HV-P01-081"].forEach(id => {
+["HV-P01-080", "HV-D02-003", "HV-P01-019", "HV-P01-025", "HV-P01-083"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);

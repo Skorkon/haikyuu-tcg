@@ -743,7 +743,7 @@ function colocarCarta(jugador, carta, zona) {
         if (tieneEfecto("blockout")) {
           let efecto = game.efectosActivos.find(e => e.tipo === "blockout"); // buscar efecto
           if (carta.stats.bloqueo <= efecto.valor) {                         // si bloqueo insuficiente
-            log("Blockout: " + carta.nombre + " tiene bloqueo ≤ " + efecto.valor + " y va al trash.");
+            log(t("log.blockoutTrash", { carta: carta.nombre, valor: efecto.valor }));
             jugador.trash.push(carta);                                        // carta al trash
             renderMano();
             renderManoRival()
@@ -918,9 +918,7 @@ async function usarGuts(jugador, zona, cantidad) {
   }
   return true;
 }
-// ==================================================================================================================================================== PRIMEROS EJEMPLOS DE JUGAR CARTA
-// ==================================================================================================================================================== A BORRAR DESDE AQUI
-/*
+// ==================================================================================================================================================== BOTONES JUGAR CARTAS
 // ============================================================================================================================= BOTÓN
 // ============================================================================================================================= SAQUE 
 function jugarSaque() { // al hacer clic en el botón con este nombre
@@ -929,7 +927,7 @@ function jugarSaque() { // al hacer clic en el botón con este nombre
     return;
   }
   if (!game.cartaSeleccionada) {
-  log("Selecciona una carta primero ❌");
+  log(t("log.seleccionaCarta"));
   return;
   }
   const jugador = game.jugadores[game.jugadorActivo]; // crear la constante del jugador activo
@@ -940,11 +938,11 @@ function jugarSaque() { // al hacer clic en el botón con este nombre
 // ========================================================================================================================= RECEPCIÓN 
 function jugarRecepcion() {
   if (!esTurnoValido("recepcion")) {
-    log("No puedes jugar recepción ahora ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
     return;
   }
   if (!game.cartaSeleccionada) {
-  log("Selecciona una carta primero ❌");
+  log(t("log.seleccionaCarta"));
   return;
   }
   const jugador = game.jugadores[game.jugadorActivo];
@@ -955,11 +953,11 @@ function jugarRecepcion() {
 // ============================================================================================================================== PASE 
 function jugarPase() {
   if (!esTurnoValido("pase")) {
-    log("No puedes jugar pase ahora ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
     return;
   }
   if (!game.cartaSeleccionada) {
-  log("Selecciona una carta primero ❌");
+  log(t("log.seleccionaCarta"));
   return;
   }
   const jugador = game.jugadores[game.jugadorActivo];
@@ -970,11 +968,11 @@ function jugarPase() {
 // ============================================================================================================================ REMATE 
 function jugarRemate() {
   if (!esTurnoValido("remate")) {
-    log("No puedes jugar remate ahora ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
     return;
   }
   if (!game.cartaSeleccionada) {
-  log("Selecciona una carta primero ❌");
+  log(t("log.seleccionaCarta"));
   return;
   }
   const jugador = game.jugadores[game.jugadorActivo];
@@ -985,11 +983,11 @@ function jugarRemate() {
 // =============================================================================================================== AÑADIR BLOQUEADORES
 function jugarBloqueo() {
   if (!esTurnoValido("bloqueo")) {
-    log("No puedes jugar bloqueo ahora ❌");
+    log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
     return;
   }
   if (!game.cartaSeleccionada) {
-  log("Selecciona una carta primero ❌");
+  log(t("log.seleccionaCarta"));
   return;
   }
   const jugador = game.jugadores[game.jugadorActivo];
@@ -1007,8 +1005,7 @@ function jugarCarta() {
     default: log("No puedes jugar una carta en esta fase ❌");
   }
 }
-*/
-// ==================================================================================================================================================== A BORRAR HASTA AQUI
+
 
 
 // =========================================================================================================================== BOTONES
@@ -1289,21 +1286,19 @@ function usarHabilidad() {
     return;
   }
   if (jugador.zonas[carta.zonaActual]?.at(-1) !== carta) { // ------------ si carta en el GUTS
-    log("Esta carta está en el GUTS y no puede usar su habilidad ❌");
+    log(t("log.cartaEnGuts"));
     return;
   }
   if (!carta || !carta.habilidad) { // --------------- si carta sin habilidad
-    log("Esta carta no tiene habilidad.");
+    log(t("log.sinHabilidad"));
     return;
   }
   if (carta.habilidadUsada) { // ------------------------- si habilidad usada
-    log("Esta habilidad ya fue usada.");
+    log(t("log.habilidadYaUsada"));
     return;
   }
-
-
   let resultado = carta.habilidad(jugador, game, carta);
-  if (resultado !== false) { // solo marcar como usada si no fue cancelada
+  if (resultado !== false) {            // solo marcar como usada si no fue cancelada
     carta.habilidadUsada = true;
   }
   renderCampo();
@@ -1316,17 +1311,17 @@ function usarHabilidad() {
 function jugarEvento() {
   // ==================================================================================================== Comprobaciones
   if (!game.cartaSeleccionada) {
-    log("Selecciona una carta primero ❌");
+    log(t("log.seleccionaCarta")); // "selecciona una carta primero"
     return;
   }
   let jugador = game.jugadores[game.jugadorActivo];
   let carta = game.cartaSeleccionada;
   if (carta.info?.tipo !== "evento") {
-    log("Esta carta no es un evento ❌");
+    log(t("log.noEsEvento")); // "esta carta no es un evento"
     return;
   }
   if (!carta.info.fases.includes(game.fase)) {
-    log("No puedes jugar este evento en fase de " + game.fase + " ❌");
+    log(t("log.eventoFaseIncorrecta", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;
   }
 
@@ -1334,8 +1329,8 @@ function jugarEvento() {
   if (tieneEfecto("negarEventosBloqueo")) {                                  // si efecto activo
     let efecto = game.efectosActivos.find(e => e.tipo === "negarEventosBloqueo"); // buscar efecto
     if (efecto.activadoPor !== game.jugadorActivo &&                         // si lo activó el rival
-        carta.info?.fases?.includes("bloqueo")) {                            // y es evento de bloqueo
-      log("No puedes jugar eventos de bloqueo este turno ❌");               // mostrar mensaje
+      carta.info?.fases?.includes("bloqueo")) {                            // y es evento de bloqueo
+      log(t("log.negarEventosBloqueo"));
       return;                                                                // cancelar
     }
   }
@@ -1344,15 +1339,13 @@ function jugarEvento() {
       e => e.nombre === carta.nombre                               // si ya hay una carta con ese nombre
     );
     if (yaJugada) {                                                // si ya fue jugada este turno
-      log("Ya has jugado una carta de " + carta.nombre + " este turno ❌");
+      log(t("log.cartaUnica", { carta: carta.nombre }));
       jugador.mano.push(carta);                                    // devolver a la mano
       renderMano();                                                // actualizar mano
       renderManoRival();                                           // actualizar mano rival
       return;                                                      // cancelar
     }
   }
-
-  
 
   let index = jugador.mano.indexOf(carta); 
   if (index !== -1) jugador.mano.splice(index, 1); // sacar de la mano
@@ -1362,7 +1355,7 @@ function jugarEvento() {
   // game.ultimaCarta = carta;
   // game.ultimoJugador = jugador;
 
-  log(jugador.nombre + " juega el evento: " + carta.nombre);
+  log(t("log.eventoJugado", { jugador: jugador.nombre, carta: carta.nombre }));
 
   if (carta.habilidad) { // activar el efecto
     carta.habilidad(jugador, game, carta);
@@ -1382,25 +1375,25 @@ function jugarEvento() {
 // ================================================================================================================== JUGAR DESDE MANO 
 function jugarHabilidadDesdeMano() {
   if (!game.cartaSeleccionada) {
-    log("Selecciona una carta primero.");
+    log(t("log.seleccionaCarta"));
     return;
   }
   // ============================================== Efectos de  habilidades
   let efectoMano = game.efectosActivos.find(e => e.tipo === "negarCartaDesdeMano");
   if (efectoMano && efectoMano.fases.includes(game.fase)) {
-    log("No puedes usar habilidades desde la mano en " + game.fase + " ❌");
+    log(t("log.negarCartaDesdeMano", { fases: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;
   }
 
   let carta = game.cartaSeleccionada;
 
   if (carta.info?.tipo !== "personaje" || !carta.info?.activacionMano) {
-    log("Esta carta no tiene habilidad de mano ❌");
+    log(t("log.noHabilidadMano"));
     return;
   }
 
   if (!carta.info.fases.includes(game.fase)) {
-    log("No puedes usar esta habilidad en fase de " + game.fase + " ❌");
+    log(t("log.noHabilidadEnFase", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;
   }
 
@@ -1441,7 +1434,7 @@ function concederPunto() {
 
   perderPunto(game.jugadores[game.jugadorActivo]);         // el que concede pierde el punto
   log(game.jugadores[game.jugadorActivo].nombre + " concede el punto.");
-  log("Punto para " + rival.nombre);                       
+  log(t("log.puntoParaRival", { jugador: rival.nombre }));                       
 
   limpiarJugada();                                         // limpiar estado de la jugada
 
@@ -1452,9 +1445,7 @@ function concederPunto() {
   } else {
     cambiarJugador(rivalIndex);                            // cambiar turno en local
   }
-
   game.fase = "saque";                                     // volver a saque
-
   actualizarMarcador();                                    // actualizar marcador
   actualizarFaseUI();                                      // actualizar letrero
   renderMano();                                            // redibujar mano
@@ -1465,10 +1456,9 @@ function concederPunto() {
 // =============================================================================================================== DESELECCIONAR CARTA
 function deseleccionarCarta() {
   if (!game.cartaSeleccionada) {
-    log("No hay carta seleccionada ❌");
+    log(t("log.seleccionaCarta"));
     return;
   }
-  // log("Carta deseleccionada: " + game.cartaSeleccionada.nombre);
   game.cartaSeleccionada = null;
   renderMano(); // para quitar el marco rojo de selección
   renderManoRival()
@@ -1476,22 +1466,18 @@ function deseleccionarCarta() {
 
 // ============================================================================================================================= BOTÓN
 // ========================================================================================================== MOSTRAR ESTADO DEL JUEGO
+// ========================================================================================================== FUNCIÓN OBSOLETA
+/*
 function mostrarEstado() {
-
   game.jugadores.forEach(jugador => {
-
     log("\n====================");
     log("Jugador: " + jugador.nombre);
     log("Puntos: " + jugador.puntos);
     log("====================");
-
     // ZONAS
     log("ZONAS:");
-
     for (let zona in jugador.zonas) {
-
       const carta = jugador.zonas[zona];
-
       if (Array.isArray(carta)) {
         log("- " + zona + ": " + carta.length + " cartas");
       } else if (carta) {
@@ -1500,10 +1486,9 @@ function mostrarEstado() {
         log("- " + zona + ": vacío");
       }
     }
-
   });
 }
-
+*/
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
 function actualizarFaseUI() { // texto que indica la fase de juego en directo
@@ -1524,7 +1509,7 @@ function renderMano() {
     ? game.jugadores[miNumero - 1] 
     : game.jugadores[game.jugadorActivo];
   const contenedor = document.getElementById("mano");
-  document.getElementById("nombreJugadorActivo").textContent = "Jugador: " + jugador.nombre;
+  document.getElementById("nombreJugadorActivo").textContent = t("ui.etiquetaJugador") + jugador.nombre;
   contenedor.innerHTML = "";
 
   let totalCartas = jugador.mano.length;

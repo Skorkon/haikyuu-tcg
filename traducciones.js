@@ -28,6 +28,13 @@ const TRADUCCIONES = {
       "gutsInsuficiente": "No hay suficientes cartas en la zona de GUTS indicada",
       "gutsUsado": "GUTS usado correctamente en {zona}",
       "gutsTitulo": "GUTS en {zona}: Descarta ( {actual} / {total} )",
+      "cartaEnGuts": "Esta carta está en el GUTS y no puede usar su habilidad",
+      "sinHabilidad": "Esta carta no tiene habilidad",
+      "habilidadYaUsada": "Esta habilidad ya fue usada",
+      "noEsEvento": "Esta carta no es un evento",
+      "eventoFaseIncorrecta": "No puedes jugar este evento en fase de {zona}",
+      "eventoJugado": "{jugador} juega el evento: {carta}",
+      "cartaUnica": "Ya has jugado una carta de {carta} este turno",
       "sacaConPotencia": "{carta} saca con una potencia de {valor}",
       "paseConPotencia": "{carta} realiza un pase con una potencia de {valor}",
       "remataConPotencia": "{carta} remata con una potencia de {valor}",
@@ -61,7 +68,7 @@ const TRADUCCIONES = {
       "negarColocador": "Efecto activo: No puedes jugar un colocador este turno",
       "negarOneTouch": "Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo",
       "negarCartaDesdeMano": "Efecto activo: el rival no podrá usar habilidades desde la mano en {fases}",
-      "negarEventosBloqueo": "Efecto activo: el rival no podrá jugar eventos de bloqueo",
+      "negarEventosBloqueo": "Efecto activo: no puedes jugar eventos de bloqueo",
       "anularHabilidadReceptor": "Efecto activo: el receptor no puede usar su habilidad",
       "anularHabilidadColocador": "Efecto activo: el colocador no puede usar su habilidad",
       "limitarBloqueadores": "Efecto: el rival solo puede colocar hasta {max} bloqueadores",
@@ -73,7 +80,9 @@ const TRADUCCIONES = {
       "cartaColocadaBloqueo": "{jugador} juega a {carta} como {tipo} ({stat})",
       "bloqueadorCentral": "Bloqueador central",
       "apoyoBloqueo": "Bloqueo de apoyo",
-      "soloDesdeMano": "Esta carta solo puede usar su habilidad desde la mano"
+      "soloDesdeMano": "Esta carta solo puede usar su habilidad desde la mano",
+      "noHabilidadMano": "Esta carta no tiene habilidad de mano",
+      "noHabilidadEnFase": "No puedes usar esta habilidad en fase de {zona}"
     }
   },
   "en": {
@@ -102,6 +111,13 @@ const TRADUCCIONES = {
       "gutsInsuficiente": "Not enough cards in the indicated GUTS zone",
       "gutsUsado": "GUTS used correctly in {zona}",
       "gutsTitulo": "GUTS in {zona}: Discard ( {actual} / {total} )",
+      "cartaEnGuts": "This card is in the GUTS and cannot use its ability",
+      "sinHabilidad": "This card has no ability",
+      "habilidadYaUsada": "This ability was already used",
+      "noEsEvento": "This card is not an event",
+      "eventoFaseIncorrecta": "You cannot play this event in {zona} phase",
+      "eventoJugado": "{jugador} plays the event: {carta}",
+      "cartaUnica": "You already played a {carta} card this turn",
       "sacaConPotencia": "{carta} serves with a power of {valor}",
       "paseConPotencia": "{carta} sets with a power of {valor}",
       "remataConPotencia": "{carta} spikes with a power of {valor}",
@@ -135,7 +151,7 @@ const TRADUCCIONES = {
       "negarColocador": "Active effect: You cannot place a setter this turn",
       "negarOneTouch": "Active effect: rival cannot use One Touch in their next block",
       "negarCartaDesdeMano": "Active effect: rival cannot use hand abilities in {fases}",
-      "negarEventosBloqueo": "Active effect: rival cannot play block events",
+      "negarEventosBloqueo": "Active effect: you cannot play block events",
       "anularHabilidadReceptor": "Active effect: receiver cannot use their ability",
       "anularHabilidadColocador": "Active effect: setter cannot use their ability",
       "limitarBloqueadores": "Effect: rival can only place up to {max} blockers",
@@ -147,7 +163,9 @@ const TRADUCCIONES = {
       "cartaColocadaBloqueo": "{jugador} plays {carta} as {tipo} ({stat})",
       "bloqueadorCentral": "Central blocker",
       "apoyoBloqueo": "Support blocker",
-      "soloDesdeMano": "This card can only use its ability from hand"
+      "soloDesdeMano": "This card can only use its ability from hand",
+      "noHabilidadMano": "This card has no hand ability",
+      "noHabilidadEnFase": "You cannot use this ability in {zona} phase"
     }
   },
   "fr": {
@@ -176,6 +194,13 @@ const TRADUCCIONES = {
       "gutsInsuficiente": "Pas assez de cartes dans la zone GUTS indiquée",
       "gutsUsado": "GUTS utilisé correctement en {zona}",
       "gutsTitulo": "GUTS en {zona} : Défaussez ( {actual} / {total} )",
+      "cartaEnGuts": "Cette carte est dans le GUTS et ne peut pas utiliser sa capacité",
+      "sinHabilidad": "Cette carte n'a pas de capacité",
+      "habilidadYaUsada": "Cette capacité a déjà été utilisée",
+      "noEsEvento": "Cette carte n'est pas un événement",
+      "eventoFaseIncorrecta": "Tu ne peux pas jouer cet événement en phase {zona}",
+      "eventoJugado": "{jugador} joue l'événement : {carta}",
+      "cartaUnica": "Tu as déjà joué une carte {carta} ce tour",
       "sacaConPotencia": "{carta} sert avec une puissance de {valor}",
       "paseConPotencia": "{carta} effectue une passe avec une puissance de {valor}",
       "remataConPotencia": "{carta} attaque avec une puissance de {valor}",
@@ -209,7 +234,7 @@ const TRADUCCIONES = {
       "negarColocador": "Effet actif : Tu ne peux pas jouer un passeur ce tour",
       "negarOneTouch": "Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc",
       "negarCartaDesdeMano": "Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases}",
-      "negarEventosBloqueo": "Effet actif : le rival ne pourra pas jouer d'événements de bloc",
+      "negarEventosBloqueo": "Effet actif : tu en peux pas jouer d'événements de bloc",
       "anularHabilidadReceptor": "Effet actif : le receveur ne peut pas utiliser sa capacité",
       "anularHabilidadColocador": "Effet actif : le passeur ne peut pas utiliser sa capacité",
       "limitarBloqueadores": "Effet : le rival ne peut placer que {max} bloqueurs",
@@ -221,7 +246,9 @@ const TRADUCCIONES = {
       "cartaColocadaBloqueo": "{jugador} joue {carta} en tant que {tipo} ({stat})",
       "bloqueadorCentral": "Bloqueur central",
       "apoyoBloqueo": "Bloqueur de soutien",
-      "soloDesdeMano": "Cette carte ne peut utiliser sa capacité que depuis la main"
+      "soloDesdeMano": "Cette carte ne peut utiliser sa capacité que depuis la main",
+      "noHabilidadMano": "Cette carte n'a pas de capacité depuis la main",
+      "noHabilidadEnFase": "Tu ne peux pas utiliser cette capacité en phase {zona}"
     }
   },
   "": {
@@ -250,6 +277,13 @@ const TRADUCCIONES = {
       "gutsInsuficiente": "",
       "gutsUsado": "",
       "gutsTitulo": "",
+      "cartaEnGuts": "",
+      "sinHabilidad": "",
+      "habilidadYaUsada": "",
+      "noEsEvento": "",
+      "eventoFaseIncorrecta": "",
+      "eventoJugado": "",
+      "cartaUnica": "",
       "sacaConPotencia": "",
       "paseConPotencia": "",
       "remataConPotencia": "",
@@ -295,7 +329,9 @@ const TRADUCCIONES = {
       "cartaColocadaBloqueo": "",
       "bloqueadorCentral": "",
       "apoyoBloqueo": "",
-      "soloDesdeMano": ""
+      "soloDesdeMano": "",
+      "noHabilidadMano": "",
+      "noHabilidadEnFase": ""
     }
   }
 };

@@ -1537,7 +1537,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Durante el próximo turno rival, las habilidades del <strong>receptor</strong> y del <strong>colocador</strong> quedan anuladas.`
     }
   ),
-  // =================================================================================================== AOBA JOSAI
+  // ===================================================================================================== AOBA JOSAI
   crearCarta("Oikawa Toru", // ================================================================= P01-033
     {
       saque: 5,
@@ -1548,21 +1548,21 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "saque" && carta.zonaActual !== "pase") { // comprobar zona válida
-        log("Solo puedes usar esta habilidad en saque o pase ❌");
+        log("Solo puedes usar esta habilidad en saque o pase.");
         return false;                                                     // return false: zona incorrecta
       }
 
-      // buscar cartas de Aoba Jōsai en la mano
-      let aobaEnMano = jugador.mano.filter(c => c.info?.escuela === "Aoba Jōsai"); // filtrar por escuela
+      // buscar cartas de Aoba Jôsai en la mano
+      let aobaEnMano = jugador.mano.filter(c => c.info?.escuela === "Aoba Jôsai"); // filtrar por escuela
       if (aobaEnMano.length === 0) {                                     // si no hay ninguna
-        log("Necesitas una carta de Aoba Jōsai en la mano para activar esta habilidad ❌");
+        log("Necesitas una carta de Aoba Jôsai en la mano para activar esta habilidad.");
         return false;                                                     // return false: coste no pagable
       }
 
-      // elegir carta de Aoba Jōsai para descartar
+      // elegir carta de Aoba Jôsai para descartar
       let cartaDescarte = await mostrarSelectorCartas(                   // abrir selector
-        "Elige una carta de Aoba Jōsai para descartar:",                 // título
-        aobaEnMano                                                        // solo Aoba Jōsai
+        "Elige una carta de Aoba Jôsai para descartar:",                 // título
+        aobaEnMano                                                       // solo Aoba Jôsai
       );
       if (!cartaDescarte) return false;                                  // return false: cancelado
 
@@ -1581,7 +1581,7 @@ function inicializarCartas() {
       let rival = game.jugadores[rivalIndex];                            // jugador rival
 
       if (rival.mano.length >= 4) {                                      // si el rival tiene 4+ cartas
-        await aplicarOikawa033Descarte(rival, rivalIndex);               // forzar descarte del rival
+        await forzarDescarteRival(rival, rivalIndex);               // forzar descarte del rival
       }
 
       renderMano();                                                      // actualizar mano
@@ -1591,13 +1591,373 @@ function inicializarCartas() {
     {
       tipo: "personaje",
       id: "HV-P01-033",
-      escuela: "Aoba Jōsai",
+      escuela: "Aoba Jôsai",
       posicion: "S",
       anyo: 3,
       rareza: "TP",
-      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Descarta 1 carta de <strong>Aoba Jōsai</strong> de tu mano para +1 al saque o al pase. Si el rival tiene 4 o más cartas en la mano, debe descartar 1 carta de su mano.`
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Descarta 1 carta de <strong>Aoba Jôsai</strong> de tu mano para +1 al saque o al pase. Si el rival tiene 4 o más cartas en la mano, debe descartar 1 carta de su mano.`
     }
   ),
+  crearCarta("Oikawa Toru", // ================================================================= P01-034
+    {
+      saque: 5,
+      recepcion: 0,
+      pase: 1,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque") {                                // comprobar zona válida
+        log("Solo puedes usar esta habilidad en saque.");
+        return false;                                                    // return false: zona incorrecta
+      }
+      if (!await usarGuts(jugador, "saque", 1)) {                       // pagar 1 GUTS de saque
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      let cartaDescartada = game.gutsDescartados[0];                    // carta descartada en el GUTS
+      if (!cartaDescartada || cartaDescartada.info?.escuela !== "Aoba Jôsai") { // comprobar escuela
+        log("La carta descartada no es de Aoba Jôsai. Efecto no activado.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      // aplicar efecto sobre el rival
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;  // índice del rival
+      let rival = game.jugadores[rivalIndex];                           // jugador rival
+
+      // devolver mano del rival al mazo y barajar
+      rival.mazo.push(...rival.mano);                                   // devolver mano al mazo
+      rival.mano = [];                                                  // vaciar mano
+      barajarMazo(rival);                                               // barajar mazo
+      log(rival.nombre + " devuelve su mano al mazo y baraja.");
+
+      if (modoOnline) {
+        enviarJugada("resetearManoRival", {});                          // avisar al rival
+      } else {
+        robarCarta(rival, 6);                                           // el rival roba 6 en local
+        log(rival.nombre + " roba 6 cartas.");
+      }
+
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-034",
+      escuela: "Aoba Jôsai",
+      posicion: "S",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> GUTS - 1</strong>: Si la carta descartada es de <strong>Aoba Jôsai</strong>, el rival devuelve todas las cartas de su mano al mazo, baraja y roba 6 cartas.`
+    }
+  ),
+  crearCarta("Iwaizumi Hajime", // ============================================================= P01-035
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                               // comprobar zona válida
+        log("Solo puedes usar esta habilidad en remate.");
+        return false;                                                    // return false: zona incorrecta
+      }
+
+      // buscar cartas de Aoba Jôsai en la mano
+      let aobaEnMano = jugador.mano.filter(c => c.info?.escuela === "Aoba Jôsai"); // filtrar por escuela
+      if (aobaEnMano.length === 0) {                                     // si no hay ninguna
+        log("Necesitas una carta de Aoba Jôsai en la mano para activar esta habilidad.");
+        return false;                                                    // return false: coste no pagable
+      }
+
+      // elegir carta de Aoba Jôsai para descartar
+      let cartaDescarte = await mostrarSelectorCartas(                   // abrir selector
+        "Elige una carta de Aoba Jôsai para descartar:",                 // título
+        aobaEnMano                                                        // solo Aoba Jôsai
+      );
+      if (!cartaDescarte) return false;                                  // return false: cancelado
+
+      let index = jugador.mano.indexOf(cartaDescarte);                   // buscar en la mano
+      jugador.mano.splice(index, 1);                                     // sacar de la mano
+      jugador.trash.push(cartaDescarte);                                 // enviar al trash
+      log(cartaDescarte.nombre + " descartada de la mano como coste.");
+
+      game.valorAtaque += 2;                                             // +2 al remate
+      log("Habilidad Iwaizumi: +2 al remate.");
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+
+      // comprobar si el rival tiene 4 o menos cartas
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;   // índice del rival
+      let rival = game.jugadores[rivalIndex];                            // jugador rival
+
+      if (rival.mano.length <= 4) {                                      // si el rival tiene 4 o menos
+        negarRobar();                                                    // activar efecto
+      }
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-035",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Descarta 1 carta de <strong>Aoba Jôsai</strong> de tu mano para +2 al remate. Si el rival tiene 4 o menos cartas en la mano, durante el próximo turno rival no podrá robar cartas mediante habilidades.`
+    }
+  ),
+  crearCarta("Kindaichi Yutaro", // ============================================================ P01-036
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-036",
+      escuela: "Aoba Jôsai",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Matsukawa Issei", // ============================================================= P01-037
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo") {                              // comprobar zona válida
+        log("Solo puedes usar esta habilidad en bloqueo.");
+        return false;                                                    // return false: zona incorrecta
+      }
+      if (game.valorAtaque < 8) {                                        // comprobar ataque rival
+        log("Solo puedes usar esta habilidad si el ataque del rival es 8 o más.");
+        return false;                                                    // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "bloqueo", 1)) {                      // pagar 1 GUTS de bloqueo
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      aplicarMatsukawa037();                                           // activar efecto
+
+      game.fase = "recepcion";                                           // terminar fase de bloqueo
+      log("Habilidad Matsukawa: fase de bloqueo terminada. Pasando a recepción.");
+      if (modoOnline) enviarFase("recepcion");                           // sincronizar fase con el rival
+
+      actualizarFaseUI();                                                // actualizar letrero
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-037",
+      escuela: "Aoba Jôsai",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> GUTS - 1</strong>: Solo puedes usar esta habilidad si el ataque del rival es 8 o más. Termina inmediatamente la fase de bloqueo y pasa a recepción. Durante este turno, si tu receptor es del <strong>Aoba Jôsai</strong> tendrá <strong>+3 a la recepción</strong>.`
+    }
+  ),
+  crearCarta("Hanamaki Takahiro", // =========================================================== P01-038
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-038",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Watari Shinji", // =============================================================== P01-039
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 1,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
+        log("Solo puedes usar esta habilidad en recepción.");
+        return false;                                                    // return false: zona incorrecta
+      }
+      if (game.valorAtaque < 6) {                                        // comprobar ataque rival
+        log("Solo puedes usar esta habilidad si el ataque del rival es 6 o más.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      // buscar cartas de Aoba Jôsai en la mano
+      let aobaEnMano = jugador.mano.filter(c => c.info?.escuela === "Aoba Jôsai"); // filtrar por escuela
+      if (aobaEnMano.length === 0) {                                     // si no hay ninguna
+        log("Necesitas una carta de Aoba Jôsai en la mano para activar esta habilidad.");
+        return false;                                                    // return false: coste no pagable
+      }
+
+      // elegir carta de Aoba Jôsai para descartar
+      let cartaDescarte = await mostrarSelectorCartas(                   // abrir selector
+        "Elige una carta de Aoba Jôsai para descartar:",                 // título
+        aobaEnMano                                                        // solo Aoba Jôsai
+      );
+      if (!cartaDescarte) return false;                                  // return false: cancelado
+
+      let index = jugador.mano.indexOf(cartaDescarte);                   // buscar en la mano
+      jugador.mano.splice(index, 1);                                     // sacar de la mano
+      jugador.trash.push(cartaDescarte);                                 // enviar al trash
+      log(cartaDescarte.nombre + " descartada de la mano como coste.");
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+
+      game.valorDefensa += 1;                                            // +1 a la recepción
+      log("Habilidad Watari: +1 a la recepción.");
+
+      // comprobar si todos los personajes en juego son de Aoba Jôsai
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                      // último sacador
+        jugador.zonas.recepcion.at(-1),                                  // último receptor
+        jugador.zonas.pase.at(-1),                                       // último colocador
+        jugador.zonas.remate.at(-1),                                     // último rematador
+        jugador.zonas.bloqueo.at(-1)                                     // último bloqueador
+      ].filter(c => c !== null && c !== undefined);                      // filtrar zonas vacías
+
+      let todasAoba = cartasEnJuego.every(c => c.info?.escuela === "Aoba Jôsai"); // comprobar escuela
+      if (todasAoba) {                                                   // si todas son de Aoba Jôsai
+        robarCarta(jugador, 1, true);                                    // robar 1 carta
+        log("Habilidad Watari: todos los personajes son de Aoba Jôsai, roba 1 carta.");
+      } else {
+        log("No todos los personajes en juego son de Aoba Jôsai. No se roba carta.");
+      }
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-039",
+      escuela: "Aoba Jôsai",
+      posicion: "Li",
+      anyo: 2,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"],                             // libero: no puede jugar en saque ni bloqueo
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Solo puedes usar esta habilidad si el ataque del rival es 6 o más. Descarta 1 carta de <strong>Aoba Jôsai</strong> de tu mano para +1 a la recepción. Si todos tus personajes en juego son de <strong>Aoba Jôsai</strong>, roba 1 carta.`
+    }
+  ),
+  crearCarta("Yahaba Shigeru", // ============================================================== P01-040
+    {
+      saque: 2,
+      recepcion: 3,
+      pase: 2,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-040",
+      escuela: "Aoba Jôsai",
+      posicion: "S",
+      anyo: 2,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Kunimi Akira", // ================================================================ P01-041
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                               // comprobar zona válida
+        log("Solo puedes usar esta habilidad en remate.");
+        return false;                                                    // return false: zona incorrecta
+      }
+
+      // comprobar que todos los personajes en juego son de Aoba Jôsai
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                      // último sacador
+        jugador.zonas.recepcion.at(-1),                                  // último receptor
+        jugador.zonas.pase.at(-1),                                       // último colocador
+        jugador.zonas.remate.at(-1),                                     // último rematador
+        jugador.zonas.bloqueo.at(-1)                                     // último bloqueador
+      ].filter(c => c !== null && c !== undefined);                      // filtrar zonas vacías
+
+      let todasAoba = cartasEnJuego.every(c => c.info?.escuela === "Aoba Jôsai"); // comprobar escuela
+      if (!todasAoba) {                                                  // si no todas son de Aoba Jôsai
+        log("Todos tus personajes en juego deben ser de Aoba Jôsai.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      // comprobar que el rival tiene 3 o menos cartas
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;   // índice del rival
+      let rival = game.jugadores[rivalIndex];                            // jugador rival
+      if (rival.mano.length > 3) {                                       // si el rival tiene más de 3
+        log("El rival debe tener 3 o menos cartas en la mano.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      if (!await usarGuts(jugador, "remate", 1)) {                       // pagar 1 GUTS de remate
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      finta(4);                                                          // activar efecto finta con valor 4
+      log("Habilidad Kunimi: Finta (4) activada.");
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-041",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 1</strong>: Solo puedes usar esta habilidad si todos tus personajes en juego son de <strong>Aoba Jôsai</strong> y el rival tiene 3 o menos cartas en la mano: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Finta (4)</strong></span> : el ataque queda fijado en 4 y el rival no puede colocar bloqueadores este turno.`
+    }
+  ),
+  crearCarta("Kyotani Kentaro", // ============================================================= P01-042
+    {
+      saque: 5,
+      recepcion: 4,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P01-042",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "R"
+    }
+  ),
+
 
   crearCarta("Kotaro Bokuto", // =============================================================== P01-044
     {
@@ -1698,7 +2058,7 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 0
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-P01-050",

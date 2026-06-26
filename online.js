@@ -262,6 +262,53 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                             // redibujar campo
       break;
 
+    case "pedirDescarte": // ========================================================= PEDIR DESCARTE (OIKAWA)
+      const miJugadorDescarte = game.jugadores[miNumero - 1];              // jugador local (el que descarta)
+      if (miJugadorDescarte.mano.length === 0) {                           // si no tiene cartas
+        log("No tienes cartas para descartar.");
+        return;
+      }
+      mostrarSelectorCartas(                                               // abrir selector obligatorio
+        "Descarte forzado: debes descartar 1 carta de tu mano:",             
+        miJugadorDescarte.mano                                             // toda la mano
+      ).then(cartaElegida => {                                             // cuando elige
+        if (!cartaElegida) return;                                         // no debería cancelarse
+
+        let index = miJugadorDescarte.mano.indexOf(cartaElegida);         // buscar en la mano
+        miJugadorDescarte.mano.splice(index, 1);                          // sacar de la mano
+        miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
+        log("Descartaste " + cartaElegida.nombre + " por el efecto rival.");
+
+        enviarJugada("cartaDescartadaRival", {                            // avisar al rival
+          cartaId: cartaElegida.info?.id                                   // id de la carta descartada
+        });
+
+        if (modoOnline) enviarTrash(miJugadorDescarte);                   // sincronizar trash
+
+        renderMano();                                                      // actualizar mano
+        renderManoRival();                                                  // actualizar mano rival
+        renderCampo();                                                      // actualizar campo
+      });
+      break;
+
+    case "cartaDescartadaRival": // ============================================= CARTA DESCARTADA
+      break; // gestionado por el Promise en forzarDescarteRival
+
+    case "resetearManoRival": // ====================================================== RESETEAR MANO RIVAL (OIKAWA P01-034)
+      const miJugadorReset = game.jugadores[miNumero - 1];               // jugador local (el que resetea)
+      miJugadorReset.mazo.push(...miJugadorReset.mano);                  // devolver mano al mazo
+      miJugadorReset.mano = [];                                          // vaciar mano
+      barajarMazo(miJugadorReset);                                       // barajar mazo
+      log("Efecto rival: devuelves tu mano al mazo y barajas.");
+      robarCarta(miJugadorReset, 6);                                     // robar 6 cartas
+      log("Robas 6 cartas.");
+      enviarCantidadMano();                                              // sincronizar cantidad de mano
+      enviarMazo();                                                      // sincronizar mazo
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+      break;
+
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste
       break;

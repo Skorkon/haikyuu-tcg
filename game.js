@@ -625,6 +625,15 @@ function colocarCarta(jugador, carta, zona) {
           }
         }
       }
+      // ================================================== Efectos
+      if (tieneEfecto("potenciarReceptorAoba")) {                            // si efecto activo
+        let efecto = game.efectosActivos.find(e => e.tipo === "potenciarReceptorAoba"); // buscar efecto
+        if (efecto.activadoPor !== game.jugadorActivo &&                     // si lo activó el rival
+            carta.info?.escuela === "Aoba Jôsai") {                          // y el receptor es de Aoba Jôsai
+          game.valorDefensa += 3;                                            // +3 a la recepción
+          log("Efecto Matsukawa: +3 a la recepción de " + carta.nombre + ".");
+        }
+      }
       actualizarFaseUI();
       renderMano();
       renderManoRival()
@@ -851,6 +860,17 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
       log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
       return;
     }
+
+        // comprobar efecto negarRobar
+    if (esHabilidad && tieneEfecto("negarRobar")) {                    // si es robo por habilidad
+      let efecto = game.efectosActivos.find(e => e.tipo === "negarRobar"); // buscar efecto
+      let jugadorIndex = game.jugadores.indexOf(jugador);             // índice del jugador que roba
+      if (efecto.activadoPor !== jugadorIndex) {                       // si lo activó el rival
+        log("Efecto activo: " + jugador.nombre + " no puede robar cartas por habilidad este turno.");
+        return;                                                        // bloquear el robo
+      }
+    }
+
     let carta = jugador.mazo.shift();
     jugador.mano.push(carta);
 
@@ -1150,6 +1170,29 @@ function resolverRemate() {
   game.valorAtaque = atacante + valorRemate;
   log(t("log.remataConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
+
+    // comprobar efecto finta
+  if (tieneEfecto("finta")) {                                          // si efecto finta activo
+    let efecto = game.efectosActivos.find(e => e.tipo === "finta");    // buscar efecto
+    game.valorAtaque = efecto.valor;                                   // fijar ataque al valor de finta
+    log("Finta: el ataque queda fijado en " + efecto.valor + ". Se salta la fase de bloqueo.");
+    // el que va a recibir roba 1 carta
+    if (modoOnline) {
+      enviarJugada("robarCarta", { cantidad: 1 });                         // avisar al rival que robe
+    } else {
+      let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;                  // índice del rival
+      robarCarta(game.jugadores[rivalIndex], 1);                           // el rival roba en local
+    }
+    game.fase = "recepcion";                                           // saltar a recepción
+    if (modoOnline) enviarFase("recepcion");                           // sincronizar fase
+    cambiarJugador();                                                  // turno al rival
+    actualizarFaseUI();                                                // actualizar letrero
+    renderMano();                                                      // actualizar mano
+    renderManoRival();                                                 // actualizar mano rival
+    renderCampo();                                                     // actualizar campo
+    return;                                                            // salir sin pasar por bloqueo
+  }
+
   game.fase = "bloqueo";
   if (modoOnline) enviarFase("bloqueo"); // avisar al rival del cambio de fase
   cambiarJugador();
@@ -2104,6 +2147,17 @@ function bloqueoMinimo(valor) {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log("Efecto activo: el bloqueo rival fallará si su defensa total es " + valor + " o menos.");
 }
+// ======================================= FINTA
+function finta(n) { // fijar ataque a n y saltar fase de bloqueo
+  game.efectosActivos.push({
+    tipo: "finta",
+    valor: n,                                                          // valor al que se fijará el ataque
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 1                                             // dura hasta resolver el remate
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
+  log("Efecto Finta (" + n + "): el ataque se fijará en " + n + " y se saltará la fase de bloqueo.");
+}
 // ======================================= ONE TOUCH
 function oneTouch(n) {
   if (tieneEfecto("negarOneTouch")) {
@@ -2147,6 +2201,16 @@ function negarEventosBloqueo() {
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log("Efecto activo: el rival no podrá jugar eventos de bloqueo.");
+}
+// ======================================== NEGAR ROBAR POR HABILIDADES
+function negarRobar() {
+  game.efectosActivos.push({
+    tipo: "negarRobar",
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 2                                             // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
+  log("Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno.");
 }
 // ======================================== BUSCAR EN EL TRASH
 function filtrarTrash(jugador, { escuela, posicion, anyo, tipo, sinHabilidad } = {}) {
@@ -2192,6 +2256,50 @@ async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porq
   renderManoRival()
   renderCampo();
   return true;
+}
+
+// ======================================== FORZAR DESCARTE RIVAL
+async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
+  if (!modoOnline) {                                                   // modo local: selector directo
+    let cartaDescarte = await mostrarSelectorCartas(                   // abrir selector para el rival
+      "Efecto de descarte: " + rival.nombre + " debe descartar 1 carta de su mano:", // título
+      rival.mano                                                        // mano del rival
+    );
+    if (!cartaDescarte) return;                                        // si cancela, ignorar (no debería)
+
+    let index = rival.mano.indexOf(cartaDescarte);                     // buscar en la mano del rival
+    rival.mano.splice(index, 1);                                       // sacar de la mano
+    rival.trash.push(cartaDescarte);                                   // enviar al trash
+    log(rival.nombre + " descarta " + cartaDescarte.nombre + ".");
+
+    renderMano();                                                      // actualizar mano
+    renderManoRival();                                                  // actualizar mano rival
+    renderCampo();                                                      // actualizar campo
+    return;
+  }
+
+  // modo online: enviar petición al rival y esperar respuesta
+  log("Esperando que el rival descarte una carta...");
+  bloquearUI();                                                         // bloquear mientras espera
+  enviarJugada("pedirDescarte", { rivalIndex: rivalIndex });           // avisar al rival
+
+  await new Promise(resolve => {                                       // esperar respuesta del rival
+    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");     // escuchar Firebase
+    ref.on("value", function(snap) {                                   // cuando cambie
+      let jugada = snap.val();                                         // leer datos
+      if (!jugada) return;                                             // ignorar si vacío
+      if (jugada.tipo !== "cartaDescartadaRival") return;             // ignorar si no es la respuesta
+      if (jugada.jugador === miNumero) return;                         // ignorar si es mío
+
+      ref.off();                                                       // desactivar listener
+      log(rival.nombre + " ha descartado una carta.");
+      desbloquearUI();                                                   // desbloquear tras recibir respuesta
+      renderMano();                                                    // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+      resolve();                                                        // resolver el Promise
+    });
+  });
 }
 
 // ===================================================================================================================================
@@ -2378,6 +2486,15 @@ async function aplicarLevApoyo(jugador) { // ===================================
   }
   renderCampo();                                                            // actualizar campo
 }
+function aplicarMatsukawa037() { // +3 a la recepción de receptores de Aoba Jôsai
+  game.efectosActivos.push({
+    tipo: "potenciarReceptorAoba",
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 2                                             // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
+  log("Efecto activo: los receptores de Aoba Jôsai tendrán +3 a la recepción este turno.");
+}
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 function mostrarFinPartida(gane) {
@@ -2468,9 +2585,17 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
+
+// MANO NEKOMA 
 /*
-// MANO J1
-["HV-P01-080", "HV-D02-003", "HV-P01-019", "HV-P01-025", "HV-P01-083"].forEach(id => {
+["HV-P01-080", "HV-D02-003", "HV-P01-019"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
+});
+*/
+// MANO AOBA JOSAI
+[ "HV-P01-033", "HV-P01-034", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2532,10 +2657,20 @@ game.jugadores[1].zonas.remate.push(levT2); // el "jugado" — siempre el últim
 let aoneP01 = todasLasCartas.find(c => c.info?.id === "HV-P01-054");
 game.jugadores[0].trash.push(aoneP01);
 
-// GUTS de prueba para ambos jugadores
+// GUTS NEKOMA
+/*
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+*/
+// GUTS AOBA JOSAI
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-036"); // Sasaya, sin habilidad
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
@@ -2546,7 +2681,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

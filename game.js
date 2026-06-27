@@ -2593,7 +2593,7 @@ game.jugadores[0].mazo.push(gtsr); */
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
 });
-*/
+
 // MANO AOBA JOSAI
 [ "HV-P01-033", "HV-P01-034", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -2666,7 +2666,7 @@ game.jugadores[0].trash.push(aoneP01);
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
-*/
+
 // GUTS AOBA JOSAI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
@@ -2681,7 +2681,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-
+*/
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

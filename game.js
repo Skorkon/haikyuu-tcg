@@ -625,13 +625,12 @@ function colocarCarta(jugador, carta, zona) {
           }
         }
       }
-      // ================================================== Efectos
-      if (tieneEfecto("potenciarReceptorAoba")) {                            // si efecto activo
-        let efecto = game.efectosActivos.find(e => e.tipo === "potenciarReceptorAoba"); // buscar efecto
-        if (efecto.activadoPor !== game.jugadorActivo &&                     // si lo activó el rival
-            carta.info?.escuela === "Aoba Jôsai") {                          // y el receptor es de Aoba Jôsai
-          game.valorDefensa += 3;                                            // +3 a la recepción
-          log("Efecto Matsukawa: +3 a la recepción de " + carta.nombre + ".");
+      if (tieneEfecto("potenciarReceptor")) {                                // si efecto activo
+        let efecto = game.efectosActivos.find(e => e.tipo === "potenciarReceptor"); // buscar efecto
+        if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
+            (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
+          game.valorDefensa += efecto.valor;                                 // sumar al valor de defensa
+          log("Efecto potenciar receptor: +" + efecto.valor + " a la recepción de " + carta.nombre + ".");
         }
       }
       actualizarFaseUI();
@@ -684,6 +683,15 @@ function colocarCarta(jugador, carta, zona) {
         log(t("log.efectoDebilitarColocador", { valor: 2, carta: carta.nombre }));
       }
     }
+    // comprobar efecto potenciarColocador
+    if (tieneEfecto("potenciarColocador")) {                               // si efecto activo
+      let efecto = game.efectosActivos.find(e => e.tipo === "potenciarColocador"); // buscar efecto
+      if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
+          (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
+        game.valorAtaque += efecto.valor;                                  // sumar al valor de ataque
+        log("Efecto potenciar colocador: +" + efecto.valor + " al pase de " + carta.nombre + ".");
+      }
+    }
     actualizarFaseUI();
     renderMano();
     renderManoRival()
@@ -730,6 +738,15 @@ function colocarCarta(jugador, carta, zona) {
       if (efecto.activadoPor !== game.jugadorActivo) { // solo si es el rival
         game.valorAtaque -= 2;
         log(t("log.efectoDebilitarRematador", { valor: 2, carta: carta.nombre }));
+      }
+    }
+    // comprobar efecto potenciarRematador
+    if (tieneEfecto("potenciarRematador")) {                               // si efecto activo
+      let efecto = game.efectosActivos.find(e => e.tipo === "potenciarRematador"); // buscar efecto
+      if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
+          (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
+        game.valorAtaque += efecto.valor;                                  // sumar al valor de ataque
+        log("Efecto potenciar rematador: +" + efecto.valor + " al remate de " + carta.nombre + ".");
       }
     }
     actualizarFaseUI();
@@ -874,10 +891,31 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
     let carta = jugador.mazo.shift();
     jugador.mano.push(carta);
 
+    // ================================================================ // Efectos
     if (esHabilidad && tieneEfecto("tendoSatori")) {                    // si es por habilidad, activar Tendo si está activo
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
       robarCarta(game.jugadores[rivalIndex], 1);                        // el rival roba una carta como reacción
       log(t("log.tendoSatori"));
+    }
+
+    if (esHabilidad && tieneEfecto("descartePorRobo")) {
+      let efecto = game.efectosActivos.find(e => e.tipo === "descartePorRobo");
+      if (efecto.activadoPor !== game.jugadores.indexOf(jugador)) {        // si lo activó el rival
+        mostrarSelectorCartas(                                             // selector en la propia pantalla
+          "Efecto Oikawa: debes descartar 1 carta:",
+          jugador.mano
+        ).then(cartaElegida => {
+          if (!cartaElegida) return;
+          let index = jugador.mano.indexOf(cartaElegida);
+          jugador.mano.splice(index, 1);
+          jugador.trash.push(cartaElegida);
+          log(jugador.nombre + " descarta " + cartaElegida.nombre + " por efecto descartePorRobo.");
+          if (modoOnline) enviarTrash(jugador);                            // sincronizar trash
+          renderMano();
+          renderManoRival();
+          renderCampo();
+        });
+      }
     }
   }
   log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: cantidad }));
@@ -2060,6 +2098,32 @@ function añadirCartaAMano(jugador, carta) {
     robarCarta(rival, 1);
     log("Tendo Satori: roba 1 carta por efecto.");
   }
+
+  if (tieneEfecto("descartePorRobo")) {                                  // si efecto descartePorRobo activo
+    let efecto = game.efectosActivos.find(e => e.tipo === "descartePorRobo"); // buscar efecto
+    if (efecto.activadoPor !== game.jugadores.indexOf(jugador)) {        // si lo activó el rival
+      if (modoOnline) {
+        enviarJugada("pedirDescarteRival", {                             // avisar al rival
+          rivalIndex: game.jugadores.indexOf(jugador)                    // índice del que descarta
+        });
+      } else {
+        mostrarSelectorCartas(                                           // abrir selector sin await
+          "Efecto Oikawa: " + jugador.nombre + " debe descartar 1 carta:",
+          jugador.mano
+        ).then(cartaElegida => {                                         // cuando elige
+          if (!cartaElegida) return;                                     // no debería cancelarse
+          let index = jugador.mano.indexOf(cartaElegida);                // buscar en la mano
+          jugador.mano.splice(index, 1);                                 // sacar de la mano
+          jugador.trash.push(cartaElegida);                              // enviar al trash
+          log(jugador.nombre + " descarta " + cartaElegida.nombre + " por efecto descartePorRobo.");
+          renderMano();                                                  // actualizar mano
+          renderManoRival();                                             // actualizar mano rival
+          renderCampo();                                                 // actualizar campo
+        });
+      }
+    }
+  }
+
   if (modoOnline) enviarTrash(jugador);                      // sincronizar trash tras mover carta
   renderMano();
   renderManoRival()
@@ -2127,6 +2191,41 @@ function debilitarBloqueadorCentral(cantidad) {
   });
   if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
   log("Efecto activo: el próximo bloqueador central rival tendrá -" + cantidad + " al bloqueo.");
+}
+function potenciarReceptor(valor, escuela = null) { // +N a la recepción, escuela opcional
+  game.efectosActivos.push({
+    tipo: "potenciarReceptor",
+    valor: valor,                                                      // cantidad a sumar
+    escuela: escuela,                                                  // escuela requerida (null = cualquiera)
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 1                                             // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos
+  log("Efecto activo: receptores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " a la recepción.");
+}
+
+function potenciarColocador(valor, escuela = null) { // +N al pase, escuela opcional
+  game.efectosActivos.push({
+    tipo: "potenciarColocador",
+    valor: valor,                                                      // cantidad a sumar
+    escuela: escuela,                                                  // escuela requerida (null = cualquiera)
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 1                                            // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos
+  log("Efecto activo: colocadores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " al pase.");
+}
+
+function potenciarRematador(valor, escuela = null) { // +N al remate, escuela opcional
+  game.efectosActivos.push({
+    tipo: "potenciarRematador",
+    valor: valor,                                                      // cantidad a sumar
+    escuela: escuela,                                                  // escuela requerida (null = cualquiera)
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 1                                             // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos
+  log("Efecto activo: rematadores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " al remate.");
 }
 function doshat(potencia) { // bloqueo ofensivo
   game.efectosActivos.push({
@@ -2301,7 +2400,15 @@ async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
     });
   });
 }
-
+function descartePorRobo() {                                            // forzar descarte rival cuando añade carta a la mano
+  game.efectosActivos.push({
+    tipo: "descartePorRobo",
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 2                                             // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos
+  log("Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar.");
+}
 // ===================================================================================================================================
 // ================================================================================================================ HABILIDADES ÚNICAS
 async function aplicarKenma019(jugador, carta) { // ========================================== KENMA P01-019
@@ -2585,24 +2692,22 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-
-// MANO NEKOMA 
 /*
+// MANO NEKOMA 
 ["HV-P01-080", "HV-D02-003", "HV-P01-019"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
 });
-
 // MANO AOBA JOSAI
-[ "HV-P01-033", "HV-P01-034", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039"].forEach(id => {
+[ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P02-056"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
 });
 
 // TRASH 
-["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P02-019"].forEach(id => {
+["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(carta);
   if (carta) game.jugadores[1].trash.push(carta);
@@ -2658,15 +2763,13 @@ let aoneP01 = todasLasCartas.find(c => c.info?.id === "HV-P01-054");
 game.jugadores[0].trash.push(aoneP01);
 
 // GUTS NEKOMA
-/*
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
-
 // GUTS AOBA JOSAI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {

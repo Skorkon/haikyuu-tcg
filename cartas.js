@@ -1751,7 +1751,7 @@ function inicializarCartas() {
         return false;                                                    // return false: GUTS insuficientes
       }
 
-      aplicarMatsukawa037();                                           // activar efecto
+      potenciarReceptor(3, "Aoba Jôsai");                                 // +3 solo a receptores de Aoba Jôsai
 
       game.fase = "recepcion";                                           // terminar fase de bloqueo
       log("Habilidad Matsukawa: fase de bloqueo terminada. Pasando a recepción.");
@@ -3016,6 +3016,174 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar <strong>6 GUTS</strong> de cualquier zona de tu campo para añadir <strong>+3 al remate</strong>.`
     }
   ),
+  crearCarta("Irihata Nobuteru", // ============================================================ P01-085
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      // recopilar todas las cartas de todos los GUTS del campo
+      let todasGuts = [];                                                // array de todas las cartas en GUTS
+      ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
+        let guts = jugador.zonas[zona].filter(c => !c.recienJugada);    // excluir recién jugadas
+        todasGuts.push(...guts);                                         // añadir al array
+      });
+
+      if (todasGuts.length < 8) {                                        // comprobar que hay 8 o más
+        log("No hay suficientes cartas en el GUTS (necesitas 8, tienes " + todasGuts.length + ").");
+        return false;                                                    // return false: coste no pagable
+      }
+
+      // selector 8 veces para trashear
+      let cartasDescartadas = [];                                        // array de cartas descartadas
+      for (let i = 0; i < 8; i++) {                                      // repetir 8 veces
+        let disponibles = todasGuts.filter(c => !cartasDescartadas.includes(c)); // excluir ya elegidas
+        let cartaElegida = await mostrarSelectorCartas(                  // abrir selector
+          "Irihata GUTS: elige una carta para descartar (" + (i + 1) + "/8):", // título
+          disponibles                                                    // cartas disponibles
+        );
+        if (!cartaElegida) return false;                                 // return false: cancelado
+        cartasDescartadas.push(cartaElegida);                            // añadir a descartadas
+      }
+
+      // trashear las 8 cartas elegidas
+      cartasDescartadas.forEach(c => {
+        ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // buscar en cada zona
+          let index = jugador.zonas[zona].indexOf(c);                    // buscar carta
+          if (index !== -1) {                                            // si se encuentra
+            jugador.zonas[zona].splice(index, 1);                        // sacar de la zona
+            jugador.trash.push(c);                                       // enviar al trash
+          }
+        });
+      });
+      log("Irihata: 8 cartas del GUTS enviadas al trash.");
+
+      robarCarta(jugador, 1, true);                                      // roba 1 carta
+      log("Irihata: roba 1 carta.");
+
+      potenciarReceptor(1, "Aoba Jôsai");                                // +1 a receptores de Aoba Jôsai
+      potenciarColocador(1, "Aoba Jôsai");                               // +1 a colocadores de Aoba Jôsai
+      potenciarRematador(1, "Aoba Jôsai");                               // +1 a rematadores de Aoba Jôsai
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",                                             // subtipo entrenador
+      id: "HV-P01-085",
+      fases: ["recepcion"],                                              // solo en recepción
+      escuela: "Aoba Jôsai",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Gasta 8 cartas del GUTS de tu campo para activar. Roba 1 carta. </br>Durante este turno, cada personaje de <strong>Aoba Jôsai</strong> que coloques tendrá <strong>+1 a su parámetro activo</strong>.`    }
+  ),
+  crearCarta('"Cuando el director cambia, el sonido cambia"', // ================================ P01-086
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      // buscar personajes de Aoba Jôsai en el trash
+      let aobaEnTrash = jugador.trash.filter(c =>                        // filtrar trash
+        c.info?.escuela === "Aoba Jôsai" &&                              // solo Aoba Jôsai
+        c.info?.tipo === "personaje"                                     // solo personajes
+      );
+      if (aobaEnTrash.length === 0) {                                    // si no hay ninguno
+        log("No hay personajes de Aoba Jôsai en el trash.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      // elegir carta del trash
+      let cartaElegida = await mostrarSelectorCartas(                    // abrir selector
+        "Elige un personaje de Aoba Jôsai del trash para añadir a tu mano:", // título
+        aobaEnTrash                                                      // solo Aoba Jôsai
+      );
+      if (!cartaElegida) return false;                                   // return false: cancelado
+
+      let index = jugador.trash.indexOf(cartaElegida);                   // buscar en el trash
+      jugador.trash.splice(index, 1);                                    // sacar del trash
+      añadirCartaAMano(jugador, cartaElegida);                           // añadir a la mano
+      log(cartaElegida.nombre + " añadido a la mano desde el trash.");
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-086",
+      fases: ["recepcion"],                                              // recepción y robo → recepcion en nuestro sistema
+      escuela: "Aoba Jôsai",
+      rareza: "R",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Añade 1 carta de personaje de <strong>Aoba Jôsai</strong> desde tu descarte a tu mano.`
+    }
+  ),
+  crearCarta('"Yo también lo pensé"', // ================================================= P01-087
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      // comprobar que el sacador o colocador es Oikawa Toru
+      let sacador = jugador.zonas.saque.at(-1);                          // último sacador
+      let colocador = jugador.zonas.pase.at(-1);                         // último colocador
+      let hayOikawa = sacador?.nombre === "Oikawa Toru" ||               // si sacador es Oikawa
+                      colocador?.nombre === "Oikawa Toru";               // o colocador es Oikawa
+      if (!hayOikawa) {                                                  // si no hay Oikawa
+        log("Tu sacador o colocador debe ser Oikawa Toru.");
+        jugador.mano.push(carta);                                        // devolver carta a la mano
+        jugador.zonas.eventos.splice(jugador.zonas.eventos.indexOf(carta), 1); // sacar de zona eventos
+        renderMano();                                                    // actualizar mano
+        renderManoRival();                                               // actualizar mano rival
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      robarCarta(jugador, 1, true);                                      // roba 1 carta
+
+      // +1 al pase de un Oikawa Toru en el campo
+      let oikawaEnPase = jugador.zonas.pase.at(-1);                      // buscar Oikawa en pase
+      if (oikawaEnPase?.nombre === "Oikawa Toru") {                      // si hay Oikawa en pase
+        game.valorAtaque += 1;                                           // +1 al pase
+        log('"Yo también lo pensé": +1 al pase de Oikawa Toru.');
+      } else if (sacador?.nombre === "Oikawa Toru") {                    // si hay Oikawa en saque
+        game.valorAtaque += 1;                                           // +1 al saque
+        log('"Yo también lo pensé": +1 al saque de Oikawa Toru.');
+      }
+      descartePorRobo();                                                 // activar efecto
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-087",
+      fases: ["saque", "pase"],                                          // saque y pase
+      escuela: "Aoba Jôsai",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Solo puedes jugar esta carta si tu sacador o colocador es <strong>Oikawa Toru</strong>. Roba 1 carta y +1 al parámetro activo de <strong>Oikawa Toru</strong>. Durante el siguiente turno rival, cada vez que el rival añada una carta a su mano por medios no estándar, deberá descartar 1 carta de su mano.`
+    }
+  ),
+  crearCarta('"Vosotros sois fuertes"', // ===================================================== P01-088
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                      // roba 1 carta
+
+      // comprobar que hay un receptor de Aoba Jôsai en juego
+      let receptor = jugador.zonas.recepcion.at(-1);                     // buscar receptor en juego
+      if (!receptor || receptor.info?.escuela !== "Aoba Jôsai") {        // si no hay o no es de Aoba Jôsai
+        log("No hay ningún receptor de Aoba Jôsai en juego.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      game.valorDefensa += 1;                                            // +1 a la recepción
+      log('"Vosotros sois fuertes": +1 a la recepción de ' + receptor.nombre + '.');
+
+      if (jugador.mano.length <= 3) {                                    // si 3 o menos cartas en mano
+        game.valorDefensa += 1;                                          // +1 adicional
+        log('"Vosotros sois fuertes": +1 adicional a la recepción.');
+      }
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-088",
+      fases: ["recepcion"],                                              // solo en recepción
+      escuela: "Aoba Jôsai",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Aoba Jôsai</strong> en juego. Si tienes 3 o menos cartas en la mano, +1 adicional a la recepción.`
+    }
+  ),
+
   // =================================================================================================================================== P02
   crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {
@@ -4018,12 +4186,170 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+
+  crearCarta("Oikawa Toru", // ================================================================= P02-056
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 1,
+      remate: 0,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                                 // comprobar zona válida
+        log("Solo puedes usar esta habilidad en pase.");
+        return false;                                                    // return false: zona incorrecta
+      }
+      if (!await usarGuts(jugador, "pase", 3)) {                         // pagar 3 GUTS de pase
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      game.valorAtaque += 2;                                             // +2 al pase
+      log("Habilidad Oikawa: +2 al pase.");
+
+      // buscar Iwaizumi en el trash
+      let iwaizumisEnTrash = jugador.trash.filter(c =>                   // filtrar trash
+        c.nombre === "Iwaizumi Hajime"                                   // solo Iwaizumi
+      );
+      if (iwaizumisEnTrash.length === 0) {                               // si no hay ninguno
+        log("No hay ningún Iwaizumi Hajime en el trash.");
+        return;                                                          // termina sin robar
+      }
+
+      let iwaizumiElegido = await mostrarSelectorCartas(                 // abrir selector
+        "Elige un Iwaizumi Hajime del trash para añadir a tu mano:",     // título
+        iwaizumisEnTrash                                                 // solo Iwaizumi
+      );
+      if (!iwaizumiElegido) return;                                      // si cancela, ignorar
+
+      let index = jugador.trash.indexOf(iwaizumiElegido);                // buscar en el trash
+      jugador.trash.splice(index, 1);                                    // sacar del trash
+      añadirCartaAMano(jugador, iwaizumiElegido);                        // añadir a la mano
+      log("Iwaizumi Hajime añadido a la mano desde el trash.");
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-056",
+      escuela: "Aoba Jôsai",
+      posicion: "S",
+      anyo: 3,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 3</strong>: +2 al pase. Después, puedes añadir hasta 1 <strong>Iwaizumi Hajime</strong> desde tu descarte a tu mano.`
+    }
+  ),
+  crearCarta("Iwaizumi Hajime", // ============================================================= P02-057
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
+        log("Solo puedes usar esta habilidad en recepción.");
+        return false;                                                    // return false: zona incorrecta
+      }
+
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;   // índice del rival
+      let rival = game.jugadores[rivalIndex];                            // jugador rival
+      if (rival.mano.length > 3) {                                       // comprobar cartas del rival
+        log("El rival debe tener 3 o menos cartas en la mano.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      if (!await usarGuts(jugador, "recepcion", 3)) {                    // pagar 3 GUTS de recepción
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      game.valorDefensa += 7;                                            // +7 a la recepción
+      log("Habilidad Iwaizumi: +7 a la recepción.");
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-057",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS - 3</strong>: Solo puedes usar esta habilidad si el rival tiene 3 o menos cartas en la mano. +7 a la recepción.`
+    }
+  ),
+  crearCarta("Kunimi Akira", // ================================================================ P02-058
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
+        log("Solo puedes usar esta habilidad en recepción.");
+        return false;                                                    // return false: zona incorrecta
+      }
+
+      let cartasQueNecesita = 3 - jugador.mano.length;                  // cartas que faltan hasta 3
+      if (cartasQueNecesita <= 0) {                                      // si ya tiene 3 o más
+        log("Ya tienes 3 o más cartas en la mano.");
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      if (!await usarGuts(jugador, "recepcion", 2)) {                    // pagar 2 GUTS de recepción
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      robarCarta(jugador, cartasQueNecesita, true);                      // robar hasta tener 3
+      log("Habilidad Kunimi: roba " + cartasQueNecesita + " carta(s) hasta tener 3 en la mano.");
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-058",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS - 2</strong>: Roba cartas hasta tener 3 en la mano.`
+    }
+  ),
+  crearCarta("Kyotani Kentaro", // ============================================================= P02-059
+    {
+      saque: 2,
+      recepcion: 4,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P02-059",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N"
+    }
+  ),
+
   crearCarta("Kurosu Norimune", // ============================================================ P02-084
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
 
       robarCarta(jugador, 1, true);                                          // roba 1 carta
-      log("Kurosu: roba 1 carta 🃏");
+      log("Kurosu: roba 1 carta.");
 
       // buscar personajes de Inarizaki en juego
       let elegibles = [

@@ -1174,6 +1174,11 @@ function inicializarCartas() {
       añadirCartaAMano(jugador, cartaElegida);                        // añadir a la mano
       log(cartaElegida.nombre + " añadida a la mano desde la zona de eventos.");
 
+      if (modoOnline) enviarJugada("quitarCartaZona", {                     // avisar al rival
+        zona: "eventos",                                                     // zona de origen
+        cartaId: cartaElegida.info.id                                        // id de la carta
+      });
+
       renderMano();                                                   // actualizar mano
       renderManoRival();                                              // actualizar mano rival
       renderCampo();                                                  // actualizar campo
@@ -1274,11 +1279,17 @@ function inicializarCartas() {
 
       // sacar las cartas elegidas del GUTS y añadirlas a la mano
       cartasElegidas.forEach(c => {
-        let index = jugador.zonas[zonaElegida].indexOf(c);            // buscar en la zona
-        jugador.zonas[zonaElegida].splice(index, 1);                  // sacar de la zona
-        añadirCartaAMano(jugador, c);                                 // añadir a la mano
+        let index = jugador.zonas[zonaElegida].indexOf(c);                   // buscar en la zona
+        jugador.zonas[zonaElegida].splice(index, 1);                         // sacar de la zona
+        añadirCartaAMano(jugador, c);                                        // añadir a la mano
         log(c.nombre + " añadida a la mano desde el GUTS de " + zonaElegida + ".");
+
+        if (modoOnline) enviarJugada("quitarCartaZona", {                    // avisar al rival
+            zona: zonaElegida,                                                 // zona de origen
+            cartaId: c.info?.id                                                // id de la carta
+          });
       });
+
       renderMano();                                                   // actualizar mano
       renderManoRival();                                              // actualizar mano rival
       renderCampo();                                                  // actualizar campo
@@ -3832,7 +3843,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS -2 : Si 3 bloqueos del date = Contraataque 7
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log("Solo puedes usar esta habilidad en bloqueo.");
         carta.habilidadUsada = false;
         return;
       }
@@ -3845,13 +3856,13 @@ function inicializarCartas() {
 
       let dateTeches = todosBloqueo.filter(c => c?.info?.escuela === "Date Kôgyô");
       if (dateTeches.length < 3) {
-        log("Necesitas 3 personajes de Date Kôgyô en bloqueo ❌");
+        log("Necesitas 3 personajes de Date Kôgyô en bloqueo.");
         carta.habilidadUsada = false;
         return false;
       }
 
       if (!await usarGuts(jugador, "bloqueo", 2)) {
-        log("Necesitas 2 GUTS en bloqueo ❌");
+        log("Necesitas 2 GUTS en bloqueo.");
         carta.habilidadUsada = false;
         return;
       }
@@ -4037,7 +4048,7 @@ function inicializarCartas() {
       // comprobar que todas son de Date Kôgyô
       let todasDate = tresCartas.every(c => c.info?.escuela === "Date Kôgyô");
       if (!todasDate) {
-        log("No todas las cartas son de Date Kôgyô. Efecto cancelado ❌");
+        log("No todas las cartas son de Date Kôgyô. Efecto cancelado.");
         return;
       }
 
@@ -4049,14 +4060,14 @@ function inicializarCartas() {
       );
 
       if (elegibles.length === 0) {
-        log("No hay personajes de Date Kôgyô sin habilidad en el trash ❌");
+        log("No hay personajes de Date Kôgyô sin habilidad en el trash.");
         return;
       }
 
       // mostrar selector
       let cartaElegida = await mostrarSelectorCartas("Elige un personaje de Date Kôgyô para colocar como bloqueador de apoyo:", elegibles);
       if (!cartaElegida) {
-        log("Habilidad cancelada ❌");
+        log("Habilidad cancelada.");
         return;
       }
 
@@ -4065,7 +4076,7 @@ function inicializarCartas() {
       jugador.trash.splice(indexTrash, 1);
 
       if (game.bloqueoActual.apoyos.length >= 2) {
-        log("Ya hay 2 bloqueadores de apoyo ❌");
+        log("Ya hay 2 bloqueadores de apoyo.");
         jugador.trash.push(cartaElegida);
         return;
       }
@@ -4074,6 +4085,14 @@ function inicializarCartas() {
       game.bloqueoActual.apoyos.push(cartaElegida);
       cartaElegida.zonaActual = "bloqueoApoyo";
       log(cartaElegida.nombre + " colocado como bloqueador de apoyo desde el trash.");
+
+      if (modoOnline) {
+        enviarJugada("cartaJugada", {
+          zona: "bloqueoApoyo",
+          cartaId: cartaElegida.info?.id
+        });
+      }
+
       renderCampo();
       renderMano();
       renderManoRival()

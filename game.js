@@ -1789,7 +1789,7 @@ function renderCampo() {
               return;
             }
             mostrarSelectorCartas(
-              "GUTS de " + zona + " — " + cartasGuts.length + " carta(s)",
+              "GUTS de " + zona + " : " + cartasGuts.length + " carta(s)",
               cartasGuts,
               true                                                    // permite cerrar clicando fuera
             );
@@ -2694,7 +2694,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 /*
 // MANO NEKOMA 
-["HV-P01-080", "HV-D02-003", "HV-P01-019"].forEach(id => {
+["HV-P01-021", "HV-D02-003", "HV-P01-018"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2702,8 +2702,8 @@ game.jugadores[0].mazo.push(gtsr); */
 // MANO AOBA JOSAI
 [ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P02-056"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 
 // TRASH 
@@ -2766,16 +2766,16 @@ game.jugadores[0].trash.push(aoneP01);
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // GUTS AOBA JOSAI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-036"); // Sasaya, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 

@@ -161,10 +161,11 @@ function setLang(lang) {
 }
 
 function aplicarIdioma() {
-  const elementos = document.querySelectorAll("[data-i18n]"); // Busca todos los elementos del HTML que tengan el atributo data-i18n
-  
-  for (const elemento of elementos) { // Para cada elemento encontrado...
-    const clave = elemento.getAttribute("data-i18n"); // ...lee su clave
-    elemento.textContent = t(clave); // ...y reemplaza su texto con la traducción
+  const elementos = document.querySelectorAll("[data-i18n]");
+  for (const elemento of elementos) {
+    // Saltar las zonas del campo — renderCampo() las gestiona
+    if (elemento.classList.contains("zona")) continue;
+    const clave = elemento.getAttribute("data-i18n");
+    elemento.textContent = t(clave);
   }
 }

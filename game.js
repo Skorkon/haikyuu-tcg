@@ -976,6 +976,60 @@ async function usarGuts(jugador, zona, cantidad) {
   }
   return true;
 }
+// ======================================================================================================================= USAR GUTS MULTIZONA
+async function usarGutsMultiZona(jugador, cantidad) { // GUTS de múltiples zonas
+  // recopilar todos los GUTS disponibles de todas las zonas
+  let todasGuts = [];                                                    // array de {carta, zona}
+  ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
+    jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {     // excluir recién jugadas
+      todasGuts.push({ carta: c, zona: zona });                          // guardar carta + zona
+    });
+  });
+
+  if (todasGuts.length < cantidad) {                                     // comprobar que hay suficientes
+    log("No hay suficientes GUTS en el campo (necesitas " + cantidad + ", tienes " + todasGuts.length + ") ❌");
+    return false;                                                        // return false: GUTS insuficientes
+  }
+
+  // elegir cartas una a una
+  let elegidas = [];                                                     // array de {carta, zona} elegidas
+  for (let i = 0; i < cantidad; i++) {
+    let disponibles = todasGuts.filter(item => !elegidas.includes(item)); // filtrar items no elegidos
+
+    let proxies = disponibles.map(item => ({                             // un proxy por item
+      ...item.carta,                                                     // copiar propiedades de la carta
+      _item: item                                                        // referencia al item original
+    }));
+
+    let proxyElegido = await mostrarSelectorCartas(                      // abrir selector con proxies
+      t("log.gutsTitulo", { zona: "campo", actual: i + 1, total: cantidad }), // título
+      proxies                                                            // cartas disponibles
+    );
+    if (!proxyElegido) return false;                                     // return false: cancelado
+
+    let item = proxyElegido._item;                                       // recuperar item original
+    elegidas.push(item);                                                 // añadir a elegidas
+
+    // sacar la carta de su zona EN EL MOMENTO de elegirla
+    let index = jugador.zonas[item.zona].indexOf(item.carta);            // buscar en su zona
+    jugador.zonas[item.zona].splice(index, 1);                          // sacar de la zona inmediatamente
+    jugador.trash.push(item.carta);                                      // enviar al trash
+    game.gutsDescartados.push(item.carta);                               // registrar como GUTS usado
+
+    if (modoOnline) {
+      enviarJugada("gutsUsado", {                                        // avisar al rival
+        zona: item.zona,                                                 // zona de origen
+        cartasIds: [item.carta.info?.id]                                 // id de la carta
+      });
+    }
+
+    renderCampo();                                                       // actualizar campo tras cada extracción
+  }
+
+  if (modoOnline) enviarTrash(jugador);                                  // sincronizar trash al final
+  log("GUTS multi-zona: " + cantidad + " cartas enviadas al trash.");
+  return true;                                                           // return true: éxito
+}
 // ==================================================================================================================================================== BOTONES JUGAR CARTAS
 // ============================================================================================================================= BOTÓN
 // ============================================================================================================================= SAQUE 
@@ -2000,7 +2054,9 @@ function mostrarTooltip(carta, e) {
       <strong>${carta.nombre}</strong><br>
       <span style="color:#888">${carta.info?.escuela || ""} · ${carta.info?.posicion || ""} ${infoAnyo}</span><br><br>
       ${infoStats}
-      ${carta.info?.descripcion ? `<br>${carta.info.descripcion}` : ""}
+      ${(() => { let d = DESCRIPCIONES[carta.info?.id]?.[idiomaActivo] || carta.info?.descripcion;
+        return d ? `<br>${d.replace(/&quot;/g, '"')}` : ""; 
+      })()}
     </div>
   `;
 
@@ -2692,18 +2748,18 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-/*
+
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
-});
-// MANO AOBA JOSAI
-[ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P02-056"].forEach(id => {
-  let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
+});
+// MANO AOBA JOSAI
+[ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-D01-001"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 
 // TRASH 
@@ -2766,16 +2822,16 @@ game.jugadores[0].trash.push(aoneP01);
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // GUTS AOBA JOSAI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-036"); // Sasaya, sin habilidad
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 
@@ -2784,7 +2840,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Convertidor descripciones → JS</title>
+</head>
+<body>
+  <h2>Convertidor de descripciones de cartas</h2>
+
+  <!-- Campo para seleccionar el archivo CSV -->
+  <input type="file" id="archivo" accept=".csv">
+  <br><br>
+
+  <!-- Botón que lanza la conversión -->
+  <button onclick="convertir()">Convertir</button>
+  <br><br>
+
+  <!-- Botón para descargar el resultado -->
+  <button onclick="descargar()">Descargar descripciones.js</button>
+  <br><br>
+
+  <!-- Aquí aparecerá el resultado JavaScript generado -->
+  <textarea id="resultado" style="width:100%; height:500px;"></textarea>
+
+  <script>
+    function convertir() {
+      // Recuperar el archivo seleccionado
+      let archivo = document.getElementById("archivo").files[0];
+      if (!archivo) {
+        alert("Selecciona un archivo CSV primero");
+        return;
+      }
+
+      let lector = new FileReader();
+      lector.onload = function(e) {
+        let texto = e.target.result;
+
+        // Separar en líneas
+        let lineas = texto.split("\n");
+
+        // Primera línea es la cabecera: id, es, en, fr
+        let cabecera = lineas[0].split(";");
+        let idiomas = cabecera.slice(1).map(i => i.trim());
+
+        // Objeto resultado
+        let resultado = {};
+
+        // Recorrer las filas
+        for (let i = 1; i < lineas.length; i++) {
+          let linea = lineas[i].trim();
+          if (!linea) continue; // ignorar líneas vacías
+
+          // Separar por ; pero respetando las celdas entre comillas
+          let columnas = parsearLinea(linea);
+          if (columnas.length < 2) continue;
+
+          // Primera columna es el id de la carta
+          let id = columnas[0].trim();
+          resultado[id] = {};
+
+          // Resto de columnas son los idiomas
+          idiomas.forEach((lang, j) => {
+            let valor = (columnas[j + 1] || "").trim();
+            // Convertir comillas dobles escapadas "" a simples "
+            valor = valor.replace(/""/g, '"');
+            resultado[id][lang] = valor;
+          });
+        }
+
+        // Generar el JS
+        let js = "// Generado automáticamente — no editar manualmente\n";
+        js += "// Editar el archivo descripciones.csv y volver a convertir\n\n";
+        js += "const DESCRIPCIONES = " + JSON.stringify(resultado, null, 2) + ";";
+
+        document.getElementById("resultado").value = js;
+      };
+
+      lector.readAsText(archivo, "UTF-8");
+    }
+
+    function parsearLinea(linea) {
+      // Separar por ; respetando celdas entre comillas
+      let columnas = [];
+      let actual = "";
+      let dentroComillas = false;
+
+      for (let i = 0; i < linea.length; i++) {
+        let char = linea[i];
+        if (char === '"') {
+          dentroComillas = !dentroComillas;
+        } else if (char === ';' && !dentroComillas) {
+          columnas.push(actual);
+          actual = "";
+        } else {
+          actual += char;
+        }
+      }
+      columnas.push(actual);
+      return columnas;
+    }
+
+    function descargar() {
+      let contenido = document.getElementById("resultado").value;
+      if (!contenido) {
+        alert("Primero convierte el CSV");
+        return;
+      }
+      let blob = new Blob([contenido], { type: "text/javascript" });
+      let a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "descripciones.js";
+      a.click();
+    }
+  </script>
+</body>
+</html>

@@ -2962,58 +2962,11 @@ function inicializarCartas() {
         return false;                                                        // return false: condición no cumplida
       }
 
-      // recopilar todos los GUTS disponibles de todas las zonas
-      let todasGuts = [];                                                    // array de {carta, zona}
-      ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
-        jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {     // excluir recién jugadas
-          todasGuts.push({ carta: c, zona: zona });                          // guardar carta + zona
-        });
-      });
-
-      if (todasGuts.length < 6) {                                            // comprobar que hay al menos 6
-        log("No hay suficientes GUTS en el campo (necesitas 6, tienes " + todasGuts.length + ").");
-        return false;                                                        // return false: condición no cumplida
-      }
-
-      // elegir 6 cartas una a una
-      let elegidas = [];                                                     // array de {carta, zona} elegidas
-      for (let i = 0; i < 6; i++) {
-        let disponiblesItems = todasGuts.filter(item => !elegidas.includes(item)); // filtrar items no elegidos
-
-        // crear proxies únicos para el selector (esto no lo entiendo mucho)
-        let proxies = disponiblesItems.map(item => ({                        // un proxy por item
-          ...item.carta,                                                     // copiar propiedades de la carta
-          _item: item                                                        // referencia al item original
-        }));
-
-        let proxyElegido = await mostrarSelectorCartas(                      // abrir selector con proxies
-          "Elige una carta del GUTS (" + (i + 1) + "/6):",
-          proxies
-        );
-        if (!proxyElegido) return false;                                     // return false: cancelado
-
-        elegidas.push(proxyElegido._item);                                   // añadir el item original
-      }
-
-      // sacar cada carta elegida de su zona y enviarla al trash
-      elegidas.forEach(item => {
-        let index = jugador.zonas[item.zona].indexOf(item.carta);            // buscar en su zona
-        jugador.zonas[item.zona].splice(index, 1);                          // sacar de la zona
-        jugador.trash.push(item.carta);                                      // enviar al trash
-        game.gutsDescartados.push(item.carta);                               // registrar como GUTS usado
-      });
+      if (!await usarGutsMultiZona(jugador, 6)) return false;               // pagar 6 GUTS de cualquier zona
 
       game.valorAtaque += 3;                                                 // +3 al remate
       log("Evento 1st Tempo: +3 al remate.");
 
-      if (modoOnline) {
-        elegidas.forEach(item => {                                            // para cada carta elegida
-          enviarJugada("gutsUsado", {                                         // avisar al rival
-            zona: item.zona,                                                  // zona de origen
-            cartasIds: [item.carta.info?.id]                                  // id de la carta
-          });
-        });
-      }
       renderMano();                                                          // actualizar mano
       renderManoRival();                                                     // actualizar mano rival
       renderCampo();                                                         // actualizar campo
@@ -3030,62 +2983,29 @@ function inicializarCartas() {
   crearCarta("Irihata Nobuteru", // ============================================================ P01-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
-      // recopilar todas las cartas de todos los GUTS del campo
-      let todasGuts = [];                                                // array de todas las cartas en GUTS
-      ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
-        let guts = jugador.zonas[zona].filter(c => !c.recienJugada);    // excluir recién jugadas
-        todasGuts.push(...guts);                                         // añadir al array
-      });
+    if (!await usarGutsMultiZona(jugador, 8)) return false;             // pagar 8 GUTS de cualquier zona
 
-      if (todasGuts.length < 8) {                                        // comprobar que hay 8 o más
-        log("No hay suficientes cartas en el GUTS (necesitas 8, tienes " + todasGuts.length + ").");
-        return false;                                                    // return false: coste no pagable
-      }
+      // activar los tres efectos de potenciar para Aoba Jôsai
+      potenciarReceptor(1, "Aoba Jôsai");                                  // +1 a receptores de Aoba Jôsai
+      potenciarColocador(1, "Aoba Jôsai");                                 // +1 a colocadores de Aoba Jôsai
+      potenciarRematador(1, "Aoba Jôsai");                                 // +1 a rematadores de Aoba Jôsai
 
-      // selector 8 veces para trashear
-      let cartasDescartadas = [];                                        // array de cartas descartadas
-      for (let i = 0; i < 8; i++) {                                      // repetir 8 veces
-        let disponibles = todasGuts.filter(c => !cartasDescartadas.includes(c)); // excluir ya elegidas
-        let cartaElegida = await mostrarSelectorCartas(                  // abrir selector
-          "Irihata GUTS: elige una carta para descartar (" + (i + 1) + "/8):", // título
-          disponibles                                                    // cartas disponibles
-        );
-        if (!cartaElegida) return false;                                 // return false: cancelado
-        cartasDescartadas.push(cartaElegida);                            // añadir a descartadas
-      }
-
-      // trashear las 8 cartas elegidas
-      cartasDescartadas.forEach(c => {
-        ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // buscar en cada zona
-          let index = jugador.zonas[zona].indexOf(c);                    // buscar carta
-          if (index !== -1) {                                            // si se encuentra
-            jugador.zonas[zona].splice(index, 1);                        // sacar de la zona
-            jugador.trash.push(c);                                       // enviar al trash
-          }
-        });
-      });
-      log("Irihata: 8 cartas del GUTS enviadas al trash.");
-
-      robarCarta(jugador, 1, true);                                      // roba 1 carta
+      robarCarta(jugador, 1, true);                                        // roba 1 carta al final
       log("Irihata: roba 1 carta.");
 
-      potenciarReceptor(1, "Aoba Jôsai");                                // +1 a receptores de Aoba Jôsai
-      potenciarColocador(1, "Aoba Jôsai");                               // +1 a colocadores de Aoba Jôsai
-      potenciarRematador(1, "Aoba Jôsai");                               // +1 a rematadores de Aoba Jôsai
-
-      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
-      renderMano();                                                      // actualizar mano
-      renderManoRival();                                                 // actualizar mano rival
-      renderCampo();                                                     // actualizar campo
+      renderMano();                                                        // actualizar mano
+      renderManoRival();                                                   // actualizar mano rival
+      renderCampo();                                                       // actualizar campo
     },
     {
       tipo: "evento",
-      subtipo: "entrenador",                                             // subtipo entrenador
+      subtipo: "entrenador",
       id: "HV-P01-085",
-      fases: ["recepcion"],                                              // solo en recepción
+      fases: ["recepcion"],
       escuela: "Aoba Jôsai",
       rareza: "N",
-      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Gasta 8 cartas del GUTS de tu campo para activar. Roba 1 carta. </br>Durante este turno, cada personaje de <strong>Aoba Jôsai</strong> que coloques tendrá <strong>+1 a su parámetro activo</strong>.`    }
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Gasta 8 cartas del GUTS de tu campo para activar. Durante este turno, cada personaje de <strong>Aoba Jôsai</strong> que coloques tendrá <strong>+1 a su parámetro activo</strong>.`
+    }
   ),
   crearCarta('"Cuando el director cambia, el sonido cambia"', // ================================ P01-086
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
@@ -3523,7 +3443,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 2: Roba 1 y trash 1
       if (carta.zonaActual !== "recepcion") {
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log("Solo puedes usar esta habilidad en recepción.");
         carta.habilidadUsada = false;
         return false;
       }
@@ -3547,6 +3467,8 @@ function inicializarCartas() {
       jugador.mano.splice(index, 1);
       jugador.trash.push(cartaDescarte);
       log(cartaDescarte.nombre + " descartada de la mano.");
+
+      if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
 
       renderMano();
       renderManoRival()

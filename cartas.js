@@ -2181,7 +2181,7 @@ function inicializarCartas() {
       }
       robarCarta(jugador, 1, true);
       game.valorAtaque += 2;
-      log("Habilidad Ushijima: +2 al ataque 💥");
+      log("Habilidad Ushijima: +2 al ataque.");
     },
     {
       tipo: "personaje",
@@ -2204,7 +2204,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log("Solo puedes usar esta habilidad en bloqueo.");
         return;
       }
       tendoSatori();
@@ -3394,6 +3394,7 @@ function inicializarCartas() {
       let indexDescarte = jugador.mano.indexOf(cartaDescarte);
       jugador.mano.splice(indexDescarte, 1);
       jugador.trash.push(cartaDescarte);
+      enviarTrash(jugador);
       log(cartaDescarte.nombre + " descartada de la mano.");
 
       // GUTS-3
@@ -3408,7 +3409,7 @@ function inicializarCartas() {
       // buscar carta de Inarizaki en zona de eventos
       let elegibles = jugador.zonas.eventos.filter(c => c.info?.escuela === "Inarizaki");
       if (elegibles.length === 0) {
-        log("No hay cartas de Inarizaki en la zona de eventos ❌");
+        log("No hay cartas de Inarizaki en la zona de eventos.");
         return;
       }
 
@@ -3417,6 +3418,7 @@ function inicializarCartas() {
 
       let index = jugador.zonas.eventos.indexOf(cartaElegida);
       jugador.zonas.eventos.splice(index, 1);
+      enviarEventos(jugador);
       añadirCartaAMano(jugador, cartaElegida);
       log(cartaElegida.nombre + " añadida a la mano desde la zona de eventos.");
       renderMano();

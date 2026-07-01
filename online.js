@@ -433,6 +433,7 @@ function confirmarMulliganOnline() {
         escucharManoRival();        // escuchar cambios en mano rival
         escucharEfectos()           // escuchar los efectos que se vayan añadiendo al array
         escucharTrashRival()        // escuchar los cambios de cartas en el trash
+        escucharEventosRival();
         escucharMazoPuntosRival()   // escuchar los cambios de el mazo de puntos
         escucharMazoRival()         // escuchar los cambios de el mazo del rival
         actualizarFaseUI();         // actualizar el letrero
@@ -552,6 +553,35 @@ function escucharTrashRival() {
       .filter(c => c);                                        // filtrar no encontradas
     
     renderCampo();                                            // redibujar campo
+  });
+}
+
+// ── SINCRONIZAR EVENTOS ─────────────────────────────────────
+function enviarEventos(jugador) {
+  if (!modoOnline) return;
+  const miIndice = miNumero - 1;
+  if (jugador !== game.jugadores[miIndice]) return;
+
+  db.ref("partidas/" + salaActual + "/eventos/jugador" + miNumero).set(
+    jugador.zonas.eventos.map(c => c.info?.id || null)
+  );
+}
+
+function escucharEventosRival() {
+  const rivalNumero = miNumero === 1 ? 2 : 1;
+  const rivalIndice = miNumero === 1 ? 1 : 0;
+
+  db.ref("partidas/" + salaActual + "/eventos/jugador" + rivalNumero).on("value", function(snap) {
+    const ids = snap.val();
+    if (!ids) return;
+
+    const todasLasCartas = inicializarCartas();
+    game.jugadores[rivalIndice].zonas.eventos = ids
+      .filter(id => id)
+      .map(id => todasLasCartas.find(c => c.info?.id === id))
+      .filter(c => c);
+
+    renderCampo();
   });
 }
 

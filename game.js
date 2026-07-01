@@ -896,6 +896,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
       robarCarta(game.jugadores[rivalIndex], 1);                        // el rival roba una carta como reacción
       log(t("log.tendoSatori"));
+      enviarJugada("robarCarta", { cantidad: 1 }); // ← avisar al rival para que robe en su lado
     }
 
     if (esHabilidad && tieneEfecto("descartePorRobo")) {
@@ -2748,7 +2749,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-
+/*
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -2756,7 +2757,7 @@ game.jugadores[0].mazo.push(gtsr); */
   // if (carta) game.jugadores[1].mano.push(carta);
 });
 // MANO AOBA JOSAI
-[ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-D01-001"].forEach(id => {
+[ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P01-057"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -2840,7 +2841,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-
+*/
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

@@ -630,7 +630,7 @@ function colocarCarta(jugador, carta, zona) {
         if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
             (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
           game.valorDefensa += efecto.valor;                                 // sumar al valor de defensa
-          log("Efecto potenciar receptor: +" + efecto.valor + " a la recepción de " + carta.nombre + ".");
+          log(t("log.potenciarReceptor", { valor: efecto.valor, carta: carta.nombre }));
         }
       }
       actualizarFaseUI();
@@ -689,7 +689,7 @@ function colocarCarta(jugador, carta, zona) {
       if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
           (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
         game.valorAtaque += efecto.valor;                                  // sumar al valor de ataque
-        log("Efecto potenciar colocador: +" + efecto.valor + " al pase de " + carta.nombre + ".");
+        log(t("log.potenciarColocador", { valor: efecto.valor, carta: carta.nombre }));
       }
     }
     actualizarFaseUI();
@@ -746,7 +746,7 @@ function colocarCarta(jugador, carta, zona) {
       if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
           (!efecto.escuela || carta.info?.escuela === efecto.escuela)) {   // escuela válida o cualquiera
         game.valorAtaque += efecto.valor;                                  // sumar al valor de ataque
-        log("Efecto potenciar rematador: +" + efecto.valor + " al remate de " + carta.nombre + ".");
+        log(t("log.potenciarRematador", { valor: efecto.valor, carta: carta.nombre }));
       }
     }
     actualizarFaseUI();
@@ -883,7 +883,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
       let efecto = game.efectosActivos.find(e => e.tipo === "negarRobar"); // buscar efecto
       let jugadorIndex = game.jugadores.indexOf(jugador);             // índice del jugador que roba
       if (efecto.activadoPor !== jugadorIndex) {                       // si lo activó el rival
-        log("Efecto activo: " + jugador.nombre + " no puede robar cartas por habilidad este turno.");
+        log(t("log.negarRobar", { jugador: jugador.nombre }));
         return;                                                        // bloquear el robo
       }
     }
@@ -988,7 +988,7 @@ async function usarGutsMultiZona(jugador, cantidad) { // GUTS de múltiples zona
   });
 
   if (todasGuts.length < cantidad) {                                     // comprobar que hay suficientes
-    log("No hay suficientes GUTS en el campo (necesitas " + cantidad + ", tienes " + todasGuts.length + ") ❌");
+    log(t("log.gutsInsuficienteMultiZona", { cantidad: cantidad, total: todasGuts.length }));
     return false;                                                        // return false: GUTS insuficientes
   }
 
@@ -1028,7 +1028,7 @@ async function usarGutsMultiZona(jugador, cantidad) { // GUTS de múltiples zona
   }
 
   if (modoOnline) enviarTrash(jugador);                                  // sincronizar trash al final
-  log("GUTS multi-zona: " + cantidad + " cartas enviadas al trash.");
+  log(t("log.gutsMultiZona", { cantidad: cantidad }));
   return true;                                                           // return true: éxito
 }
 // ==================================================================================================================================================== BOTONES JUGAR CARTAS
@@ -1115,7 +1115,7 @@ function jugarCarta() {
     case "pase": jugarPase(); break;
     case "remate": jugarRemate(); break;
     case "bloqueo": jugarBloqueo(); break;
-    default: log("No puedes jugar una carta en esta fase ❌");
+    default: break;
   }
 }
 
@@ -1268,7 +1268,7 @@ function resolverRemate() {
   if (tieneEfecto("finta")) {                                          // si efecto finta activo
     let efecto = game.efectosActivos.find(e => e.tipo === "finta");    // buscar efecto
     game.valorAtaque = efecto.valor;                                   // fijar ataque al valor de finta
-    log("Finta: el ataque queda fijado en " + efecto.valor + ". Se salta la fase de bloqueo.");
+    log(t("log.finta", { valor: efecto.valor }));
     // el que va a recibir roba 1 carta
     if (modoOnline) {
       enviarJugada("robarCarta", { cantidad: 1 });                         // avisar al rival que robe
@@ -1309,7 +1309,7 @@ function resolverBloqueo() {
   if (game.bloqueoActual.central) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularBloqueadorCentral");
     if (efecto && efecto.activadoPor !== game.jugadorActivo) {
-      log(t("log.efectoAnularBloqueadorCentral"));
+      log(t("log.negarBloqueadorCentral"));
       game.valorDefensa = 0;                            // resetear defensa
       defensaTotal = 0;                                 // resetear defensaTotal
     } else {
@@ -1600,31 +1600,6 @@ function deseleccionarCarta() {
   renderManoRival()
 }
 
-// ============================================================================================================================= BOTÓN
-// ========================================================================================================== MOSTRAR ESTADO DEL JUEGO
-// ========================================================================================================== FUNCIÓN OBSOLETA
-/*
-function mostrarEstado() {
-  game.jugadores.forEach(jugador => {
-    log("\n====================");
-    log("Jugador: " + jugador.nombre);
-    log("Puntos: " + jugador.puntos);
-    log("====================");
-    // ZONAS
-    log("ZONAS:");
-    for (let zona in jugador.zonas) {
-      const carta = jugador.zonas[zona];
-      if (Array.isArray(carta)) {
-        log("- " + zona + ": " + carta.length + " cartas");
-      } else if (carta) {
-        log("- " + zona + ": " + carta.nombre);
-      } else {
-        log("- " + zona + ": vacío");
-      }
-    }
-  });
-}
-*/
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
 function actualizarFaseUI() { // texto que indica la fase de juego en directo
@@ -1804,7 +1779,6 @@ function renderCampo() {
 
         if (carta === game.ultimaCarta) {  
           div.classList.add("seleccionada");
-          console.log("añadiendo clase seleccionada a:", carta.nombre);
         }
         if (carta.info?.id) {
           div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`;
@@ -1837,7 +1811,7 @@ function renderCampo() {
                 game.ultimaCarta = carta;
                 game.ultimoJugador = jugador;
                 game.cartaSeleccionada = null;
-                log("Carta seleccionada del campo: " + carta.nombre);
+                log(t("log.cartaSeleccionadaCampo", { carta: carta.nombre }));
                 renderMano();
                 renderCampo();
               }
@@ -1856,7 +1830,7 @@ function renderCampo() {
           game.ultimoJugador = jugador;
           game.cartaSeleccionada = null;
           console.log("click detectado en:", carta.nombre);
-          log("Carta seleccionada del campo: " + carta.nombre);
+          log(t("log.cartaSeleccionadaCampo", { carta: carta.nombre }));
           renderMano();
           renderCampo();
         });
@@ -2077,7 +2051,7 @@ function mostrarTooltip(carta, e) {
 function negarBloqueadoresApoyo() {
   añadirEfecto("negarBloqueadoresApoyo");
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto: el rival solo puede colocar al bloqueador central este turno.");
+  log(t("log.negarBloqueadoresApoyo"));
 }
 function anularBloqueadorCentral() {
   game.efectosActivos.push({
@@ -2086,7 +2060,7 @@ function anularBloqueadorCentral() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el bloqueador central rival tendrá su bloqueo anulado.");
+  log(t("log.negarBloqueadorCentral"));
 }
 function limitarBloqueadores(max) {
   game.efectosActivos.push({
@@ -2096,12 +2070,12 @@ function limitarBloqueadores(max) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto: el rival solo puede colocar hasta " + max + " bloqueadores de apoyo.");
+  log(t("log.limitarBloqueadores", { max: max }));
 }
 function negarReceptorAlto() {
   añadirEfecto("negarReceptorAlto");
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto: el rival no puede colocar un receptor con recepción original de 6 o más.");
+  log(t("log.negarReceptorAlto"));
 }
 function anularHabilidadReceptor() {
   game.efectosActivos.push({
@@ -2110,7 +2084,7 @@ function anularHabilidadReceptor() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el siguiente receptor rival no podrá usar su habilidad.");
+  log(t("log.anularHabilidadReceptor"));
 }
 function anularHabilidadColocador() {
   game.efectosActivos.push({
@@ -2119,7 +2093,7 @@ function anularHabilidadColocador() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos();
-  log("Efecto activo: el siguiente colocador rival no podrá usar su habilidad.");
+  log(t("log.anularHabilidadColocador"));
 }
 function negarColocador() {
   game.efectosActivos.push({
@@ -2128,19 +2102,19 @@ function negarColocador() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el rival no podrá jugar un colocador (S) el próximo turno.");
+  log(t("log.negarColocador"));
 }
 function pagarConEvento(jugador) {
   let indexEvento = jugador.mano.findIndex(c => c.info?.tipo === "evento"); // buscar eventos en mano
   if (indexEvento === -1) { // si no tiene eventos en mano
-    log("Necesitas una carta de evento en la mano ❌");
+    log(t("log.eventoEnMano"));
     carta.habilidadUsada = true;
     return false;
   }
   let evento = jugador.mano.splice(indexEvento, 1)[0];
   jugador.trash.push(evento); // trasehar evento de la mano
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Carta de evento enviada al trash como coste.");
+  log(t("log.eventoPagar"));
   renderMano();
   renderManoRival()
   return true;
@@ -2208,7 +2182,7 @@ function blockout(nivelBloqueo) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto Blockout(" + nivelBloqueo + "): los bloqueadores del rival con bloqueo ≤ " + nivelBloqueo + " irán al trash.");
+  log(t("log.efectoBlockout", { valor: nivelBloqueo }));
 }
 function debilitarRematador() {
   game.efectosActivos.push({
@@ -2258,7 +2232,7 @@ function potenciarReceptor(valor, escuela = null) { // +N a la recepción, escue
     expira: game.turno + 1                                             // dura 1 turno rival
   });
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos
-  log("Efecto activo: receptores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " a la recepción.");
+  log(t("log.potenciarReceptorEscuela", { escuela: escuela ? " de " + escuela : "", valor: valor }));
 }
 
 function potenciarColocador(valor, escuela = null) { // +N al pase, escuela opcional
@@ -2270,7 +2244,7 @@ function potenciarColocador(valor, escuela = null) { // +N al pase, escuela opci
     expira: game.turno + 1                                            // dura 1 turno rival
   });
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos
-  log("Efecto activo: colocadores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " al pase.");
+  log(t("log.potenciarColocadorEscuela", { escuela: escuela ? " de " + escuela : "", valor: valor }));
 }
 
 function potenciarRematador(valor, escuela = null) { // +N al remate, escuela opcional
@@ -2282,7 +2256,7 @@ function potenciarRematador(valor, escuela = null) { // +N al remate, escuela op
     expira: game.turno + 1                                             // dura 1 turno rival
   });
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos
-  log("Efecto activo: rematadores" + (escuela ? " de " + escuela : "") + " tendrán +" + valor + " al remate.");
+  log(t("log.potenciarRematadorEscuela", { escuela: escuela ? " de " + escuela : "", valor: valor }));
 }
 function doshat(potencia) { // bloqueo ofensivo
   game.efectosActivos.push({

@@ -679,8 +679,8 @@ function colocarCarta(jugador, carta, zona) {
     if (tieneEfecto("debilitarColocador")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarColocador");
       if (efecto.activadoPor !== game.jugadorActivo) {
-        game.valorAtaque -= 2;
-        log(t("log.efectoDebilitarColocador", { valor: 2, carta: carta.nombre }));
+        game.valorAtaque -= efecto.valor;
+        log(t("log.efectoDebilitarColocador", { valor: efecto.valor, carta: carta.nombre }));
       }
     }
     // comprobar efecto potenciarColocador
@@ -737,7 +737,7 @@ function colocarCarta(jugador, carta, zona) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarRematador");
       if (efecto.activadoPor !== game.jugadorActivo) { // solo si es el rival
         game.valorAtaque -= 2;
-        log(t("log.efectoDebilitarRematador", { valor: 2, carta: carta.nombre }));
+        log(t("log.efectoDebilitarRematador", { valor: efecto.valor, carta: carta.nombre }));
       }
     }
     // comprobar efecto potenciarRematador
@@ -2127,7 +2127,7 @@ function añadirCartaAMano(jugador, carta) {
   
   if (tieneEfecto("tendoSatori")) {
     robarCarta(rival, 1);
-    log("Tendo Satori: roba 1 carta por efecto.");
+    log(t("log.robarCuandoRival"));
   }
 
   if (tieneEfecto("descartePorRobo")) {                                  // si efecto descartePorRobo activo
@@ -2165,7 +2165,7 @@ function tendoSatori() { // robar cuando el rival roba
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto Tendo: el rival robará 1 carta cada vez que añadas una carta a tu mano por medios no estándar 👁️");
+  log(t("log.robarCuandoRivalActivo"));
 }
 function kageyamaSP() { // +2 al ataque de un Hinata
   game.efectosActivos.push({
@@ -2184,24 +2184,28 @@ function blockout(nivelBloqueo) {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log(t("log.efectoBlockout", { valor: nivelBloqueo }));
 }
-function debilitarRematador() {
+function debilitarRematador(cantidad = 2) {
   game.efectosActivos.push({
     tipo: "debilitarRematador",
     activadoPor: game.jugadorActivo,
+    valor: cantidad,
     expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo Debilitar Rematador : el próximo rematador rival tendrá al remate reducido.");
+  if (modoOnline) enviarEfectos();
+  log(t("log.debilitarRematadorActivo", { valor: cantidad }));
 }
-function debilitarColocador() {
+
+function debilitarColocador(cantidad = 2) {
   game.efectosActivos.push({
     tipo: "debilitarColocador",
     activadoPor: game.jugadorActivo,
+    valor: cantidad,
     expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo Debilitar Colocador : el próximo colocador rival tendrá el pase reducido.");
+  if (modoOnline) enviarEfectos();
+  log(t("log.debilitarColocadorActivo", { valor: cantidad }));
 }
+
 function debilitarReceptor(cantidad = 1, soloSinHabilidad = false) {
   game.efectosActivos.push({
     tipo: "debilitarReceptor",
@@ -2210,8 +2214,8 @@ function debilitarReceptor(cantidad = 1, soloSinHabilidad = false) {
     soloSinHabilidad: soloSinHabilidad,
     expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo Debilitar Receptor: el próximo receptor rival tendrá -" + cantidad + "a la recepción.");
+  if (modoOnline) enviarEfectos();
+  log(t("log.debilitarReceptorActivo", { valor: cantidad }));
 }
 function debilitarBloqueadorCentral(cantidad) {
   game.efectosActivos.push({
@@ -2221,7 +2225,7 @@ function debilitarBloqueadorCentral(cantidad) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
-  log("Efecto activo: el próximo bloqueador central rival tendrá -" + cantidad + " al bloqueo.");
+  log(t("log.debilitarBloqueadorCentralActivo", { valor: cantidad }));
 }
 function potenciarReceptor(valor, escuela = null) { // +N a la recepción, escuela opcional
   game.efectosActivos.push({

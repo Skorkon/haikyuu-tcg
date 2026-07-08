@@ -68,6 +68,10 @@ const TRADUCCIONES = {
       "efectoDebilitarColocador": "Efecto colocador debilitado: -{valor} al pase de {carta}",
       "efectoDebilitarRematador": "Efecto rematador debilitado: -{valor} al remate de {carta}",
       "efectoDebilitarBloqueo": "Efecto: -{valor} al bloqueo de {carta}",
+      "debilitarRematadorActivo": "Efecto activo: el próximo rematador rival tendrá -{valor} al remate",
+      "debilitarColocadorActivo": "Efecto activo: el próximo colocador rival tendrá -{valor} al pase",
+      "debilitarReceptorActivo": "Efecto activo: el próximo receptor rival tendrá -{valor} a la recepción",
+      "debilitarBloqueadorCentralActivo": "Efecto activo: el próximo bloqueador central rival tendrá -{valor} al bloqueo",
       "efectoKageyamaSP": "Efecto Kageyama: Hinata sumará +2 al remate este turno",
       "efectoTendo": "Efecto Tendo: el rival robará 1 carta cada vez que añadas una carta a tu mano",
       "efectoBlockout": "Efecto Blockout({valor}): bloqueadores rivales con bloqueo menor o igual a {valor} irán al trash",
@@ -95,7 +99,9 @@ const TRADUCCIONES = {
       "soloDesdeMano": "Esta carta solo puede usar su habilidad desde la mano",
       "noHabilidadMano": "Esta carta no tiene habilidad de mano",
       "noHabilidadEnFase": "No puedes usar esta habilidad en fase de {zona}",
-      "finta": "Finta: el ataque queda fijado en {valor}. Se salta la fase de bloqueo"
+      "finta": "Finta: el ataque queda fijado en {valor}. Se salta la fase de bloqueo",
+      "robarCuandoRival": "El rival roba 1 carta por efecto",
+      "robarCuandoRivalActivo": "Efecto activo: el rival robará 1 carta cada vez que añadas una carta a tu mano"
     }
   },
   "en": {
@@ -164,6 +170,10 @@ const TRADUCCIONES = {
       "efectoDebilitarColocador": "Effect weakened setter: -{valor} to {carta} set",
       "efectoDebilitarRematador": "Effect weakened spiker: -{valor} to {carta} spike",
       "efectoDebilitarBloqueo": "Effect: -{valor} to {carta} block",
+      "debilitarRematadorActivo": "Active effect: next rival spiker will have -{valor} to spike",
+      "debilitarColocadorActivo": "Active effect: next rival setter will have -{valor} to set",
+      "debilitarReceptorActivo": "Active effect: next rival receiver will have -{valor} to reception",
+      "debilitarBloqueadorCentralActivo": "Active effect: next rival central blocker will have -{valor} to block",
       "efectoKageyamaSP": "Kageyama effect: Hinata gets +2 to spike this turn",
       "efectoTendo": "Tendo effect: rival draws 1 card each time you add a card to your hand",
       "efectoBlockout": "Blockout({valor}) effect: rival blockers with block equal or less than {valor} go to discard",
@@ -191,7 +201,9 @@ const TRADUCCIONES = {
       "soloDesdeMano": "This card can only use its ability from hand",
       "noHabilidadMano": "This card has no hand ability",
       "noHabilidadEnFase": "You cannot use this ability in {zona} phase",
-      "finta": "Feint: attack is set to {valor}. Block phase is skipped"
+      "finta": "Feint: attack is set to {valor}. Block phase is skipped",
+      "robarCuandoRival": "Rival draws 1 card by effect",
+      "robarCuandoRivalActivo": "Active effect: rival draws 1 card each time you add a card to your hand"
     }
   },
   "fr": {
@@ -260,6 +272,10 @@ const TRADUCCIONES = {
       "efectoDebilitarColocador": "Effet passeur affaibli : -{valor} à la passe de {carta}",
       "efectoDebilitarRematador": "Effet attaquant affaibli : -{valor} à l'attaque de {carta}",
       "efectoDebilitarBloqueo": "Effet : -{valor} au bloc de {carta}",
+      "debilitarRematadorActivo": "Effet actif : le prochain attaquant rival aura -{valor} à l'attaque",
+      "debilitarColocadorActivo": "Effet actif : le prochain passeur rival aura -{valor} à la passe",
+      "debilitarReceptorActivo": "Effet actif : le prochain receveur rival aura -{valor} à la réception",
+      "debilitarBloqueadorCentralActivo": "Effet actif : le prochain bloqueur central rival aura -{valor} au bloc",
       "efectoKageyamaSP": "Effet Kageyama : Hinata gagne +2 à l'attaque ce tour",
       "efectoTendo": "Effet Tendo : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main",
       "efectoBlockout": "Effet Blockout({valor}) : les bloqueurs rivaux avec bloc inférieur ou égal à {valor} vont à la défausse",
@@ -287,7 +303,9 @@ const TRADUCCIONES = {
       "soloDesdeMano": "Cette carte ne peut utiliser sa capacité que depuis la main",
       "noHabilidadMano": "Cette carte n'a pas de capacité depuis la main",
       "noHabilidadEnFase": "Tu ne peux pas utiliser cette capacité en phase {zona}",
-      "finta": "Feinte : l'attaque est fixée à {valor}. La phase de bloc est ignorée"
+      "finta": "Feinte : l'attaque est fixée à {valor}. La phase de bloc est ignorée",
+      "robarCuandoRival": "Le rival pioche 1 carte par effet",
+      "robarCuandoRivalActivo": "Effet actif : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main"
     }
   },
   "": {
@@ -356,6 +374,10 @@ const TRADUCCIONES = {
       "efectoDebilitarColocador": "",
       "efectoDebilitarRematador": "",
       "efectoDebilitarBloqueo": "",
+      "debilitarRematadorActivo": "",
+      "debilitarColocadorActivo": "",
+      "debilitarReceptorActivo": "",
+      "debilitarBloqueadorCentralActivo": "",
       "efectoKageyamaSP": "",
       "efectoTendo": "",
       "efectoBlockout": "",
@@ -383,7 +405,9 @@ const TRADUCCIONES = {
       "soloDesdeMano": "",
       "noHabilidadMano": "",
       "noHabilidadEnFase": "",
-      "finta": ""
+      "finta": "",
+      "robarCuandoRival": "",
+      "robarCuandoRivalActivo": ""
     }
   }
 };

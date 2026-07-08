@@ -347,8 +347,8 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 1;
-      log("Habilidad Kenma: +1 al pase 💫");
-      debilitarRematador();
+      log("Habilidad Kenma: +1 al pase.");
+      debilitarRematador(2);
     },
     {
       tipo: "personaje",
@@ -929,7 +929,7 @@ function inicializarCartas() {
 
     if (cartaRevelada.info?.escuela === "Karasuno") {
       log("¡Es de Karasuno! Efecto activado.");
-      debilitarColocador();
+      debilitarColocador(2);
     } else {
       log("La carta revelada no es de Karasuno: efecto no activado.");
     }
@@ -3885,7 +3885,7 @@ function inicializarCartas() {
         return;
       }
       doshat(4);
-      debilitarReceptor();
+      debilitarReceptor(1);
     },
     {
       tipo: "personaje",
@@ -4413,12 +4413,12 @@ function inicializarCartas() {
         let sacador = jugador.zonas.saque.at(-1);
         let atsumuEnSaque = sacador?.nombre === "Miya Atsumu";
 
-        debilitarReceptor(true); // solo sin habilidad
+        debilitarReceptor(1, true); // solo sin habilidad
         log("Efecto activo: el próximo receptor rival sin habilidad tendrá -1 a la recepción 📉");
 
         if (atsumuEnSaque) {
-          debilitarReceptor(true); // -1 adicional si Atsumu en saque
-          log("Bonus Atsumu: -1 adicional al receptor rival sin habilidad 📉");
+          debilitarReceptor(1, true); // -1 adicional si Atsumu en saque
+          log("Bonus Atsumu: -1 adicional al receptor rival sin habilidad.");
         }
       }
     },
@@ -4895,7 +4895,7 @@ function inicializarCartas() {
       }
 
       if (bloqueadores.length >= 3) {
-        debilitarReceptor();
+        debilitarReceptor(1);
         log("Evento: 3 Date Kôgyô en bloqueo: el próximo receptor rival tendrá -1 a la recepción.");
       }
     },

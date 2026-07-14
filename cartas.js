@@ -810,7 +810,7 @@ function inicializarCartas() {
       jugador.mazo.push(cartaRevelada); // va al fondo del mazo
       log(cartaRevelada.nombre + " enviado al fondo del mazo.");
     }
-    kageyamaSP(); // añadirá +2 SÓLO si se juega un Hinata
+    potenciarPersonaje("Hinata Shoyo", "remate", 2);
   },
     {
       tipo: "personaje",
@@ -2207,7 +2207,7 @@ function inicializarCartas() {
         log("Solo puedes usar esta habilidad en bloqueo.");
         return;
       }
-      tendoSatori();
+      robarCuandoRival();
     },
       {
         tipo: "personaje",
@@ -4606,9 +4606,8 @@ function inicializarCartas() {
       let colocador = jugador.zonas.pase.at(-1);                            // último colocador
       let rematador = jugador.zonas.remate.at(-1);                          // último rematador
 
-      if (colocador?.nombre === "Miya Osamu" &&                             // si colocador es Osamu
-          rematador?.nombre === "Miya Atsumu") {                            // y rematador es Atsumu
-        negarEventosBloqueo();                                              // activar efecto
+      if (colocador?.nombre === "Miya Osamu" && rematador?.nombre === "Miya Atsumu") {  // si colocador es Osamu y rematador es Atsumu
+        negarEventos("bloqueo");                                             // activar efecto
       }
     },
     {

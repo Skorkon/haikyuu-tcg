@@ -597,7 +597,7 @@ function colocarCarta(jugador, carta, zona) {
     }
     // ================================================== Efectos
     if (tieneEfecto("negarReceptorAlto") && carta.stats.recepcion >= 6) { // negar receptor alto
-      log(t("log.noReceptorAlto"));
+      log(t("log.negarReceptorAlto"));
       jugador.mano.push(carta);
       renderMano();
       renderManoRival()
@@ -718,10 +718,13 @@ function colocarCarta(jugador, carta, zona) {
     log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "remate", stat: carta.stats.remate }));
 
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
-    // ------------------------------------------------------------------------- Kageyama SP
-    if (tieneEfecto("kageyamaSP") && carta.nombre === "Hinata Shoyo") {
-      game.valorAtaque += 2;
-      log(t("log.efectoKageyamaSP"));
+    // ------------------------------------------------------------------------- Potenciar personaje
+    if (tieneEfecto("potenciarPersonaje")) {
+      let efecto = game.efectosActivos.find(e => e.tipo === "potenciarPersonaje" && e.nombrePersonaje === carta.nombre && e.zona === zona);
+      if (efecto) {
+        game.valorAtaque += efecto.valor;
+        log(t("log.potenciarPersonajeAplicado", {nombre: carta.nombre, zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)), valor: efecto.valor}));
+      }
     }
     // ------------------------------------------------------------------------- Kenma P01-019
     if (jugador.zonas.pase.at(-1)?.info?.id === "HV-P01-019" && carta.stats.remate === 3) {
@@ -769,7 +772,7 @@ function colocarCarta(jugador, carta, zona) {
         if (tieneEfecto("blockout")) {
           let efecto = game.efectosActivos.find(e => e.tipo === "blockout"); // buscar efecto
           if (carta.stats.bloqueo <= efecto.valor) {                         // si bloqueo insuficiente
-            log(t("log.blockoutTrash", { carta: carta.nombre, valor: efecto.valor }));
+            log(t("log.blockout", { carta: carta.nombre, valor: efecto.valor }));
             jugador.trash.push(carta);                                        // carta al trash
             renderMano();
             renderManoRival()
@@ -892,10 +895,10 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
     jugador.mano.push(carta);
 
     // ================================================================ // Efectos
-    if (esHabilidad && tieneEfecto("tendoSatori")) {                    // si es por habilidad, activar Tendo si está activo
+    if (esHabilidad && tieneEfecto("robarCuandoRival")) {                    // si es por habilidad, activar Tendo si está activo
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
       robarCarta(game.jugadores[rivalIndex], 1);                        // el rival roba una carta como reacción
-      log(t("log.tendoSatori"));
+      log(t("log.robarCuandoRival"));
       enviarJugada("robarCarta", { cantidad: 1 }); // ← avisar al rival para que robe en su lado
     }
 
@@ -1309,7 +1312,7 @@ function resolverBloqueo() {
   if (game.bloqueoActual.central) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularBloqueadorCentral");
     if (efecto && efecto.activadoPor !== game.jugadorActivo) {
-      log(t("log.negarBloqueadorCentral"));
+      log(t("log.anularBloqueadorCentral"));
       game.valorDefensa = 0;                            // resetear defensa
       defensaTotal = 0;                                 // resetear defensaTotal
     } else {
@@ -1326,7 +1329,7 @@ function resolverBloqueo() {
   if (tieneEfecto("bloqueoMinimo")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "bloqueoMinimo");
     if (defensaTotal <= efecto.valor) {
-      log(t("log.bloqueoMinimoForzado"));
+      log(t("log.bloqueoMinimo"));
     }
   }
 
@@ -1462,12 +1465,11 @@ function jugarEvento() {
   }
 
   // ==================================================================================================== Efectos
-  if (tieneEfecto("negarEventosBloqueo")) {                                  // si efecto activo
-    let efecto = game.efectosActivos.find(e => e.tipo === "negarEventosBloqueo"); // buscar efecto
-    if (efecto.activadoPor !== game.jugadorActivo &&                         // si lo activó el rival
-      carta.info?.fases?.includes("bloqueo")) {                            // y es evento de bloqueo
-      log(t("log.negarEventosBloqueo"));
-      return;                                                                // cancelar
+  if (tieneEfecto("negarEventos")) {
+    let efecto = game.efectosActivos.find(e => e.tipo === "negarEventos");
+    if (efecto.activadoPor !== game.jugadorActivo && carta.info?.fases?.includes(efecto.fase)) {
+      log(t("log.negarEventos", { fase: t("ui.zona" + efecto.fase.charAt(0).toUpperCase() + efecto.fase.slice(1)) }));
+      return;
     }
   }
   if (carta.info?.unica) {                                         // si la carta tiene restricción 1 Única
@@ -1517,7 +1519,7 @@ function jugarHabilidadDesdeMano() {
   // ============================================== Efectos de  habilidades
   let efectoMano = game.efectosActivos.find(e => e.tipo === "negarCartaDesdeMano");
   if (efectoMano && efectoMano.fases.includes(game.fase)) {
-    log(t("log.negarCartaDesdeMano", { fases: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
+    log(t("log.negarCartaDesdeMano", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;
   }
 
@@ -2051,7 +2053,7 @@ function mostrarTooltip(carta, e) {
 function negarBloqueadoresApoyo() {
   añadirEfecto("negarBloqueadoresApoyo");
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.negarBloqueadoresApoyo"));
+  log(t("log.negarBloqueadoresApoyoActivo"));
 }
 function anularBloqueadorCentral() {
   game.efectosActivos.push({
@@ -2060,7 +2062,7 @@ function anularBloqueadorCentral() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.negarBloqueadorCentral"));
+  log(t("log.anularBloqueadorCentralActivo"));
 }
 function limitarBloqueadores(max) {
   game.efectosActivos.push({
@@ -2070,12 +2072,12 @@ function limitarBloqueadores(max) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.limitarBloqueadores", { max: max }));
+  log(t("log.limitarBloqueadoresActivo", { max: max }));
 }
 function negarReceptorAlto() {
   añadirEfecto("negarReceptorAlto");
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.negarReceptorAlto"));
+  log(t("log.negarReceptorAltoActivo"));
 }
 function anularHabilidadReceptor() {
   game.efectosActivos.push({
@@ -2084,7 +2086,7 @@ function anularHabilidadReceptor() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.anularHabilidadReceptor"));
+  log(t("log.anularHabilidadReceptorActivo"));
 }
 function anularHabilidadColocador() {
   game.efectosActivos.push({
@@ -2102,7 +2104,7 @@ function negarColocador() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.negarColocador"));
+  log(t("log.negarColocadorActivo"));
 }
 function pagarConEvento(jugador) {
   let indexEvento = jugador.mano.findIndex(c => c.info?.tipo === "evento"); // buscar eventos en mano
@@ -2125,7 +2127,7 @@ function añadirCartaAMano(jugador, carta) {
   let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
   let rival = game.jugadores[rivalIndex];
   
-  if (tieneEfecto("tendoSatori")) {
+  if (tieneEfecto("robarCuandoRival")) {
     robarCarta(rival, 1);
     log(t("log.robarCuandoRival"));
   }
@@ -2159,21 +2161,25 @@ function añadirCartaAMano(jugador, carta) {
   renderMano();
   renderManoRival()
 }
-function tendoSatori() { // robar cuando el rival roba
+function robarCuandoRival() { // robar cuando el rival roba
   game.efectosActivos.push({ 
-    tipo: "tendoSatori",
+    tipo: "robarCuandoRival",
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log(t("log.robarCuandoRivalActivo"));
 }
-function kageyamaSP() { // +2 al ataque de un Hinata
+function potenciarPersonaje(nombrePersonaje, zona, valor) {
+  // Guarda el efecto con el nombre del personaje, la zona y el valor
   game.efectosActivos.push({
-    tipo: "kageyamaSP",
+    tipo: "potenciarPersonaje",
+    nombrePersonaje: nombrePersonaje,
+    zona: zona,
+    valor: valor,
     expira: game.turno + 1 // dura hasta el próximo cambio de jugador
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto Kageyama SP: Hinata sumará +2 al remate este turno 💫");
+  if (modoOnline) enviarEfectos();
+  log(t("log.potenciarPersonajeActivo", {nombre: nombrePersonaje, zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)), valor: valor}));
 }
 function blockout(nivelBloqueo) {
   game.efectosActivos.push({
@@ -2182,7 +2188,7 @@ function blockout(nivelBloqueo) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log(t("log.efectoBlockout", { valor: nivelBloqueo }));
+  log(t("log.blockoutActivo", { valor: nivelBloqueo }));
 }
 function debilitarRematador(cantidad = 2) {
   game.efectosActivos.push({
@@ -2269,7 +2275,7 @@ function doshat(potencia) { // bloqueo ofensivo
     expira: game.turno + 1
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto de Bloqueo Ofensivo (" + potencia + "): si el bloqueo es exitoso, el contraataque tendrá una potencia de " + potencia + ".");
+  log(t("log.efectoBloqueoOfensivo", { valor: potencia }));
 }
 function bloqueoMinimo(valor) {
   game.efectosActivos.push({
@@ -2279,7 +2285,7 @@ function bloqueoMinimo(valor) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el bloqueo rival fallará si su defensa total es " + valor + " o menos.");
+  log(t("log.bloqueoMinimoActivo", { valor: valor }));
 }
 // ======================================= FINTA
 function finta(n) { // fijar ataque a n y saltar fase de bloqueo
@@ -2290,16 +2296,16 @@ function finta(n) { // fijar ataque a n y saltar fase de bloqueo
     expira: game.turno + 1                                             // dura hasta resolver el remate
   });
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
-  log("Efecto Finta (" + n + "): el ataque se fijará en " + n + " y se saltará la fase de bloqueo.");
+  log(t("log.finta", { valor: n }));
 }
 // ======================================= ONE TOUCH
 function oneTouch(n) {
   if (tieneEfecto("negarOneTouch")) {
-    log("El One Touch ha sido negado ❌");
+    log(t("log.negarOneTouch"));
     return false;
   }
   game.valorAtaque -= n;
-  log("One Touch (" + n + "): -" + n + " al ataque rival. Ataque ahora: " + game.valorAtaque + " 🤚");
+  log(t("log.oneTouch", { valor: n, ataque: game.valorAtaque }));
   game.fase = "recepcion";
   game.bloqueoActual = { central: null, apoyos: [] };
   actualizarFaseUI();
@@ -2314,7 +2320,7 @@ function negarOneTouch() {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo.");
+  log(t("log.negarOneTouchActivo"));
 }
 // ======================================== NEGAR USAR EFECTOS DESDE LA MANO
 function negarCartaDesdeMano(fases) {
@@ -2324,17 +2330,19 @@ function negarCartaDesdeMano(fases) {
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el rival no podrá usar habilidades desde la mano en " + fases.join(", ") + ".");
+  log(t("log.negarCartaDesdeManoActivo", { fases: fases.join(", ") }));
 }
-// ======================================== NEGAR EVENTOS DE BLOQUEO
-function negarEventosBloqueo() {
-  game.efectosActivos.push({                                               // añadir efecto
-    tipo: "negarEventosBloqueo",                                           // tipo del efecto
-    activadoPor: game.jugadorActivo,                                       // quién lo activó
-    expira: game.turno + 2                                                 // dura 1 turno rival
+// ======================================== NEGAR EVENTOS
+function negarEventos(fase) {
+  // Guarda el efecto con la fase donde se niegan los eventos
+  game.efectosActivos.push({
+    tipo: "negarEventos",
+    fase: fase,
+    activadoPor: game.jugadorActivo,
+    expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
-  log("Efecto activo: el rival no podrá jugar eventos de bloqueo.");
+  if (modoOnline) enviarEfectos();
+  log(t("log.negarEventosActivo", { fase: t("ui.zona" + fase.charAt(0).toUpperCase() + fase.slice(1)) }));
 }
 // ======================================== NEGAR ROBAR POR HABILIDADES
 function negarRobar() {

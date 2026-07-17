@@ -26,7 +26,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return;
       }
       if (!await usarGuts(jugador, "remate", 2)) {
@@ -55,7 +55,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "pase") {
-        log("Solo puedes usar esta habilidad en pase ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return;
       }
       if (!await usarGuts(jugador, "pase", 2)) {
@@ -84,7 +84,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       if (game.valorAtaque > 4) {
@@ -135,7 +135,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return;
       }
       if (!await usarGuts(jugador, "recepcion", 3)) {
@@ -184,7 +184,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {              // async porque tiene selector de descarte
       if (carta.zonaActual !== "recepcion") {           // comprobar que está en recepción
-        log("Solo puedes usar esta habilidad en recepción.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
         return false;                                   // return false: habilidad no ejecutada
       }
@@ -339,7 +339,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "pase") {
-        log("Solo puedes usar esta habilidad en pase ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return;
       }
       if (!await usarGuts(jugador, "pase", 2)) {
@@ -370,7 +370,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       if (!await usarGuts(jugador, "bloqueo", 1)) {
@@ -399,7 +399,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {               // comprobar que está en recepción
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return false;                                       
       }
       if (jugador.mano.length === 0) {                      // comprobar que hay cartas en mano
@@ -536,7 +536,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return;
       }
       if (!await usarGuts(jugador, "recepcion", 2)) {
@@ -649,7 +649,7 @@ function inicializarCartas() {
         let index = jugador.mazo.indexOf(cartaElegida);
         jugador.mazo.splice(index, 1);
         añadirCartaAMano(jugador, cartaElegida);
-        log(cartaElegida.nombre + " añadido a la mano.");
+        log(t("log.cartaAMano", { carta: cartaElegida.nombre }));
       }
 
       // las restantes al fondo
@@ -688,7 +688,7 @@ function inicializarCartas() {
 
     async function(jugador,game,carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return;
       }
       if (!await usarGuts(jugador, "remate", 3)) {
@@ -712,8 +712,9 @@ function inicializarCartas() {
     {saque: 1, recepcion: 2, pase: 0, remate: 2, bloqueo: 2},
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
-        return;
+        console.log("a ver que pasa")
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;
       }
       // condición: 3 o menos cartas en mano
       if (jugador.mano.length > 3) {
@@ -787,7 +788,7 @@ function inicializarCartas() {
     },
    async function(jugador, game, carta) { // GUTS - 2: +2 al remate de hinata. Busca (1) un Hinata o Ataque Amplio 
     if (carta.zonaActual !== "pase") {
-      log("Solo puedes usar esta habilidad en pase ❌");
+      log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
       return;
     }
     if (!await usarGuts(jugador, "pase", 2)) {
@@ -850,7 +851,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 2: Si Yamaguchi en juego : +2 de bloqueo. Contraataque 6
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       if (!await usarGuts(jugador, "bloqueo", 2)) {
@@ -914,7 +915,7 @@ function inicializarCartas() {
   },
   function(jugador, game, carta) { // SAQUE : Revela 1 carta del deck, si Karasuno = -2 al pase siguiente
     if (carta.zonaActual !== "saque") {
-      log("Solo puedes usar esta habilidad en saque ❌");
+      log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
       return;
     }
 
@@ -1045,7 +1046,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {              // async porque usa usarGuts
       if (carta.zonaActual !== "pase") {                // comprobar que está en pase
-        log("Solo puedes usar esta habilidad en pase.");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
         return false;                                   // return false: habilidad no ejecutada
       }
@@ -1077,7 +1078,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {              // async porque usa usarGuts
       if (carta.zonaActual !== "remate") {              // comprobar que está en remate
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
         return false;                                   // return false: habilidad no ejecutada
       }
@@ -1132,7 +1133,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "pase") {                              // comprobar que está en pase
-        log("Solo puedes usar esta habilidad en pase.");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return false;                                                 // return false: condición no cumplida
       }
       if (!await usarGuts(jugador, "pase", 3)) {                      // pagar 3 GUTS de pase
@@ -1222,7 +1223,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {                            // comprobar que está en remate
-        log("Solo puedes usar esta habilidad en remate.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return false;                                                 // return false: condición no cumplida
       }
       if (!await usarGuts(jugador, "remate", 3)) {                    // pagar 3 GUTS de remate
@@ -1371,7 +1372,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {                        // comprobar que está en remate
-        log("Solo puedes usar esta habilidad en remate.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return false;                                             // return false: condición no cumplida
       }
       if (!await usarGuts(jugador, "remate", 2)) {                // pagar 2 GUTS de remate
@@ -1531,7 +1532,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "saque") {                         // comprobar que está en saque
-        log("Solo puedes usar esta habilidad en saque.");
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
         return false;                                             // return false: condición no cumplida
       }
       anularHabilidadReceptor();                                  // anular habilidad del receptor rival
@@ -1559,7 +1560,8 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "saque" && carta.zonaActual !== "pase") { // comprobar zona válida
-        log("Solo puedes usar esta habilidad en saque o pase.");
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return false;                                                     // return false: zona incorrecta
       }
 
@@ -1619,7 +1621,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "saque") {                                // comprobar zona válida
-        log("Solo puedes usar esta habilidad en saque.");
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
         return false;                                                    // return false: zona incorrecta
       }
       if (!await usarGuts(jugador, "saque", 1)) {                       // pagar 1 GUTS de saque
@@ -1673,7 +1675,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {                               // comprobar zona válida
-        log("Solo puedes usar esta habilidad en remate.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return false;                                                    // return false: zona incorrecta
       }
 
@@ -1751,7 +1753,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {                              // comprobar zona válida
-        log("Solo puedes usar esta habilidad en bloqueo.");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return false;                                                    // return false: zona incorrecta
       }
       if (game.valorAtaque < 8) {                                        // comprobar ataque rival
@@ -1811,7 +1813,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
-        log("Solo puedes usar esta habilidad en recepción.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return false;                                                    // return false: zona incorrecta
       }
       if (game.valorAtaque < 6) {                                        // comprobar ataque rival
@@ -1902,7 +1904,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {                               // comprobar zona válida
-        log("Solo puedes usar esta habilidad en remate.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return false;                                                    // return false: zona incorrecta
       }
 
@@ -1997,7 +1999,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "pase") {
-        log("Solo puedes usar esta habilidad en pase ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return;
       }
       if (!await usarGuts(jugador, "pase", 2)) {
@@ -2125,7 +2127,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS-3 : +5 Bloqueo
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       if (!await usarGuts(jugador, "bloqueo", 3)) {
@@ -2172,7 +2174,8 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "saque" && carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en saque o remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return;
       }
@@ -2204,7 +2207,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo.");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       robarCuandoRival();
@@ -2265,7 +2268,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
       if (game.valorAtaque < 4) {
@@ -2348,7 +2351,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") { 
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return;
       }
 
@@ -2387,7 +2390,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return;
       }
 
@@ -2468,7 +2471,7 @@ function inicializarCartas() {
 
   function(jugador, game, carta) {
     if (carta.zonaActual !== "remate") {
-      log("Solo puedes usar esta habilidad en remate ❌");
+      log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
       return;
     }
 
@@ -3144,7 +3147,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 3:  +2 al pase y roba 1 carta. Si evento: Niega OneTouch y Carta desde mano.
       if (carta.zonaActual !== "pase") {
-        log("Solo puedes usar esta habilidad en pase ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3185,7 +3188,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 3 : +2 remate. Si +6 Inarizakis distintos en el trash, añade un WS o MB a la mano
       if (carta.zonaActual !== "pase") {
-        log("Solo puedes usar esta habilidad en pase ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3266,7 +3269,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 3 : Remate +3. Si evento: +1 remate y niega 1 bloqueador
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3307,7 +3310,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3375,7 +3378,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {
-        log("Solo puedes usar esta habilidad en recepción ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3445,7 +3448,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 2: Roba 1 y trash 1
       if (carta.zonaActual !== "recepcion") {
-        log("Solo puedes usar esta habilidad en recepción.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3514,7 +3517,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3568,7 +3571,7 @@ function inicializarCartas() {
     async function(jugador, game, carta) { // Si 6 inarizaki distintos en el trash: remate +3 y anular habilidad receptor
       // ======================================== Comprobaciones
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3628,7 +3631,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS - 1: Si Riseki descartado, +6 al saque
       if (carta.zonaActual !== "saque") {
-        log("Solo puedes usar esta habilidad en saque ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
         carta.habilidadUsada = false;
         return false;
       }
@@ -3767,7 +3770,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // GUTS -2 : Si 3 bloqueos del date = Contraataque 7
       if (carta.zonaActual !== "bloqueo") {
-        log("Solo puedes usar esta habilidad en bloqueo.");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         carta.habilidadUsada = false;
         return;
       }
@@ -3907,7 +3910,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        log("Solo puedes usar esta habilidad en remate ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         carta.habilidadUsada = false;
         return;
       }
@@ -4044,7 +4047,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") {
-        log("Solo puedes usar esta habilidad en bloqueo ❌");
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         carta.habilidadUsada = false;
         return;
       }
@@ -4140,7 +4143,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "pase") {                                 // comprobar zona válida
-        log("Solo puedes usar esta habilidad en pase.");
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
         return false;                                                    // return false: zona incorrecta
       }
       if (!await usarGuts(jugador, "pase", 3)) {                         // pagar 3 GUTS de pase
@@ -4195,7 +4198,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
-        log("Solo puedes usar esta habilidad en recepción.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return false;                                                    // return false: zona incorrecta
       }
 
@@ -4237,7 +4240,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "recepcion") {                            // comprobar zona válida
-        log("Solo puedes usar esta habilidad en recepción.");
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
         return false;                                                    // return false: zona incorrecta
       }
 

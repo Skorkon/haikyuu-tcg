@@ -33,7 +33,7 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 2;
-      log("Habilidad Hinata: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -62,7 +62,7 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 2;
-      log("Habilidad Kageyama: +2 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -88,14 +88,14 @@ function inicializarCartas() {
         return;
       }
       if (game.valorAtaque > 4) {
-        log("Solo puedes usar esta habilidad si el ataque (pase + remate) del rival es igual o inferior a 4 ❌");
+        log(t("log.condicionNoCumplida"));
         return;
       }
       if (!await usarGuts(jugador, "bloqueo", 1)) {
         return;
       }
       robarCarta(jugador, 1, true);
-      log("Habilidad Tsukishima: Roba 1 carta.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -143,7 +143,7 @@ function inicializarCartas() {
       }
       robarCarta(jugador, 1, true);
       game.valorDefensa += 2;
-      log("Habilidad Nishinoya: +2 a la recepción y roba 1 carta 💪");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -207,7 +207,7 @@ function inicializarCartas() {
       log(cartaDescarte.nombre + " descartada de la mano como coste.");
 
       game.valorDefensa += 3;                           // añadir +3 a la recepción de esta jugada
-      log("Habilidad Ennoshita: +3 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       renderMano();                                     // actualizar la mano tras el descarte
       renderManoRival();                                // actualizar la mano del rival
       renderCampo();                                    // actualizar el campo
@@ -283,8 +283,8 @@ function inicializarCartas() {
 
       let cartaRecepcion = jugador.zonas.recepcion.at(-1); // buscar carta en recepción
       if (!cartaRecepcion) {
-        log("No hay carta en recepción.");
-        return;
+        log(t("log.condicionNoCumplida"));
+        return false;
       }
 
       game.valorDefensa += 1; 
@@ -347,7 +347,7 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 1;
-      log("Habilidad Kenma: +1 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       debilitarRematador(2);
     },
     {
@@ -419,7 +419,7 @@ function inicializarCartas() {
       log(cartaDescarte.nombre + " descartada de la mano como coste.");
 
       game.valorDefensa += 2;                               // añadir +2 a la recepción de esta jugada
-      log("Habilidad Yaku: +2 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       renderMano();                                         // actualizar la mano tras el descarte
       renderManoRival();                                    // actualizar la mano del rival
       renderCampo();                                        // actualizar el campo
@@ -543,7 +543,7 @@ function inicializarCartas() {
         return;
       }
       robarCarta(jugador, 1, true);
-      log("Habilidad Shibayama: Roba 1 carta.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     }, 
     {
       tipo: "personaje",
@@ -587,7 +587,7 @@ function inicializarCartas() {
       if (eleccion === 0) {
         let kuroo = jugador.zonas.bloqueo.at(-1);
         if (!kuroo || kuroo.nombre !== "Kuroo Tetsuro") {
-          log("No hay ningún Kuroo Tetsuro en bloqueo.");
+          log(t("log.condicionNoCumplida"));
           return false;
         }
         game.valorAtaque -= 1;
@@ -595,7 +595,7 @@ function inicializarCartas() {
       } else {
         let receptor = jugador.zonas.recepcion.at(-1);
         if (!receptor) {
-          log("No hay ningún receptor en recepción.");
+          log(t("log.condicionNoCumplida"));
           return false;
         }
         game.valorDefensa += 1;
@@ -615,14 +615,14 @@ function inicializarCartas() {
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mazo.length === 0) {
-        log("No hay cartas en el mazo.");
+        log(t("log.condicionNoCumplida"));
         return false;
       }
       robarCarta(jugador, 1, true);
       log(jugador.nombre + " roba 1 carta por efecto del evento.");
 
       if (jugador.mazo.length === 0) {
-        log("No hay cartas en el mazo.");
+        log(t("log.condicionNoCumplida"));
         return false;
       }
 
@@ -635,7 +635,7 @@ function inicializarCartas() {
       );
 
       if (elegibles.length === 0) {
-        log("No hay Haiba Lev ni Inuoka So entre las 3 primeras cartas.");
+        log(t("log.condicionNoCumplida"));
         // mandar las 3 al fondo
         let restantes = jugador.mazo.splice(0, 3);
         jugador.mazo.push(...restantes);
@@ -695,7 +695,7 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 4;
-      log("Habilidad Hinata: +4 al remate y limitación de buenos receptores.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       negarReceptorAlto();
     },
     {
@@ -712,24 +712,23 @@ function inicializarCartas() {
     {saque: 1, recepcion: 2, pase: 0, remate: 2, bloqueo: 2},
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
-        console.log("a ver que pasa")
         log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
         return false;
       }
       // condición: 3 o menos cartas en mano
       if (jugador.mano.length > 3) {
-        log("Debes tener 3 o menos cartas en la mano ❌");
-        return;
+        log(t("log.condicionNoCumplida"));
+        return false;
       }
       // condición: colocador es Kageyama Tobio
       let colocador = jugador.zonas.pase.at(-1);
       if (!colocador || !colocador.nombre.includes("Kageyama Tobio")) {
-        log("Tu colocador debe ser Kageyama Tobio ❌");
-        return;
+        log(t("log.condicionNoCumplida"));
+        return false;
       }
 
       game.valorAtaque += 2;
-      log("Habilidad Hinata: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       limitarBloqueadores(2);
     },
     {
@@ -869,10 +868,10 @@ function inicializarCartas() {
 
       if(yamaguchi){
         game.valorDefensa += 2;
-        log("Habilidad Tsukishima: +2 al bloqueo gracias a Yamaguchi.");
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
       }
       else{
-        log("No hay ningún Yamaguchi en juego. No se aplica el bonus de bloqueo.");
+        log(t("log.condicionNoCumplida"));
       }
 
       doshat(6);
@@ -996,15 +995,15 @@ function inicializarCartas() {
     function(jugador, game, carta) {              // habilidad: se activa desde la mano en recepción
       let receptor = jugador.zonas.recepcion.at(-1); // buscar la carta en recepción
       if (!receptor) {                            // si no hay receptor en juego
-        log("No hay ningún personaje en recepción ❌");
+        log(t("log.condicionNoCumplida"));
         return false;                             // return false: habilidad no ejecutada
       }
       if (receptor.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
-        log("El receptor debe ser de Karasuno ❌");
+        log(t("log.condicionNoCumplida"));
         return false;                             // return false: habilidad no ejecutada
       }
       game.valorDefensa += 2;                     // añadir +2 a la recepción de esta jugada
-      log("Habilidad Ennoshita: +2 a la recepción de " + receptor.nombre + ".");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -1056,7 +1055,7 @@ function inicializarCartas() {
       }
       robarCarta(jugador, 1, true);                     // robar 1 carta
       game.valorAtaque += 1;                            // +1 al pase
-      log("Habilidad Sugawara: roba 1 carta y +1 al pase 💫");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -1084,7 +1083,7 @@ function inicializarCartas() {
       }
       let colocador = jugador.zonas.pase.at(-1);        // buscar el colocador en pase
       if (!colocador || colocador.info?.escuela !== "Karasuno" || colocador.info?.posicion !== "S") {
-        log("Tu colocador debe ser un setter (S) de Karasuno."); // comprobar escuela y posición
+        log(t("log.condicionNoCumplida")); // comprobar escuela y posición
         carta.habilidadUsada = false;                   // resetear para no bloquear la habilidad
         return false;                                   // return false: habilidad no ejecutada
       }
@@ -1093,7 +1092,7 @@ function inicializarCartas() {
         return false;                                   // return false: habilidad no ejecutada
       }
       game.valorAtaque += 2;                            // +2 al remate
-      log("Habilidad Asahi: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -1141,7 +1140,7 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 1;                                          // +1 al pase
-      log("Habilidad Kenma: +1 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // comprobar que todos los personajes en juego son de Nekoma
       let cartasEnJuego = [
@@ -1160,7 +1159,7 @@ function inicializarCartas() {
 
       // buscar cartas en zona de eventos
       if (jugador.zonas.eventos.length === 0) {                       // si no hay eventos
-        log("No hay cartas en tu zona de eventos.");
+        log(t("log.condicionNoCumplida"));
         return;                                                       // termina sin el bonus
       }
 
@@ -1231,7 +1230,7 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 3;                                          // +3 al remate
-      log("Habilidad Kuroo: +3 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // buscar zonas con al menos 1 carta de Nekoma en el GUTS (excluyendo recién jugadas)
       let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona => {
@@ -1240,7 +1239,7 @@ function inicializarCartas() {
       });
 
       if (zonasValidas.length === 0) {                                // si no hay ninguna zona válida
-        log("No hay cartas de Nekoma disponibles en el GUTS.");
+        log(t("log.condicionNoCumplida"));
         return false;                                                 // return false: condición no cumplida
       }
 
@@ -1256,7 +1255,7 @@ function inicializarCartas() {
       // filtrar solo Nekoma
       let gutNekoma = cartasGuts.filter(c => c.info?.escuela === "Nekoma");     // solo Nekoma
       if (gutNekoma.length === 0) {                                   // si no hay ninguna de Nekoma
-        log("No hay cartas de Nekoma en el GUTS de " + zonaElegida + ".");
+        log(t("log.condicionNoCumplida"));
         return false;                                                 // return false: condición no cumplida
       }
 
@@ -1267,7 +1266,7 @@ function inicializarCartas() {
           !cartasElegidas.some(e => e.nombre === c.nombre)            // excluir nombres ya elegidos
         );
         if (disponibles.length === 0) {                               // si no quedan disponibles
-          log("No hay más cartas de Nekoma con nombres distintos disponibles.");
+          log(t("log.condicionNoCumplida"));
           break;                                                      // salir del bucle sin error
         }
         let cartaElegida = await mostrarSelectorCartas(               // abrir selector
@@ -1383,7 +1382,7 @@ function inicializarCartas() {
       let kenma = jugador.zonas.pase.at(-1);                      // buscar colocador en pase
       if (kenma?.info?.id === "HV-P01-019" && kenma?.habilidadUsada) { // si es Kenma y usó habilidad
         game.valorAtaque += 2;                                    // +2 al remate
-        log("Habilidad Lev: +2 al remate por haber sido traído por Kenma.");
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
       }
       debilitarBloqueadorCentral(3);                              // -3 al próximo bloqueador central rival
     },
@@ -1499,7 +1498,7 @@ function inicializarCartas() {
     function(jugador, game, carta) {
       let receptor = jugador.zonas.recepcion.at(-1);              // buscar carta en recepción
       if (!receptor) {                                            // si no hay receptor en juego
-        log("No hay ningún personaje en recepción.");
+        log(t("log.condicionNoCumplida"));
         return false;                                             // return false: condición no cumplida
       }
       if (receptor.info?.escuela !== "Nekoma") {                  // comprobar que es de Nekoma
@@ -1507,7 +1506,7 @@ function inicializarCartas() {
         return false;                                             // return false: condición no cumplida
       }
       game.valorDefensa += 2;                                     // +2 a la recepción
-      log("Habilidad Shibayama: +2 a la recepción de " + receptor.nombre + ".");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -1537,7 +1536,7 @@ function inicializarCartas() {
       }
       anularHabilidadReceptor();                                  // anular habilidad del receptor rival
       anularHabilidadColocador();                                 // anular habilidad del colocador rival
-      log("Habilidad Teshiro: habilidades del receptor y colocador rival anuladas el próximo turno.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -1585,7 +1584,7 @@ function inicializarCartas() {
       log(cartaDescarte.nombre + " descartada de la mano como coste.");
 
       game.valorAtaque += 1;                                             // +1 al ataque
-      log("Habilidad Oikawa: +1 al " + (carta.zonaActual === "saque" ? "saque" : "pase") + ".");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
 
@@ -1699,7 +1698,7 @@ function inicializarCartas() {
       log(cartaDescarte.nombre + " descartada de la mano como coste.");
 
       game.valorAtaque += 2;                                             // +2 al remate
-      log("Habilidad Iwaizumi: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
 
@@ -1757,7 +1756,7 @@ function inicializarCartas() {
         return false;                                                    // return false: zona incorrecta
       }
       if (game.valorAtaque < 8) {                                        // comprobar ataque rival
-        log("Solo puedes usar esta habilidad si el ataque del rival es 8 o más.");
+        log(t("log.condicionNoCumplida"));
         return false;                                                    // return false: condición no cumplida
       }
       if (!await usarGuts(jugador, "bloqueo", 1)) {                      // pagar 1 GUTS de bloqueo
@@ -1767,7 +1766,7 @@ function inicializarCartas() {
       potenciarReceptor(3, "Aoba Jôsai");                                 // +3 solo a receptores de Aoba Jôsai
 
       game.fase = "recepcion";                                           // terminar fase de bloqueo
-      log("Habilidad Matsukawa: fase de bloqueo terminada. Pasando a recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       if (modoOnline) enviarFase("recepcion");                           // sincronizar fase con el rival
 
       actualizarFaseUI();                                                // actualizar letrero
@@ -1817,7 +1816,7 @@ function inicializarCartas() {
         return false;                                                    // return false: zona incorrecta
       }
       if (game.valorAtaque < 6) {                                        // comprobar ataque rival
-        log("Solo puedes usar esta habilidad si el ataque del rival es 6 o más.");
+        log(t("log.condicionNoCumplida"));
         return false;                                                    // return false: condición no cumplida
       }
 
@@ -1842,7 +1841,7 @@ function inicializarCartas() {
       if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
 
       game.valorDefensa += 1;                                            // +1 a la recepción
-      log("Habilidad Watari: +1 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // comprobar si todos los personajes en juego son de Aoba Jôsai
       let cartasEnJuego = [
@@ -1856,7 +1855,7 @@ function inicializarCartas() {
       let todasAoba = cartasEnJuego.every(c => c.info?.escuela === "Aoba Jôsai"); // comprobar escuela
       if (todasAoba) {                                                   // si todas son de Aoba Jôsai
         robarCarta(jugador, 1, true);                                    // robar 1 carta
-        log("Habilidad Watari: todos los personajes son de Aoba Jôsai, roba 1 carta.");
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
       } else {
         log("No todos los personajes en juego son de Aoba Jôsai. No se roba carta.");
       }
@@ -1936,7 +1935,7 @@ function inicializarCartas() {
       }
 
       finta(4);                                                          // activar efecto finta con valor 4
-      log("Habilidad Kunimi: Finta (4) activada.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       renderMano();                                                      // actualizar mano
       renderManoRival();                                                 // actualizar mano rival
@@ -2006,10 +2005,10 @@ function inicializarCartas() {
         return;
       }
       game.valorAtaque += 2;
-      log("Habilidad Akaashi: +2 al pase 💫");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       let bokutos = jugador.trash.filter(c => c.nombre === "Kotaro Bokuto"); // buscar todos los Bokutos
       if (bokutos.length === 0) {
-        log("No hay ningún Bokuto en el trash ❌");
+        log(t("log.condicionNoCumplida"));
         return;
       }
 
@@ -2134,7 +2133,7 @@ function inicializarCartas() {
         return;
       }
       game.valorDefensa += 5;
-      log("Habilidad Aone: +5 al bloqueo.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -2184,7 +2183,7 @@ function inicializarCartas() {
       }
       robarCarta(jugador, 1, true);
       game.valorAtaque += 2;
-      log("Habilidad Ushijima: +2 al ataque.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -2272,7 +2271,7 @@ function inicializarCartas() {
         return;
       }
       if (game.valorAtaque < 4) {
-        log("Solo puedes usar esta habilidad si el ataque rival es 4 o más ❌");
+        log(t("log.condicionNoCumplida"));
         return;
       }
       oneTouch(2);
@@ -2365,7 +2364,7 @@ function inicializarCartas() {
 
       if (cartasValidas.length >= 5) {
         game.valorDefensa += 6;
-        log("Habilidad Kita: +6 a la recepción.");
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
       } else {
         log("El rival no tiene suficientes cartas de evento en pase/remate (necesitas 5, tiene " + cartasValidas.length + ") ❌");
       }
@@ -2421,7 +2420,7 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 3;
-      log("Habilidad Hoshiumi: +3 al remate 💥");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // descartar hasta 2 cartas del rival en zona de eventos
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
@@ -2497,7 +2496,7 @@ function inicializarCartas() {
     }
 
     game.valorAtaque += 2;
-    log("Habilidad Sakusa: +2 al remate 💥");
+    log(t("log.habilidadActivada", { carta: carta.nombre }));
     blockout(2);
   },
   {
@@ -2624,7 +2623,7 @@ function inicializarCartas() {
         jugador.zonas[zona].length >= 2                        // buscar zonas con al menos 2 cartas en el GUTS
       );
       if (zonasValidas.length === 0) {                         // si no hay ninguna zona válida
-        log("No hay zonas con suficientes cartas en el GUTS.");
+        log(t("log.condicionNoCumplida"));
         return false;                                          // return false: habilidad no ejecutada
       }
 
@@ -2637,7 +2636,7 @@ function inicializarCartas() {
       // elegir 2 cartas del GUTS de esa zona con el selector
       let cartasGuts = jugador.zonas[zonaElegida];  
       if (cartasGuts.length < 2) {                             // comprobar que hay al menos 2
-        log("No hay suficientes cartas en el GUTS de " + zonaElegida + ".");
+        log(t("log.condicionNoCumplida"));
         return false;                                          // return false: habilidad no ejecutada
       }
 
@@ -2729,7 +2728,7 @@ function inicializarCartas() {
         c.nombre === "Hinata Shoyo"                                // solo Hinata
       );
       if (hinatasEnTrash.length === 0) {                           // si no hay ninguno
-        log("No hay ningún Hinata Shoyo en el trash.");
+        log(t("log.condicionNoCumplida"));
         return false;                                              // return false: habilidad no ejecutada
       }
 
@@ -2804,7 +2803,7 @@ function inicializarCartas() {
             log("Yamaguchi Tadashi añadido a la mano desde el saque.");
           }
         } else {
-          log("No hay Yamaguchi Tadashi en la zona de saque.");
+          log(t("log.condicionNoCumplida"));
         }
 
         debilitarReceptor(2);                                        // -2 al receptor rival
@@ -3019,7 +3018,7 @@ function inicializarCartas() {
         c.info?.tipo === "personaje"                                     // solo personajes
       );
       if (aobaEnTrash.length === 0) {                                    // si no hay ninguno
-        log("No hay personajes de Aoba Jôsai en el trash.");
+        log(t("log.condicionNoCumplida"));
         return false;                                                    // return false: condición no cumplida
       }
 
@@ -3058,7 +3057,7 @@ function inicializarCartas() {
       let hayOikawa = sacador?.nombre === "Oikawa Toru" ||               // si sacador es Oikawa
                       colocador?.nombre === "Oikawa Toru";               // o colocador es Oikawa
       if (!hayOikawa) {                                                  // si no hay Oikawa
-        log("Tu sacador o colocador debe ser Oikawa Toru.");
+        log(t("log.condicionNoCumplida"));
         jugador.mano.push(carta);                                        // devolver carta a la mano
         jugador.zonas.eventos.splice(jugador.zonas.eventos.indexOf(carta), 1); // sacar de zona eventos
         renderMano();                                                    // actualizar mano
@@ -3096,7 +3095,7 @@ function inicializarCartas() {
       // comprobar que hay un receptor de Aoba Jôsai en juego
       let receptor = jugador.zonas.recepcion.at(-1);                     // buscar receptor en juego
       if (!receptor || receptor.info?.escuela !== "Aoba Jôsai") {        // si no hay o no es de Aoba Jôsai
-        log("No hay ningún receptor de Aoba Jôsai en juego.");
+        log(t("log.condicionNoCumplida"));
         return false;                                                    // return false: condición no cumplida
       }
 
@@ -3157,7 +3156,7 @@ function inicializarCartas() {
       }
       robarCarta(jugador, 1, true);
       game.valorAtaque += 2;
-      log("Habilidad Atsumu: roba 1 carta y +2 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // bonus si fue traído por el evento
       if (tieneEfecto("justoBlanco")) {
@@ -3204,7 +3203,7 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 2;
-      log("Habilidad Atsumu: +2 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       log("Condición habilidad Atsumu conseguida: Añade a tu mano un WS o MB desde tu descarte.");
 
       await buscarEnTrashAMano(jugador, { // llevar carta del trash a la mano
@@ -3278,7 +3277,7 @@ function inicializarCartas() {
         return false;
       }
       game.valorAtaque += 3;
-      log("Habilidad Osamu: +3 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // bonus si fue traído por el evento
       if (tieneEfecto("justoBlanco")) {
@@ -3320,7 +3319,7 @@ function inicializarCartas() {
         return false;
       }
       game.valorAtaque += 2;
-      log("Habilidad Osamu: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -3407,12 +3406,12 @@ function inicializarCartas() {
       }
 
       game.valorDefensa += 1;
-      log("Habilidad Kita: +1 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // buscar carta de Inarizaki en zona de eventos
       let elegibles = jugador.zonas.eventos.filter(c => c.info?.escuela === "Inarizaki");
       if (elegibles.length === 0) {
-        log("No hay cartas de Inarizaki en la zona de eventos.");
+        log(t("log.condicionNoCumplida"));
         return;
       }
 
@@ -3458,7 +3457,7 @@ function inicializarCartas() {
       }
 
       robarCarta(jugador, 1, true);
-      log("Habilidad Kita: roba 1 carta.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       if (jugador.mano.length === 0) {
         log("No tienes cartas en la mano para descartar ❌");
@@ -3529,7 +3528,7 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 2;
-      log("Habilidad Suna: +2 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       anularBloqueadorCentral();
     },
     {
@@ -3586,7 +3585,7 @@ function inicializarCartas() {
       }
       // ========================================= Efecto
       game.valorAtaque += 3;
-      log("Habilidad Aran: +3 al remate.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
       anularHabilidadReceptor();
 
       renderMano();
@@ -3642,7 +3641,7 @@ function inicializarCartas() {
 
       if (game.gutsDescartados.some(c => c.nombre === "Riseki Heisuke")) {
         game.valorAtaque += 6;
-        log("Habilidad Riseki: +6 al saque.");
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
         negarColocador();
       } else {
         log("La carta descartada no es Riseki Heisuke, no se activa el bonus ❌");
@@ -3738,12 +3737,12 @@ function inicializarCartas() {
                 && c.info?.escuela === "Inarizaki");                         // solo Inarizaki
 
       if (cartasEnJuego.length === 0) {                                      // si no hay ninguno
-        log("No hay personajes de Inarizaki en juego ❌");
+        log(t("log.condicionNoCumplida"));
         return false;
       }
 
       game.valorDefensa += 2;                                                // +2 a la recepción
-      log("Habilidad Kosaku: +2 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       renderMano();                                                          // actualizar mano
       renderCampo();                                                         // actualizar campo
@@ -3795,7 +3794,7 @@ function inicializarCartas() {
       }
 
       doshat(7);
-      log("Habilidad Aone: Bloqueo ofensivo (7) activado!");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -3817,7 +3816,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueoApoyo") {
-        log("Solo puedes usar esta habilidad como bloqueador de apoyo ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return;
       }
@@ -3825,7 +3824,7 @@ function inicializarCartas() {
       // buscar todos los Aone Takanobu en el trash
       let aonesEnTrash = jugador.trash.filter(c => c.nombre === "Aone Takanobu");
       if (aonesEnTrash.length === 0) {
-        log("No hay ningún Aone Takanobu en el trash ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return;
       }
@@ -3883,7 +3882,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueoApoyo") {
-        log("Solo puedes usar esta habilidad como bloqueador de apoyo ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return;
       }
@@ -3917,13 +3916,13 @@ function inicializarCartas() {
 
       let colocador = jugador.zonas.pase.at(-1);
       if (!colocador || colocador.info?.escuela !== "Date Kôgyô" || colocador.info?.posicion !== "S") {
-        log("Tu colocador debe ser un setter de Date Kôgyô ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return;
       }
 
       bloqueoMinimo(6);
-      log("Habilidad Futakuchi: si el siguiente bloqueo del rival es 6 o menos, el bloqueo fallará automáticamente.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -3987,7 +3986,7 @@ function inicializarCartas() {
       );
 
       if (elegibles.length === 0) {
-        log("No hay personajes de Date Kôgyô sin habilidad en el trash.");
+        log(t("log.condicionNoCumplida"));
         return;
       }
 
@@ -4066,7 +4065,7 @@ function inicializarCartas() {
       }
 
       game.valorDefensa += 5;
-      log("Habilidad Kamasaki realizada con éxito: +5 al bloqueo.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
     },
     {
       tipo: "personaje",
@@ -4151,14 +4150,14 @@ function inicializarCartas() {
       }
 
       game.valorAtaque += 2;                                             // +2 al pase
-      log("Habilidad Oikawa: +2 al pase.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       // buscar Iwaizumi en el trash
       let iwaizumisEnTrash = jugador.trash.filter(c =>                   // filtrar trash
         c.nombre === "Iwaizumi Hajime"                                   // solo Iwaizumi
       );
       if (iwaizumisEnTrash.length === 0) {                               // si no hay ninguno
-        log("No hay ningún Iwaizumi Hajime en el trash.");
+        log(t("log.condicionNoCumplida"));
         return;                                                          // termina sin robar
       }
 
@@ -4214,7 +4213,7 @@ function inicializarCartas() {
       }
 
       game.valorDefensa += 7;                                            // +7 a la recepción
-      log("Habilidad Iwaizumi: +7 a la recepción.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       renderMano();                                                      // actualizar mano
       renderManoRival();                                                 // actualizar mano rival
@@ -4255,7 +4254,7 @@ function inicializarCartas() {
       }
 
       robarCarta(jugador, cartasQueNecesita, true);                      // robar hasta tener 3
-      log("Habilidad Kunimi: roba " + cartasQueNecesita + " carta(s) hasta tener 3 en la mano.");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       renderMano();                                                      // actualizar mano
       renderManoRival();                                                 // actualizar mano rival
@@ -4308,7 +4307,7 @@ function inicializarCartas() {
                 && c.info?.escuela === "Inarizaki");                         // solo Inarizaki
 
       if (elegibles.length === 0) {                                          // si no hay ninguno
-        log("No hay personajes de Inarizaki en juego ❌");
+        log(t("log.condicionNoCumplida"));
         return false;
       }
 

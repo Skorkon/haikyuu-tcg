@@ -279,6 +279,11 @@
   <nav>
     <button class="active" id="tab-builder"    onclick="setTab('builder')">Constructor</button>
     <button            id="tab-predefined" onclick="setTab('predefined')">Decks predefinidos</button>
+    <div style="display:flex;gap:4px;margin-left:12px;">
+      <button class="active" id="lang-es" onclick="setIdioma('es')">ES</button>
+      <button id="lang-en" onclick="setIdioma('en')">EN</button>
+      <button id="lang-fr" onclick="setIdioma('fr')">FR</button>
+    </div>  
   </nav>
 </header>
 
@@ -416,6 +421,7 @@ function crearCarta(nombre, stats, habilidadFn, info) {
 
 <!-- Tu cartas.js real — el deckbuilder leerá el catálogo de aquí -->
 <script src="cartas.js"></script>
+<script src="descripciones.js"></script>
 
 <script>
 // ── CATÁLOGO ──────────────────────────────────────────────
@@ -471,6 +477,9 @@ function init() {
   applyFilters();
   renderSavedDecks();
   renderPredefined();
+
+  document.querySelectorAll('#lang-es,#lang-en,#lang-fr').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang-' + idiomaDeck).classList.add('active');   // marca el botón según el idioma guardado
 }
 
 // ── CATÁLOGO RENDER ───────────────────────────────────────
@@ -563,6 +572,15 @@ function resetFiltros() {
   activeFilters = { tipo: null, hab: null };
   document.querySelectorAll('.pill.on').forEach(p => p.classList.remove('on'));
   applyFilters();
+}
+
+let idiomaDeck = localStorage.getItem('hv-idioma') || 'en'; // idioma guardado desde el lobby, o inglés por defecto
+function setIdioma(idioma) {
+  idiomaDeck = idioma;
+  localStorage.setItem('hv-idioma', idioma);   // guardar para que lobby y juego lo recojan también
+  document.querySelectorAll('#lang-es,#lang-en,#lang-fr').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang-' + idioma).classList.add('active');
+  applyFilters(); // vuelve a pintar el grid, aunque no traduce los nombres
 }
 
 // ── DECK LOGIC ────────────────────────────────────────────
@@ -777,9 +795,10 @@ function openPreview(c) {
       <div class="preview-stat"><span class="preview-stat-l">Bloqueo</span><span class="preview-stat-v" style="color:var(--text2)">${c.stats.bloqueo}</span></div>`;
   } else { ps.style.display = 'none'; }
 
-  document.getElementById('previewDesc').innerHTML = c.descripcion
-    ? `<p>${c.descripcion}</p>`
-    : `<p style="color:var(--text3);font-style:italic">Sin descripción disponible</p>`;
+  const descripcion = DESCRIPCIONES[c.id]?.[idiomaDeck] || c.descripcion;
+  document.getElementById('previewDesc').innerHTML = descripcion
+      ? `<p>${descripcion.replace(/&quot;/g, '"')}</p>`
+      : `<p style="color:var(--text3);font-style:italic">Sin descripción disponible</p>`;
 
   document.getElementById('previewAddBtn').onclick = () => { addToDeck(c); closePreview(); };
   document.getElementById('previewOverlay').classList.add('show');

@@ -309,13 +309,13 @@ function inicializarCartas() {
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
       game.valorAtaque += 1;
-      log("Evento: +1 al remate 💥");
+      log("Evento: +1 al remate");
       // combo Kageyama + Hinata
       let cartaPase = jugador.zonas.pase.at(-1);
       let cartaRemate = jugador.zonas.remate.at(-1);
       if (cartaPase?.nombre === "Kageyama Tobio" && cartaRemate?.nombre === "Hinata Shoyo") {
         negarBloqueadoresApoyo();
-        log("¡Combo Kageyama + Hinata activado! 🔥");
+        log("¡Combo Kageyama + Hinata activado!");
       }
     },
     {
@@ -325,7 +325,6 @@ function inicializarCartas() {
       escuela: "Karasuno",
       rareza: "D",
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y añade +1 al remate. Si en la jugada están presentes <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> y <strong><span style= color:#c62828>Hinata Shoyo</span></strong>, el rival no podrá usar bloqueadores laterales para defender.`
-   
     }
   ),
   // ======================================================================================================== D02 : NEKOMA
@@ -796,7 +795,7 @@ function inicializarCartas() {
     }
 
     if (jugador.mazo.length === 0) {  // si no quedan cartas en el mazo
-      log("No hay cartas en el mazo ❌");
+      log(t("log.condicionNoCumplida"));
     }
     // ??? Quizás debería meter todo esto en un else, salvo el kageyamaSP
     let cartaRevelada = jugador.mazo.shift(); // revelar carta de arriba del mazo

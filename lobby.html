@@ -54,33 +54,39 @@
 
   <!-- PASO 1: cargar tu mazo -->
 <section>
-  <h2>1. Tu nombre y mazo</h2>
-  <input type="text" id="input-nombre" placeholder="Tu nombre" maxlength="20">
+  <h2>1. Name and deck</h2>
+  <input type="text" id="input-nombre" placeholder="Your nickname" maxlength="20">
   <br><br>
+  <div id="selector-idioma">
+    <button type="button" data-idioma="es">ES</button>
+    <button type="button" data-idioma="en">EN</button>
+    <button type="button" data-idioma="fr">FR</button>
+  </div>
+  <br>
   <input type="file" id="input-mazo" accept=".json">
-  <p id="estado-mazo">Ningún mazo cargado</p>
+  <p id="estado-mazo">No deck loaded</p>
 </section>
 
   <!-- PASO 2: crear una partida nueva -->
   <section>
-    <h2>2. Crear partida</h2>
-    <button id="btn-crear">Crear partida</button>
+    <h2>2. Create a lobby</h2>
+    <button id="btn-crear">New game</button>
     <p id="codigo-sala" style="display:none"></p>
     <p id="estado-sala"></p>
   </section>
 
   <!-- PASO 3: unirse a una partida existente -->
   <section>
-    <h2>3. Unirse a una partida</h2>
+    <h2>3. Join a game</h2>
 
     <!-- opción A: lista de partidas abiertas -->
-    <p><strong>Partidas abiertas:</strong></p>
-    <div id="lista-partidas">Buscando partidas...</div>
+    <p><strong>Open games:</strong></p>
+    <div id="lista-partidas">Searching games...</div>
 
     <!-- opción B: introducir código manualmente -->
-    <p style="margin-top:20px"><strong>O introduce un código:</strong></p>
+    <p style="margin-top:20px"><strong> Or insert a code:</strong></p>
     <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6">
-    <button id="btn-unirse">Unirse</button>
+    <button id="btn-unirse">Join</button>
   </section>
 
     <!-- Firebase (la librería oficial, se carga desde internet) -->

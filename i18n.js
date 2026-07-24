@@ -120,7 +120,7 @@ function fusionarTraducciones() {
 fusionarTraducciones();
 
 
-let idiomaActivo = "es"; // variable que guarda el idioma del jugador 
+let idiomaActivo = localStorage.getItem("hv-idioma") || "en"; // idioma guardado, o inglés por defecto
 
 function t(clave, tokens = {}) {
   // Separa la clave por puntos: "log.mulliganConfirmado" → ["log", "mulliganConfirmado"]
@@ -156,6 +156,7 @@ function setLang(lang) {
   }
   // Cambia el idioma activo
   idiomaActivo = lang;
+  localStorage.setItem("hv-idioma", lang); // recordarlo para la próxima vez
   console.log(`[i18n] Idioma cambiado a: ${lang}`);
   aplicarIdioma(); 
 }
@@ -169,3 +170,4 @@ function aplicarIdioma() {
     elemento.textContent = t(clave);
   }
 }
+aplicarIdioma(); // aplica el idioma guardado nada más cargar la página

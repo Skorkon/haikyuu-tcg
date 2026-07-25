@@ -1,64 +1,318 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  <!-- documento HTML5 -->
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="favicon.png">   <!-- icono navegador -->
+  <meta charset="UTF-8"> <!-- codificación de caracteres -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- responsive básico -->
   <title>HV-TCG</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico para todos los elementos */
+
+    :root { /* variables de color reutilizables en toda la página */
+      --bg: #0d0d0f;          /* fondo general oscuro */
+      --surface: #16161a;     /* superficie de paneles */
+      --surface2: #1e1e24;    /* superficie secundaria (inputs, etc) */
+      --border: rgba(255,255,255,0.07);   /* borde sutil */
+      --border2: rgba(255,255,255,0.13);  /* borde un poco más marcado */
+      --text: #e8e8ec;        /* texto principal */
+      --text2: #9090a0;       /* texto secundario, más apagado */
+      --accent: #E8761A;      /* color naranja de acento (marca del juego) */
+      --font-display: 'Bebas Neue', sans-serif; /* fuente para títulos */
+      --font-body: 'Noto Sans JP', sans-serif;  /* fuente para texto normal */
+    }
+
     body {
-      font-family: sans-serif;
-      background: #0d0d0f;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      background: var(--bg);           /* fondo oscuro de toda la página */
+      color: var(--text);              /* color de texto por defecto */
+      font-family: Arial, sans-serif;  /* fuente base */
+      min-height: 100vh;               /* ocupa toda la altura de la pantalla */
+      display: flex;                   /* flexbox para centrar contenido */
+      flex-direction: column;          /* apilado en columna */
+      align-items: center;             /* centrado horizontal */
+      justify-content: center;         /* centrado vertical */
+    }
+
+    .pantalla {
+      display: none;             /* oculta por defecto — se muestra con JS al activarla */
+      flex-direction: column;    /* contenido interno en columna */
+      align-items: center;       /* centrado horizontal del contenido */
+      gap: 20px;                 /* separación entre elementos internos */
+      width: 100%;               /* ancho completo disponible */
+      max-width: 400px;          /* pero limitado para que no se estire demasiado */
+      padding: 20px;             /* aire interior */
+    }
+
+    .pantalla.activa {
+      display: flex;             /* la pantalla con esta clase es la que se muestra */
     }
 
     h1 {
-      font-size: 48px;
-      letter-spacing: 6px;
-      margin-bottom: 10px;
-      color: #E8761A;
+      font-size: 42px;           /* tamaño grande de título */
+      letter-spacing: 4px;       /* espaciado entre letras, estilo logo */
+      color: var(--accent);      /* título en color naranja de marca */
     }
 
-    p {
-      color: #9090a0;
-      margin-bottom: 60px;
-      font-size: 14px;
-      letter-spacing: 2px;
+    /* ------------------------------- BOTONES ------------------------------------- */
+    .btn-menu {
+      display: block;                    /* ocupa toda la línea, igual que un botón */
+      width: 100%;                       /* ancho completo del contenedor */
+      padding: 14px;                     /* aire interior */
+      background: var(--surface2);       /* fondo oscuro secundario */
+      border: 1px solid var(--border2);  /* borde sutil */
+      border-radius: 8px;                /* esquinas redondeadas */
+      color: var(--text);                /* texto claro */
+      text-decoration: none;             /* quitar subrayado de los <a> */
+      text-align: center;                /* texto centrado */
+      font-size: 16px;                   /* tamaño de letra */
+      font-family: inherit;              /* heredar la fuente del body (para el <button>) */
+      cursor: pointer;                   /* cursor de mano al pasar por encima */
+      transition: all 0.15s;             /* transición suave en hover */
     }
 
-    .botones {
-      display: flex;
-      gap: 20px;
+    .btn-menu:hover {
+      border-color: var(--accent);       /* borde naranja al pasar el ratón */
+      background: var(--surface);        /* fondo ligeramente distinto */
     }
 
-    a {
-      padding: 16px 40px;
-      font-size: 16px;
-      border: 1px solid #E8761A;
-      color: #E8761A;
-      text-decoration: none;
-      border-radius: 6px;
+    /* ------------------------------- SETTINGS ------------------------------------- */
+    .input-settings {
+      width: 100%;                       /* ancho completo */
+      padding: 10px;                     /* aire interior */
+      background: var(--surface2);       /* fondo oscuro */
+      border: 1px solid var(--border2);  /* borde sutil */
+      border-radius: 6px;                /* esquinas redondeadas */
+      color: var(--text);                /* texto claro */
+      font-size: 15px;                   /* tamaño legible */
+      font-family: inherit;              /* heredar fuente */
+      outline: none;                     /* quitar el borde azul de foco */
+    }
+
+    .btn-idioma {
+      padding: 8px 16px;                 /* aire interior */
+      background: var(--surface2);       /* fondo oscuro */
+      border: 1px solid var(--border2);  /* borde sutil */
+      border-radius: 6px;                /* esquinas redondeadas */
+      color: var(--text2);               /* texto apagado por defecto */
+      cursor: pointer;                   /* cursor de mano */
+      font-family: inherit;
       transition: all 0.15s;
     }
 
-    a:hover {
-      background: #E8761A;
-      color: white;
+    .btn-idioma.activo {
+      background: var(--accent);         /* fondo naranja si es el idioma activo */
+      border-color: var(--accent);
+      color: white;                      /* texto blanco cuando está activo */
     }
+
+  
+  /* ------------------------------------------ TRIPTICO ----------------------------- */
+  /* ── CONTENEDOR TRÍPTICO ─────────────────────────────────── */
+  .triptico {
+    display: flex;              /* las 3 columnas en fila */
+    width: 100%;                /* ocupa todo el ancho */
+    height: 100vh;              /* ocupa toda la altura de la pantalla */
+    position: fixed;            /* fijo detrás de todo el contenido */
+    top: 0;
+    left: 0;
+    justify-content: space-between;   /* columnas laterales a los extremos, centro en medio */
+  }
+
+  /* ── COLUMNAS LATERALES (imágenes) ───────────────────────── */
+  .columna-lateral {
+    flex: 1;                          /* cada columna lateral ocupa espacio proporcional */
+    max-width: 400px;                 /* limita cuánto puede crecer cada columna */
+    background-size: cover;           /* la imagen cubre toda la columna sin deformarse */
+    background-position: center;      /* centrada */
+    background-repeat: no-repeat;
+    min-width: 0;                     /* evita que flexbox las empuje a tamaño mínimo raro */
+  }
+
+  #columna-izquierda {
+     background-image: url('img/fondos/index_columna_izquierda.jpg');
+     background-color: #1a1a2e;
+     border-right: 3px solid var(--accent);
+  }
+
+  #columna-derecha {
+    background-image: url('img/fondos/index_columna_derecha.jpg'); 
+    background-color: #2e0a0a;
+    border-left: 3px solid var(--accent); 
+  }
+
+  /* ── COLUMNA CENTRAL (panel negro con los botones) ───────── */
+  .columna-central {
+    width: 420px;                /* ancho fijo del panel central */
+    flex-shrink: 0;              /* nunca se encoge, aunque las laterales sí */
+    background: var(--bg);       /* fondo negro/oscuro ya definido en :root */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;           /* necesario para posicionar el texto de créditos dentro */
+  }
+
+  .creditos {
+    position: absolute;        /* posicionado respecto a .columna-central */
+    bottom: 16px;               /* pegado abajo */
+    right: 16px;                /* pegado a la derecha */
+    font-size: 11px;            /* texto pequeño, discreto */
+    color: var(--text2);        /* gris apagado */
+    text-align: right;          /* alineado a la derecha */
+    line-height: 1.5;           /* espacio entre líneas */
+    max-width: 250px;           /* que no se estire demasiado */
+  }
+
+  /* ── RESPONSIVE: pantallas pequeñas ──────────────────────── */
+  @media (max-width: 768px) {
+    .columna-lateral {
+      display: none;             /* ocultar columnas laterales en móvil */
+    }
+    .columna-central {
+      width: 100%;                /* el panel central ocupa toda la pantalla */
+    }
+  }
+
   </style>
 </head>
 <body>
-  <h1>HV · TCG</h1>
-  <p>Haikyuu Trading Card Game Simulator</p>
-  <div class="botones">
-    <a href="lobby.html">⚔️ Jugar</a>
-    <a href="deckbuilding.html">🃏 Deckbuilder</a>
-  </div>
+
+  <!-- FONDO TRÍPTICO -->
+  <div class="triptico">
+    <div class="columna-lateral" id="columna-izquierda"></div>
+
+    <div class="columna-central">
+
+      <!-- ============================================================ PANTALLA 1: BIENVENIDA (solo primera vez) -->
+      <div class="pantalla" id="pantalla-bienvenida">
+        <h1>HV · TCG</h1>
+        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);">Tu nombre</label>
+          <input type="text" id="input-nombre-bienvenida" maxlength="20" class="input-settings" placeholder="Ej: Andrés">
+        </div>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);">Idioma</label>
+          <div id="selector-idioma-bienvenida" style="display:flex; gap:6px;">
+            <button type="button" data-idioma="es" onclick="cambiarIdiomaBienvenida('es')" class="btn-idioma">ES</button>
+            <button type="button" data-idioma="en" onclick="cambiarIdiomaBienvenida('en')" class="btn-idioma">EN</button>
+            <button type="button" data-idioma="fr" onclick="cambiarIdiomaBienvenida('fr')" class="btn-idioma">FR</button>
+          </div>
+        </div>
+        <button onclick="confirmarBienvenida()" class="btn-menu" style="background:var(--accent); border-color:var(--accent);">Continuar</button>
+      </div>
+
+      <!-- ============================================================ PANTALLA 2: PRINCIPAL -->
+      <div class="pantalla" id="pantalla-principal">
+        <h1>HV · TCG</h1>
+        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
+        <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+          <a href="lobby.html" class="btn-menu">PLAY</a>
+          <a href="deckbuilding.html" class="btn-menu">DECKBUILDER</a>
+          <button onclick="abrirSettings()" class="btn-menu">SETTINGS</button>
+        </div>
+      </div>
+
+      <!-- ============================================================ PANTALLA 3: SETTINGS -->
+      <div class="pantalla" id="pantalla-settings">
+        <h1>Settings</h1>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);">Nombre</label>
+          <input type="text" id="input-nombre-settings" maxlength="20" class="input-settings">
+        </div>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);">Idioma</label>
+          <div id="selector-idioma-settings" style="display:flex; gap:6px;">
+            <button type="button" data-idioma="es" onclick="cambiarIdiomaSettings('es')" class="btn-idioma">ES</button>
+            <button type="button" data-idioma="en" onclick="cambiarIdiomaSettings('en')" class="btn-idioma">EN</button>
+            <button type="button" data-idioma="fr" onclick="cambiarIdiomaSettings('fr')" class="btn-idioma">FR</button>
+          </div>
+        </div>
+        <button onclick="guardarSettings()" class="btn-menu" style="background:var(--accent); border-color:var(--accent);">Guardar</button>
+        <button onclick="mostrarPantalla('principal')" class="btn-menu">← Volver</button>
+      </div>
+
+      <div class="creditos">
+        A fan project by Skorkon<br>
+        Haikyuu!! © Haruichi Furudate / Shueisha<br>
+        Bavoca!! BREAK TCG © Takara Tomy
+      </div>
+
+    </div> <!-- fin columna-central -->
+
+    <div class="columna-lateral" id="columna-derecha"></div>
+  </div> <!-- fin triptico -->
+
+  <script>
+    // ── MOSTRAR PANTALLA ──────────────────────────────────────
+    function mostrarPantalla(nombre) {
+      // quita la clase "activa" de todas las pantallas (las oculta todas)
+      document.querySelectorAll(".pantalla").forEach(p => p.classList.remove("activa"));
+      // añade la clase "activa" solo a la pantalla pedida (la muestra)
+      document.getElementById("pantalla-" + nombre).classList.add("activa");
+    }
+
+    // ── SETTINGS: VARIABLE TEMPORAL DE IDIOMA (hasta pulsar Guardar) ──
+    let idiomaTemporal = localStorage.getItem("hv-idioma") || "es"; // idioma actual, o español por defecto
+
+    // ── SETTINGS: RELLENAR AL ABRIR LA PANTALLA ────────────────────
+    function abrirSettings() {
+      document.getElementById("input-nombre-settings").value = localStorage.getItem("hv-nombre") || ""; // rellenar nombre actual
+      idiomaTemporal = localStorage.getItem("hv-idioma") || "es"; // recuperar idioma actual
+      marcarIdiomaSettings(); // pintar el botón activo
+      mostrarPantalla("settings"); // mostrar la pantalla
+    }
+
+    // ── SETTINGS: CAMBIAR IDIOMA (solo visual, no guarda todavía) ──
+    function cambiarIdiomaSettings(idioma) {
+      idiomaTemporal = idioma; // guardar en variable temporal
+      marcarIdiomaSettings(); // actualizar botón resaltado
+    }
+
+    // ── SETTINGS: MARCAR BOTÓN DE IDIOMA ACTIVO ────────────────────
+    function marcarIdiomaSettings() {
+      document.querySelectorAll("#selector-idioma-settings button").forEach(function(boton) {
+        boton.classList.toggle("activo", boton.dataset.idioma === idiomaTemporal); // activa solo el botón que coincide
+      });
+    }
+
+    // ── SETTINGS: GUARDAR CAMBIOS ──────────────────────────────────
+    function guardarSettings() {
+      const nuevoNombre = document.getElementById("input-nombre-settings").value.trim() || "Jugador"; // nombre o valor por defecto
+      localStorage.setItem("hv-nombre", nuevoNombre);     // guardar nombre
+      localStorage.setItem("hv-idioma", idiomaTemporal);  // guardar idioma elegido
+      mostrarPantalla("principal");                        // volver a la pantalla principal
+    }
+
+    // ── BIENVENIDA: VARIABLE TEMPORAL DE IDIOMA ────────────────
+    let idiomaBienvenida = "es"; // idioma por defecto en el primer registro
+
+    // ── BIENVENIDA: CAMBIAR IDIOMA (solo visual) ───────────────
+    function cambiarIdiomaBienvenida(idioma) {
+      idiomaBienvenida = idioma; // guardar en variable temporal
+      document.querySelectorAll("#selector-idioma-bienvenida button").forEach(function(boton) {
+        boton.classList.toggle("activo", boton.dataset.idioma === idiomaBienvenida); // marcar botón activo
+      });
+    }
+
+    // ── BIENVENIDA: CONFIRMAR Y GUARDAR ────────────────────────
+    function confirmarBienvenida() {
+      const nombre = document.getElementById("input-nombre-bienvenida").value.trim() || "Jugador"; // nombre o valor por defecto
+      localStorage.setItem("hv-nombre", nombre);            // guardar nombre
+      localStorage.setItem("hv-idioma", idiomaBienvenida);  // guardar idioma elegido
+      mostrarPantalla("principal");                         // ir a la pantalla principal
+    }
+
+    // ── BIENVENIDA: MARCAR "EN" COMO ACTIVO POR DEFECTO AL CARGAR ──
+    cambiarIdiomaBienvenida("en");
+
+    // ── DECIDIR PANTALLA INICIAL ──────────────────────────────
+    const nombreGuardado = localStorage.getItem("hv-nombre"); // comprobar si ya hay un nombre guardado de antes
+
+    if (!nombreGuardado) {           // si no hay nombre guardado
+      mostrarPantalla("bienvenida"); // es la primera vez: mostrar pantalla de bienvenida
+    } else {                        // si ya hay nombre guardado
+      mostrarPantalla("principal");  // el jugador ya está registrado: ir directo a la pantalla principal
+    }
+  </script>
+
 </body>
 </html>

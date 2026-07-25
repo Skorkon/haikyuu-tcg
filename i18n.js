@@ -33,7 +33,37 @@ const I18N = {
             elegirOpcion:     "Elige una opción:",
             cancelar:         "Cancelar",
             volverLobby:      "Volver al lobby",
-          }
+          },
+        menu: {                                          // ← nueva sección para index.html
+          labelNombre:      "Tu nombre",
+          placeholderNombre:"Ej: Perro loco",
+          labelIdioma:      "Idioma",
+          btnContinuar:     "Continuar",
+          btnJugar:         "JUGAR",
+          btnDeckbuilder:   "DECKBUILDER",
+          btnSettings:      "AJUSTES",
+          tituloSettings:   "Ajustes",
+          labelNombreSettings: "Nombre",
+          btnGuardar:       "GUARDAR",
+          btnVolver:        "VOLVER",
+          colorSecundario:  "Color secundario",
+        },
+        lobby: {                                    // ← nueva sección
+          volverInicio:     "← Volver a inicio",
+          tituloMazo:       "Tu mazo",
+          mazoNoCargado:    "Ningún mazo cargado",
+          tituloCrear:      "Crear partida",
+          btnCrear:         "NUEVA PARTIDA",
+          esperandoRival:   "Esperando rival...",
+          tituloPartidas:   "Partidas abiertas",
+          buscandoPartidas: "Buscando partidas...",
+          tituloUnirse:     "Unirse con código",
+          placeholderCodigo:"Ej: XK7F2A",
+          btnUnirse:        "UNIRSE",
+          alertMazo:        "Primero carga tu mazo",
+          alertCodigo:      "El código debe tener 6 caracteres",
+          uniendoPartida:   "Uniéndose a la partida ",
+        }
     },    
     en: {
         ui: {
@@ -68,6 +98,36 @@ const I18N = {
             elegirOpcion:     "Choose an option:",
             cancelar:         "Cancel",
             volverLobby:      "Back to lobby",
+        },
+        menu: {
+          labelNombre:      "Your name",
+          placeholderNombre:"E.g: Mad dog",
+          labelIdioma:      "Language",
+          btnContinuar:     "Continue",
+          btnJugar:         "PLAY",
+          btnDeckbuilder:   "DECKBUILDER",
+          btnSettings:      "SETTINGS",
+          tituloSettings:   "Settings",
+          labelNombreSettings: "Name",
+          btnGuardar:       "SAVE",
+          btnVolver:        "BACK",
+          colorSecundario:  "Secondary colour",
+        },
+        lobby: {
+          volverInicio:     "← Back to home",
+          tituloMazo:       "Your deck",
+          mazoNoCargado:    "No deck loaded",
+          tituloCrear:      "Create match",
+          btnCrear:         "NEW MATCH",
+          esperandoRival:   "Waiting for opponent...",
+          tituloPartidas:   "Open matches",
+          buscandoPartidas: "Searching for matches...",
+          tituloUnirse:     "Join with code",
+          placeholderCodigo:"E.g: XK7F2A",
+          btnUnirse:        "JOIN",
+          alertMazo:        "Load your deck first",
+          alertCodigo:      "The code must be 6 characters",
+          uniendoPartida:   "Joining match ",
         }
     },
     fr: {
@@ -103,10 +163,41 @@ const I18N = {
             elegirOpcion:     "Choisissez une option :",
             cancelar:         "Annuler",
             volverLobby:      "Retour au lobby",
+        },
+        menu: {
+          labelNombre:      "Ton nom",
+          placeholderNombre:"Ex : Enragé",
+          labelIdioma:      "Langue",
+          btnContinuar:     "Continuer",
+          btnJugar:         "JOUER",
+          btnDeckbuilder:   "DECKBUILDER",
+          btnSettings:      "PARAMÈTRES",
+          tituloSettings:   "Paramètres",
+          labelNombreSettings: "Nom",
+          btnGuardar:       "ENREGISTRER",
+          btnVolver:        "RETOUR",
+          colorSecundario:  "Couleur secondaire",
+        },
+        lobby: {
+          volverInicio:     "← Retour à l'accueil",
+          tituloMazo:       "Ton deck",
+          mazoNoCargado:    "Aucun deck chargé",
+          tituloCrear:      "Créer une partie",
+          btnCrear:         "NOUVELLE PARTIE",
+          esperandoRival:   "En attente d'un adversaire...",
+          tituloPartidas:   "Parties ouvertes",
+          buscandoPartidas: "Recherche de parties...",
+          tituloUnirse:     "Rejoindre avec un code",
+          placeholderCodigo:"Ex : XK7F2A",
+          btnUnirse:        "REJOINDRE",
+          alertMazo:        "Charge d'abord ton deck",
+          alertCodigo:      "Le code doit comporter 6 caractères",
+          uniendoPartida:   "Connexion à la partie ",
         }
     }
 };
 function fusionarTraducciones() {
+  if (typeof TRADUCCIONES === "undefined") return;
   for (let lang in TRADUCCIONES) {
     if (!I18N[lang]) I18N[lang] = {};
     for (let seccion in TRADUCCIONES[lang]) {
@@ -168,6 +259,13 @@ function aplicarIdioma() {
     if (elemento.classList.contains("zona")) continue;
     const clave = elemento.getAttribute("data-i18n");
     elemento.textContent = t(clave);
+  }
+
+    // ── Traducir placeholders de inputs (para la version 2 del index) ──────────────────
+  const placeholders = document.querySelectorAll("[data-i18n-placeholder]");
+  for (const elemento of placeholders) {
+    const clave = elemento.getAttribute("data-i18n-placeholder");
+    elemento.placeholder = t(clave);
   }
 }
 aplicarIdioma(); // aplica el idioma guardado nada más cargar la página

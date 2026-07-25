@@ -1,101 +1,225 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- documento HTML5 -->
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png"> <!-- icono navegador -->
+  <meta charset="UTF-8"> <!-- codificación de caracteres -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- responsive básico -->
   <title>HV-TCG · Lobby</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico */
+
+    :root { /* variables de color, mismas que index.html */
+      --bg: #f2f0e8;              /* fondo gris clarito tipo papel de manga */
+      --surface: #16161a;         /* superficie oscura de paneles */
+      --surface2: #1e1e24;        /* superficie secundaria (inputs) */
+      --border: rgba(255,255,255,0.07);   /* borde sutil */
+      --border2: rgba(255,255,255,0.13);  /* borde algo más marcado */
+      --text: #e8e8ec;            /* texto claro */
+      --text2: #9090a0;           /* texto gris apagado */
+      --accent: #E8761A;          /* naranja de marca */
+      --font-display: 'Bebas Neue', sans-serif; /* fuente de títulos */
+      --font-body: 'Noto Sans JP', sans-serif;  /* fuente de texto */
+    }
+
     body {
-      font-family: sans-serif;
-      max-width: 500px;
-      margin: 60px auto;
-      padding: 20px;
+      background: var(--bg);           /* fondo general */
+      color: var(--text);              /* color de texto por defecto */
+      font-family: Arial, sans-serif;  /* fuente base */
+      min-height: 100vh;               /* toda la altura de pantalla */
+      display: flex;                   /* flexbox para centrar */
+      flex-direction: column;          /* apilado vertical */
+      align-items: center;             /* centrado horizontal */
+      justify-content: center;         /* centrado vertical */
     }
 
-    h1 { margin-bottom: 40px; }
-
-    section {
-      border: 1px solid #ccc;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 8px;
+    /* ── CONTENEDOR TRÍPTICO ─────────────────────────────────── */
+    .triptico {
+      display: flex;              /* las 3 columnas en fila */
+      width: 100%;                /* todo el ancho */
+      height: 100vh;              /* toda la altura */
+      position: fixed;            /* fijo en toda la pantalla */
+      top: 0;
+      left: 0;
+      justify-content: space-between;    /* centra el conjunto si sobra espacio */
     }
 
-    h2 { margin-top: 0; }
+    /* ── COLUMNAS LATERALES ───────────────────────────────────── */
+    .columna-lateral {
+      flex: 1;                          /* ocupa espacio proporcional */
+      max-width: 400px;                 /* límite de ancho */
+      background-size: cover;           /* imagen sin deformarse */
+      background-position: center;      /* centrada */
+      background-repeat: no-repeat;
+      min-width: 0;                     /* evita comportamiento raro de flexbox */
+    }
 
-    button {
-      padding: 10px 20px;
+    #columna-izquierda {
+      background-image: url('img/fondos/lobby_columna_izquierda.jpg'); /* ← tu imagen aquí */
+      background-color: #1a1a2e;        /* color de respaldo mientras no hay imagen */
+      border-right: 3px solid var(--accent); /* borde naranja hacia el centro */
+    }
+
+    #columna-derecha {
+      background: var(--bg);          /* aquí no es imagen: panel funcional del mazo */
+      border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
+      display: flex;
+      flex-direction: column;
+      padding: 20px;                        /* aire interior */
+      overflow-y: auto;                     /* scroll si el contenido crece */
+    }
+
+    /* ── COLUMNA CENTRAL ──────────────────────────────────────── */
+    .columna-central {
+      width: 500px;                 /* ancho fijo, algo más ancha que en index.html */
+      flex-shrink: 0;               /* nunca se encoge */
+      background: var(--bg);        /* mismo gris clarito */
+      display: flex;
+      flex-direction: column;       /* contenido apilado en vertical */
+      align-items: center;          /* centrado horizontal */
+      padding: 30px 20px;           /* aire interior */
+      position: relative;           /* por si luego necesitamos posicionar algo dentro */
+      overflow-y: auto;             /* scroll si hay mucho contenido */
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .columna-lateral { display: none; }  /* ocultar laterales en pantallas pequeñas */
+      .columna-central { width: 100%; }    /* panel central ocupa toda la pantalla */
+    }
+
+    /* ── ESTILOS COMPARTIDOS (mismos que index.html) ──────────── */
+    h1 {
+      font-size: 32px;             /* tamaño de título */
+      letter-spacing: 3px;         /* espaciado entre letras */
+      color: var(--accent);        /* naranja de marca */
+      margin-bottom: 20px;         /* separación con lo siguiente */
+    }
+
+    h2 {
+      font-size: 16px;             /* subtítulos de cada panel */
+      color: var(--accent);                 /* gris oscuro, legible sobre fondo claro */
+      margin-bottom: 10px;
+    }
+
+    .btn-menu {
+      display: block;                    /* ocupa toda la línea */
+      width: 100%;                       /* ancho completo del contenedor */
+      padding: 14px;                      /* aire interior */
+      background: #000000;               /* relleno negro */
+      border: 2px solid var(--accent);   /* borde naranja */
+      border-radius: 8px;                /* esquinas redondeadas */
+      color: var(--text);                /* texto claro */
+      text-decoration: none;             /* sin subrayado en los <a> */
+      text-align: center;                /* texto centrado */
       font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
+      font-weight: bold;                 /* negrita */
+      font-family: inherit;              /* hereda la fuente del body */
+      cursor: pointer;                   /* cursor de mano */
+      transition: all 0.15s;             /* transición suave en hover */
     }
 
-    input {
-      padding: 8px;
-      font-size: 16px;
-      width: 200px;
+    .btn-menu:hover {
+      background: var(--accent);   /* al pasar el ratón: fondo naranja */
+      color: #000000;              /* texto negro */
+    }
+
+    .input-settings {
+      width: 100%;                       /* ancho completo */
+      padding: 10px;                      /* aire interior */
+      background: var(--surface2);       /* fondo oscuro */
+      border: 1px solid var(--border2);  /* borde sutil */
+      border-radius: 6px;                /* esquinas redondeadas */
+      color: var(--text);                /* texto claro */
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;                     /* sin borde azul de foco */
+    }
+
+    .panel {
+      width: 100%;                  /* ancho completo del contenedor */
+      background: #000000;            /* fondo blanco para destacar sobre el gris clarito */
+      border: 2px solid var(--accent);       /* borde sutil */
+      border-radius: 8px;           /* esquinas redondeadas */
+      padding: 16px;                 /* aire interior */
+      margin-bottom: 16px;          /* separación entre paneles */
+      color: var(--text);
+    }
+
+    .volver-link {
+      align-self: flex-start;       /* alineado a la izquierda dentro del flex column */
+      margin-bottom: 16px;          /* separación con el título */
+      text-decoration: none;        /* sin subrayado */
+      color: var(--accent);         /* naranja de marca */
+      font-weight: bold;
+      font-size: 14px;
     }
 
     #codigo-sala {
-      font-size: 32px;
+      font-size: 28px;              /* código de sala bien visible */
       font-weight: bold;
-      letter-spacing: 6px;
+      letter-spacing: 4px;          /* espaciado entre caracteres del código */
       margin: 10px 0;
-    }
-
-    #lista-partidas {
-      margin-top: 10px;
+      color: var(--accent);                   /* gris oscuro, legible sobre fondo blanco del panel */
     }
   </style>
 </head>
 <body>
 
-  <h1>HV-TCG · Buscar partida</h1>
+  <!-- FONDO TRÍPTICO -->
+  <div class="triptico">
 
-  <!-- PASO 1: cargar tu mazo -->
-<section>
-  <h2>1. Name and deck</h2>
-  <input type="text" id="input-nombre" placeholder="Your nickname" maxlength="20">
-  <br><br>
-  <div id="selector-idioma">
-    <button type="button" data-idioma="es">ES</button>
-    <button type="button" data-idioma="en">EN</button>
-    <button type="button" data-idioma="fr">FR</button>
+      <!-- COLUMNA IZQUIERDA: SOLO IMAGEN -->
+      <div class="columna-lateral" id="columna-izquierda"></div>
+
+    <!-- COLUMNA CENTRAL -->
+    <div class="columna-central">
+      <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
+      <h1 data-i18n="menu.btnJugar">Jugar</h1>
+
+        <!-- PANEL: tu mazo -->
+      <div class="panel">
+        <h2 data-i18n="lobby.tituloMazo">Tu mazo</h2>
+        <input type="file" id="input-mazo" accept=".json" style="margin:10px 0;">
+        <p id="estado-mazo" style="font-size:13px;" data-i18n="lobby.mazoNoCargado">Ningún mazo cargado</p>
+      </div>
+
+      <!-- PANEL: crear partida -->
+      <div class="panel">
+        <h2 data-i18n="lobby.tituloCrear">Crear partida</h2>
+        <button id="btn-crear" class="btn-menu" data-i18n="lobby.btnCrear">Crear partida</button>
+        <p id="codigo-sala" style="display:none"></p>
+        <p id="estado-sala"></p>
+      </div>
+    </div>
+
+<!-- COLUMNA DERECHA: BUSCAR / UNIRSE A PARTIDA -->
+<div class="columna-lateral" id="columna-derecha">
+  <!-- PANEL: unirse con código -->
+  <div class="panel">
+    <h2 data-i18n="lobby.tituloUnirse">Unirse con código</h2>
+    <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6" class="input-settings" style="margin-bottom:10px;">
+    <button id="btn-unirse" class="btn-menu" data-i18n="lobby.btnUnirse">Unirse</button>
   </div>
-  <br>
-  <input type="file" id="input-mazo" accept=".json">
-  <p id="estado-mazo">No deck loaded</p>
-</section>
 
-  <!-- PASO 2: crear una partida nueva -->
-  <section>
-    <h2>2. Create a lobby</h2>
-    <button id="btn-crear">New game</button>
-    <p id="codigo-sala" style="display:none"></p>
-    <p id="estado-sala"></p>
-  </section>
+  <!-- PANEL: lista de partidas abiertas -->
+  <div class="panel">
+    <h2 data-i18n="lobby.tituloPartidas">Partidas abiertas</h2>
+    <div id="lista-partidas" data-i18n="lobby.buscandoPartidas">Buscando partidas...</div>
+  </div>
+</div>
 
-  <!-- PASO 3: unirse a una partida existente -->
-  <section>
-    <h2>3. Join a game</h2>
+</div> <!-- fin triptico -->
 
-    <!-- opción A: lista de partidas abiertas -->
-    <p><strong>Open games:</strong></p>
-    <div id="lista-partidas">Searching games...</div>
+  <script src="i18n.js"></script>
 
-    <!-- opción B: introducir código manualmente -->
-    <p style="margin-top:20px"><strong> Or insert a code:</strong></p>
-    <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6">
-    <button id="btn-unirse">Join</button>
-  </section>
+  <!-- Firebase (la librería oficial, se carga desde internet) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    <!-- Firebase (la librería oficial, se carga desde internet) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Archivos de juego -->
+  <script src="cartas.js"></script>
+  <script src="online.js"></script>
+  <script src="lobby.js"></script>
 
-    <!-- Archivos de juego -->
-    <script src="cartas.js"></script>
-    <script src="online.js"></script>
-    <script src="lobby.js"></script>
 </body>
 </html>

@@ -9,7 +9,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico para todos los elementos */
 
     :root { /* variables de color reutilizables en toda la página */
-      --bg: #0d0d0f;          /* fondo general oscuro */
+      /* --bg: #0d0d0f;           fondo general oscuro (alternativa) */
+      --bg: #eeeeee;          /* fondo general claro gris */
       --surface: #16161a;     /* superficie de paneles */
       --surface2: #1e1e24;    /* superficie secundaria (inputs, etc) */
       --border: rgba(255,255,255,0.07);   /* borde sutil */
@@ -57,21 +58,23 @@
       display: block;                    /* ocupa toda la línea, igual que un botón */
       width: 100%;                       /* ancho completo del contenedor */
       padding: 14px;                     /* aire interior */
-      background: var(--surface2);       /* fondo oscuro secundario */
-      border: 1px solid var(--border2);  /* borde sutil */
+      background: #000000;             /* relleno negro */
+      border: 2px solid var(--accent);   /* borde sutil */
       border-radius: 8px;                /* esquinas redondeadas */
-      color: var(--text);                /* texto claro */
+      color: var(--accent);                /* texto claro */
       text-decoration: none;             /* quitar subrayado de los <a> */
       text-align: center;                /* texto centrado */
       font-size: 16px;                   /* tamaño de letra */
+      font-weight: bold;                 /* negrita */
       font-family: inherit;              /* heredar la fuente del body (para el <button>) */
       cursor: pointer;                   /* cursor de mano al pasar por encima */
       transition: all 0.15s;             /* transición suave en hover */
     }
 
     .btn-menu:hover {
-      border-color: var(--accent);       /* borde naranja al pasar el ratón */
-      background: var(--surface);        /* fondo ligeramente distinto */
+      background: var(--accent);        /* ← al pasar el ratón, se invierte: fondo naranja */
+      color: #000000;                   /* texto negro sobre fondo naranja */
+      border-color: var(--accent);
     }
 
     /* ------------------------------- SETTINGS ------------------------------------- */
@@ -92,7 +95,7 @@
       background: var(--surface2);       /* fondo oscuro */
       border: 1px solid var(--border2);  /* borde sutil */
       border-radius: 6px;                /* esquinas redondeadas */
-      color: var(--text2);               /* texto apagado por defecto */
+      color: var(--text);               /* texto apagado por defecto */
       cursor: pointer;                   /* cursor de mano */
       font-family: inherit;
       transition: all 0.15s;
@@ -171,6 +174,25 @@
     }
   }
 
+/* ── AJUSTES: COLORES ───────── */
+.swatch-color {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;         /* círculo */
+  border: 2px solid var(--border2);
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.swatch-color:hover {
+  transform: scale(1.1);      /* pequeño efecto al pasar el ratón */
+}
+
+.swatch-color.activo {
+  border-color: white;        /* marco blanco en el color seleccionado actualmente */
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
   </style>
 </head>
 <body>
@@ -181,54 +203,62 @@
 
     <div class="columna-central">
 
-      <!-- ============================================================ PANTALLA 1: BIENVENIDA (solo primera vez) -->
-      <div class="pantalla" id="pantalla-bienvenida">
-        <h1>HV · TCG</h1>
-        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
-        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
-          <label style="font-size:13px; color:var(--text2);">Tu nombre</label>
-          <input type="text" id="input-nombre-bienvenida" maxlength="20" class="input-settings" placeholder="Ej: Andrés">
-        </div>
-        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
-          <label style="font-size:13px; color:var(--text2);">Idioma</label>
-          <div id="selector-idioma-bienvenida" style="display:flex; gap:6px;">
-            <button type="button" data-idioma="es" onclick="cambiarIdiomaBienvenida('es')" class="btn-idioma">ES</button>
-            <button type="button" data-idioma="en" onclick="cambiarIdiomaBienvenida('en')" class="btn-idioma">EN</button>
-            <button type="button" data-idioma="fr" onclick="cambiarIdiomaBienvenida('fr')" class="btn-idioma">FR</button>
-          </div>
-        </div>
-        <button onclick="confirmarBienvenida()" class="btn-menu" style="background:var(--accent); border-color:var(--accent);">Continuar</button>
+  <!-- ============================================================ PANTALLA 1: BIENVENIDA -->
+  <div class="pantalla" id="pantalla-bienvenida">
+    <h1>HVB!! · TCG</h1>
+    <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelNombre">Tu nombre</label>
+      <input type="text" id="input-nombre-bienvenida" maxlength="20" class="input-settings" placeholder="Ej: Andrés" data-i18n-placeholder="menu.placeholderNombre">
+    </div>
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelIdioma">Idioma</label>
+      <div id="selector-idioma-bienvenida" style="display:flex; gap:6px;">
+        <button type="button" data-idioma="es" onclick="cambiarIdiomaBienvenida('es')" class="btn-idioma">ES</button>
+        <button type="button" data-idioma="en" onclick="cambiarIdiomaBienvenida('en')" class="btn-idioma">EN</button>
+        <button type="button" data-idioma="fr" onclick="cambiarIdiomaBienvenida('fr')" class="btn-idioma">FR</button>
       </div>
+    </div>
+    <button onclick="confirmarBienvenida()" class="btn-menu" data-i18n="menu.btnContinuar">Continuar</button>
+  </div>
 
-      <!-- ============================================================ PANTALLA 2: PRINCIPAL -->
-      <div class="pantalla" id="pantalla-principal">
-        <h1>HV · TCG</h1>
-        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
-        <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
-          <a href="lobby.html" class="btn-menu">PLAY</a>
-          <a href="deckbuilding.html" class="btn-menu">DECKBUILDER</a>
-          <button onclick="abrirSettings()" class="btn-menu">SETTINGS</button>
-        </div>
-      </div>
+  <!-- ============================================================ PANTALLA 2: PRINCIPAL -->
+  <div class="pantalla" id="pantalla-principal">
+    <h1>HVB!! · TCG</h1>
+    <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyuu VB!! - Trading Card Game Simulator</p>
+    <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+      <a href="lobby.html" class="btn-menu" data-i18n="menu.btnJugar">PLAY</a>
+      <a href="deckbuilding.html" class="btn-menu" data-i18n="menu.btnDeckbuilder">DECKBUILDER</a>
+      <button onclick="abrirSettings()" class="btn-menu" data-i18n="menu.btnSettings">SETTINGS</button>
+    </div>
+  </div>
 
-      <!-- ============================================================ PANTALLA 3: SETTINGS -->
-      <div class="pantalla" id="pantalla-settings">
-        <h1>Settings</h1>
-        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
-          <label style="font-size:13px; color:var(--text2);">Nombre</label>
-          <input type="text" id="input-nombre-settings" maxlength="20" class="input-settings">
-        </div>
-        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
-          <label style="font-size:13px; color:var(--text2);">Idioma</label>
-          <div id="selector-idioma-settings" style="display:flex; gap:6px;">
-            <button type="button" data-idioma="es" onclick="cambiarIdiomaSettings('es')" class="btn-idioma">ES</button>
-            <button type="button" data-idioma="en" onclick="cambiarIdiomaSettings('en')" class="btn-idioma">EN</button>
-            <button type="button" data-idioma="fr" onclick="cambiarIdiomaSettings('fr')" class="btn-idioma">FR</button>
-          </div>
-        </div>
-        <button onclick="guardarSettings()" class="btn-menu" style="background:var(--accent); border-color:var(--accent);">Guardar</button>
-        <button onclick="mostrarPantalla('principal')" class="btn-menu">← Volver</button>
+  <!-- ============================================================ PANTALLA 3: SETTINGS -->
+  <div class="pantalla" id="pantalla-settings">
+    <h1 data-i18n="menu.tituloSettings">Settings</h1>
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelNombreSettings">Nombre</label>
+      <input type="text" id="input-nombre-settings" maxlength="20" class="input-settings">
+    </div>
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelIdioma">Idioma</label>
+      <div id="selector-idioma-settings" style="display:flex; gap:6px;">
+        <button type="button" data-idioma="es" onclick="cambiarIdiomaSettings('es')" class="btn-idioma">ES</button>
+        <button type="button" data-idioma="en" onclick="cambiarIdiomaSettings('en')" class="btn-idioma">EN</button>
+        <button type="button" data-idioma="fr" onclick="cambiarIdiomaSettings('fr')" class="btn-idioma">FR</button>
       </div>
+    </div>
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+    <!-- ============================================================ COLORES -->
+    <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; color:var(--text2);" data-i18n="menu.colorSecundario">Color secundario</label>
+      <input type="color" id="color-libre" onchange="elegirColorLibre(this.value)" style="width:50px; height:36px; border:2px solid var(--border2); border-radius:6px; padding:0; cursor:pointer; background:none;">
+    </div>
+  </div>
+
+    <button onclick="guardarSettings()" class="btn-menu" data-i18n="menu.btnGuardar">Guardar</button>
+    <button onclick="mostrarPantalla('principal')" class="btn-menu" data-i18n="menu.btnVolver">← Volver</button>
+  </div>
 
       <div class="creditos">
         A fan project by Skorkon<br>
@@ -241,7 +271,14 @@
     <div class="columna-lateral" id="columna-derecha"></div>
   </div> <!-- fin triptico -->
 
+  <script src="i18n.js"></script>
   <script>
+    // ── APLICAR COLOR GUARDADO AL CARGAR LA PÁGINA ─────────────
+    const colorGuardado = localStorage.getItem("hv-accent");
+    if (colorGuardado) {
+      document.documentElement.style.setProperty("--accent", colorGuardado);
+    }
+  
     // ── MOSTRAR PANTALLA ──────────────────────────────────────
     function mostrarPantalla(nombre) {
       // quita la clase "activa" de todas las pantallas (las oculta todas)
@@ -257,6 +294,8 @@
     function abrirSettings() {
       document.getElementById("input-nombre-settings").value = localStorage.getItem("hv-nombre") || ""; // rellenar nombre actual
       idiomaTemporal = localStorage.getItem("hv-idioma") || "es"; // recuperar idioma actual
+      colorTemporal = localStorage.getItem("hv-accent") || "#E8761A";        // ← nuevo
+      document.getElementById("color-libre").value = colorTemporal;          // ← nuevo: pinta el input con ese color
       marcarIdiomaSettings(); // pintar el botón activo
       mostrarPantalla("settings"); // mostrar la pantalla
     }
@@ -274,11 +313,25 @@
       });
     }
 
+    // ── SETTINGS: VARIABLE TEMPORAL DE COLOR ───────────────────
+    let colorTemporal = localStorage.getItem("hv-accent") || "#E8761A"; // color actual guardado, o naranja por defecto
+
+    // ── SETTINGS: ELEGIR COLOR ──────────────────────────────────
+    function elegirColorLibre(color) {
+      colorTemporal = color; // guarda el color elegido en la variable temporal (aún no se aplica ni se guarda)
+    }
+
     // ── SETTINGS: GUARDAR CAMBIOS ──────────────────────────────────
     function guardarSettings() {
       const nuevoNombre = document.getElementById("input-nombre-settings").value.trim() || "Jugador"; // nombre o valor por defecto
       localStorage.setItem("hv-nombre", nuevoNombre);     // guardar nombre
       localStorage.setItem("hv-idioma", idiomaTemporal);  // guardar idioma elegido
+      localStorage.setItem("hv-accent", colorTemporal);   // guardar color elegido
+
+      idiomaActivo = idiomaTemporal;   // actualizar la variable que usa t()
+      aplicarIdioma();                  // refrescar los textos ya traducidos en pantalla
+      document.documentElement.style.setProperty("--accent", colorTemporal); 
+
       mostrarPantalla("principal");                        // volver a la pantalla principal
     }
 
@@ -298,6 +351,10 @@
       const nombre = document.getElementById("input-nombre-bienvenida").value.trim() || "Jugador"; // nombre o valor por defecto
       localStorage.setItem("hv-nombre", nombre);            // guardar nombre
       localStorage.setItem("hv-idioma", idiomaBienvenida);  // guardar idioma elegido
+
+      idiomaActivo = idiomaBienvenida;   // actualizar la variable que usa t()
+      aplicarIdioma();                    // refrescar los textos ya traducidos en pantalla
+
       mostrarPantalla("principal");                         // ir a la pantalla principal
     }
 

@@ -2538,7 +2538,7 @@ function inicializarCartas() {
     {
       tipo: "personaje",
       id: "HV-P01-070",
-      escuela: "Sarukawa Tech",
+      escuela: "Sarukawa Kōgyō",
       posicion: "S",
       anyo: 3,
       rareza: "N",

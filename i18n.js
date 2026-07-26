@@ -34,7 +34,7 @@ const I18N = {
             cancelar:         "Cancelar",
             volverLobby:      "Volver al lobby",
           },
-        menu: {                                          // ← nueva sección para index.html
+        menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
           placeholderNombre:"Ej: Perro loco",
           labelIdioma:      "Idioma",
@@ -48,7 +48,7 @@ const I18N = {
           btnVolver:        "VOLVER",
           colorSecundario:  "Color secundario",
         },
-        lobby: {                                    // ← nueva sección
+        lobby: {                                          // ← para lobby.html
           volverInicio:     "← Volver a inicio",
           tituloMazo:       "Tu mazo",
           mazoNoCargado:    "Ningún mazo cargado",
@@ -63,6 +63,18 @@ const I18N = {
           alertMazo:        "Primero carga tu mazo",
           alertCodigo:      "El código debe tener 6 caracteres",
           uniendoPartida:   "Uniéndose a la partida ",
+        },
+        deckbuilder: {                                    // ← para deckbuilder.html
+          tabConstructor:     "Constructor",
+          tabPredefinidos:    "Decks predefinidos",
+          buscarPlaceholder:  "Buscar carta...",
+          todasEscuelas:      "Todas las escuelas",
+          todasPosiciones:    "Todas las posiciones",
+          todasRarezas:       "Todas las rarezas",
+          pillPersonaje:      "Personaje",
+          pillEvento:         "Evento",
+          pillHabilidad:      "Con habilidad",
+          resetearFiltros:    "Resetear filtros",
         }
     },    
     en: {
@@ -128,6 +140,18 @@ const I18N = {
           alertMazo:        "Load your deck first",
           alertCodigo:      "The code must be 6 characters",
           uniendoPartida:   "Joining match ",
+        },
+        deckbuilder: {
+          tabConstructor:     "Builder",
+          tabPredefinidos:    "Preset decks",
+          buscarPlaceholder:  "Search card...",
+          todasEscuelas:      "All schools",
+          todasPosiciones:    "All positions",
+          todasRarezas:       "All rarities",
+          pillPersonaje:      "Character",
+          pillEvento:         "Event",
+          pillHabilidad:      "With ability",
+          resetearFiltros:    "Reset filters",
         }
     },
     fr: {
@@ -193,6 +217,18 @@ const I18N = {
           alertMazo:        "Charge d'abord ton deck",
           alertCodigo:      "Le code doit comporter 6 caractères",
           uniendoPartida:   "Connexion à la partie ",
+        },
+        deckbuilder: {
+          tabConstructor:     "Constructeur",
+          tabPredefinidos:    "Decks prédéfinis",
+          buscarPlaceholder:  "Rechercher une carte...",
+          todasEscuelas:      "Toutes les écoles",
+          todasPosiciones:    "Toutes les positions",
+          todasRarezas:       "Toutes les raretés",
+          pillPersonaje:      "Personnage",
+          pillEvento:         "Événement",
+          pillHabilidad:      "Avec capacité",
+          resetearFiltros:    "Réinitialiser les filtres",
         }
     }
 };
@@ -261,11 +297,18 @@ function aplicarIdioma() {
     elemento.textContent = t(clave);
   }
 
-    // ── Traducir placeholders de inputs (para la version 2 del index) ──────────────────
+  // -- Traducir placeholders de inputs (para index.html)
   const placeholders = document.querySelectorAll("[data-i18n-placeholder]");
   for (const elemento of placeholders) {
     const clave = elemento.getAttribute("data-i18n-placeholder");
     elemento.placeholder = t(clave);
+  }
+
+  // -- Traducir atributos title (tooltips para deckbuilder.html)
+  const titles = document.querySelectorAll("[data-i18n-title]");
+  for (const elemento of titles) {
+    const clave = elemento.getAttribute("data-i18n-title");
+    elemento.title = t(clave);
   }
 }
 aplicarIdioma(); // aplica el idioma guardado nada más cargar la página

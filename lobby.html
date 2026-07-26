@@ -1,26 +1,24 @@
 <!DOCTYPE html> <!-- documento HTML5 -->
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png"> <!-- icono navegador -->
-  <meta charset="UTF-8"> <!-- codificación de caracteres -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- responsive básico -->
+  <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
+  <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
   <title>HV-TCG · Lobby</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico */
-
-    :root { /* variables de color, mismas que index.html */
-      --bg: #f2f0e8;              /* fondo gris clarito tipo papel de manga */
-      --surface: #16161a;         /* superficie oscura de paneles */
-      --surface2: #1e1e24;        /* superficie secundaria (inputs) */
-      --border: rgba(255,255,255,0.07);   /* borde sutil */
-      --border2: rgba(255,255,255,0.13);  /* borde algo más marcado */
-      --text: #e8e8ec;            /* texto claro */
-      --text2: #9090a0;           /* texto gris apagado */
-      --accent: #E8761A;          /* naranja de marca */
+    :root {                                     /* variables de color, mismas que index.html */
+      --bg: #f2f0e8;                          /* fondo gris clarito tipo papel de manga */
+      --surface: #16161a;                     /* superficie oscura de paneles */
+      --surface2: #1e1e24;                    /* superficie secundaria (inputs) */
+      --border: rgba(255,255,255,0.07);       /* borde sutil */
+      --border2: rgba(255,255,255,0.13);      /* borde algo más marcado */
+      --text: #e8e8ec;                        /* texto claro */
+      --text2: #9090a0;                       /* texto gris apagado */
+      --accent: #E8761A;                      /* naranja de color secundario */
       --font-display: 'Bebas Neue', sans-serif; /* fuente de títulos */
       --font-body: 'Noto Sans JP', sans-serif;  /* fuente de texto */
     }
-
     body {
       background: var(--bg);           /* fondo general */
       color: var(--text);              /* color de texto por defecto */
@@ -32,7 +30,7 @@
       justify-content: center;         /* centrado vertical */
     }
 
-    /* ── CONTENEDOR TRÍPTICO ─────────────────────────────────── */
+    /* ------------------------------- TRÍPTICO ------------------------------------- */
     .triptico {
       display: flex;              /* las 3 columnas en fila */
       width: 100%;                /* todo el ancho */
@@ -43,7 +41,7 @@
       justify-content: space-between;    /* centra el conjunto si sobra espacio */
     }
 
-    /* ── COLUMNAS LATERALES ───────────────────────────────────── */
+    /* ------------------------------- COLUMNAS ------------------------------------- */
     .columna-lateral {
       flex: 1;                          /* ocupa espacio proporcional */
       max-width: 400px;                 /* límite de ancho */
@@ -52,23 +50,19 @@
       background-repeat: no-repeat;
       min-width: 0;                     /* evita comportamiento raro de flexbox */
     }
-
     #columna-izquierda {
-      background-image: url('img/fondos/lobby_columna_izquierda.jpg'); /* ← tu imagen aquí */
-      background-color: #1a1a2e;        /* color de respaldo mientras no hay imagen */
-      border-right: 3px solid var(--accent); /* borde naranja hacia el centro */
+      background-image: url('img/fondos/lobby_columna_izquierda.jpg'); 
+      background-color: #1a1a2e;            /* color de respaldo mientras no hay imagen */
+      border-right: 3px solid var(--accent);  /* borde naranja hacia el centro */
     }
-
     #columna-derecha {
-      background: var(--bg);          /* aquí no es imagen: panel funcional del mazo */
+      background: var(--bg);          
       border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
       display: flex;
       flex-direction: column;
       padding: 20px;                        /* aire interior */
       overflow-y: auto;                     /* scroll si el contenido crece */
     }
-
-    /* ── COLUMNA CENTRAL ──────────────────────────────────────── */
     .columna-central {
       width: 500px;                 /* ancho fijo, algo más ancha que en index.html */
       flex-shrink: 0;               /* nunca se encoge */
@@ -77,35 +71,33 @@
       flex-direction: column;       /* contenido apilado en vertical */
       align-items: center;          /* centrado horizontal */
       padding: 30px 20px;           /* aire interior */
-      position: relative;           /* por si luego necesitamos posicionar algo dentro */
+      position: relative;           /* por si hay que meter algo dentro */
       overflow-y: auto;             /* scroll si hay mucho contenido */
     }
 
-    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    /* ------------------------------- RESPONSIVE ------------------------------------- */
     @media (max-width: 900px) {
       .columna-lateral { display: none; }  /* ocultar laterales en pantallas pequeñas */
       .columna-central { width: 100%; }    /* panel central ocupa toda la pantalla */
     }
 
-    /* ── ESTILOS COMPARTIDOS (mismos que index.html) ──────────── */
+    /* ------------------------------- ESTILOS COMPARTIDOS ------------------------------------- */
     h1 {
       font-size: 32px;             /* tamaño de título */
       letter-spacing: 3px;         /* espaciado entre letras */
-      color: var(--accent);        /* naranja de marca */
+      color: var(--accent);        /* naranja color secundario */
       margin-bottom: 20px;         /* separación con lo siguiente */
     }
-
     h2 {
       font-size: 16px;             /* subtítulos de cada panel */
-      color: var(--accent);                 /* gris oscuro, legible sobre fondo claro */
+      color: var(--accent);        /* gris oscuro, legible sobre fondo claro */
       margin-bottom: 10px;
     }
-
     .btn-menu {
       display: block;                    /* ocupa toda la línea */
       width: 100%;                       /* ancho completo del contenedor */
-      padding: 14px;                      /* aire interior */
-      background: #000000;               /* relleno negro */
+      padding: 14px;                     /* aire interior */
+      background: #000000;             /* relleno negro */
       border: 2px solid var(--accent);   /* borde naranja */
       border-radius: 8px;                /* esquinas redondeadas */
       color: var(--text);                /* texto claro */
@@ -117,15 +109,13 @@
       cursor: pointer;                   /* cursor de mano */
       transition: all 0.15s;             /* transición suave en hover */
     }
-
     .btn-menu:hover {
-      background: var(--accent);   /* al pasar el ratón: fondo naranja */
-      color: #000000;              /* texto negro */
+      background: var(--accent);          /* al pasar el ratón: fondo naranja */
+      color: #000000;                   /* texto negro */
     }
-
     .input-settings {
       width: 100%;                       /* ancho completo */
-      padding: 10px;                      /* aire interior */
+      padding: 10px;                     /* aire interior */
       background: var(--surface2);       /* fondo oscuro */
       border: 1px solid var(--border2);  /* borde sutil */
       border-radius: 6px;                /* esquinas redondeadas */
@@ -135,16 +125,16 @@
       outline: none;                     /* sin borde azul de foco */
     }
 
+    /* ------------------------------- PROPIO AL LOBBY ------------------------------------- */
     .panel {
-      width: 100%;                  /* ancho completo del contenedor */
+      width: 100%;                      /* ancho completo del contenedor */
       background: #000000;            /* fondo blanco para destacar sobre el gris clarito */
-      border: 2px solid var(--accent);       /* borde sutil */
-      border-radius: 8px;           /* esquinas redondeadas */
-      padding: 16px;                 /* aire interior */
-      margin-bottom: 16px;          /* separación entre paneles */
+      border: 2px solid var(--accent);  /* borde sutil */
+      border-radius: 8px;               /* esquinas redondeadas */
+      padding: 16px;                    /* aire interior */
+      margin-bottom: 16px;              /* separación entre paneles */
       color: var(--text);
     }
-
     .volver-link {
       align-self: flex-start;       /* alineado a la izquierda dentro del flex column */
       margin-bottom: 16px;          /* separación con el título */
@@ -153,7 +143,6 @@
       font-weight: bold;
       font-size: 14px;
     }
-
     #codigo-sala {
       font-size: 28px;              /* código de sala bien visible */
       font-weight: bold;
@@ -163,26 +152,23 @@
     }
   </style>
 </head>
-<body>
 
+<body>
   <!-- FONDO TRÍPTICO -->
   <div class="triptico">
-
-      <!-- COLUMNA IZQUIERDA: SOLO IMAGEN -->
-      <div class="columna-lateral" id="columna-izquierda"></div>
+    <!-- COLUMNA IZQUIERDA: SOLO IMAGEN -->
+    <div class="columna-lateral" id="columna-izquierda"></div>
 
     <!-- COLUMNA CENTRAL -->
     <div class="columna-central">
       <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
       <h1 data-i18n="menu.btnJugar">Jugar</h1>
-
-        <!-- PANEL: tu mazo -->
+      <!-- PANEL: tu mazo -->
       <div class="panel">
         <h2 data-i18n="lobby.tituloMazo">Tu mazo</h2>
         <input type="file" id="input-mazo" accept=".json" style="margin:10px 0;">
         <p id="estado-mazo" style="font-size:13px;" data-i18n="lobby.mazoNoCargado">Ningún mazo cargado</p>
       </div>
-
       <!-- PANEL: crear partida -->
       <div class="panel">
         <h2 data-i18n="lobby.tituloCrear">Crear partida</h2>
@@ -190,26 +176,32 @@
         <p id="codigo-sala" style="display:none"></p>
         <p id="estado-sala"></p>
       </div>
-    </div>
+    </div> <!-- fin columna central -->
 
-<!-- COLUMNA DERECHA: BUSCAR / UNIRSE A PARTIDA -->
-<div class="columna-lateral" id="columna-derecha">
-  <!-- PANEL: unirse con código -->
-  <div class="panel">
-    <h2 data-i18n="lobby.tituloUnirse">Unirse con código</h2>
-    <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6" class="input-settings" style="margin-bottom:10px;">
-    <button id="btn-unirse" class="btn-menu" data-i18n="lobby.btnUnirse">Unirse</button>
-  </div>
+    <!-- COLUMNA DERECHA: BUSCAR / UNIRSE A PARTIDA -->
+    <div class="columna-lateral" id="columna-derecha">
+      <!-- PANEL: unirse con código -->
+      <div class="panel">
+        <h2 data-i18n="lobby.tituloUnirse">Unirse con código</h2>
+        <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6" class="input-settings" style="margin-bottom:10px;">
+        <button id="btn-unirse" class="btn-menu" data-i18n="lobby.btnUnirse">Unirse</button>
+      </div>
+      <!-- PANEL: lista de partidas abiertas -->
+      <div class="panel">
+        <h2 data-i18n="lobby.tituloPartidas">Partidas abiertas</h2>
+        <div id="lista-partidas" data-i18n="lobby.buscandoPartidas">Buscando partidas...</div>
+      </div>
+    </div> <!-- fin columna derecha -->
+  </div> <!-- fin triptico -->
 
-  <!-- PANEL: lista de partidas abiertas -->
-  <div class="panel">
-    <h2 data-i18n="lobby.tituloPartidas">Partidas abiertas</h2>
-    <div id="lista-partidas" data-i18n="lobby.buscandoPartidas">Buscando partidas...</div>
-  </div>
-</div>
-
-</div> <!-- fin triptico -->
-
+  <script>
+    // =============================================================== APLICAR COLOR GUARDADO AL CARGAR PÁGINA
+    const colorGuardado = localStorage.getItem("hv-accent");
+    if (colorGuardado) {
+      document.documentElement.style.setProperty("--accent", colorGuardado);
+    }
+  </script>
+  
   <script src="i18n.js"></script>
 
   <!-- Firebase (la librería oficial, se carga desde internet) -->

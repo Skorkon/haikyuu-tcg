@@ -1,14 +1,14 @@
-// ── VARIABLES ─────────────────────────────────────────────
-let miMazo = null;  // aquí se guardará el mazo cargado
-let miNombre = localStorage.getItem("hv-nombre") || "Player"; // nombre guardado, o por defecto
-let miIdioma = localStorage.getItem("hv-idioma") || "en"; // idioma guardado, o inglés por defecto
+// =============================================================== VARIABLES
+let miMazo = null;                                              // aquí se guardará el mazo cargado
+let miNombre = localStorage.getItem("hv-nombre") || "Player";   // nombre guardado, o por defecto
+let miIdioma = localStorage.getItem("hv-idioma") || "en";       // idioma guardado, o inglés por defecto
 
-// ── CARGAR MAZO ───────────────────────────────────────────
+// =============================================================== CARGAR MAZO
 document.getElementById("input-mazo").addEventListener("change", function(evento) {
-  const archivo = evento.target.files[0];
+  const archivo = evento.target.files[0];                           // buscar mazo cargado
   if (!archivo) return;
 
-  const lector = new FileReader();
+  const lector = new FileReader();      
   lector.onload = function(e) {
     miMazo = JSON.parse(e.target.result);
     document.getElementById("estado-mazo").textContent = 
@@ -17,9 +17,9 @@ document.getElementById("input-mazo").addEventListener("change", function(evento
   lector.readAsText(archivo);
 });
 
-// ── BOTÓN CREAR PARTIDA ───────────────────────────────────
+// =============================================================== BOTÓN CREAR PARTIDA
 document.getElementById("btn-crear").addEventListener("click", function() {
-  if (!miMazo) {
+  if (!miMazo) {                            // buscar mazo
     alert(t("lobby.alertMazo"));
     return;
   }
@@ -35,15 +35,15 @@ document.getElementById("btn-crear").addEventListener("click", function() {
 });
 
 
-// ── BOTÓN UNIRSE ──────────────────────────────────────────
+// =============================================================== BOTÓN UNIRSE
 document.getElementById("btn-unirse").addEventListener("click", function() {
-  if (!miMazo) {
+  if (!miMazo) {                              // buscar mazo
     alert(t("lobby.alertMazo"));
     return;
   }
 
   const codigo = document.getElementById("input-codigo").value.trim().toUpperCase();
-  if (codigo.length !== 6) {
+  if (codigo.length !== 6) {                  // comprobar código
     alert(t("lobby.alertCodigo"));
     return;
   }

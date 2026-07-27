@@ -40,13 +40,14 @@
 
     /* -------------------------------------------------- COLUMNAS ------------------------------------------ */
     #columna-izquierda {
-      width: 150px;                                /* ancho fijo y pequeño — la haces "muy fina" */
+      width: 300px;                                /* ancho fijo y pequeño — la haces "muy fina" */
       flex-shrink: 0;                             /* no se encoge nunca, aunque falte espacio */
       background-image: url('img/fondos/deckb.jpg'); 
       background-color: #1a1a2e;                /* color de respaldo mientras no hay imagen */
       background-size: cover;                     /* la imagen cubre toda la columna sin deformarse */
       background-position: center;                /* centrada dentro de la columna */
       border-right: 3px solid var(--accent);      /* borde naranja hacia el centro, igual que en index/lobby */
+      position: relative;                         /* necesario para poner el preview encima */
     }
     .columna-central {
       flex: 1;                     /* crece para ocupar TODO el espacio que sobra entre izquierda y derecha */
@@ -353,6 +354,81 @@
       z-index: 3;
     }
 
+    /* ----------------------------------------------------------------------------------------------------- */
+    .preview-panel { /* --------------------------------------------------------- PANEL DE PREVIEW DE CARTAS */
+      display: none;
+      position: absolute;
+      top: 50%;                /* margen desde arriba, para que no toque el borde */
+      left: 10px;
+      right: 10px;               /* margen a los lados, dentro de la columna de 260px */
+      transform: translateY(-50%);
+      flex-direction: column;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);   /* sombra para que se note que "flota" encima */
+      z-index: 5;
+    }
+    .preview-panel.show {
+      display: flex;
+    }
+    .preview-imagen {
+      width: 100%;
+      height: 380px;                      /* tamaño grande, pero no toda la columna */
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .preview-info {
+      background: #000000;
+      color: var(--text);
+      padding: 14px;
+      max-height: 260px;          /* límite de altura, con scroll si hace falta */
+      overflow-y: auto;
+    }
+    .preview-info h3 {
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .preview-info .preview-meta {
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+    .preview-info .preview-stats {
+      display: flex;               /* en fila, en vez de grid de 2 columnas */
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .pstat {                        /* Posición y tamaño de cuadrados */
+      flex: 1;                      /* los 5 cuadraditos se reparten el ancho por igual */
+      text-align: center;
+      padding: 4px 2px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+    .pstat span {                   /* Texto cuadrados */
+      display: block;
+      font-size: 8px;
+      opacity: 0.8;
+    }
+    .pstat strong {                 /* Números cuadrados */
+      display: block;
+      font-size: 13px;
+    }
+    .pstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
+    .pstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
+    .pstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
+    .pstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
+    .pstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
+
+    .preview-info .preview-desc {
+      font-size: 11px;
+      line-height: 1.5;
+      border-top: 1px solid var(--border2);
+      padding-top: 8px;
+    }
+
     /* ---------------------------------------------- BARRA DE SCROLL PERSONALIZADA ------------------------- */
     .catalogue-grid::-webkit-scrollbar {
       width: 10px;                    /* ancho de la barra */
@@ -375,7 +451,12 @@
   <!-- CONTENEDOR PRINCIPAL -->
   <div class="triptico">
     <!-- COLUMNA IZQUIERDA : solo imagen -->
-    <div id="columna-izquierda"></div>
+    <div id="columna-izquierda">
+      <div class="preview-panel" id="previewPanel">
+        <div class="preview-imagen" id="previewImagen"></div>
+        <div class="preview-info" id="previewInfo"></div>
+      </div>
+    </div>
 
     <!-- COLUMNA CENTRAL : FILTROS + CATÁLOGO -->
     <div class="columna-central">
@@ -566,8 +647,48 @@
           ${c.posicion ? `<span class="card-position" style="background:${colorEscuela}">${c.posicion}</span>` : ''}
         </div>`;
 
+      // ------------------------------------------------------------------- Mostrar tooltip al pasar el ratón   
+      div.addEventListener("mouseenter", () => mostrarPreview(c));
+      div.addEventListener("mouseleave", () => ocultarPreview());
+
       return div;
     }
+
+    // ------------------------------------- MOSTRAR TOOLTIP
+    function mostrarPreview(c) {
+      const panel   = document.getElementById("previewPanel");
+      const imagen  = document.getElementById("previewImagen"); 
+      const info    = document.getElementById("previewInfo");
+      const colorEscuela = getSchoolColor(c.escuela);
+
+      imagen.style.backgroundImage = `url('${imgPath(c.id)}')`;   // imagen de fondo
+      panel.style.border = `3px solid ${colorEscuela}`;           // borde del color de la escuela
+      imagen.style.borderBottom = `5px solid ${colorEscuela}`;    // línea del color de la escuela
+
+      const descripcion = DESCRIPCIONES?.[c.id]?.[idiomaActivo] || c.descripcion || "";
+
+      info.innerHTML = `
+        <h3 style="color:${colorEscuela}">${c.nombre}</h3>
+        <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''}</div>
+        ${c.tipo === 'personaje' ? `
+          <div class="preview-stats">
+            <div class="pstat pstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${c.stats.saque}</strong></div>
+            <div class="pstat pstat-bloqueo"><span>${t("deckbuilder.statBloqueoCorto")}</span><strong>${c.stats.bloqueo}</strong></div>
+            <div class="pstat pstat-recepcion"><span>${t("deckbuilder.statRecepcionCorto")}</span><strong>${c.stats.recepcion}</strong></div>
+            <div class="pstat pstat-pase"><span>${t("deckbuilder.statPaseCorto")}</span><strong>${c.stats.pase}</strong></div>
+            <div class="pstat pstat-remate"><span>${t("deckbuilder.statRemateCorto")}</span><strong>${c.stats.remate}</strong></div>
+          </div>` : ''}
+        <div class="preview-desc">${descripcion.replace(/&quot;/g, '"')}</div>
+      `;
+
+      panel.classList.add("show");
+    }
+
+    // ------------------------------------- OCULTAR TOOLTIP
+    function ocultarPreview() {
+      document.getElementById("previewPanel").classList.remove("show");
+    }
+
     // ----------------------------------------------------------------------------------------- FILTROS //
         // ------------------------------------- RELLENAR LISTA ESCUELAS
     function llenarListaEscuela() {
@@ -641,6 +762,7 @@
       document.querySelectorAll(".pill.on").forEach(p => p.classList.remove("on"));
       applyFilters();
     }
+
     // ------------------------------------- FILTRO POR ESTADÍSTICA
     let statFiltro = { stat: "", valores: new Set() };   // stat elegido + valores marcados
 
@@ -659,15 +781,14 @@
         contenedor.appendChild(pill);
       }
     }
-    // ── AL CAMBIAR DE ESTADÍSTICA ────────────────────────────────
+    // // ------------------------------------- AL CAMBIAR DE ESTADÍSTICA
     document.getElementById("filterStat").addEventListener("change", function() {
       statFiltro.stat = this.value;
       statFiltro.valores.clear();   // al cambiar de stat, se resetean los valores marcados
       renderStatValuePills();
       applyFilters();
     });
-
-    // ── TOGGLE DE UN VALOR CONCRETO (multi-selección) ───────────
+    // ------------------------------------- PILLS DE UN VALOR CONCRETO
     function toggleStatValue(v) {
       if (statFiltro.valores.has(v)) {
         statFiltro.valores.delete(v);   // ya estaba marcado → lo quitamos

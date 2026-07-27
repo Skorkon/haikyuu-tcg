@@ -82,6 +82,11 @@ const I18N = {
           statPase:        "Pase",
           statRemate:      "Remate",
           statBloqueo:     "Bloqueo",
+          statSaqueCorto:     "SAQ",
+          statRecepcionCorto: "REC",
+          statPaseCorto:      "PAS",
+          statRemateCorto:    "REM",
+          statBloqueoCorto:   "BLQ",
         }
     },    
     en: {
@@ -166,6 +171,11 @@ const I18N = {
           statPase:        "Set",
           statRemate:      "Spike",
           statBloqueo:     "Block",
+          statSaqueCorto:     "SRV",
+          statRecepcionCorto: "REC",
+          statPaseCorto:      "SET",
+          statRemateCorto:    "SPK",
+          statBloqueoCorto:   "BLK",
         }
     },
     fr: {
@@ -250,6 +260,11 @@ const I18N = {
           statPase:        "Passe",
           statRemate:      "Attaque",
           statBloqueo:     "Bloc",
+          statSaqueCorto:     "SRV",
+          statRecepcionCorto: "RÉC",
+          statPaseCorto:      "PAS",
+          statRemateCorto:    "ATQ",
+          statBloqueoCorto:   "BLC",
         }
     }
 };

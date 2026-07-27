@@ -125,12 +125,31 @@
       background: var(--bg);              
       border-bottom: 2px solid var(--accent);    /* línea separadora con el catálogo que irá debajo */
       display: flex;                    /* todos los filtros en fila */
+      flex-direction: column;
       flex-wrap: wrap;                  /* si la pantalla es estrecha, los filtros saltan a la línea siguiente en vez de desbordar */
-      gap: 8px;                         /* separación entre cada filtro */
-      align-items: center;              /* centrados verticalmente entre sí */
+      gap: 10px;                         /* separación entre cada filtro */
       flex-shrink: 0;                   /* esta barra nunca se encoge, aunque el catálogo de abajo necesite más espacio */
     }
+    .filters-fila1 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
 
+    .filters-fila2 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .separador {
+      width: 4px;                 /* muy fina, como una línea */
+      height: 24px;               /* altura similar a los botones/pills de al lado */
+      background: var(--accent);  /* color naranja, para que combine con el resto */
+      flex-shrink: 0;             /* nunca se encoge ni desaparece */
+    }
     /* -------------------------------------- BUSCADOR DE TEXTO --------------------------------- */
     .search-wrap { /* buscador de texto como elemento en la cabecera */
       flex: 1;                /* el buscador "crece" para ocupar todo el espacio que sobra junto a los selects */
@@ -193,19 +212,20 @@
     }
     /* ------------------------------- BOTÓN DE FILTRO RESET --------------------------------- */
     .pill-reset {
-      padding: 4px 12px;                 /* mismo aspecto que una pill normal */
-      border-radius: 20px;
+      padding: 4px 8px;                   /* mismo aspecto que una pill normal */
+      border-radius: 50px;
       border: 1px solid #ccc;
-      background: #f5f5f5;
-      color: #666;
+      background: #000000;
+      color: var(--text);
       font-size: 12px;
       cursor: pointer;
       font-family: inherit;              /* como es un <button>, hay que decirle que use la fuente de la página (si no, usa la fuente por defecto del navegador) */
       white-space: nowrap;
     }
     .pill-reset:hover {
-      border-color: var(--accent);      /* mismo hover que las pills normales */
-      color: #333;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text);
     }
 
     /* ------------------------------- ESTILO CONTADOR Y GRID DE CARTAS --------------------------------- */
@@ -370,35 +390,52 @@
       </header> <!-- fin cabecera -->
       <!------------------------ FILTROS ------------------------------------>
       <div class="filters">
-        <button class="pill-reset" title="Resetear filtros">✕</button>
-
-        <div class="search-wrap">
-          <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
+        <div class="filters-fila1">
+          <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
+          </div>
+          <select id="filterEscuela">
+            <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
+          </select>
+          <select id="filterPosicion">
+            <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
+            <option value="MB">MB — Middle Blocker</option>
+            <option value="S">S — Setter</option>
+            <option value="WS">WS — Wing Spiker</option>
+            <option value="L">L — Libero</option>
+          </select>
+          <select id="filterRareza">
+            <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
+            <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
+            <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
+            <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
+          </select>
         </div>
 
-        <select id="filterEscuela">
-          <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
-        </select>
+        <div class="filters-fila2">
+          <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
+          <div class="filter-pills">
+            <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
+            <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
+          </div>
+          <span class="separador"></span>
+          <div class="filter-pills">
+            <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
+            <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
+          </div>
+          <span class="separador"></span>
+          <select id="filterStat" class="select-oscuro">
+            <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
+            <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
+            <option value="recepcion" data-i18n="deckbuilder.statRecepcion">Recepción</option>
+            <option value="pase" data-i18n="deckbuilder.statPase">Pase</option>
+            <option value="remate" data-i18n="deckbuilder.statRemate">Remate</option>
+            <option value="bloqueo" data-i18n="deckbuilder.statBloqueo">Bloqueo</option>
+          </select>
 
-        <select id="filterPosicion">
-          <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
-          <option value="MB">MB — Middle Blocker</option>
-          <option value="S">S — Setter</option>
-          <option value="WS">WS — Wing Spiker</option>
-          <option value="L">L — Libero</option>
-        </select>
-
-        <select id="filterRareza">
-          <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
-          <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
-          <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
-          <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
-        </select>
-
-        <div class="filter-pills">
-          <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
-          <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
-          <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
+            <div class="filter-pills" id="statValuePills">
+              <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
+            </div>
         </div>
       </div> <!-- fin filtros -->
 
@@ -531,7 +568,126 @@
 
       return div;
     }
-    renderCatalogo(CATALOGUE); // lanzar búsqueda del catálogo
+    // ----------------------------------------------------------------------------------------- FILTROS //
+        // ------------------------------------- RELLENAR LISTA ESCUELAS
+    function llenarListaEscuela() {
+      const escuelas = [...new Set(CATALOGUE.map(c => c.escuela).filter(Boolean))].sort();  // escuelas únicas, sin vacíos, ordenadas
+        // CATALOGUE.map(c => c.escuela) → saca un array con la escuela de CADA carta (con repetidos)
+        // .filter(Boolean) → quita los valores vacíos/null/undefined (p.ej. cartas sin escuela, como algunos eventos)
+        // new Set(...) → convierte el array en un "conjunto" que elimina automáticamente los duplicados
+        // [...] → vuelve a convertirlo en un array normal para poder usar .sort()
+        // .sort() → ordena alfabéticamente
+
+      const select = document.getElementById("filterEscuela");      // crear la lista HTML
+      escuelas.forEach(e => {                                       // por cada opción
+        const option = document.createElement("option");            // crea el valor
+        option.value = e;                                           // valor interno para el filtro
+        option.textContent = e;                                     // valor asociado al texto
+        select.appendChild(option);
+      });
+    }
+    // ------------------------------------- ESTADO FILTROS
+    let activeFilters = { tipo: null, hab: null };                   // para los pills (tipo: "personaje"/"evento", hab: "si")
+    // ------------------------------------- APLICAR FILTROS
+    function applyFilters() {                                        // leer todos los filtros
+      const q        = document.getElementById("searchInput").value.toLowerCase().trim();
+      const escuela  = document.getElementById("filterEscuela").value;
+      const posicion = document.getElementById("filterPosicion").value;
+      const rareza   = document.getElementById("filterRareza").value;
+
+      const resultado = CATALOGUE.filter(c => {                        // mostrar o no según se encuentre en el filtro
+        if (q        && !c.nombre.toLowerCase().includes(q) && !(c.id||'').toLowerCase().includes(q)) return false; // texto escrito en el buscador
+        if (escuela  && c.escuela  !== escuela)  return false;
+        if (posicion && c.posicion !== posicion) return false;
+        if (rareza   && c.rareza   !== rareza)   return false;
+        if (activeFilters.tipo && c.tipo !== activeFilters.tipo) return false;  // filtro personaje/evento
+        if (activeFilters.hab === "si" && !c.habilidad) return false;           // filtro con habilidad
+        if (activeFilters.hab === "no" && c.habilidad)  return false;           // filtro sin habilidad
+
+        // ------------------------ FILTRO POR ESTADÍSTICAS
+        if (statFiltro.stat && statFiltro.valores.size > 0) {
+          const valorCarta = c.stats?.[statFiltro.stat];              // valor de esa stat en esta carta
+          if (!statFiltro.valores.has(valorCarta)) return false;      // si no está entre los valores marcados, descartar
+        }
+
+        return true;
+      });
+      renderCatalogo(resultado);                                                // repintar el catálogo
+    }
+    // ------------------------------------- TOOGLES DE PILLS DE FILTROS
+    function togglePill(el) {
+      const filtro = el.dataset.filter;                         // lee el atributo del pill tipo
+      const valor  = el.dataset.val;                            // lee el atributo del pill 
+      const estabaActiva = el.classList.contains("on");
+
+      // desactivar visualmente todas las pills del mismo grupo de filtro
+      document.querySelectorAll(`.pill[data-filter="${filtro}"]`).forEach(p => p.classList.remove("on"));
+
+      activeFilters[filtro] = estabaActiva ? null : valor;      // si ya estaba activa, se desactiva; si no, se activa
+      if (!estabaActiva) el.classList.add("on");
+
+      applyFilters();
+    }
+    // ------------------------------------- RESETEAR FILTROS
+    function resetFiltros() {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("filterEscuela").value = "";
+      document.getElementById("filterPosicion").value = "";
+      document.getElementById("filterRareza").value = "";
+      document.getElementById("filterStat").value = "";
+      activeFilters = { tipo: null, hab: null };
+      statFiltro = { stat: "", valores: new Set() };
+      renderStatValuePills();
+      document.querySelectorAll(".pill.on").forEach(p => p.classList.remove("on"));
+      applyFilters();
+    }
+    // ------------------------------------- FILTRO POR ESTADÍSTICA
+    let statFiltro = { stat: "", valores: new Set() };   // stat elegido + valores marcados
+
+    // ------------------------------------- RELLENAR PILLS DE VALORES
+    function renderStatValuePills() {
+      const contenedor = document.getElementById("statValuePills");
+      contenedor.innerHTML = "";
+
+      if (!statFiltro.stat) return; // si no hay stat seleccionada, no mostrar nada
+
+      for (let v = 0; v <= 6; v++) {
+        const pill = document.createElement("span");
+        pill.className = "pill" + (statFiltro.valores.has(v) ? " on" : "");
+        pill.textContent = v;
+        pill.addEventListener("click", () => toggleStatValue(v));
+        contenedor.appendChild(pill);
+      }
+    }
+    // ── AL CAMBIAR DE ESTADÍSTICA ────────────────────────────────
+    document.getElementById("filterStat").addEventListener("change", function() {
+      statFiltro.stat = this.value;
+      statFiltro.valores.clear();   // al cambiar de stat, se resetean los valores marcados
+      renderStatValuePills();
+      applyFilters();
+    });
+
+    // ── TOGGLE DE UN VALOR CONCRETO (multi-selección) ───────────
+    function toggleStatValue(v) {
+      if (statFiltro.valores.has(v)) {
+        statFiltro.valores.delete(v);   // ya estaba marcado → lo quitamos
+      } else {
+        statFiltro.valores.add(v);      // no estaba → lo añadimos
+      }
+      renderStatValuePills();
+      applyFilters();
+    }
+
+    // ------------------------------------- VINCULAR BOTONES CON FUNCIONES DE FILTRO
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("filterEscuela").addEventListener("change", applyFilters);
+    document.getElementById("filterPosicion").addEventListener("change", applyFilters);
+    document.getElementById("filterRareza").addEventListener("change", applyFilters);
+    document.querySelectorAll(".pill").forEach(p => p.addEventListener("click", () => togglePill(p)));
+    document.querySelector(".pill-reset").addEventListener("click", resetFiltros);
+
+    llenarListaEscuela();
+    applyFilters();  
   </script>
 
 </body>

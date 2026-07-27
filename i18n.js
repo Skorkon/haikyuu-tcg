@@ -74,7 +74,14 @@ const I18N = {
           pillPersonaje:      "Personaje",
           pillEvento:         "Evento",
           pillHabilidad:      "Con habilidad",
+          pillSinHabilidad:   "Sin habilidad",
           resetearFiltros:    "Resetear filtros",
+          filtrarPorStat:  "Filtrar por estadística...",
+          statSaque:       "Saque",
+          statRecepcion:   "Recepción",
+          statPase:        "Pase",
+          statRemate:      "Remate",
+          statBloqueo:     "Bloqueo",
         }
     },    
     en: {
@@ -151,7 +158,14 @@ const I18N = {
           pillPersonaje:      "Character",
           pillEvento:         "Event",
           pillHabilidad:      "With ability",
+          pillSinHabilidad:   "Without ability",
           resetearFiltros:    "Reset filters",
+          filtrarPorStat:  "Filter by stat...",
+          statSaque:       "Serve",
+          statRecepcion:   "Reception",
+          statPase:        "Set",
+          statRemate:      "Spike",
+          statBloqueo:     "Block",
         }
     },
     fr: {
@@ -228,7 +242,14 @@ const I18N = {
           pillPersonaje:      "Personnage",
           pillEvento:         "Événement",
           pillHabilidad:      "Avec capacité",
+          pillSinHabilidad:   "Sans capacité",
           resetearFiltros:    "Réinitialiser les filtres",
+          filtrarPorStat:  "Filtrer par statistique...",
+          statSaque:       "Service",
+          statRecepcion:   "Réception",
+          statPase:        "Passe",
+          statRemate:      "Attaque",
+          statBloqueo:     "Bloc",
         }
     }
 };

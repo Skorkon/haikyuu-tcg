@@ -737,31 +737,31 @@
     <div class="columna-derecha">
       <!------------------------ CABECERA DEL MAZO ------------------------------------>
       <div class="deck-header">
-        <div class="deck-section-title" style="padding:0 0 4px;">Nombre del mazo</div>
+        <div class="deck-section-title" style="padding:0 0 4px;" data-i18n="deckbuilder.nombreMazoLabel">Nombre del mazo</div>
         <input type="text" class="deck-name-input" id="deckNameInput" value="Mi deck">
         <div class="deck-stats-row">
           <span class="deck-stat" id="statTotal">0 / 40</span>
-          <span class="deck-stat" id="statEventos">0 eventos</span>
-          <span class="deck-stat" id="statEscuelas">0 escuelas</span>
+          <span class="deck-stat" id="statEventos">0 / 8</span>
+          <span class="deck-stat" id="statEscuelas">1</span>
         </div>
       </div>
       <!------------------------ ACCIONES ------------------------------------>
       <div class="deck-actions">
-        <button class="btn-mini" onclick="clearDeck()">Vaciar</button>
-        <button class="btn-mini" onclick="saveDeck()">Guardar</button>
-        <button class="btn-mini" onclick="exportDeck()">Exportar</button>
-        <label class="btn-mini" for="importFileInput" style="cursor:pointer;text-align:center;">Importar</label>
+        <button class="btn-mini" onclick="clearDeck()" data-i18n="deckbuilder.btnVaciar">Vaciar</button>
+        <button class="btn-mini" onclick="saveDeck()" data-i18n="deckbuilder.btnGuardarMazo">Guardar</button>
+        <button class="btn-mini" onclick="exportDeck()" data-i18n="deckbuilder.btnExportar">Exportar</button>
+        <label class="btn-mini" for="importFileInput" style="cursor:pointer;text-align:center;" data-i18n="deckbuilder.btnImportar">Importar</label>
         <input type="file" id="importFileInput" accept=".json" onchange="importDeck(event)" style="display:none">
       </div>
       <!------------------------ LISTADO DE CARTAS ------------------------------------>
       <div class="deck-list" id="deckList">
         <div class="deck-empty">
-          <div>Haz clic en + para añadir cartas</div>
+          <div data-i18n="deckbuilder.deckVacioTexto">Haz clic en + para añadir cartas</div>
         </div>
       </div>
       <!------------------------ DECKS GUARDADOS ------------------------------------>
       <div class="saved-decks-bar">
-        <div class="saved-title">Decks guardados</div>
+         <div class="saved-title" data-i18n="deckbuilder.decksGuardados">Decks guardados</div>
         <div id="savedDecksList"></div>
       </div>
 
@@ -872,7 +872,7 @@
 
       div.innerHTML = `
         <div class="card-art">
-          <img src="${imgPath(c.id)}" alt="${c.nombre}" onerror="this.style.display='none'">
+          <img src="${imgPath(c.id)}" alt="${c.nombre}" loading="lazy" onerror="this.style.display='none'">
           <div class="card-esc-bar" style="background:${colorEscuela}"></div>
         </div>
         <button class="card-add-btn" title="Añadir al deck">+</button>
@@ -954,6 +954,14 @@
       const escuela  = document.getElementById("filterEscuela").value;
       const posicion = document.getElementById("filterPosicion").value;
       const rareza   = document.getElementById("filterRareza").value;
+
+      // no mostrar nada, si no hay filtro
+      const hayFiltro = q || escuela || posicion || rareza || activeFilters.tipo || activeFilters.hab || (statFiltro.stat && statFiltro.valores.size > 0);
+        if (!hayFiltro) {
+          document.getElementById("cardCount").textContent = "Aplica al menos un filtro para ver cartas";
+          document.getElementById("catalogueGrid").innerHTML = "";
+          return;
+        }
 
       const resultado = CATALOGUE.filter(c => {                        // mostrar o no según se encuentre en el filtro
         if (q        && !c.nombre.toLowerCase().includes(q) && !(c.id||'').toLowerCase().includes(q)) return false; // texto escrito en el buscador
@@ -1045,11 +1053,8 @@
     document.getElementById("filterRareza").addEventListener("change", applyFilters);
     document.querySelectorAll(".pill").forEach(p => p.addEventListener("click", () => togglePill(p)));
     document.querySelector(".pill-reset").addEventListener("click", resetFiltros);
-
-    llenarListaEscuela();
-    applyFilters();  
-
-
+ 
+    
     // -------------------------------------------------------------- COLUMNA DERECHA
     // -------------------------------------------------------------- CREACIÓN DE DECKS
     let deck = [];                                                            
@@ -1060,8 +1065,6 @@
     function addToDeck(c) {
       const total   = deck.reduce((s,e) => s+e.qty, 0);               // total de cartas del mazo
       const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);  // total de eventos
-      if (total >= 40)                         { return; }            // si más de 40 cartas
-      if (c.tipo === 'evento' && eventos >= 8) { return; }            // si más de 8 eventos
       const entry = deck.find(e => e.carta.id === c.id);              // busca si la carta ya está en el mazo
       if (entry) entry.qty++; else deck.push({ carta: c, qty: 1 });   // añade +1, si es el caso
       refreshThumbBadge(c.id);                                        // actualiza el contador en el catálogo
@@ -1121,12 +1124,12 @@
       st.textContent = `${total} / 40`;                                 // contador de cartas
       st.className   = 'deck-stat' + (total === 40 ? ' ok' : total > 40 ? ' warn' : '');  // rojo o verde si mala/buena cantidad
       const se = document.getElementById('statEventos');                // 0/8
-      se.textContent = `${eventos} / 8 eventos`;                        // contador de eventos
+      se.textContent = `${eventos} ${t("deckbuilder.statEventos")}`;    // contador de eventos
       se.className   = 'deck-stat' + (eventos > 8 ? ' warn' : '');
-      document.getElementById('statEscuelas').textContent = `${escuelas.size} escuelas`;  // rojo o verde con eventos
+      document.getElementById('statEscuelas').textContent = `${escuelas.size} ${t("deckbuilder.statEscuelas")}`;  // rojo o verde con eventos
 
       if (!deck.length) {                                               // si el mazo está vacío
-        list.innerHTML = `<div class="deck-empty"><div>Haz clic en + para añadir cartas</div></div>`;
+        list.innerHTML = `<div class="deck-empty"><div>${t("deckbuilder.deckVacioTexto")}</div></div>`;
         return;
       }
 
@@ -1144,15 +1147,15 @@
           <div class="deck-entry-color" style="background:${colorBorde}"></div>
           <div class="deck-entry-name" title="${carta.nombre}">${carta.nombre}</div>
           <div class="deck-entry-qty">${qty}</div>
-          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}')" title="Quitar una">−</button>
-          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}',true)" title="Quitar todas">✕</button>
+          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}')" title="${t('deckbuilder.quitarUna')}">−</button>
+          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}',true)" title="${t('deckbuilder.quitarTodas')}">✕</button>
         </div>`;
       };
 
       //                                                                 // creación del HTML final 
       let html = '';
-      if (personajes.length) { html += `<div class="deck-section-title">Personajes (${personajes.reduce((s,e)=>s+e.qty,0)})</div>`; html += personajes.map(entryHTML).join(''); }
-      if (evts.length)       { html += `<div class="deck-section-title">Eventos (${evts.reduce((s,e)=>s+e.qty,0)})</div>`;          html += evts.map(entryHTML).join(''); }
+      if (personajes.length) { html += `<div class="deck-section-title">${t("deckbuilder.seccionPersonajes")} (${personajes.reduce((s,e)=>s+e.qty,0)})</div>`; html += personajes.map(entryHTML).join(''); }
+      if (evts.length)       { html += `<div class="deck-section-title">${t("deckbuilder.seccionEventos")} (${evts.reduce((s,e)=>s+e.qty,0)})</div>`;          html += evts.map(entryHTML).join(''); }
       list.innerHTML = html;
 
       //                                                                  // mostrar el tooltip
@@ -1170,6 +1173,19 @@
     function saveDeck() {
       const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
       if (!deck.length) return;
+
+      //                                                                  // validaciones antes de guardar
+      const total   = deck.reduce((s,e) => s+e.qty, 0);
+      const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);
+      if (total !== 40) {
+        alert(t("deckbuilder.errorTotalCartas", { total }));
+        return;
+      }
+      if (eventos > 8) {
+        alert(t("deckbuilder.errorMaxEventos", { eventos }));
+        return;
+      }
+
       const data = {
         id: currentDeckId || Date.now().toString(),                         // reutilizar el id, si existe
         nombre,
@@ -1211,12 +1227,12 @@
     // -------------------------------------------------------------- RENDER MAZOS GUARDADOS
     function renderSavedDecks() {
       const list = document.getElementById('savedDecksList');
-      if (!savedDecks.length) { list.innerHTML = `<div style="font-size:11px;color:var(--text2);padding:4px 0">No hay decks guardados</div>`; return; }
+      if (!savedDecks.length) { list.innerHTML = `<div style="font-size:11px;color:var(--text2);padding:4px 0">${t("deckbuilder.sinDecksGuardados")}</div>`; return; }
       list.innerHTML = savedDecks.map(d => `
         <div class="saved-deck-item${d.id===currentDeckId?' active':''}" onclick="loadSavedDeck('${d.id}')">
           <span class="saved-deck-name">${d.nombre}</span>
           <span class="saved-deck-count">${d.total}/40</span>
-          <button class="saved-deck-del" onclick="deleteSavedDeck('${d.id}',event)" title="Eliminar">✕</button>
+          <button class="saved-deck-del" onclick="deleteSavedDeck('${d.id}',event)" title="${t('deckbuilder.eliminarDeck')}">✕</button>
         </div>`).join('');
     }
 
@@ -1265,6 +1281,10 @@
 
     // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR
     renderSavedDecks();
+    renderDeckList();
+
+    llenarListaEscuela();
+    applyFilters();          // ← esta línea ya la tienes puesta ahora mismo; no hace falta añadir nada nuevo
   </script>
 
 </body>

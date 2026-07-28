@@ -1,859 +1,1271 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  <!-- documento HTML5 -->
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HV-TCG · Deckbuilder</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+  <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
+  <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
+  <title>HV-TCG · Deckbuilder</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700&display=swap'); /* fuentes google font */
+    * { box-sizing: border-box; margin: 0; padding: 0; }          /* reset básico para todos los elementos */
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {                                       /* variables de color reutilizables, mismas que index.html y lobby.html */
+      --bg: #f2f0e8;                            /* fondo gris clarito */
+      --surface: #16161a;                       /* superficie oscura de paneles */
+      --surface2: #1e1e24;                      /* superficie secundaria (inputs, etc) */
+      --surface3: #26262e;                      /* superficie terciaria, para detalles */
+      --border: rgba(255,255,255,0.07);         /* borde muy sutil */
+      --border2: rgba(255,255,255,0.13);        /* borde algo más marcado */
+      --text: #e8e8ec;                          /* texto claro (para fondos oscuros) */
+      --text2: #9090a0;                         /* texto gris apagado */
+      --accent: #E8761A;                        /* naranja color secundario */
+      --font-display: 'Bebas Neue', sans-serif;   /* fuente de títulos */
+      --font-body: 'Noto Sans JP', sans-serif;    /* fuente de texto normal */
+    }
+    body {
+      background: var(--bg);           /* fondo general de la página */
+      color: var(--text);              /* color de texto por defecto */
+      font-family: var(--font-body);   /* fuente base */
+      font-size: 14px;                 /* tamaño de texto base */
+      min-height: 100vh;               /* ocupa toda la altura de pantalla */
+      overflow: hidden;                /* sin scroll en el body — cada columna scrollea por su cuenta */
+    }
 
-  :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --surface2: #1e1e24;
-    --surface3: #26262e;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.13);
-    --text: #e8e8ec;
-    --text2: #9090a0;
-    --text3: #5a5a70;
-    --accent: #E8761A;
-    --blue: #3a8ee6;
-    --green: #2ea84e;
-    --gold: #f0c040;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'Noto Sans JP', sans-serif;
-  }
+    /* -------------------------------------------------- CONTENEDOR TRÍPTICO ------------------------------------------ */
+    .triptico {
+      display: flex;         /* las 3 columnas en fila, una al lado de otra */
+      width: 100%;           /* ocupa todo el ancho de la pantalla */
+      height: 100vh;         /* ocupa toda la altura de la pantalla */
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+    /* -------------------------------------------------- COLUMNAS ------------------------------------------ */
+    #columna-izquierda {
+      width: 300px;                                /* ancho fijo y pequeño — la haces "muy fina" */
+      flex-shrink: 0;                             /* no se encoge nunca, aunque falte espacio */
+      background-image: url('img/fondos/deckb.jpg'); 
+      background-color: #1a1a2e;                /* color de respaldo mientras no hay imagen */
+      background-size: cover;                     /* la imagen cubre toda la columna sin deformarse */
+      background-position: center;                /* centrada dentro de la columna */
+      border-right: 3px solid var(--accent);      /* borde naranja hacia el centro, igual que en index/lobby */
+      position: relative;                         /* necesario para poner el preview encima */
+    }
+    .columna-central {
+      flex: 1;                     /* crece para ocupar TODO el espacio que sobra entre izquierda y derecha */
+      display: flex;               /* por si luego apilamos filtros arriba y catálogo abajo */
+      flex-direction: column;      /* apilado en vertical */
+      overflow: hidden;            /* el scroll irá en el catálogo interior, no aquí */
+      background: var(--bg);       /* mismo fondo gris clarito */
+    }
+    .columna-derecha {
+      width: 380px;                 /* ancho fijo, mediano (más pequeño que el central, más grande que la izquierda) */
+      flex-shrink: 0;               /* no se encoge */
+      background: var(--bg);        
+      border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
+      display: flex;
+      flex-direction: column;       /* apilado en vertical (cabecera del mazo, lista de cartas, etc.) */
+      overflow: hidden;             /* scroll interno se pondrá más adelante en la lista de cartas */
+    }
 
-  header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 16px 28px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 3px; color: var(--accent); line-height: 1; }
-  .logo span { color: var(--text2); font-size: 14px; letter-spacing: 1px; font-family: var(--font-body); }
-  nav { display: flex; gap: 4px; margin-left: auto; }
-  nav button {
-    background: transparent; border: 1px solid var(--border2); color: var(--text2);
-    padding: 7px 18px; border-radius: 6px; cursor: pointer;
-    font-family: var(--font-body); font-size: 13px; transition: all .15s;
-  }
-  nav button:hover { border-color: var(--accent); color: var(--text); }
-  nav button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    /* -------------------------------------------------- CABECERA ------------------------------------------ */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 28px;
+      border-bottom: 2px solid var(--accent);       /* línea naranja, coherente con los bordes del tríptico */
+      background: var(--bg);                       /* fondo negro, como los paneles de lobby.html */
+      flex-shrink: 0;
+    }
+    header h1 {
+      flex: 1;                /* ocupa el espacio disponible entre "volver" y las pestañas */
+      text-align: center;     /* centrado */
+      font-size: 24px;        /* más pequeño que el h1 normal de las otras pantallas */
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin: 0;               /* quita cualquier margen que el h1 general pudiera tener */
+    }
+    .volver-link {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    nav {                 /* zona de navegación de pestañas con botones */
+      display: flex;      /* pone las pestañas en fila, una al lado de otra */
+      gap: 8px;           /* separación entre ellas */
+      margin-left: auto;  /* las empuja hacia la derecha del header */
+    }
 
-  .app { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 61px); }
+    /* -------------------------------------------------- BOTONES ------------------------------------------ */
+    .tab-btn {
+      background: #000000;                 /* mismo negro que .btn-menu */
+      border: 2px solid var(--accent);       /* mismo borde naranja que .btn-menu */
+      color: var(--text);                    /* texto claro */
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: bold;                     /* negrita, como el resto de botones */
+      transition: all 0.15s;
+    }
+    .tab-btn:hover {
+      background: var(--accent);
+      color: #000000;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000000;
+    }
 
-  /* CATALOGUE */
-  .catalogue { display: flex; flex-direction: column; flex: 1; min-width: 0; border-right: 1px solid var(--border); overflow: hidden; }
+    /* -------------------------------------------------- FILTROS ------------------------------------------ */
+    .filters {
+      padding: 14px 20px;               /* aire interior arriba/abajo y a los lados */
+      background: var(--bg);              
+      border-bottom: 2px solid var(--accent);    /* línea separadora con el catálogo que irá debajo */
+      display: flex;                    /* todos los filtros en fila */
+      flex-direction: column;
+      flex-wrap: wrap;                  /* si la pantalla es estrecha, los filtros saltan a la línea siguiente en vez de desbordar */
+      gap: 10px;                         /* separación entre cada filtro */
+      flex-shrink: 0;                   /* esta barra nunca se encoge, aunque el catálogo de abajo necesite más espacio */
+    }
+    .filters-fila1 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
 
-  .filters {
-    padding: 14px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  }
-  .search-wrap { position: relative; flex: 1; min-width: 180px; }
-  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; stroke: var(--text3); fill: none; stroke-width: 2; pointer-events: none; }
-  .search-wrap input {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 6px; color: var(--text); padding: 7px 10px 7px 32px;
-    font-family: var(--font-body); font-size: 13px; outline: none; transition: border-color .15s;
-  }
-  .search-wrap input:focus { border-color: var(--accent); }
+    .filters-fila2 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
 
-  select {
-    background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px;
-    color: var(--text); padding: 7px 10px; font-family: var(--font-body); font-size: 13px; cursor: pointer; outline: none;
-  }
-  select:focus { border-color: var(--accent); }
+    .separador {
+      width: 4px;                 /* muy fina, como una línea */
+      height: 24px;               /* altura similar a los botones/pills de al lado */
+      background: var(--accent);  /* color naranja, para que combine con el resto */
+      flex-shrink: 0;             /* nunca se encoge ni desaparece */
+    }
+    /* -------------------------------------- BUSCADOR DE TEXTO --------------------------------- */
+    .search-wrap { /* buscador de texto como elemento en la cabecera */
+      flex: 1;                /* el buscador "crece" para ocupar todo el espacio que sobra junto a los selects */
+      min-width: 180px;      /* pero nunca se encoge por debajo de 180px, aunque falte sitio */
+    }
+    .search-wrap input { /* buscador de texto opciones css */
+      width: 100%;                      /* ocupa todo el ancho de su contenedor (.search-wrap) */
+      background: #f5f5f5;            /* gris muy clarito, para diferenciarlo del blanco de fondo */
+      border: 1px solid #ccc;         /* borde sutil */
+      border-radius: 6px;               /* esquinas redondeadas */
+      color: #333;                    /* texto oscuro, legible sobre fondo claro */
+      padding: 7px 10px;                /* aire interior del texto */
+      font-family: inherit;             /* usa la misma fuente que el resto de la página */
+      font-size: 13px;
+      outline: none;                    /* quita el borde azul feo que pone el navegador al hacer clic */
+    }
+    .search-wrap input:focus {
+      border-color: var(--accent);      /* cuando se escribe dentro, el borde se pone de color */
+    }
 
-  .filter-pills { display: flex; gap: 5px; flex-wrap: wrap; }
-  .pill {
-    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border2);
-    background: var(--surface2); color: var(--text2); font-size: 12px; cursor: pointer; transition: all .15s; white-space: nowrap;
-  }
-  .pill:hover { border-color: var(--text2); color: var(--text); }
-  .pill.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .pill.on.tipo-evento { background: var(--blue); border-color: var(--blue); }
+    /* -------------------------------------- LISTAS --------------------------------- */
+    .filters select {
+      background: #f5f5f5;            /* mismo estilo que el buscador, para que combinen */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      color: #333;
+      padding: 7px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;                  /* cursor de mano, indica que es clicable */
+      outline: none;
+    }
 
-  .card-count { font-size: 12px; color: var(--text3); padding: 8px 20px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    /* ------------------------------- BOTONES DE FILTRO PEQUEÑOS --------------------------------- */
+    .filter-pills {
+      display: flex;            /* las 3 pills (Personaje/Evento/Con habilidad) en fila */
+      gap: 5px;                 /* separación pequeña entre ellas */
+      flex-wrap: wrap;          /* saltan de línea si no caben */
+    }
+    .pill {
+      padding: 4px 12px;                /* aire interior, más redondeado que un botón normal */
+      border-radius: 6px;               
+      border: 1px solid var(--accent);
+      background: #000000;
+      color: var(--text);                
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;            /* transición suave al cambiar de estado (hover, activo) */
+      white-space: nowrap;              /* el texto de la pill nunca se parte en dos líneas */
+    }
+    .pill:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text);                      /* texto un poco más oscuro */
+    }
+    .pill.on {
+      background: var(--accent);          /* pill SELECCIONADA (clase "on" añadida por JS): fondo naranja sólido */
+      border-color: var(--accent);
+      color: var(--text);                 /* texto blanco para que resalte sobre el naranja */
+    }
+    /* ------------------------------- BOTÓN DE FILTRO RESET --------------------------------- */
+    .pill-reset {
+      padding: 4px 8px;                   /* mismo aspecto que una pill normal */
+      border-radius: 50px;
+      border: 1px solid #ccc;
+      background: #000000;
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;              /* como es un <button>, hay que decirle que use la fuente de la página (si no, usa la fuente por defecto del navegador) */
+      white-space: nowrap;
+    }
+    .pill-reset:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text);
+    }
 
-  .catalogue-grid {
-    flex: 1; overflow-y: auto; padding: 16px 20px;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 12px; align-content: start;
-  }
+    /* ------------------------------- ESTILO CONTADOR Y GRID DE CARTAS --------------------------------- */
+    .card-count {                         /* contador de cartas */
+      font-size: 12px;
+      color: #666;                      /* gris medio, discreto */
+      padding: 8px 20px; 
+      background: var(--bg);               
+      /* border-bottom: 2px solid var(--accent);     separación con el grid de abajo */
+      flex-shrink: 0;                     /* nunca se encoge */
+    }
+    .catalogue-grid {
+      flex: 1;                          /* ocupa todo el espacio vertical que sobra */
+      overflow-y: auto;                 /* scroll propio si hay muchas cartas */
+      padding: 2px 20px;
+      margin-right: 4px;
+      display: grid;                    /* rejilla de miniaturas */
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* tantas columnas como quepan, mínimo 130px cada una */
+      gap: 12px;                        /* separación entre miniaturas */
+      align-content: start;             /* las cartas se agrupan arriba, no se estiran para llenar el alto */
+    }
 
-  /* CARD THUMB */
-  .card-thumb {
-    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-    overflow: hidden; cursor: pointer; transition: transform .12s, border-color .12s, box-shadow .12s;
-    position: relative; display: flex; flex-direction: column; user-select: none;
-  }
-  .card-thumb:hover { transform: translateY(-3px); border-color: var(--border2); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
-  .card-thumb.in-deck { border-color: var(--accent); }
+    /* ------------------------------- CARTAS EN MINIATURA --------------------------------- */
+    .card-thumb { /* ------------------------------------- Caja negra de la carta */
+      background: #000000;          /* color de fondo */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      min-height: 230px;
+    }
+    .card-thumb:hover { /* ------------------------------------- Ratón por encima de la carta */
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 12px rgba(0,0,0,.15); /* longitud vertical / desenfoque / (,,,,opacidad) */ 
+    }
+    .card-thumb.in-deck { /* ------------------------------------- Carta ya añadida al mazo */
+      box-shadow: 0 0 0 3px var(--accent);   /* un halo alrededor */
+    }
+    .card-art { /* ------------------------------------- Contenedor de la carta */
+      width: 100%;
+      height: 196px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eee;           /* color de respaldo mientras la imagen carga o si falta */
+    }
+    .card-art img { /* ------------------------------------- Arte de la carta */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .card-esc-bar { /* ------------------------------------- Línea color escuela */
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .card-info { /* ------------------------------------- Información de la carta */
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;              /* alinear nombre y posición en la misma línea */
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .card-name { /* ------------------------------------- Nombre del personaje */
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;                         /* ocupa el espacio disponible */
+    }
+    .card-position {
+      flex-shrink: 0;           /* nunca se encoge */
+      color: white;              /* texto blanco */
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
 
-  .card-art { width: 100%; aspect-ratio: 2/3; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .card-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-art .fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; pointer-events: none; }
+    .card-add-btn { /* ------------------------------------- Botón + para añadir al mazo  */
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 24px; height: 24px;
+      background: rgba(0,0,0,.75);
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      color: white;
+      transition: all 0.12s;
+      z-index: 3;
+    }
+    .card-add-btn:hover {
+      background: var(--accent);
+    }
 
-  .art-Karasuno      { background: linear-gradient(160deg,#1a1a2e,#3d0a0a); }
-  .art-Nekoma        { background: linear-gradient(160deg,#1a0a0a,#0a2a0a); }
-  .art-Fukurodani    { background: linear-gradient(160deg,#0a0a2e,#1a1a0a); }
-  .art-Shiratorizawa { background: linear-gradient(160deg,#1a0a2e,#0a2a0a); }
-  .art-Inarizaki     { background: linear-gradient(160deg,#111,#222); }
-  .art-Kamomedai     { background: linear-gradient(160deg,#0a0a2e,#0a2a3e); }
-  .art-Itachiyama    { background: linear-gradient(160deg,#0a2a0a,#1a3e0a); }
-  .art-evento        { background: linear-gradient(160deg,#0a1a2e,#0a2e2e); }
-  .art-default       { background: linear-gradient(160deg,#1a1a1a,#2e2e2e); }
+    .card-count-badge { /* ------------------------------------- Contador del número de cartas en el mazo  */
+      position: absolute;
+      top: 6px; left: 6px;
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
 
-  .card-rarity-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; z-index: 2; }
-  .rarity-DP,.rarity-TP { background: linear-gradient(90deg,#ff6b35,#e8231a,#ff6b35); }
-  .rarity-S              { background: linear-gradient(90deg,#f0c040,#ffd700); }
-  .rarity-R,.rarity-RP   { background: linear-gradient(90deg,#3a8ee6,#60b0ff); }
-  .rarity-N,.rarity-NP   { background: #5a5a70; }
-  .rarity-P              { background: linear-gradient(90deg,#b060ff,#e060ff); }
-  .rarity-T              { background: linear-gradient(90deg,#2ea84e,#60d080); }
-  .rarity-D              { background: #3a5a8e; }
+    /* ----------------------------------------------------------------------------------------------------- */
+    .preview-panel { /* --------------------------------------------------------- PANEL DE PREVIEW DE CARTAS */
+      display: none;
+      position: absolute;
+      top: 50%;                /* margen desde arriba, para que no toque el borde */
+      left: 10px;
+      right: 10px;               /* margen a los lados, dentro de la columna de 260px */
+      transform: translateY(-50%);
+      flex-direction: column;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);   /* sombra para que se note que "flota" encima */
+      z-index: 5;
+    }
+    .preview-panel.show {
+      display: flex;
+    }
+    .preview-imagen {
+      width: 100%;
+      height: 380px;                      /* tamaño grande, pero no toda la columna */
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .preview-info {
+      background: #000000;
+      color: var(--text);
+      padding: 14px;
+      max-height: 260px;          /* límite de altura, con scroll si hace falta */
+      overflow-y: auto;
+    }
+    .preview-info h3 {
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .preview-info .preview-meta {
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+    .preview-info .preview-stats {
+      display: flex;               /* en fila, en vez de grid de 2 columnas */
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .pstat {                        /* Posición y tamaño de cuadrados */
+      flex: 1;                      /* los 5 cuadraditos se reparten el ancho por igual */
+      text-align: center;
+      padding: 4px 2px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+    .pstat span {                   /* Texto cuadrados */
+      display: block;
+      font-size: 8px;
+      opacity: 0.8;
+    }
+    .pstat strong {                 /* Números cuadrados */
+      display: block;
+      font-size: 13px;
+    }
+    .pstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
+    .pstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
+    .pstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
+    .pstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
+    .pstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
 
-  .card-info { padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; }
-  .card-name { font-size: 11px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card-meta { font-size: 10px; color: var(--text3); display: flex; justify-content: space-between; }
-  .card-stats { display: flex; gap: 2px; margin-top: 2px; }
-  .stat { flex: 1; text-align: center; font-size: 8px; padding: 2px 0; border-radius: 3px; line-height: 1.4; }
-  .stat-label { color: var(--text3); font-size: 7px; display: block; }
-  .stat-val   { font-weight: 700; display: block; }
-  .stat-s  { background: rgba(240,192,64,.1);  color: var(--gold); }
-  .stat-r  { background: rgba(58,142,230,.1);  color: var(--blue); }
-  .stat-p  { background: rgba(46,168,78,.1);   color: var(--green); }
-  .stat-rm { background: rgba(232,35,26,.1);   color: var(--accent); }
-  .stat-b  { background: rgba(90,90,112,.15);  color: var(--text2); }
+    .preview-info .preview-desc {
+      font-size: 11px;
+      line-height: 1.5;
+      border-top: 1px solid var(--border2);
+      padding-top: 8px;
+    }
 
-  .card-add-btn {
-    position: absolute; top: 6px; right: 6px; width: 24px; height: 24px;
-    background: rgba(0,0,0,.75); border: 1px solid var(--border2); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 15px; color: var(--text2); transition: all .12s; z-index: 3;
-  }
-  .card-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    /* ---------------------------------------------- BARRA DE SCROLL PERSONALIZADA ------------------------- */
+    .catalogue-grid::-webkit-scrollbar {
+      width: 10px;                    /* ancho de la barra */
+    }
+    .catalogue-grid::-webkit-scrollbar-track {
+      background: var(--bg);          /* fondo del "carril" por donde se desliza */
+    }
+    .catalogue-grid::-webkit-scrollbar-thumb {
+      background: var(--accent);      /* color de la barra */
+      border-radius: 6px;             /* esquinas redondeadas */
+    }
+    .catalogue-grid::-webkit-scrollbar-thumb:hover {
+      background: #000000;            /* se oscurece un poco al pasar el ratón por encima */
+      border: 2px solid var(--accent);
+    }
 
-  .card-count-badge {
-    position: absolute; top: 6px; left: 6px; background: var(--accent); color: #fff;
-    font-size: 11px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; z-index: 3;
-  }
+    /* ---------------------------------------------- COLUMNA DERECHA DECKBUILDER  ------------------------- */
+    /* ---------------------------------------------- BARRA DE SCROLL PERSONALIZADA ------------------------- */
+    .deck-header {                            /* Cabecera */
+      padding: 14px 18px 10px;
+      border-bottom: 3px solid var(--accent);
+      flex-shrink: 0;
+    }
+    .deck-name-input {                        /* Caja de texto del nombre del mazo */
+      width: 100%;
+      background: #f5f5f5;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      color: #333;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      outline: none;
+      margin-bottom: 8px;
+    }
+    .deck-name-input:focus {
+      border-color: var(--accent);
+    }
 
-  /* DECK PANEL */
-  .deck-panel { width: 320px; min-width: 300px; display: flex; flex-direction: column; background: var(--surface); overflow: hidden; }
-  .deck-header { padding: 14px 18px 10px; border-bottom: 1px solid var(--border); }
-  .deck-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .deck-name-input {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px;
-    color: var(--text); padding: 6px 10px; font-family: var(--font-body); font-size: 14px; font-weight: 700; outline: none; transition: border-color .15s;
-  }
-  .deck-name-input:focus { border-color: var(--accent); }
-  .deck-stats-row { display: flex; gap: 6px; font-size: 12px; flex-wrap: wrap; }
-  .deck-stat { padding: 3px 10px; border-radius: 4px; background: var(--surface3); color: var(--text2); }
-  .deck-stat.warn { background: rgba(232,35,26,.15); color: var(--accent); }
-  .deck-stat.ok   { background: rgba(46,168,78,.15); color: var(--green); }
+    .deck-stats-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 11px;
+    }
+    .deck-stat {                               /* contadores de cartas y eventos */
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: var(--surface3);
+      color: var(--accent);
+    }
+    .deck-stat.warn { color: #ff6b6b; }
+    .deck-stat.ok   { color: #6fcf73; }
 
-  .deck-actions { padding: 10px 18px; display: flex; gap: 6px; border-bottom: 1px solid var(--border); }
-  .btn {
-    flex: 1; padding: 7px 6px; border-radius: 6px; border: 1px solid var(--border2);
-    background: var(--surface2); color: var(--text2); font-family: var(--font-body);
-    font-size: 12px; cursor: pointer; transition: all .15s; text-align: center; white-space: nowrap;
-  }
-  .btn:hover { border-color: var(--text2); color: var(--text); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn.primary:hover { background: #c01a12; }
-  .btn.success { background: var(--green); border-color: var(--green); color: #fff; }
-  .btn.success:hover { opacity: .85; }
+    /* ----------------------------------------------------------- ACCIONES ---- */
+    .deck-actions {                             /* botones guardar, exportar, .. */
+      padding: 10px 18px;
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      border-bottom: 3px solid var(--accent);
+    }
+    .btn-mini {
+      flex: 1;
+      padding: 7px 4px;
+      border-radius: 6px;
+      border: 2px solid var(--accent);
+      background: var(--surface2);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-mini:hover {
+      color: var(--text);
+    }
+    /* --------------------------------------------------------- DECK LIST ---- */
+    .deck-list {                                    /* deck list */
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0;
+      border-bottom: 3px solid var(--accent);
+      margin-right: 4px;
+    }
+    .deck-section-title {                           /* Personajes () */
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      padding: 8px 18px 4px;
+      text-transform: uppercase;
+    }
+    .deck-entry {                                   /* cada carta en la lista */
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px 6px 6px;
+      margin: 4px 12px;
+      background: #000000;
+      border-radius: 6px;
+      transition: background 0.1s;
+    }
+    .deck-entry:hover { background: var(--surface2); }
+    .deck-entry-thumb {                             /* miniatura de la imagen */
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      background-size: 150%;                        /* zoom: la imagen se muestra 2.5x más grande que el contenedor */
+      background-position: center 20%;              /* centrado horizontalmente, un poco hacia arriba para enfocar la cara */
+      background-repeat: no-repeat;
+    }
+    .deck-entry-color {                              /* barra de color de escuela */
+      width: 4px;
+      height: 32px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .deck-entry-name {                                /* nombre carta */
+      flex: 1;
+      overflow: hidden;
+      font-size: 12px;
+      color: var(--text);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .deck-entry-qty {                                  /* cantidad */
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 16px;
+      text-align: center;
+    }
+    .deck-entry-rm {                                    /* botones + y - */
+      width: 20px;
+      height: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    .deck-entry-rm:hover { border-color: var(--accent); color: var(--accent); }
+    .deck-empty {                                         /* mazo vacío */
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text2);
+      font-size: 12px;
+    }
+    /* -------------------- BARRA DE SCROLL PERSONALIZADA (deck-list) ------------------------- */
+    .deck-list::-webkit-scrollbar {
+      width: 10px;
+    }
+    .deck-list::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    .deck-list::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 6px;
+    }
+    .deck-list::-webkit-scrollbar-thumb:hover {
+      background: #000000;
+      border: 2px solid var(--accent);
+    }
+    /* ----------------------------------------------------------- MAZOS GUARDADOS ---- */
+    .saved-decks-bar {
+      border-top: 1px solid var(--border2);
+      padding: 10px 18px 12px;
+      max-height: 180px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
 
-  .deck-list { flex: 1; overflow-y: auto; padding: 10px 0; }
-  .deck-section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--text3); padding: 8px 18px 4px; text-transform: uppercase; }
-  .deck-entry { display: flex; align-items: center; gap: 7px; padding: 4px 18px; transition: background .1s; }
-  .deck-entry:hover { background: var(--surface2); }
-  .deck-entry-img { width: 28px; height: 42px; border-radius: 3px; overflow: hidden; flex-shrink: 0; background: var(--surface3); }
-  .deck-entry-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .deck-entry-color { width: 3px; height: 36px; border-radius: 2px; flex-shrink: 0; }
-  .deck-entry-name { flex: 1; font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .deck-entry-sub  { font-size: 10px; color: var(--text3); }
-  .deck-entry-qty  { font-size: 13px; font-weight: 700; color: var(--text2); min-width: 16px; text-align: center; }
-  .deck-entry-rm {
-    width: 20px; height: 20px; border: 1px solid transparent; border-radius: 4px;
-    background: transparent; color: var(--text3); cursor: pointer; font-size: 13px;
-    display: flex; align-items: center; justify-content: center; transition: all .12s; flex-shrink: 0;
-  }
-  .deck-entry-rm:hover { border-color: var(--accent); color: var(--accent); }
+    .saved-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
 
-  .deck-empty { padding: 40px 20px; text-align: center; color: var(--text3); font-size: 13px; }
-  .deck-empty-icon { font-size: 36px; margin-bottom: 10px; }
+    .saved-deck-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      margin-bottom: 5px;
+      cursor: pointer;
+      background: var(--surface2);
+      transition: all 0.12s;
+    }
 
-  /* SAVED DECKS */
-  .saved-decks-bar { border-top: 1px solid var(--border); padding: 10px 18px 12px; max-height: 190px; overflow-y: auto; }
-  .saved-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--text3); text-transform: uppercase; margin-bottom: 8px; }
-  .saved-deck-item {
-    display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 6px;
-    border: 1px solid var(--border); margin-bottom: 5px; cursor: pointer; transition: all .12s; background: var(--surface2);
-  }
-  .saved-deck-item:hover { border-color: var(--border2); }
-  .saved-deck-item.active { border-color: var(--accent); }
-  .saved-deck-name  { flex: 1; font-size: 12px; font-weight: 700; color: var(--text); }
-  .saved-deck-count { font-size: 11px; color: var(--text3); }
-  .saved-deck-del   { background: transparent; border: none; color: var(--text3); cursor: pointer; font-size: 15px; padding: 0 2px; transition: color .12s; }
-  .saved-deck-del:hover { color: var(--accent); }
+    .saved-deck-item:hover { border-color: var(--accent); }
+    .saved-deck-item.active { border-color: var(--accent); }
 
-  /* PREDEFINED TAB */
-  .predefined-panel { flex: 1; overflow-y: auto; padding: 24px 28px; }
-  .predefined-panel h2 { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; margin-bottom: 6px; }
-  .predefined-panel > p { color: var(--text2); font-size: 13px; margin-bottom: 28px; }
-  .predefined-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .pre-deck-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform .12s, border-color .12s; }
-  .pre-deck-card:hover { transform: translateY(-2px); border-color: var(--border2); }
-  .pre-deck-banner { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 42px; }
-  .pre-deck-body { padding: 14px 16px 16px; }
-  .pre-deck-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-  .pre-deck-desc { font-size: 12px; color: var(--text2); margin-bottom: 12px; line-height: 1.5; }
-  .pre-deck-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-  .pre-tag { font-size: 10px; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border2); color: var(--text2); }
-  .pre-deck-load { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-family: var(--font-body); font-size: 12px; cursor: pointer; transition: all .15s; }
-  .pre-deck-load:hover { background: var(--accent); color: #fff; }
- 
-  /* PREVIEW MODAL */
-  .card-preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; align-items: center; justify-content: center; }
-  .card-preview-overlay.show { display: flex; }
-  .card-preview { background: var(--surface2); border: 1px solid var(--border2); border-radius: 12px; width: 380px; max-width: 95vw; height: 95vh; overflow: hidden; display: flex; flex-direction: column; }
-  .preview-art { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 0; }
-  .preview-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .preview-art .fallback-big { position: absolute; font-size: 80px; pointer-events: none; }
-  .preview-body { padding: 18px; display: flex; flex-direction: column; flex-shrink: 0; }
-  .preview-name { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
-  .preview-id   { font-size: 11px; color: var(--text3); margin-bottom: 12px; }
-  .preview-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-  .preview-tag  { font-size: 11px; padding: 3px 10px; border-radius: 4px; background: var(--surface3); color: var(--text2); }
-  .preview-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-bottom: 14px; }
-  .preview-stat { text-align: center; background: var(--surface3); border-radius: 5px; padding: 6px 2px; }
-  .preview-stat-l { font-size: 9px; color: var(--text3); display: block; text-transform: uppercase; letter-spacing: .5px; }
-  .preview-stat-v { font-size: 18px; font-weight: 700; display: block; }
-  .preview-desc { font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; margin-bottom: 14px; }
-  .preview-actions { display: flex; gap: 8px; }
-  .preview-close { padding: 9px 16px; border-radius: 6px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-family: var(--font-body); cursor: pointer; flex: 1; }
-  .preview-add  { padding: 9px 16px; border-radius: 6px; border: none; background: var(--accent); color: #fff; font-family: var(--font-body); font-weight: 700; cursor: pointer; flex: 2; transition: opacity .15s; }
-  .preview-add:hover { opacity: .85; }
+    .saved-deck-name { flex: 1; font-size: 11px; font-weight: 700; color: var(--text); }
+    .saved-deck-count { font-size: 10px; color: var(--text2); }
 
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+    .saved-deck-del {
+      background: transparent;
+      border: none;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 2px;
+    }
 
-  .toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
-    padding: 10px 22px; border-radius: 8px; font-size: 13px; z-index: 500;
-    transition: transform .25s; white-space: nowrap; pointer-events: none;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .hidden { display: none !important; }
-</style>
+    .saved-deck-del:hover { color: var(--accent); }
+
+  </style>
 </head>
 <body>
-
-<header>
-  <div class="logo">HV<span>·TCG</span></div>
-  <nav>
-    <button class="active" id="tab-builder"    onclick="setTab('builder')">Constructor</button>
-    <button            id="tab-predefined" onclick="setTab('predefined')">Decks predefinidos</button>
-    <div style="display:flex;gap:4px;margin-left:12px;">
-      <button class="active" id="lang-es" onclick="setIdioma('es')">ES</button>
-      <button id="lang-en" onclick="setIdioma('en')">EN</button>
-      <button id="lang-fr" onclick="setIdioma('fr')">FR</button>
-    </div>  
-  </nav>
-</header>
-
-<div class="card-preview-overlay" id="previewOverlay" onclick="closePreview(event)">
-  <div class="card-preview">
-    <div class="preview-art" id="previewArt"></div>
-    <div class="preview-body">
-      <div class="preview-name" id="previewName"></div>
-      <div class="preview-id"   id="previewId"></div>
-      <div class="preview-tags" id="previewTags"></div>
-      <div class="preview-stats" id="previewStats"></div>
-      <div class="preview-desc"  id="previewDesc"></div>
-      <div class="preview-actions">
-        <button class="preview-close" onclick="closePreview()">Cerrar</button>
-        <button class="preview-add"   id="previewAddBtn">+ Añadir al deck</button>
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="triptico">
+    <!-- COLUMNA IZQUIERDA : solo imagen -->
+    <div id="columna-izquierda">
+      <div class="preview-panel" id="previewPanel">
+        <div class="preview-imagen" id="previewImagen"></div>
+        <div class="preview-info" id="previewInfo"></div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="toast" id="toast"></div>
+    <!-- COLUMNA CENTRAL : FILTROS + CATÁLOGO -->
+    <div class="columna-central">
+      <!------------------------ CABECERA ------------------------------------>
+      <header>
+        <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
+        <h1 data-i18n="menu.btnDeckbuilder">Deckbuilder</h1>
+        <nav>
+          <button class="tab-btn active" id="tab-builder" onclick="setTab('builder')" data-i18n="deckbuilder.tabConstructor">Constructor</button>
+          <button class="tab-btn" id="tab-predefined" onclick="setTab('predefined')" data-i18n="deckbuilder.tabPredefinidos">Decks predefinidos</button>
+        </nav>
+      </header> <!-- fin cabecera -->
+      <!------------------------ FILTROS ------------------------------------>
+      <div class="filters">
+        <div class="filters-fila1">
+          <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
+          </div>
+          <select id="filterEscuela">
+            <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
+          </select>
+          <select id="filterPosicion">
+            <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
+            <option value="MB">MB — Middle Blocker</option>
+            <option value="S">S — Setter</option>
+            <option value="WS">WS — Wing Spiker</option>
+            <option value="L">L — Libero</option>
+          </select>
+          <select id="filterRareza">
+            <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
+            <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
+            <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
+            <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
+          </select>
+        </div>
 
-<!-- BUILDER -->
-<div class="app" id="appBuilder">
-  <div class="catalogue">
-    <div class="filters">
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Buscar carta..." oninput="applyFilters()">
-      </div>
-      <select id="filterEscuela"  onchange="applyFilters()"><option value="">Todas las escuelas</option></select>
-      <select id="filterPosicion" onchange="applyFilters()">
-        <option value="">Todas las posiciones</option>
-        <option value="MB">MB — Middle Blocker</option>
-        <option value="S">S — Setter</option>
-        <option value="WS">WS — Wing Spiker</option>
-        <option value="L">L — Libero</option>
-      </select>
-      <select id="filterRareza" onchange="applyFilters()">
-        <option value="">Todas las rarezas</option>
-        <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
-        <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
-        <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
-      </select>
-      <div class="filter-pills">
-        <span class="pill" data-filter="tipo" data-val="personaje" onclick="togglePill(this)">Personaje</span>
-        <span class="pill tipo-evento" data-filter="tipo" data-val="evento" onclick="togglePill(this)">Evento</span>
-        <span class="pill" data-filter="hab" data-val="si" onclick="togglePill(this)">Con habilidad</span>
-      </div>
-      <button class="pill" onclick="resetFiltros()" style="border-color:var(--border2);">✕ Resetear filtros</button>
-    </div>
-    <div class="card-count" id="cardCount">Cargando catálogo...</div>
-    <div class="catalogue-grid" id="catalogueGrid"></div>
-  </div>
+        <div class="filters-fila2">
+          <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
+          <div class="filter-pills">
+            <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
+            <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
+          </div>
+          <span class="separador"></span>
+          <div class="filter-pills">
+            <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
+            <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
+          </div>
+          <span class="separador"></span>
+          <select id="filterStat" class="select-oscuro">
+            <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
+            <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
+            <option value="recepcion" data-i18n="deckbuilder.statRecepcion">Recepción</option>
+            <option value="pase" data-i18n="deckbuilder.statPase">Pase</option>
+            <option value="remate" data-i18n="deckbuilder.statRemate">Remate</option>
+            <option value="bloqueo" data-i18n="deckbuilder.statBloqueo">Bloqueo</option>
+          </select>
 
-  <div class="deck-panel">
-    <div class="deck-header">
-      <div class="deck-title-row">
+            <div class="filter-pills" id="statValuePills">
+              <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
+            </div>
+        </div>
+      </div> <!-- fin filtros -->
+
+      <!------------------------ CONTADOR DE RESULTADOS ------------------------------------>
+      <div class="card-count" id="cardCount">Cargando catálogo...</div>
+
+      <!------------------------ GRID DE CARTAS ------------------------------------>
+      <div class="catalogue-grid" id="catalogueGrid"></div>
+
+    </div> <!-- fin columna central -->
+
+    <!-- COLUMNA DERECHA:  nombre del mazo, estadísticas, lista de cartas del mazo -->
+    <div class="columna-derecha">
+      <!------------------------ CABECERA DEL MAZO ------------------------------------>
+      <div class="deck-header">
+        <div class="deck-section-title" style="padding:0 0 4px;">Nombre del mazo</div>
         <input type="text" class="deck-name-input" id="deckNameInput" value="Mi deck">
+        <div class="deck-stats-row">
+          <span class="deck-stat" id="statTotal">0 / 40</span>
+          <span class="deck-stat" id="statEventos">0 eventos</span>
+          <span class="deck-stat" id="statEscuelas">0 escuelas</span>
+        </div>
       </div>
-      <div class="deck-stats-row">
-        <span class="deck-stat" id="statTotal">0 / 40</span>
-        <span class="deck-stat" id="statEventos">0 eventos</span>
-        <span class="deck-stat" id="statEscuelas">0 escuelas</span>
+      <!------------------------ ACCIONES ------------------------------------>
+      <div class="deck-actions">
+        <button class="btn-mini" onclick="clearDeck()">Vaciar</button>
+        <button class="btn-mini" onclick="saveDeck()">Guardar</button>
+        <button class="btn-mini" onclick="exportDeck()">Exportar</button>
+        <label class="btn-mini" for="importFileInput" style="cursor:pointer;text-align:center;">Importar</label>
+        <input type="file" id="importFileInput" accept=".json" onchange="importDeck(event)" style="display:none">
       </div>
-    </div>
-    <div class="deck-actions">
-      <button class="btn" onclick="clearDeck()">Vaciar</button>
-      <button class="btn primary" onclick="saveDeck()">Guardar</button>
-      <button class="btn success" onclick="exportDeck()">Exportar</button>
-      <label class="btn" for="importFileInput" style="cursor:pointer;text-align:center;">Importar</label>
-      <input type="file" id="importFileInput" accept=".json" onchange="importDeck(event)" style="display:none">
-    </div>
-    <div class="deck-list" id="deckList">
-      <div class="deck-empty">
-        <div class="deck-empty-icon">🃏</div>
-        <div>Haz clic en una carta<br>para añadirla al deck</div>
+      <!------------------------ LISTADO DE CARTAS ------------------------------------>
+      <div class="deck-list" id="deckList">
+        <div class="deck-empty">
+          <div>Haz clic en + para añadir cartas</div>
+        </div>
       </div>
+      <!------------------------ DECKS GUARDADOS ------------------------------------>
+      <div class="saved-decks-bar">
+        <div class="saved-title">Decks guardados</div>
+        <div id="savedDecksList"></div>
+      </div>
+
     </div>
-    <div class="saved-decks-bar">
-      <div class="saved-title">Decks guardados</div>
-      <div id="savedDecksList"></div>
-    </div>
+
   </div>
-</div>
 
-<!-- PREDEFINED -->
-<div class="predefined-panel hidden" id="appPredefined">
-  <h2>Decks predefinidos</h2>
-  <p>Selecciona un deck para cargarlo en el constructor y editarlo a tu gusto.</p>
-  <div class="predefined-grid" id="predefinedGrid"></div>
-</div>
+  <!------------------ STUBS Y CREAR CARTA (necesario, aunque no se lance, para poder crear cartas ------------------------>
+  <script> // -------------------------- STUBS -------------------------------------------
+    function usarGuts()               { return false; }
+    function robarCarta()             {}
+    function añadirCartaAMano()       {}
+    function pagarConEvento()         { return false; }
+    function negarBloqueadoresApoyo() {}
+    function negarReceptorAlto()      {}
+    function debilitarRematador()     {}
+    function tendoSatori()            {}
+    function kageyamaSP()              {}
+    function doshat()                  {}
+    function blockout()                 {}
+    function renderMano()               {}
+    function renderCampo()              {}
+    function actualizarFaseUI()         {}
+    function log()                       {}
 
-<!--
-  STUBS de funciones del juego que cartas.js referencia.
-  Aquí no hacen nada: solo evitan errores de JS al cargar el archivo.
-  crearCarta() se redefine justo después para extraer solo los datos.
--->
-<script>
-function usarGuts()               { return false; }
-function robarCarta()             {}
-function añadirCartaAMano()       {}
-function pagarConEvento()         { return false; }
-function negarBloqueadoresApoyo() {}
-function negarReceptorAlto()      {}
-function debilitarRematador()     {}
-function tendoSatori()            {}
-function kageyamaSP()             {}
-function doshat()                 {}
-function blockout()               {}
-function renderMano()             {}
-function renderCampo()            {}
-function actualizarFaseUI()       {}
-function log()                    {}
+    // versión de crearCarta que extrae solo los datos que necesita el deckbuilder
+    function crearCarta(nombre, stats, habilidadFn, info) {
+      return {
+        nombre,
+        stats,
+        habilidad:       typeof habilidadFn === 'function',
+        tipo:            info.tipo            || 'personaje',
+        id:              info.id              || '',
+        escuela:         info.escuela         || '',
+        posicion:        info.posicion        || null,
+        rareza:          info.rareza          || 'N',
+        anyo:            info.anyo            || null,
+        fases:           info.fases           || [],
+        descripcion:     info.descripcion     || '',
+        zonasProhibidas: info.zonasProhibidas || [],
+      };
+    }
+  </script>
 
-// Esta versión de crearCarta extrae solo los datos que necesita el deckbuilder.
-// Cuando cartas.js llame a crearCarta(), usará esta definición.
-function crearCarta(nombre, stats, habilidadFn, info) {
-  return {
-    nombre,
-    stats,
-    habilidad:       typeof habilidadFn === 'function',
-    tipo:            info.tipo            || 'personaje',
-    id:              info.id              || '',
-    escuela:         info.escuela         || '',
-    posicion:        info.posicion        || null,
-    rareza:          info.rareza          || 'N',
-    anyo:            info.anyo            || null,
-    fases:           info.fases           || [],
-    descripcion:     info.descripcion     || '',
-    zonasProhibidas: info.zonasProhibidas || [],
-  };
-}
-</script>
+  <!------------------------------------------------ CATÁLOGO DE CARTAS ------------------->
+  <script src="cartas.js"></script>
+  <script src="descripciones.js"></script>
 
-<!-- Tu cartas.js real — el deckbuilder leerá el catálogo de aquí -->
-<script src="cartas.js"></script>
-<script src="descripciones.js"></script>
+  <script src="i18n.js"></script>
 
-<script>
-// ── CATÁLOGO ──────────────────────────────────────────────
-const CATALOGUE = inicializarCartas();
+  <script>
+    // -------------------------------------------------- APLICAR COLOR AL GUARDADO DE PÁGINA ------------------------------------------ 
+    // recupera el color de acento que el usuario eligió en Settings (index.html)
+    const colorGuardado = localStorage.getItem("hv-accent");
+    if (colorGuardado) {                                                        // si hay un color guardado de una sesión anterior
+      document.documentElement.style.setProperty("--accent", colorGuardado);    // lo aplica a la variable CSS --accent
+    }
 
-// ── ESTADO ────────────────────────────────────────────────
-let deck          = [];
-let savedDecks    = JSON.parse(localStorage.getItem('hv-decks') || '[]');
-let currentDeckId = null;
-let activeFilters = { tipo: null, hab: null };
-let _previewCard  = null;
+    // ---------------------------------------------- CAMBIAR DE PESTAÑA ------------------------------------------- 
+    function setTab(tab) {
+      document.getElementById("tab-builder").classList.toggle("active", tab === "builder");
+      document.getElementById("tab-predefined").classList.toggle("active", tab === "predefined");
+      // de momento no cambiamos contenido, solo el estado visual del botón
+    }
 
-// ── UTILIDADES ────────────────────────────────────────────
-const imgPath = id => `img/cartas/${id}.png`;
+    // ---------------------------------------------- CARTAS ------------------------------------------- 
+    const CATALOGUE = inicializarCartas();          // carga todas las cartas desde cartas.js
+    const imgPath = id => `img/cartas/${id}.png`;   // ruta de la imagen de cada carta
 
-function getArtClass(c) {
-  if (c.tipo === 'evento') return 'art-evento';
-  const known = ['Karasuno','Nekoma','Fukurodani','Shiratorizawa','Inarizaki','Kamomedai','Itachiyama', 'Wakutani Minami', 'Date Kôgyô'];
-  return 'art-' + (known.includes(c.escuela) ? c.escuela : 'default');
-}
+    // ------------------------------------- RENDER DEL GRID (sin filtros todavía, solo mostrar todo) 
+    function renderCatalogo(lista) {
+      document.getElementById("cardCount").textContent = `${lista.length} cartas`;
+      const grid = document.getElementById("catalogueGrid");
+      grid.innerHTML = "";
+      lista.forEach(c => grid.appendChild(buildCardThumb(c)));
+    }
 
-function getSchoolColor(escuela) {
-  const m = { Karasuno:'#E8761A', Nekoma:'#E8761A', Fukurodani:'#555555',
-              Shiratorizawa:'#6A1B9A', Inarizaki:'#666666', Kamomedai:'#4a9ee6', Itachiyama:'#F9A825',
-              'Wakutani Minami': '#E91E8C', 'Date Kôgyô': '#1B5E20'};
-  return m[escuela] || '#5a5a70';
-}
+    // ------------------------------------- COLORES ESCUELAS
+    function getSchoolColor(escuela) {
+      const colores = {
+        Karasuno:        '#E8761A',
+        Nekoma:          '#C62828',
+        Fukurodani:      '#D4AF37',
+        Shiratorizawa:   '#6A1B9A',
+        Inarizaki:       '#5C0A1E',
+        Kamomedai:       '#4a9ee6',
+        Itachiyama:      '#F9A825',
+        'Wakutani Minami': '#E91E8C',
+        'Date Kôgyô':    '#0F5C3D',
+        'Aoba Jôsai':      '#1AA6A0',
+        Tokonami:         '#4A7FA5',
+        Ohgiminami:         '#2C3E70',
+        Kakugawa:         '#7CB342',
+        'Sarukawa Kōgyō':         '#2E3A6E',
+        Tsubakihara:         '#C9A63C',
+      };
+      return colores[escuela] || '#999999';   // gris por defecto si no coincide ninguna
+    }
 
-function getEmoji(c) {
-  const m = { Karasuno:'🔴', Nekoma:'🐱', Fukurodani:'🦅', Shiratorizawa:'🦁',
-              Inarizaki:'⚫', Kamomedai:'🔵', Itachiyama:'🏆' };
-  return c.tipo === 'evento' ? '✨' : (m[c.escuela] || '⚡');
-}
+    // ------------------------------------- CONSTRUIR MINIATURA DE CARTA
+    function buildCardThumb(c) {
+      const div = document.createElement("div");
+      div.className = "card-thumb";
+      div.dataset.id = c.id;
 
-const rarityLabel = r => ({ DP:'Double Parallel',TP:'Triple Parallel',S:'Super',R:'Rare',
-  RP:'Rare Parallel',T:'Trigger',N:'Normal',NP:'Normal Parallel',P:'Parallel',D:'D' }[r] || r);
+      const colorEscuela = getSchoolColor(c.escuela);  // color escuela
+      div.style.border = `2px solid ${colorEscuela}`;
 
-const posLabel = p => ({ MB:'Middle Blocker',S:'Setter',WS:'Wing Spiker',L:'Libero' }[p] || p);
+      div.innerHTML = `
+        <div class="card-art">
+          <img src="${imgPath(c.id)}" alt="${c.nombre}" onerror="this.style.display='none'">
+          <div class="card-esc-bar" style="background:${colorEscuela}"></div>
+        </div>
+        <button class="card-add-btn" title="Añadir al deck">+</button>
+        <div class="card-info">
+          <div class="card-name" title="${c.nombre}">${c.nombre}</div>
+          ${c.posicion ? `<span class="card-position" style="background:${colorEscuela}">${c.posicion}</span>` : ''}
+        </div>`;
+      
+      div.querySelector('.card-add-btn').addEventListener('click', e => {
+        e.stopPropagation();   // evita que el clic dispare también el hover/mouseleave raro
+        addToDeck(c);
+      });
 
-function showToast(msg, ms=2200) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => t.classList.remove('show'), ms);
-}
+      // ------------------------------------------------------------------- Mostrar tooltip al pasar el ratón   
+      div.addEventListener("mouseenter", () => mostrarPreview(c));
+      div.addEventListener("mouseleave", () => ocultarPreview());
 
-// ── INIT ──────────────────────────────────────────────────
-function init() {
-  const escuelas = [...new Set(CATALOGUE.map(c => c.escuela).filter(Boolean))].sort();
-  const sel = document.getElementById('filterEscuela');
-  escuelas.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; sel.appendChild(o); });
-  applyFilters();
-  renderSavedDecks();
-  renderPredefined();
+      return div;
+    }
 
-  document.querySelectorAll('#lang-es,#lang-en,#lang-fr').forEach(b => b.classList.remove('active'));
-  document.getElementById('lang-' + idiomaDeck).classList.add('active');   // marca el botón según el idioma guardado
-}
+    // ------------------------------------- MOSTRAR TOOLTIP
+    function mostrarPreview(c) {
+      const panel   = document.getElementById("previewPanel");
+      const imagen  = document.getElementById("previewImagen"); 
+      const info    = document.getElementById("previewInfo");
+      const colorEscuela = getSchoolColor(c.escuela);
 
-// ── CATÁLOGO RENDER ───────────────────────────────────────
-function applyFilters() {
-  const q        = document.getElementById('searchInput').value.toLowerCase().trim();
-  const escuela  = document.getElementById('filterEscuela').value;
-  const posicion = document.getElementById('filterPosicion').value;
-  const rareza   = document.getElementById('filterRareza').value;
+      imagen.style.backgroundImage = `url('${imgPath(c.id)}')`;   // imagen de fondo
+      panel.style.border = `3px solid ${colorEscuela}`;           // borde del color de la escuela
+      imagen.style.borderBottom = `5px solid ${colorEscuela}`;    // línea del color de la escuela
 
-  const result = CATALOGUE.filter(c => {
-    if (q        && !c.nombre.toLowerCase().includes(q) && !(c.id||'').toLowerCase().includes(q)) return false;
-    if (escuela  && c.escuela  !== escuela)  return false;
-    if (posicion && c.posicion !== posicion) return false;
-    if (rareza   && c.rareza   !== rareza)   return false;
-    if (activeFilters.tipo && c.tipo !== activeFilters.tipo) return false;
-    if (activeFilters.hab === 'si' && !c.habilidad)         return false;
-    return true;
-  });
+      const descripcion = DESCRIPCIONES?.[c.id]?.[idiomaActivo] || c.descripcion || "";
 
-  document.getElementById('cardCount').textContent = `${result.length} cartas`;
-  const grid = document.getElementById('catalogueGrid');
-  grid.innerHTML = '';
-  result.forEach(c => grid.appendChild(buildCardThumb(c)));
-}
+      info.innerHTML = `
+        <h3 style="color:${colorEscuela}">${c.nombre}</h3>
+        <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''}</div>
+        ${c.tipo === 'personaje' ? `
+          <div class="preview-stats">
+            <div class="pstat pstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${c.stats.saque}</strong></div>
+            <div class="pstat pstat-bloqueo"><span>${t("deckbuilder.statBloqueoCorto")}</span><strong>${c.stats.bloqueo}</strong></div>
+            <div class="pstat pstat-recepcion"><span>${t("deckbuilder.statRecepcionCorto")}</span><strong>${c.stats.recepcion}</strong></div>
+            <div class="pstat pstat-pase"><span>${t("deckbuilder.statPaseCorto")}</span><strong>${c.stats.pase}</strong></div>
+            <div class="pstat pstat-remate"><span>${t("deckbuilder.statRemateCorto")}</span><strong>${c.stats.remate}</strong></div>
+          </div>` : ''}
+        <div class="preview-desc">${descripcion.replace(/&quot;/g, '"')}</div>
+      `;
 
-function buildCardThumb(c) {
-  const qty = getDeckQty(c.id);
-  const div = document.createElement('div');
-  div.className = 'card-thumb' + (qty > 0 ? ' in-deck' : '');
-  div.dataset.id = c.id;
+      panel.classList.add("show");
+    }
 
-  div.innerHTML = `
-    <div class="card-art ${getArtClass(c)}">
-      <img src="${imgPath(c.id)}" alt="${c.nombre}"
-           onerror="this.style.display='none'">
-      <div class="fallback"></div>
-      <div class="card-rarity-bar rarity-${c.rareza}"></div>
-    </div>
-    ${qty > 0 ? `<div class="card-count-badge">${qty}</div>` : ''}
-    <button class="card-add-btn" title="Añadir al deck">+</button>
-    <div class="card-info">
-      <div class="card-name" title="${c.nombre}">${c.nombre}</div>
-      <div class="card-meta">
-        <span>${c.tipo === 'evento' ? 'Evento' : (c.escuela||'')}</span>
-        <span>${c.rareza}</span>
-      </div>
-      ${c.tipo === 'personaje'
-        ? `<div class="card-stats">
-            <div class="stat stat-s"><span class="stat-label">SAQ</span><span class="stat-val">${c.stats.saque}</span></div>
-            <div class="stat stat-r"><span class="stat-label">REC</span><span class="stat-val">${c.stats.recepcion}</span></div>
-            <div class="stat stat-p"><span class="stat-label">PAS</span><span class="stat-val">${c.stats.pase}</span></div>
-            <div class="stat stat-rm"><span class="stat-label">REM</span><span class="stat-val">${c.stats.remate}</span></div>
-            <div class="stat stat-b"><span class="stat-label">BLQ</span><span class="stat-val">${c.stats.bloqueo}</span></div>
-           </div>`
-        : `<div style="font-size:10px;color:var(--text3);margin-top:3px">${(c.fases||[]).join(' · ') || 'Evento'}</div>`
+    // ------------------------------------- OCULTAR TOOLTIP
+    function ocultarPreview() {
+      document.getElementById("previewPanel").classList.remove("show");
+    }
+
+    // ----------------------------------------------------------------------------------------- FILTROS //
+        // ------------------------------------- RELLENAR LISTA ESCUELAS
+    function llenarListaEscuela() {
+      const escuelas = [...new Set(CATALOGUE.map(c => c.escuela).filter(Boolean))].sort();  // escuelas únicas, sin vacíos, ordenadas
+        // CATALOGUE.map(c => c.escuela) → saca un array con la escuela de CADA carta (con repetidos)
+        // .filter(Boolean) → quita los valores vacíos/null/undefined (p.ej. cartas sin escuela, como algunos eventos)
+        // new Set(...) → convierte el array en un "conjunto" que elimina automáticamente los duplicados
+        // [...] → vuelve a convertirlo en un array normal para poder usar .sort()
+        // .sort() → ordena alfabéticamente
+
+      const select = document.getElementById("filterEscuela");      // crear la lista HTML
+      escuelas.forEach(e => {                                       // por cada opción
+        const option = document.createElement("option");            // crea el valor
+        option.value = e;                                           // valor interno para el filtro
+        option.textContent = e;                                     // valor asociado al texto
+        select.appendChild(option);
+      });
+    }
+    // ------------------------------------- ESTADO FILTROS
+    let activeFilters = { tipo: null, hab: null };                   // para los pills (tipo: "personaje"/"evento", hab: "si")
+    // ------------------------------------- APLICAR FILTROS
+    function applyFilters() {                                        // leer todos los filtros
+      const q        = document.getElementById("searchInput").value.toLowerCase().trim();
+      const escuela  = document.getElementById("filterEscuela").value;
+      const posicion = document.getElementById("filterPosicion").value;
+      const rareza   = document.getElementById("filterRareza").value;
+
+      const resultado = CATALOGUE.filter(c => {                        // mostrar o no según se encuentre en el filtro
+        if (q        && !c.nombre.toLowerCase().includes(q) && !(c.id||'').toLowerCase().includes(q)) return false; // texto escrito en el buscador
+        if (escuela  && c.escuela  !== escuela)  return false;
+        if (posicion && c.posicion !== posicion) return false;
+        if (rareza   && c.rareza   !== rareza)   return false;
+        if (activeFilters.tipo && c.tipo !== activeFilters.tipo) return false;  // filtro personaje/evento
+        if (activeFilters.hab === "si" && !c.habilidad) return false;           // filtro con habilidad
+        if (activeFilters.hab === "no" && c.habilidad)  return false;           // filtro sin habilidad
+
+        // ------------------------ FILTRO POR ESTADÍSTICAS
+        if (statFiltro.stat && statFiltro.valores.size > 0) {
+          const valorCarta = c.stats?.[statFiltro.stat];              // valor de esa stat en esta carta
+          if (!statFiltro.valores.has(valorCarta)) return false;      // si no está entre los valores marcados, descartar
+        }
+
+        return true;
+      });
+      renderCatalogo(resultado);                                                // repintar el catálogo
+    }
+    // ------------------------------------- TOOGLES DE PILLS DE FILTROS
+    function togglePill(el) {
+      const filtro = el.dataset.filter;                         // lee el atributo del pill tipo
+      const valor  = el.dataset.val;                            // lee el atributo del pill 
+      const estabaActiva = el.classList.contains("on");
+
+      // desactivar visualmente todas las pills del mismo grupo de filtro
+      document.querySelectorAll(`.pill[data-filter="${filtro}"]`).forEach(p => p.classList.remove("on"));
+
+      activeFilters[filtro] = estabaActiva ? null : valor;      // si ya estaba activa, se desactiva; si no, se activa
+      if (!estabaActiva) el.classList.add("on");
+
+      applyFilters();
+    }
+    // ------------------------------------- RESETEAR FILTROS
+    function resetFiltros() {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("filterEscuela").value = "";
+      document.getElementById("filterPosicion").value = "";
+      document.getElementById("filterRareza").value = "";
+      document.getElementById("filterStat").value = "";
+      activeFilters = { tipo: null, hab: null };
+      statFiltro = { stat: "", valores: new Set() };
+      renderStatValuePills();
+      document.querySelectorAll(".pill.on").forEach(p => p.classList.remove("on"));
+      applyFilters();
+    }
+
+    // ------------------------------------- FILTRO POR ESTADÍSTICA
+    let statFiltro = { stat: "", valores: new Set() };   // stat elegido + valores marcados
+
+    // ------------------------------------- RELLENAR PILLS DE VALORES
+    function renderStatValuePills() {
+      const contenedor = document.getElementById("statValuePills");
+      contenedor.innerHTML = "";
+
+      if (!statFiltro.stat) return; // si no hay stat seleccionada, no mostrar nada
+
+      for (let v = 0; v <= 6; v++) {
+        const pill = document.createElement("span");
+        pill.className = "pill" + (statFiltro.valores.has(v) ? " on" : "");
+        pill.textContent = v;
+        pill.addEventListener("click", () => toggleStatValue(v));
+        contenedor.appendChild(pill);
       }
-    </div>`;
+    }
+    // // ------------------------------------- AL CAMBIAR DE ESTADÍSTICA
+    document.getElementById("filterStat").addEventListener("change", function() {
+      statFiltro.stat = this.value;
+      statFiltro.valores.clear();   // al cambiar de stat, se resetean los valores marcados
+      renderStatValuePills();
+      applyFilters();
+    });
+    // ------------------------------------- PILLS DE UN VALOR CONCRETO
+    function toggleStatValue(v) {
+      if (statFiltro.valores.has(v)) {
+        statFiltro.valores.delete(v);   // ya estaba marcado → lo quitamos
+      } else {
+        statFiltro.valores.add(v);      // no estaba → lo añadimos
+      }
+      renderStatValuePills();
+      applyFilters();
+    }
 
-  div.querySelector('.card-add-btn').addEventListener('click', e => { e.stopPropagation(); addToDeck(c); });
-  div.addEventListener('click', () => openPreview(c));
-  return div;
-}
+    // ------------------------------------- VINCULAR BOTONES CON FUNCIONES DE FILTRO
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("filterEscuela").addEventListener("change", applyFilters);
+    document.getElementById("filterPosicion").addEventListener("change", applyFilters);
+    document.getElementById("filterRareza").addEventListener("change", applyFilters);
+    document.querySelectorAll(".pill").forEach(p => p.addEventListener("click", () => togglePill(p)));
+    document.querySelector(".pill-reset").addEventListener("click", resetFiltros);
 
-function refreshThumb(id) {
-  const el = document.querySelector(`.card-thumb[data-id="${id}"]`);
-  if (!el) return;
-  const qty = getDeckQty(id);
-  el.classList.toggle('in-deck', qty > 0);
-  let badge = el.querySelector('.card-count-badge');
-  if (qty > 0) {
-    if (!badge) { badge = document.createElement('div'); badge.className = 'card-count-badge'; el.querySelector('.card-art').after(badge); }
-    badge.textContent = qty;
-  } else badge?.remove();
-}
+    llenarListaEscuela();
+    applyFilters();  
 
-function togglePill(el) {
-  const filter = el.dataset.filter;
-  const val    = el.dataset.val;
-  const wasOn  = el.classList.contains('on');
-  document.querySelectorAll(`.pill[data-filter="${filter}"]`).forEach(p => p.classList.remove('on'));
-  activeFilters[filter] = wasOn ? null : val;
-  if (!wasOn) el.classList.add('on');
-  applyFilters();
-}
-function resetFiltros() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterEscuela').value = '';
-  document.getElementById('filterPosicion').value = '';
-  document.getElementById('filterRareza').value = '';
-  activeFilters = { tipo: null, hab: null };
-  document.querySelectorAll('.pill.on').forEach(p => p.classList.remove('on'));
-  applyFilters();
-}
 
-let idiomaDeck = localStorage.getItem('hv-idioma') || 'en'; // idioma guardado desde el lobby, o inglés por defecto
-function setIdioma(idioma) {
-  idiomaDeck = idioma;
-  localStorage.setItem('hv-idioma', idioma);   // guardar para que lobby y juego lo recojan también
-  document.querySelectorAll('#lang-es,#lang-en,#lang-fr').forEach(b => b.classList.remove('active'));
-  document.getElementById('lang-' + idioma).classList.add('active');
-  applyFilters(); // vuelve a pintar el grid, aunque no traduce los nombres
-}
+    // -------------------------------------------------------------- COLUMNA DERECHA
+    // -------------------------------------------------------------- CREACIÓN DE DECKS
+    let deck = [];                                                            
+    let savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]');    // mazos guardados con anterioridad
+    let currentDeckId = null;                                                 // si el mazo ya fue guardado antes, aquí se guarda su ID
 
-// ── DECK LOGIC ────────────────────────────────────────────
-const getDeckQty = id => deck.find(e => e.carta.id === id)?.qty || 0;
-
-function addToDeck(c) {
-  const total   = deck.reduce((s,e) => s+e.qty, 0);
-  const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);
-  if (total >= 40)                         { showToast('El deck ya tiene 40 cartas ✋'); return; }
-  if (c.tipo === 'evento' && eventos >= 8) { showToast('Máximo 8 eventos por deck ✋'); return; }
-  const entry = deck.find(e => e.carta.id === c.id);
-  if (entry) entry.qty++; else deck.push({ carta: c, qty: 1 });
-  refreshThumb(c.id);
-  renderDeckList();
-  showToast(`${c.nombre} añadida`);
-}
-
-function removeFromDeck(id, all=false) {
-  const idx = deck.findIndex(e => e.carta.id === id);
-  if (idx === -1) return;
-  if (all || deck[idx].qty <= 1) deck.splice(idx, 1); else deck[idx].qty--;
-  refreshThumb(id);
-  renderDeckList();
-}
-
-function clearDeck() {
-  if (!deck.length) return;
-  deck = []; currentDeckId = null;
-  document.getElementById('deckNameInput').value = 'Mi deck';
-  document.querySelectorAll('.card-thumb').forEach(el => {
-    el.classList.remove('in-deck');
-    el.querySelector('.card-count-badge')?.remove();
-  });
-  renderDeckList();
-  showToast('Deck vaciado');
-}
-
-function renderDeckList() {
-  const list    = document.getElementById('deckList');
-  const total   = deck.reduce((s,e) => s+e.qty, 0);
-  const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);
-  const escuelas = new Set(deck.filter(e => e.carta.tipo === 'personaje').map(e => e.carta.escuela));
-
-  const st = document.getElementById('statTotal');
-  st.textContent = `${total} / 40`;
-  st.className   = 'deck-stat' + (total === 40 ? ' ok' : total > 40 ? ' warn' : '');
-  const se = document.getElementById('statEventos');
-  se.textContent = `${eventos} / 8 eventos`;
-  se.className   = 'deck-stat' + (eventos > 8 ? ' warn' : '');
-  document.getElementById('statEscuelas').textContent = `${escuelas.size} escuelas`;
-
-  if (!deck.length) {
-    list.innerHTML = `<div class="deck-empty"><div class="deck-empty-icon">🃏</div><div>Haz clic en una carta<br>para añadirla al deck</div></div>`;
-    return;
-  }
-
-  const personajes = deck.filter(e => e.carta.tipo === 'personaje')
-    .sort((a,b) => a.carta.escuela.localeCompare(b.carta.escuela) || a.carta.nombre.localeCompare(b.carta.nombre));
-  const evts = deck.filter(e => e.carta.tipo === 'evento');
-
-  const entryHTML = ({carta,qty}) => `
-    <div class="deck-entry" onclick="openPreview(CATALOGUE.find(c=>c.id==='${carta.id}'))" style="cursor:pointer">
-      <div class="deck-entry-img">
-        <img src="${imgPath(carta.id)}" alt="${carta.nombre}" onerror="this.style.display='none'">
-      </div>
-      <div class="deck-entry-color" style="background:${carta.tipo==='evento' ? 'var(--blue)' : getSchoolColor(carta.escuela)}"></div>
-      <div style="flex:1;overflow:hidden">
-        <div class="deck-entry-name" title="${carta.nombre}">${carta.nombre}</div>
-        <div class="deck-entry-sub">${carta.tipo==='evento' ? 'Evento' : carta.escuela} · ${carta.rareza}</div>
-      </div>
-      <div class="deck-entry-qty">${qty}</div>
-      <button class="deck-entry-rm" onclick="event.stopPropagation(); removeFromDeck('${carta.id}')"      title="Quitar una">−</button>
-      <button class="deck-entry-rm" onclick="event.stopPropagation(); removeFromDeck('${carta.id}',true)" title="Quitar todas">✕</button>
-    </div>`;
-
-  let html = '';
-  if (personajes.length) { html += `<div class="deck-section-title">Personajes (${personajes.reduce((s,e)=>s+e.qty,0)})</div>`; html += personajes.map(entryHTML).join(''); }
-  if (evts.length)       { html += `<div class="deck-section-title">Eventos (${evts.reduce((s,e)=>s+e.qty,0)})</div>`;          html += evts.map(entryHTML).join(''); }
-  list.innerHTML = html;
-}
-
-// ── SAVE / LOAD / EXPORT / IMPORT ────────────────────────
-function saveDeck() {
-  const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
-  if (!deck.length) { showToast('El deck está vacío ✋'); return; }
-  const data = { id: currentDeckId || Date.now().toString(), nombre,
-    total: deck.reduce((s,e)=>s+e.qty,0),
-    entries: deck.map(e => ({ id: e.carta.id, qty: e.qty })),
-    fecha: new Date().toLocaleDateString('es-ES') };
-  currentDeckId = data.id;
-  const idx = savedDecks.findIndex(d => d.id === data.id);
-  if (idx !== -1) savedDecks[idx] = data; else savedDecks.push(data);
-  localStorage.setItem('hv-decks', JSON.stringify(savedDecks));
-  renderSavedDecks();
-  showToast(`"${nombre}" guardado ✅`);
-}
-
-function loadSavedDeck(id) {
-  const saved = savedDecks.find(d => d.id === id);
-  if (!saved) return;
-  deck = [];
-  saved.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({ carta: c, qty: e.qty }); });
-  currentDeckId = saved.id;
-  document.getElementById('deckNameInput').value = saved.nombre;
-  document.querySelectorAll('.card-thumb').forEach(el => { el.classList.remove('in-deck'); el.querySelector('.card-count-badge')?.remove(); });
-  deck.forEach(e => refreshThumb(e.carta.id));
-  renderDeckList(); renderSavedDecks();
-  showToast(`"${saved.nombre}" cargado`);
-  setTab('builder');
-}
-
-function deleteSavedDeck(id, ev) {
-  ev.stopPropagation();
-  savedDecks = savedDecks.filter(d => d.id !== id);
-  localStorage.setItem('hv-decks', JSON.stringify(savedDecks));
-  if (currentDeckId === id) clearDeck();
-  renderSavedDecks();
-  showToast('Deck eliminado');
-}
-
-function renderSavedDecks() {
-  const list = document.getElementById('savedDecksList');
-  if (!savedDecks.length) { list.innerHTML = `<div style="font-size:12px;color:var(--text3);padding:4px 0">No hay decks guardados aún</div>`; return; }
-  list.innerHTML = savedDecks.map(d => `
-    <div class="saved-deck-item${d.id===currentDeckId?' active':''}" onclick="loadSavedDeck('${d.id}')">
-      <span class="saved-deck-name">${d.nombre}</span>
-      <span class="saved-deck-count">${d.total}/40 · ${d.fecha||''}</span>
-      <button class="saved-deck-del" onclick="deleteSavedDeck('${d.id}',event)" title="Eliminar">✕</button>
-    </div>`).join('');
-}
-
-function exportDeck() {
-  const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
-  if (!deck.length) { showToast('El deck está vacío ✋'); return; }
-
-  const total = deck.reduce((s, e) => s + e.qty, 0);
-  if (total < 40) {
-    const confirmar = confirm(
-      `El deck tiene ${total}/40 cartas. ¿Exportar igualmente?\n\n` +
-      `Un deck incompleto no podrá usarse en partidas online.`
-    );
-    if (!confirmar) return;
-  }
-
-  const data = {
-    nombre,
-    version: '1.0',
-    fecha: new Date().toISOString(),
-    entries: deck.map(e => ({ id: e.carta.id, nombre: e.carta.nombre, qty: e.qty }))
-  };
-
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = nombre.replace(/\s+/g, '-') + '.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('Deck exportado ✅');
-}
-
-function importDeck(event) {
-  const file = event.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.entries) throw '';
-      deck = []; let nf = 0;
-      data.entries.forEach(entry => { const c = CATALOGUE.find(x => x.id === entry.id); if (c) deck.push({carta:c,qty:entry.qty}); else nf++; });
-      currentDeckId = null;
-      document.getElementById('deckNameInput').value = data.nombre || 'Deck importado';
-      document.querySelectorAll('.card-thumb').forEach(el => { el.classList.remove('in-deck'); el.querySelector('.card-count-badge')?.remove(); });
-      deck.forEach(e => refreshThumb(e.carta.id));
+    // -------------------------------------------------------------- AÑADIR AL MAZO
+    function addToDeck(c) {
+      const total   = deck.reduce((s,e) => s+e.qty, 0);               // total de cartas del mazo
+      const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);  // total de eventos
+      if (total >= 40)                         { return; }            // si más de 40 cartas
+      if (c.tipo === 'evento' && eventos >= 8) { return; }            // si más de 8 eventos
+      const entry = deck.find(e => e.carta.id === c.id);              // busca si la carta ya está en el mazo
+      if (entry) entry.qty++; else deck.push({ carta: c, qty: 1 });   // añade +1, si es el caso
+      refreshThumbBadge(c.id);                                        // actualiza el contador en el catálogo
+      renderDeckList();                                               
+    }
+    // -------------------------------------------------------------- QUITAR DEL MAZO
+    function removeFromDeck(id, all=false) {
+      const idx = deck.findIndex(e => e.carta.id === id);             // buscar posición en el array
+      if (idx === -1) return; 
+      if (all || deck[idx].qty <= 1) deck.splice(idx, 1); else deck[idx].qty--; // si queda más de 1, restar 1, si queda 1, borrar por completo
+      refreshThumbBadge(id);                                          // actualiza el contador en el catálogo
       renderDeckList();
-      showToast(`Importado${nf ? ` (${nf} no encontradas)` : ' ✅'}`);
-    } catch { showToast('Fichero no válido ❌'); }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
+    }
+    // -------------------------------------------------------------- VACIAR MAZO MAZO
+    function clearDeck() {
+      if (!deck.length) return;
+      deck = []; currentDeckId = null;
+      document.getElementById('deckNameInput').value = 'Mi deck';
+      document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
+      document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
+      renderDeckList();
+    }
 
-// ── PREVIEW ───────────────────────────────────────────────
-function openPreview(c) {
-  _previewCard = c;
-  const artDiv = document.getElementById('previewArt');
-  artDiv.className = `preview-art ${getArtClass(c)}`;
-  artDiv.innerHTML = `
-    <img src="${imgPath(c.id)}" alt="${c.nombre}" onerror="this.style.display='none'">
-    <div class="fallback-big"></div>
-    <div class="card-rarity-bar rarity-${c.rareza}" style="position:absolute;bottom:0;left:0;right:0;height:4px;z-index:2"></div>`;
+    // -------------------------------------------------------------- ACTUALIZAR CANTIDAD EN LA MINIATURA DEL CATÁLOGO
+    function getDeckQty(id) {
+      return deck.find(e => e.carta.id === id)?.qty || 0;             // busca la carta por ID y devuelve su cantidad
+    }
 
-  document.getElementById('previewName').textContent = c.nombre;
-  document.getElementById('previewId').textContent   = c.id + (c.anyo ? ` · Año ${c.anyo}` : '');
+    function refreshThumbBadge(id) {
+      const el = document.querySelector(`.card-thumb[data-id="${id}"]`);  // busca la maniatura en el catálogo (por ID)
+      if (!el) return;
 
-  const tags = [
-    `<span class="preview-tag">${rarityLabel(c.rareza)}</span>`,
-    c.posicion ? `<span class="preview-tag">${posLabel(c.posicion)}</span>` : '',
-    `<span class="preview-tag">${c.escuela || 'Evento'}</span>`,
-    c.habilidad ? `<span class="preview-tag" style="background:rgba(232,35,26,.15);color:var(--accent)">Con habilidad</span>` : '',
-    ...(c.fases||[]).map(f=>`<span class="preview-tag">${f}</span>`),
-  ];
-  document.getElementById('previewTags').innerHTML = tags.join('');
+      const qty = getDeckQty(id);
+      el.classList.toggle('in-deck', qty > 0);                        // añade el borde más grueso (no estoy seguro de que funcione)
 
-  const ps = document.getElementById('previewStats');
-  if (c.tipo === 'personaje') {
-    ps.style.display = 'grid';
-    ps.innerHTML = `
-      <div class="preview-stat"><span class="preview-stat-l">Saque</span>  <span class="preview-stat-v" style="color:var(--gold)">${c.stats.saque}</span></div>
-      <div class="preview-stat"><span class="preview-stat-l">Recep.</span> <span class="preview-stat-v" style="color:var(--blue)">${c.stats.recepcion}</span></div>
-      <div class="preview-stat"><span class="preview-stat-l">Pase</span>   <span class="preview-stat-v" style="color:var(--green)">${c.stats.pase}</span></div>
-      <div class="preview-stat"><span class="preview-stat-l">Remate</span> <span class="preview-stat-v" style="color:var(--accent)">${c.stats.remate}</span></div>
-      <div class="preview-stat"><span class="preview-stat-l">Bloqueo</span><span class="preview-stat-v" style="color:var(--text2)">${c.stats.bloqueo}</span></div>`;
-  } else { ps.style.display = 'none'; }
+      let badge = el.querySelector('.card-count-badge');              // si ya existe el contador de la miniatura
+      if (qty > 0) {
+        if (!badge) {                                                 // si no existe, se crea
+          badge = document.createElement('div');
+          badge.className = 'card-count-badge';
+          el.querySelector('.card-art').after(badge);                 // colocarlo después de la imagen
+        }
+        badge.textContent = qty;                                      // actualiza el número mostrado
+      } else {
+        badge?.remove();                                              // si no hay copias, borra el badge
+      }
+    }
 
-  const descripcion = DESCRIPCIONES[c.id]?.[idiomaDeck] || c.descripcion;
-  document.getElementById('previewDesc').innerHTML = descripcion
-      ? `<p>${descripcion.replace(/&quot;/g, '"')}</p>`
-      : `<p style="color:var(--text3);font-style:italic">Sin descripción disponible</p>`;
+    // -------------------------------------------------------------- RENDER DECK LIST
+    function renderDeckList() {
+      const list    = document.getElementById('deckList');              // contadores
+      const total   = deck.reduce((s,e) => s+e.qty, 0);
+      const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);
+      const escuelas = new Set(deck.filter(e => e.carta.tipo === 'personaje').map(e => e.carta.escuela));
 
-  document.getElementById('previewAddBtn').onclick = () => { addToDeck(c); closePreview(); };
-  document.getElementById('previewOverlay').classList.add('show');
-}
+      const st = document.getElementById('statTotal');                  // 0/40
+      st.textContent = `${total} / 40`;                                 // contador de cartas
+      st.className   = 'deck-stat' + (total === 40 ? ' ok' : total > 40 ? ' warn' : '');  // rojo o verde si mala/buena cantidad
+      const se = document.getElementById('statEventos');                // 0/8
+      se.textContent = `${eventos} / 8 eventos`;                        // contador de eventos
+      se.className   = 'deck-stat' + (eventos > 8 ? ' warn' : '');
+      document.getElementById('statEscuelas').textContent = `${escuelas.size} escuelas`;  // rojo o verde con eventos
 
-function closePreview(e) {
-  if (e && e.target !== document.getElementById('previewOverlay')) return;
-  document.getElementById('previewOverlay').classList.remove('show');
-}
+      if (!deck.length) {                                               // si el mazo está vacío
+        list.innerHTML = `<div class="deck-empty"><div>Haz clic en + para añadir cartas</div></div>`;
+        return;
+      }
 
-// ── PREDEFINED ────────────────────────────────────────────
-const PREDEFINED_DECKS = [
-  { nombre:'Karasuno Inicial', desc:'El combo de velocidad negativa de Kageyama y Hinata apoyado por la verstalidad del Karasuno. Alto potencial de remate con sinergia de eventos.', banner:'🔴', bannerClass:'art-Karasuno', tags:['Karasuno','Combo','Remate'],
-    entries:[{id:'HV-D01-001',qty:3},{id:'HV-D01-002',qty:3},{id:'HV-D01-003',qty:3},{id:'HV-D01-004',qty:3},{id:'HV-D01-005',qty:3},{id:'HV-D01-006',qty:3},{id:'HV-D01-007',qty:2},{id:'HV-D01-008',qty:3},{id:'HV-D01-009',qty:3},{id:'HV-D01-010',qty:2},{id:'HV-P01-002',qty:2},{id:'HV-P01-006',qty:2},{id:'HV-D01-011',qty:4},{id:'HV-D01-012',qty:4}] },
-  { nombre:'Nekoma Inicial', desc:'La defensa de Nekoma en estado puro. Equipo de desgaste con buenas recepciones y bloqueos.', banner:'🐱', bannerClass:'art-Nekoma', tags:['Nekoma','Defensa','Bloqueo'],
-    entries:[{id:'HV-D02-001',qty:5},{id:'HV-D02-002',qty:5},{id:'HV-D02-004',qty:3},{id:'HV-D02-005',qty:3},{id:'HV-D02-006',qty:3},{id:'HV-D02-007',qty:3},{id:'HV-D02-008',qty:3},{id:'HV-D02-009',qty:3},{id:'HV-D02-010',qty:3},{id:'HV-D02-011',qty:4},{id:'HV-D02-012',qty:4}] },
-];
+      //                                                                // separar personajes de eventos
+      const personajes = deck.filter(e => e.carta.tipo === 'personaje')
+        .sort((a,b) => (a.carta.escuela||'').localeCompare(b.carta.escuela||'') || a.carta.nombre.localeCompare(b.carta.nombre));
+      const evts = deck.filter(e => e.carta.tipo === 'evento');
 
-function renderPredefined() {
-  document.getElementById('predefinedGrid').innerHTML = PREDEFINED_DECKS.map((d,i) => `
-    <div class="pre-deck-card">
-      <div class="pre-deck-banner ${d.bannerClass}">${d.banner}</div>
-      <div class="pre-deck-body">
-        <div class="pre-deck-name">${d.nombre}</div>
-        <div class="pre-deck-desc">${d.desc}</div>
-        <div class="pre-deck-tags">${d.tags.map(t=>`<span class="pre-tag">${t}</span>`).join('')}</div>
-        <button class="pre-deck-load" onclick="loadPredefined(${i})">Cargar en constructor →</button>
-      </div>
-    </div>`).join('');
-}
+      const entryHTML = ({carta,qty}) => {                              // función para crear 1 fila en la lista
+        const color = getSchoolColor(carta.escuela);                    // color de la escuela
+        const colorBorde = carta.tipo === 'evento' ? '#999' : color;
+        return `
+        <div class="deck-entry" data-id="${carta.id}" style="border: 2px solid ${colorBorde}">
+          <div class="deck-entry-thumb" style="background-image:url('${imgPath(carta.id)}')"></div>
+          <div class="deck-entry-color" style="background:${colorBorde}"></div>
+          <div class="deck-entry-name" title="${carta.nombre}">${carta.nombre}</div>
+          <div class="deck-entry-qty">${qty}</div>
+          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}')" title="Quitar una">−</button>
+          <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}',true)" title="Quitar todas">✕</button>
+        </div>`;
+      };
 
-function loadPredefined(idx) {
-  const pd = PREDEFINED_DECKS[idx];
-  deck = [];
-  pd.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({carta:c,qty:e.qty}); });
-  currentDeckId = null;
-  document.getElementById('deckNameInput').value = pd.nombre;
-  document.querySelectorAll('.card-thumb').forEach(el => { el.classList.remove('in-deck'); el.querySelector('.card-count-badge')?.remove(); });
-  deck.forEach(e => refreshThumb(e.carta.id));
-  renderDeckList();
-  setTab('builder');
-  showToast(`"${pd.nombre}" cargado en el constructor ✅`);
-}
+      //                                                                 // creación del HTML final 
+      let html = '';
+      if (personajes.length) { html += `<div class="deck-section-title">Personajes (${personajes.reduce((s,e)=>s+e.qty,0)})</div>`; html += personajes.map(entryHTML).join(''); }
+      if (evts.length)       { html += `<div class="deck-section-title">Eventos (${evts.reduce((s,e)=>s+e.qty,0)})</div>`;          html += evts.map(entryHTML).join(''); }
+      list.innerHTML = html;
 
-// ── TABS ──────────────────────────────────────────────────
-function setTab(tab) {
-  document.getElementById('tab-builder').classList.toggle('active',    tab==='builder');
-  document.getElementById('tab-predefined').classList.toggle('active', tab==='predefined');
-  document.getElementById('appBuilder').classList.toggle('hidden',     tab!=='builder');
-  document.getElementById('appPredefined').classList.toggle('hidden',  tab!=='predefined');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePreview();
-});
-init();
-</script>
+      //                                                                  // mostrar el tooltip
+      list.querySelectorAll('.deck-entry').forEach(el => {
+        const id = el.dataset.id;
+        const entry = deck.find(e => e.carta.id === id);
+        if (!entry) return;
+        el.addEventListener('mouseenter', () => mostrarPreview(entry.carta));
+        el.addEventListener('mouseleave', () => ocultarPreview());
+      });
+    }
+
+    // -------------------------------------------------------------- BOTONES DE LA DECK LIST
+    // -------------------------------------------------------------- GUARDAR MAZO
+    function saveDeck() {
+      const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
+      if (!deck.length) return;
+      const data = {
+        id: currentDeckId || Date.now().toString(),                         // reutilizar el id, si existe
+        nombre,
+        total: deck.reduce((s,e)=>s+e.qty,0),
+        entries: deck.map(e => ({ id: e.carta.id, qty: e.qty })),           // guardar solo el id y la cantidad de cada carta
+        fecha: new Date().toLocaleDateString('es-ES')
+      };
+      currentDeckId = data.id;                                              // recordar el id para futuros guardados del mismo mazo
+
+      const idx = savedDecks.findIndex(d => d.id === data.id);
+      if (idx !== -1) savedDecks[idx] = data; else savedDecks.push(data);   // sobreescribir el mazo, si ya existía, si no, añade como nuevo
+      localStorage.setItem('hv-decks', JSON.stringify(savedDecks));         // guardar el array en el navegador 
+      renderSavedDecks();
+    }
+
+    // -------------------------------------------------------------- CARGAR MAZO GUARDADO
+    function loadSavedDeck(id) {
+      const saved = savedDecks.find(d => d.id === id);
+      if (!saved) return;
+      deck = [];
+      // por cada carta, busca el id en el catálogo y reconstruye el array                                                       
+      saved.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({ carta: c, qty: e.qty }); });
+      currentDeckId = saved.id;                                               // actualizar id del mazo actual
+      document.getElementById('deckNameInput').value = saved.nombre;
+      document.querySelectorAll('.card-count-badge').forEach(b => b.remove());   // borra el badge contador de las cartas del catálogo
+      document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck')); // borra los bordes de las cartas del catálogo
+      deck.forEach(e => refreshThumbBadge(e.carta.id));                       // repintar los bordes
+      renderDeckList(); 
+      renderSavedDecks();
+    }
+    // -------------------------------------------------------------- BORRAR MAZO GUARDADO
+    function deleteSavedDeck(id, ev) {
+      ev.stopPropagation();
+      savedDecks = savedDecks.filter(d => d.id !== id);
+      localStorage.setItem('hv-decks', JSON.stringify(savedDecks));
+      if (currentDeckId === id) clearDeck();
+      renderSavedDecks();
+    }
+    // -------------------------------------------------------------- RENDER MAZOS GUARDADOS
+    function renderSavedDecks() {
+      const list = document.getElementById('savedDecksList');
+      if (!savedDecks.length) { list.innerHTML = `<div style="font-size:11px;color:var(--text2);padding:4px 0">No hay decks guardados</div>`; return; }
+      list.innerHTML = savedDecks.map(d => `
+        <div class="saved-deck-item${d.id===currentDeckId?' active':''}" onclick="loadSavedDeck('${d.id}')">
+          <span class="saved-deck-name">${d.nombre}</span>
+          <span class="saved-deck-count">${d.total}/40</span>
+          <button class="saved-deck-del" onclick="deleteSavedDeck('${d.id}',event)" title="Eliminar">✕</button>
+        </div>`).join('');
+    }
+
+    // ----------------------------------------------------------------------------------- IMPORTAR / EXPORTAR
+    // -------------------------------------------------------------- EXPORTAR MAZO A JSON
+    function exportDeck() {
+      const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
+      if (!deck.length) return;
+      const data = {
+        nombre,
+        version: '1.0',
+        fecha: new Date().toISOString(),
+        entries: deck.map(e => ({ id: e.carta.id, nombre: e.carta.nombre, qty: e.qty }))
+      };
+      // Blob = "archivo en memoria" = convertir el objeto JS en texto JSON y se empaqueta como archivo descargable
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');                  // crear un enlace invisible
+      a.href = URL.createObjectURL(blob);                     // URl que apunta al blob
+      a.download = nombre.replace(/\s+/g, '-') + '.json';     // nombre del archivo al descargar
+      a.click();                                              // simular clic en el botón
+      URL.revokeObjectURL(a.href);                            // liberar la URL
+    }
+
+    // -------------------------------------------------------------- IMPORTAR MAZO DESDE JSON
+    function importDeck(event) {
+      const file = event.target.files[0]; if (!file) return;  // el archivo que el usuario seleccionó en el <input type="file">
+      const reader = new FileReader();                        // API del navegador para leer archivos locales
+
+      reader.onload = e => {                                  // se ejecuta cuando termina de leer el archivo
+        try {
+          const data = JSON.parse(e.target.result);           // convertir el texto del archivo en objeto JS
+          if (!data.entries) throw '';                        // error si fallo de formato
+          deck = [];
+          data.entries.forEach(entry => { const c = CATALOGUE.find(x => x.id === entry.id); if (c) deck.push({carta:c,qty:entry.qty}); });
+          currentDeckId = null;
+          document.getElementById('deckNameInput').value = data.nombre || 'Deck importado';
+          document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
+          document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
+          deck.forEach(e => refreshThumbBadge(e.carta.id));
+          renderDeckList();
+        } catch {}                                            // si algún error, no se hace nada
+      };
+      reader.readAsText(file);                                // dispara la lectura del archivo como texto (esto activa el onload de arriba)
+      event.target.value = '';
+    }
+
+    // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR
+    renderSavedDecks();
+  </script>
+
 </body>
 </html>

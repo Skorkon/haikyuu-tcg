@@ -620,35 +620,33 @@
       margin-bottom: 8px;
     }
 
-    .saved-deck-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border2);
-      margin-bottom: 5px;
+    .select-oscuro {
+      background: #000000;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 7px 10px;
+      font-family: inherit;
+      font-size: 13px;
       cursor: pointer;
-      background: var(--surface2);
-      transition: all 0.12s;
+      outline: none;
     }
-
-    .saved-deck-item:hover { border-color: var(--accent); }
-    .saved-deck-item.active { border-color: var(--accent); }
-
-    .saved-deck-name { flex: 1; font-size: 11px; font-weight: 700; color: var(--text); }
-    .saved-deck-count { font-size: 10px; color: var(--text2); }
-
-    .saved-deck-del {
-      background: transparent;
-      border: none;
-      color: var(--text2);
-      cursor: pointer;
+    .btn-eliminar-deck {
+      width: 36px;
+      flex-shrink: 0;
+      background: #000000;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--text);
       font-size: 14px;
-      padding: 0 2px;
+      cursor: pointer;
+      transition: all 0.15s;
     }
 
-    .saved-deck-del:hover { color: var(--accent); }
+    .btn-eliminar-deck:hover {
+      background: var(--accent);
+      color: #000000;
+    }
 
   </style>
 </head>
@@ -766,7 +764,7 @@
           <select id="savedDecksSelect" class="select-oscuro" style="flex:1;" onchange="loadSavedDeck(this.value)">
             <option value="" data-i18n="deckbuilder.sinDecksGuardados">No hay decks guardados</option>
           </select>
-          <button class="deck-entry-rm" onclick="deleteSelectedDeck()" title="Eliminar" style="border:1px solid var(--border2); flex-shrink:0;">✕</button>
+          <button class="btn-eliminar-deck" onclick="deleteSelectedDeck()" title="Eliminar">✕</button>
         </div>
       </div>
 
@@ -1210,33 +1208,42 @@
     function loadSavedDeck(id) {
       if (!id) return;                                    // si el usuario seleccionó la opción vacía, no hacer nada
 
-      const saved = savedDecks.find(d => d.id === id);
-      if (!saved) return;
+      const saved = savedDecks.find(d => d.id === id);    // busca el mazo guardado que coincide con ese id
+      if (!saved) return;                                 // si no lo encuentra, no continúa
 
       deck = [];
+      // reconstruye el array "deck" a partir de los datos guardados (solo id+qty),
+      // buscando cada carta completa en el catálogo real
       saved.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({ carta: c, qty: e.qty }); });
-      currentDeckId = saved.id;
-      document.getElementById('deckNameInput').value = saved.nombre;
 
+      currentDeckId = saved.id;
+      document.getElementById('deckNameInput').value = saved.nombre;    // rellena el input de nombre
+
+      // limpia visualmente el catálogo (badges y bordes "in-deck") antes de repintar los correctos
       document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
       document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
-      deck.forEach(e => refreshThumbBadge(e.carta.id));
-      renderDeckList(); renderSavedDecks();
+      deck.forEach(e => refreshThumbBadge(e.carta.id));                 // vuelve a pintar los badges
+      renderDeckList(); 
+      renderSavedDecks();
     }
     // -------------------------------------------------------------- BORRAR MAZO GUARDADO
     function deleteSelectedDeck() {
       const select = document.getElementById('savedDecksSelect');
-      const id = select.value;
+      const id = select.value;                                       // lee qué mazo está seleccionado ahora mismo en el desplegable
       if (!id) return;
 
-      savedDecks = savedDecks.filter(d => d.id !== id);
-      localStorage.setItem('hv-decks', JSON.stringify(savedDecks));
-      if (currentDeckId === id) clearDeck();
+      const deckAEliminar = savedDecks.find(d => d.id === id);   // buscar el mazo para mostrar su nombre en la confirmación
+      const confirmado = confirm(t("deckbuilder.confirmarEliminar", { nombre: deckAEliminar?.nombre || '' }));
+      if (!confirmado) return;                                   // si el usuario pulsa "Cancelar", no borramos nada
+
+      savedDecks = savedDecks.filter(d => d.id !== id);              // crea un nuevo array SIN el mazo eliminado
+      localStorage.setItem('hv-decks', JSON.stringify(savedDecks));  // persiste el cambio en el navegador
+      if (currentDeckId === id) clearDeck();                         // si el mazo eliminado era el que estaba cargado, vacía todo
       renderSavedDecks();
     }
     // -------------------------------------------------------------- RENDER MAZOS GUARDADOS
     function renderSavedDecks() {
-      const select = document.getElementById('savedDecksSelect');
+      const select = document.getElementById('savedDecksSelect');         // recupera el <select> del HTML
 
       if (!savedDecks.length) {
         select.innerHTML = `<option value="">${t("deckbuilder.sinDecksGuardados")}</option>`;
@@ -1245,7 +1252,7 @@
 
       select.innerHTML = savedDecks.map(d =>
         `<option value="${d.id}" ${d.id === currentDeckId ? 'selected' : ''}>${d.nombre} (${d.total}/40)</option>`
-      ).join('');
+      ).join('');             // .map() genera un array de strings HTML; .join('') los pega todos en un único string
     }
 
     // ----------------------------------------------------------------------------------- IMPORTAR / EXPORTAR

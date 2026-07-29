@@ -63,6 +63,8 @@ const I18N = {
           alertMazo:        "Primero carga tu mazo",
           alertCodigo:      "El código debe tener 6 caracteres",
           uniendoPartida:   "Uniéndose a la partida ",
+          elegirMazoGuardado: "Elige un mazo guardado...",
+          oImportarArchivo:   "...o importa un archivo",
         },
         deckbuilder: {                                    // ← para deckbuilder.html
           tabConstructor:     "Constructor",
@@ -106,6 +108,7 @@ const I18N = {
           eliminarDeck:       "Eliminar",
           errorTotalCartas: "El mazo debe tener exactamente 40 cartas (tienes {total}).",
           errorMaxEventos:  "El mazo no puede tener más de 8 eventos (tienes {eventos}).",
+          confirmarEliminar: "¿Seguro que quieres eliminar el mazo \"{nombre}\"?",
         }
     },    
     en: {
@@ -171,6 +174,8 @@ const I18N = {
           alertMazo:        "Load your deck first",
           alertCodigo:      "The code must be 6 characters",
           uniendoPartida:   "Joining match ",
+          elegirMazoGuardado: "Choose a saved deck...",
+          oImportarArchivo:   "...or import a file",
         },
         deckbuilder: {
           tabConstructor:     "Builder",
@@ -214,6 +219,7 @@ const I18N = {
           eliminarDeck:       "Delete",
           errorTotalCartas: "The deck must have exactly 40 cards (you have {total}).",
           errorMaxEventos:  "The deck can't have more than 8 events (you have {eventos}).",
+          confirmarEliminar: "Are you sure you want to delete the deck \"{nombre}\"?",
         }
     },
     fr: {
@@ -279,6 +285,8 @@ const I18N = {
           alertMazo:        "Charge d'abord ton deck",
           alertCodigo:      "Le code doit comporter 6 caractères",
           uniendoPartida:   "Connexion à la partie ",
+          elegirMazoGuardado: "Choisis un deck enregistré...",
+          oImportarArchivo:   "...ou importe un fichier",
         },
         deckbuilder: {
           tabConstructor:     "Constructeur",
@@ -322,6 +330,7 @@ const I18N = {
           eliminarDeck:       "Supprimer",
           errorTotalCartas: "Le deck doit contenir exactement 40 cartes (tu en as {total}).",
           errorMaxEventos:  "Le deck ne peut pas contenir plus de 8 événements (tu en as {eventos}).",
+          confirmarEliminar: "Es-tu sûr de vouloir supprimer le deck « {nombre} » ?",
         }
     }
 };

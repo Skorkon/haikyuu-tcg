@@ -34,7 +34,6 @@ document.getElementById("btn-crear").addEventListener("click", function() {
   escucharSala();
 });
 
-
 // =============================================================== BOTÓN UNIRSE
 document.getElementById("btn-unirse").addEventListener("click", function() {
   if (!miMazo) {                              // buscar mazo
@@ -52,3 +51,36 @@ document.getElementById("btn-unirse").addEventListener("click", function() {
   unirseAPartida(codigo, miMazo);
   document.getElementById("estado-sala").textContent = t("lobby.uniendoPartida") + codigo + "...";
 });
+
+// ================================================================ DECKS GUARDADOS (leídos de localStorage, compartidos con el deckbuilder)
+// por comentar
+function llenarListaMazosGuardados() {
+  const savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]');
+  const select = document.getElementById('savedDecksSelectLobby');
+
+  if (!savedDecks.length) {
+    select.innerHTML = `<option value="">${t("lobby.elegirMazoGuardado")}</option>`;
+    return;
+  }
+
+  select.innerHTML = `<option value="">${t("lobby.elegirMazoGuardado")}</option>` +
+    savedDecks.map(d => `<option value="${d.id}">${d.nombre} (${d.total}/40)</option>`).join('');
+}
+
+function cargarMazoGuardado(id) {
+  if (!id) return;
+
+  const savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]');
+  const saved = savedDecks.find(d => d.id === id);
+  if (!saved) return;
+
+  // adaptamos el formato guardado (id+qty) al formato que espera miMazo (con entries)
+  miMazo = {
+    nombre: saved.nombre,
+    entries: saved.entries   // ya tiene el formato { id, qty } que usa online.js/construirMazo()
+  };
+
+  document.getElementById("estado-mazo").textContent =
+    "✅ " + miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + " cartas)";
+}
+llenarListaMazosGuardados(); // rellenar el desplegable al cargar la página

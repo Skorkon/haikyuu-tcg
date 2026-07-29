@@ -150,6 +150,18 @@
       margin: 10px 0;
       color: var(--accent);                   /* gris oscuro, legible sobre fondo blanco del panel */
     }
+
+    .select-oscuro {                /* lista de mazos guardados */
+      background: #000000;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 7px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
   </style>
 </head>
 
@@ -166,6 +178,13 @@
       <!-- PANEL: tu mazo -->
       <div class="panel">
         <h2 data-i18n="lobby.tituloMazo">Tu mazo</h2>
+
+        <select id="savedDecksSelectLobby" class="select-oscuro" style="width:100%; margin-bottom:10px;" onchange="cargarMazoGuardado(this.value)">
+          <option value="" data-i18n="lobby.elegirMazoGuardado">Elige un mazo guardado...</option>
+        </select>
+        
+        <p style="text-align:center; font-size:11px; color:var(--text2); margin-bottom:10px;" data-i18n="lobby.oImportarArchivo">— o importa un archivo —</p>
+
         <input type="file" id="input-mazo" accept=".json" style="margin:10px 0;">
         <p id="estado-mazo" style="font-size:13px;" data-i18n="lobby.mazoNoCargado">Ningún mazo cargado</p>
       </div>

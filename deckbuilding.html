@@ -761,8 +761,13 @@
       </div>
       <!------------------------ DECKS GUARDADOS ------------------------------------>
       <div class="saved-decks-bar">
-         <div class="saved-title" data-i18n="deckbuilder.decksGuardados">Decks guardados</div>
-        <div id="savedDecksList"></div>
+        <div class="saved-title" data-i18n="deckbuilder.decksGuardados">Decks guardados</div>
+        <div style="display:flex; gap:6px;">
+          <select id="savedDecksSelect" class="select-oscuro" style="flex:1;" onchange="loadSavedDeck(this.value)">
+            <option value="" data-i18n="deckbuilder.sinDecksGuardados">No hay decks guardados</option>
+          </select>
+          <button class="deck-entry-rm" onclick="deleteSelectedDeck()" title="Eliminar" style="border:1px solid var(--border2); flex-shrink:0;">✕</button>
+        </div>
       </div>
 
     </div>
@@ -1203,22 +1208,27 @@
 
     // -------------------------------------------------------------- CARGAR MAZO GUARDADO
     function loadSavedDeck(id) {
+      if (!id) return;                                    // si el usuario seleccionó la opción vacía, no hacer nada
+
       const saved = savedDecks.find(d => d.id === id);
       if (!saved) return;
+
       deck = [];
-      // por cada carta, busca el id en el catálogo y reconstruye el array                                                       
       saved.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({ carta: c, qty: e.qty }); });
-      currentDeckId = saved.id;                                               // actualizar id del mazo actual
+      currentDeckId = saved.id;
       document.getElementById('deckNameInput').value = saved.nombre;
-      document.querySelectorAll('.card-count-badge').forEach(b => b.remove());   // borra el badge contador de las cartas del catálogo
-      document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck')); // borra los bordes de las cartas del catálogo
-      deck.forEach(e => refreshThumbBadge(e.carta.id));                       // repintar los bordes
-      renderDeckList(); 
-      renderSavedDecks();
+
+      document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
+      document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
+      deck.forEach(e => refreshThumbBadge(e.carta.id));
+      renderDeckList(); renderSavedDecks();
     }
     // -------------------------------------------------------------- BORRAR MAZO GUARDADO
-    function deleteSavedDeck(id, ev) {
-      ev.stopPropagation();
+    function deleteSelectedDeck() {
+      const select = document.getElementById('savedDecksSelect');
+      const id = select.value;
+      if (!id) return;
+
       savedDecks = savedDecks.filter(d => d.id !== id);
       localStorage.setItem('hv-decks', JSON.stringify(savedDecks));
       if (currentDeckId === id) clearDeck();
@@ -1226,14 +1236,16 @@
     }
     // -------------------------------------------------------------- RENDER MAZOS GUARDADOS
     function renderSavedDecks() {
-      const list = document.getElementById('savedDecksList');
-      if (!savedDecks.length) { list.innerHTML = `<div style="font-size:11px;color:var(--text2);padding:4px 0">${t("deckbuilder.sinDecksGuardados")}</div>`; return; }
-      list.innerHTML = savedDecks.map(d => `
-        <div class="saved-deck-item${d.id===currentDeckId?' active':''}" onclick="loadSavedDeck('${d.id}')">
-          <span class="saved-deck-name">${d.nombre}</span>
-          <span class="saved-deck-count">${d.total}/40</span>
-          <button class="saved-deck-del" onclick="deleteSavedDeck('${d.id}',event)" title="${t('deckbuilder.eliminarDeck')}">✕</button>
-        </div>`).join('');
+      const select = document.getElementById('savedDecksSelect');
+
+      if (!savedDecks.length) {
+        select.innerHTML = `<option value="">${t("deckbuilder.sinDecksGuardados")}</option>`;
+        return;
+      }
+
+      select.innerHTML = savedDecks.map(d =>
+        `<option value="${d.id}" ${d.id === currentDeckId ? 'selected' : ''}>${d.nombre} (${d.total}/40)</option>`
+      ).join('');
     }
 
     // ----------------------------------------------------------------------------------- IMPORTAR / EXPORTAR

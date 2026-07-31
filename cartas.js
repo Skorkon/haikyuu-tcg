@@ -682,7 +682,7 @@ function inicializarCartas() {
       rareza: "HI",
     }
   ),
-  crearCarta("Hinata Shoyo", // =============================================================== P01-002
+  crearCarta("Hinata Shoyo", // ================================================================= P01-002
     {saque: 2, recepcion: 1, pase: 0, remate: 1, bloqueo: 3},
 
     async function(jugador,game,carta) {
@@ -707,7 +707,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 3</strong>: +4 al remate. El rival no podrá recibir con un jugador que tenga una recepción de base igual o superior a 6.`
     }
   ),
-  crearCarta("Hinata Shoyo", // =============================================================== P01-003
+  crearCarta("Hinata Shoyo", // ================================================================= P01-003
     {saque: 1, recepcion: 2, pase: 0, remate: 2, bloqueo: 2},
     function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
@@ -740,7 +740,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tienes 3 cartas o menos en tu mano y tu colocador ha sido <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong>: +2 al remate. </br>El rival solo puede colocar <strong>2 bloqueadores</strong> en el próximo turno.`
     }
   ),
-  crearCarta("Hinata Shoyo", // =============================================================== P01-004
+  crearCarta("Hinata Shoyo", // ================================================================= P01-004
     {
       saque: 2,
       recepcion: 5,
@@ -776,7 +776,7 @@ function inicializarCartas() {
       rareza: "HI"
     }
   ),
-  crearCarta("Kageyama Tobio", // ============================================================== P01-006
+  crearCarta("Kageyama Tobio", // =============================================================== P01-006
     {
       saque: 1,
       recepcion: 1,
@@ -1024,7 +1024,7 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 3
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-P01-014",
@@ -1111,7 +1111,7 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 2
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-017",
@@ -1311,7 +1311,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 1
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-022",
@@ -1403,7 +1403,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 3
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-026",
@@ -1421,7 +1421,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 0
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-027",
@@ -1458,7 +1458,7 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 1
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-029",
@@ -1476,7 +1476,7 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 3
     },
-    null, // sin habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-030",
@@ -1978,7 +1978,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 2
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-044",
@@ -2087,7 +2087,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 3
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-052",
@@ -2105,7 +2105,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 2
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-053",
@@ -2228,7 +2228,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 2
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-058",
@@ -2246,7 +2246,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 1
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-059",
@@ -2293,7 +2293,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 2
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-062",
@@ -2311,7 +2311,7 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 1
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-063",
@@ -2329,7 +2329,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 2
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P01-064",
@@ -2432,7 +2432,7 @@ function inicializarCartas() {
       // si quedan 2 o menos cartas en zona de eventos del rival, +1 adicional
       if (rival.zonas.eventos.length <= 2) {
         game.valorAtaque += 1;
-        log("Hoshiumi: +1 adicional al remate 💥");
+        log("Hoshiumi: +1 adicional al remate.");
       }
       renderCampo();
     },
@@ -2454,7 +2454,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 3
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-P01-067",
@@ -2534,7 +2534,7 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 0
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-P01-070",
@@ -3008,7 +3008,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Gasta 8 cartas del GUTS de tu campo para activar. Durante este turno, cada personaje de <strong>Aoba Jôsai</strong> que coloques tendrá <strong>+1 a su parámetro activo</strong>.`
     }
   ),
-  crearCarta('"Cuando el director cambia, el sonido cambia"', // ================================ P01-086
+  crearCarta("Cuando el director cambia, el sonido cambia", // ================================ P01-086
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       // buscar personajes de Aoba Jôsai en el trash
@@ -3047,7 +3047,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Añade 1 carta de personaje de <strong>Aoba Jôsai</strong> desde tu descarte a tu mano.`
     }
   ),
-  crearCarta('"Yo también lo pensé"', // ================================================= P01-087
+  crearCarta("Yo también lo pensé", // ================================================= P01-087
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       // comprobar que el sacador o colocador es Oikawa Toru
@@ -3086,7 +3086,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Solo puedes jugar esta carta si tu sacador o colocador es <strong>Oikawa Toru</strong>. Roba 1 carta y +1 al parámetro activo de <strong>Oikawa Toru</strong>. Durante el siguiente turno rival, cada vez que el rival añada una carta a su mano por medios no estándar, deberá descartar 1 carta de su mano.`
     }
   ),
-  crearCarta('"Vosotros sois fuertes"', // ===================================================== P01-088
+  crearCarta("Vosotros sois fuertes", // ===================================================== P01-088
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                      // roba 1 carta

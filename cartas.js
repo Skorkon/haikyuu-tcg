@@ -42,7 +42,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "DP",
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 2</strong>: +2 al remate.`
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS 2</strong>: +2 al remate.`
     }
   ),
   crearCarta("Kageyama Tobio", // ============================================================== D01-002
@@ -3125,7 +3125,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 1
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-P02-015",
@@ -3229,7 +3229,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 1
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P02-018",
@@ -3247,7 +3247,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 1
     },
-    null, // habilidad
+    null, 
     {
       tipo: "personaje",
       id: "HV-P02-019",
@@ -4323,7 +4323,7 @@ function inicializarCartas() {
 
       if (cartasValidas.length >= 2) {                                       // si hay 2 o más
         game.valorDefensa += 1;                                              // +1 adicional
-        log("Kurosu: +1 adicional a la recepción por eventos 💪");
+        log("Kurosu: +1 adicional a la recepción por eventos.");
       }
     },
     {
@@ -4917,7 +4917,7 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 3
     },
-    null, // habilidad
+    null,
     {
       tipo: "personaje",
       id: "HV-PR-005",

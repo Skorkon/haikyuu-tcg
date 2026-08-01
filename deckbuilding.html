@@ -833,6 +833,9 @@
     // ---------------------------------------------- CARTAS ------------------------------------------- 
     const CATALOGUE = inicializarCartas();          // carga todas las cartas desde cartas.js
     const imgPath = id => `img/cartas/${id}.png`;   // ruta de la imagen de cada carta
+    function getCardName(c) {                       // nombre de la carta en el idioma activo
+      return DESCRIPCIONES?.[c.id]?.["nombre_" + idiomaActivo] || c.nombre;
+    }
 
     // ------------------------------------- RENDER DEL GRID (sin filtros todavía, solo mostrar todo) 
     function renderCatalogo(lista) {
@@ -870,17 +873,18 @@
       div.className = "card-thumb";
       div.dataset.id = c.id;
 
+      const nombre = getCardName(c);
       const colorEscuela = getSchoolColor(c.escuela);  // color escuela
       div.style.border = `2px solid ${colorEscuela}`;
 
       div.innerHTML = `
         <div class="card-art">
-          <img src="${imgPath(c.id)}" alt="${c.nombre}" loading="lazy" onerror="this.style.display='none'">
+          <img src="${imgPath(c.id)}" alt="${nombre}" loading="lazy" onerror="this.style.display='none'">
           <div class="card-esc-bar" style="background:${colorEscuela}"></div>
         </div>
         <button class="card-add-btn" title="Añadir al deck">+</button>
         <div class="card-info">
-          <div class="card-name" title="${c.nombre}">${c.nombre}</div>
+          <div class="card-name" title="${nombre}">${nombre}</div>
           ${c.posicion ? `<span class="card-position" style="background:${colorEscuela}">${c.posicion}</span>` : ''}
         </div>`;
       
@@ -901,6 +905,7 @@
       const panel   = document.getElementById("previewPanel");
       const imagen  = document.getElementById("previewImagen"); 
       const info    = document.getElementById("previewInfo");
+      const nombre = getCardName(c);
       const colorEscuela = getSchoolColor(c.escuela);
 
       imagen.style.backgroundImage = `url('${imgPath(c.id)}')`;   // imagen de fondo
@@ -910,7 +915,7 @@
       const descripcion = DESCRIPCIONES?.[c.id]?.[idiomaActivo] || c.descripcion || "";
 
       info.innerHTML = `
-        <h3 style="color:${colorEscuela}">${c.nombre}</h3>
+        <h3 style="color:${colorEscuela}">${nombre}</h3>
         <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''}</div>
         ${c.tipo === 'personaje' ? `
           <div class="preview-stats">
@@ -961,13 +966,18 @@
       // no mostrar nada, si no hay filtro
       const hayFiltro = q || escuela || posicion || rareza || activeFilters.tipo || activeFilters.hab || (statFiltro.stat && statFiltro.valores.size > 0);
         if (!hayFiltro) {
-          document.getElementById("cardCount").textContent = "Aplica al menos un filtro para ver cartas";
+          document.getElementById("cardCount").textContent = t("deckbuilder.aplicaFiltro") || "Aplica al menos un filtro para ver cartas";
           document.getElementById("catalogueGrid").innerHTML = "";
           return;
         }
 
       const resultado = CATALOGUE.filter(c => {                        // mostrar o no según se encuentre en el filtro
-        if (q        && !c.nombre.toLowerCase().includes(q) && !(c.id||'').toLowerCase().includes(q)) return false; // texto escrito en el buscador
+        if (q) {                                                               // filtro por texto escrito
+          const nombreTraducido = getCardName(c).toLowerCase();   
+          const coincideNombre  = c.nombre.toLowerCase().includes(q) || nombreTraducido.includes(q); // ← comprueba ambos
+          const coincideId      = (c.id || '').toLowerCase().includes(q);
+          if (!coincideNombre && !coincideId) return false;
+        }
         if (escuela  && c.escuela  !== escuela)  return false;
         if (posicion && c.posicion !== posicion) return false;
         if (rareza   && c.rareza   !== rareza)   return false;
@@ -1142,13 +1152,14 @@
       const evts = deck.filter(e => e.carta.tipo === 'evento');
 
       const entryHTML = ({carta,qty}) => {                              // función para crear 1 fila en la lista
+        const nombre = getCardName(carta);
         const color = getSchoolColor(carta.escuela);                    // color de la escuela
         const colorBorde = carta.tipo === 'evento' ? '#999' : color;
         return `
         <div class="deck-entry" data-id="${carta.id}" style="border: 2px solid ${colorBorde}">
           <div class="deck-entry-thumb" style="background-image:url('${imgPath(carta.id)}')"></div>
           <div class="deck-entry-color" style="background:${colorBorde}"></div>
-          <div class="deck-entry-name" title="${carta.nombre}">${carta.nombre}</div>
+          <div class="deck-entry-name" title="${nombre}">${nombre}</div>
           <div class="deck-entry-qty">${qty}</div>
           <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}')" title="${t('deckbuilder.quitarUna')}">−</button>
           <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}',true)" title="${t('deckbuilder.quitarTodas')}">✕</button>

@@ -2027,7 +2027,7 @@ function mostrarTooltip(carta, e) {
         style="width:100%; display:block;"
         onerror="this.style.display='none'">
     <div style="background:white; padding:8px; font-size:11px; border: 2px solid black; border-top: none;">
-      <strong>${carta.nombre}</strong><br>
+      <strong>${DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre}</strong><br>
       <span style="color:#888">${carta.info?.escuela || ""} · ${carta.info?.posicion || ""} ${infoAnyo}</span><br><br>
       ${infoStats}
       ${(() => { let d = DESCRIPCIONES[carta.info?.id]?.[idiomaActivo] || carta.info?.descripcion;

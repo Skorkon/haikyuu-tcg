@@ -1211,6 +1211,24 @@ function inicializarCartas() {
       descripcion: `Si tu rematador esta jugada tiene un remate base de 3, puedes gastar <strong>GUTS - 2</strong> de <strong><span style="color:#2e7d32">pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.`
     }
   ),
+  crearCarta("Kuroo Tetsuro", // =============================================================== P01-020
+    {
+      saque: 5,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P01-020",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "SEC"
+    }
+  ),
   crearCarta("Kuroo Tetsuro", // =============================================================== P01-021
     {
       saque: 2,
@@ -2061,6 +2079,24 @@ function inicializarCartas() {
         rareza: "NP"
     }
   ),
+  crearCarta("Sarukui Yamato", // ============================================================== P01-049
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P01-049",
+      escuela: "Fukurodani",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N"
+    }
+  ),
   crearCarta("Haruki Komi", // ============================================================== P01-050
     {
       saque: 0,
@@ -2077,6 +2113,53 @@ function inicializarCartas() {
       posicion: "L",
       anyo: 3,
       rareza: "N"
+    }
+  ),
+  crearCarta("Washio Tatsuki", // ============================================================== P01-051
+    {
+      saque: 3,
+      recepcion: 1,
+      pase: 0,
+      remate: 0,
+      bloqueo: 3
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo") {                               // comprobar zona válida
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;                                                     // return false: zona incorrecta
+      }
+      if (game.valorAtaque < 4) {                                         // comprobar ataque rival
+        log(t("log.condicionNoCumplida"));
+        return false;                                                     // return false: condición no cumplida
+      }
+      if (jugador.mazo.length === 0) {                                    // comprobar que hay cartas en el mazo
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        return false;                                                     // return false: mazo vacío
+      }
+
+      let cartaRevelada = jugador.mazo.shift();                           // revelar carta superior del mazo
+      jugador.trash.push(cartaRevelada);                                  // enviar al trash
+      log(t("log.cartaRevelada", { carta: cartaRevelada.nombre }));
+
+      if (cartaRevelada.info?.escuela === "Fukurodani") {                 // si es de Fukurodani
+        oneTouch(3);                                                      // activar One Touch (3)
+      } else {
+        log(t("log.condicionNoCumplida"));
+      }
+
+      if (modoOnline) enviarTrash(jugador);                               // sincronizar trash
+      renderMano();                                                       // actualizar mano
+      renderManoRival();                                                  // actualizar mano rival
+      renderCampo();                                                      // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-051",
+      escuela: "Fukurodani",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es 4 o más. Descarta la carta superior de tu mazo. Si esa carta es de <strong>Fukurodani</strong>: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (3)</strong></span> : resta 3 al ataque del rival y pasa directamente a fase de recepción.`
     }
   ),
   crearCarta("Onaga Wataru", // ============================================================== P01-052
@@ -2283,6 +2366,24 @@ function inicializarCartas() {
       anyo: 1,
       rareza: "N",
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Sólo puedes jugar este efecto si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.` 
+    }
+  ),
+  crearCarta("Terushima Yuji", // ============================================================== P01-061
+    {
+      saque: 2,
+      recepcion: 1,
+      pase: 1,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P01-061",
+      escuela: "Jōzenji",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N"
     }
   ),
   crearCarta("Nakashima Takeru", // ============================================================== P01-062
@@ -2542,6 +2643,24 @@ function inicializarCartas() {
       posicion: "S",
       anyo: 3,
       rareza: "N",
+    }
+  ),
+  crearCarta("Daisho Suguru", // =============================================================== P01-071
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 3,
+      bloqueo: 1
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P01-071",
+      escuela: "Nohebi",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R"
     }
   ),
 // ========================================================================================================================= KARASUNO Eventos
@@ -3121,7 +3240,119 @@ function inicializarCartas() {
     }
   ),
 
+  crearCarta("Ese momento existe, o no existe", // =========================================== P01-090
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                      // roba 1 carta
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
+
+      // +1 al ataque de un personaje de Fukurodani en juego
+      let fukurodaniEnJuego = [
+        jugador.zonas.remate.at(-1),                                     // rematador
+        jugador.zonas.pase.at(-1),                                       // colocador
+        jugador.zonas.saque.at(-1),                                      // sacador
+        jugador.zonas.recepcion.at(-1),                                  // receptor
+        jugador.zonas.bloqueo.at(-1)                                     // bloqueador
+      ].find(c => c !== null && c !== undefined &&                        // filtrar zonas vacías
+                c.info?.escuela === "Fukurodani");                       // solo Fukurodani
+
+      if (!fukurodaniEnJuego) {                                          // si no hay ninguno
+        log(t("log.condicionNoCumplida"));
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      game.valorAtaque += 1;                                             // +1 al ataque
+      log(t("log.habilidadActivada", { carta: fukurodaniEnJuego.nombre }));
+
+      // comprobar si todos los personajes en juego son de Fukurodani
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);                      // filtrar zonas vacías
+
+      let todasFukurodani = cartasEnJuego.every(                         // comprobar escuela
+        c => c.info?.escuela === "Fukurodani"
+      );
+      if (todasFukurodani) {                                             // si todas son de Fukurodani
+        motivacionRobar();                                               // activar efecto
+      }
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-090",
+      fases: ["remate"],                                                 // solo en remate
+      escuela: "Fukurodani",
+      rareza: "R",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al ataque de un personaje de <strong>Fukurodani</strong> en juego. Si todos tus personajes en juego son de <strong>Fukurodani</strong>, durante el siguiente turno rival, si el rival pierde un punto, robas 1 carta extra.`
+    }
+  ),
+
   // =================================================================================================================================== P02
+
+  crearCarta("Tanaka Ryunosuke", // ============================================================ P02-008
+    {
+      saque: 4,
+      recepcion: 4,
+      pase: 0,
+      remate: 3,
+      bloqueo: 1
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P02-008",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N"
+    }
+  ),
+  crearCarta("Ennoshita Chikara", // =========================================================== P02-009
+    {
+      saque: 2,
+      recepcion: 4,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, // sin habilidad
+    {
+      tipo: "personaje",
+      id: "HV-P02-009",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N"
+    }
+  ),
+
+  crearCarta("Sugawara Koshi", // ============================================================== P02-013
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 2,
+      remate: 0,
+      bloqueo: 2
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P02-013",
+      escuela: "Karasuno",
+      posicion: "S",
+      anyo: 3,
+      rareza: "R"
+    }
+  ),
+
+
   crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {
       saque: 3,
@@ -4289,6 +4520,26 @@ function inicializarCartas() {
       escuela: "Aoba Jôsai",
       posicion: "WS",
       anyo: 2,
+      rareza: "N"
+    }
+  ),
+
+
+  crearCarta("Haiba Lev", // =================================================================== P02-063
+    {
+      saque: 2,
+      recepcion: 4,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P02-063",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 1,
       rareza: "N"
     }
   ),

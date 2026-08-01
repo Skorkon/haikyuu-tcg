@@ -288,6 +288,23 @@ function perderPunto(jugador) {
     log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
     enviarJugada("perderPunto", {});                      // avisar al rival del punto perdido
 
+    // comprobar efecto motivacionRobar
+    if (tieneEfecto("motivacionRobar")) {                                  // si efecto activo
+      let efecto = game.efectosActivos.find(e => e.tipo === "motivacionRobar"); // buscar efecto
+      let jugadorQueActivo = game.jugadores[efecto.activadoPor];           // quién lo activó
+      if (jugadorQueActivo !== jugador) {                                  // si el que pierde no es el que activó
+        if (efecto.activadoPor === miNumero - 1) {                         // si yo activé el efecto
+          robarCarta(miJugador, 1, true);                                  // robar 1 carta extra
+          enviarCantidadMano();                                            // sincronizar mano
+          enviarMazo();                                                    // sincronizar mazo
+          log(t("log.motivar"));
+        } else {                                                           // si lo activó el rival
+          enviarJugada("robarCarta", { cantidad: 1 });                     // avisar al rival que robe 1
+          log(t("log.motivar"));
+        }
+      }
+    }
+
   } else { // ------------------------------------------- // Modo local                                            
     game.jugadores.forEach(j => {
       let cartasQueNecesita = 6 - j.mano.length;          // cartas que necesita hasta 6
@@ -2451,6 +2468,15 @@ function descartePorRobo() {                                            // forza
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos
   log(t("log.descartarCuandoRoboActivo"));
 }
+function motivacionRobar() {                                            // robar 1 carta extra cuando el rival pierde un punto
+  game.efectosActivos.push({
+    tipo: "motivacionRobar",
+    activadoPor: game.jugadorActivo,                                    // quién lo activó
+    expira: game.turno + 3                                              // dura 1 turno rival
+  });
+  if (modoOnline) enviarEfectos();                                      // sincronizar efectos
+  log(t("log.motivarActivo"));
+}
 // ===================================================================================================================================
 // ================================================================================================================ HABILIDADES ÚNICAS
 async function aplicarKenma019(jugador, carta) { // ========================================== KENMA P01-019
@@ -2734,31 +2760,46 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------- FUKURODANI
+// GUTS de prueba Fukurodani
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga, sin habilidad
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+
+// ---------------------------------------------------------------------------------- NEKOMA
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
 });
+
+
+// ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
 [ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P01-003"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
+
 
 // TRASH 
 ["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(carta);
-  if (carta) game.jugadores[1].trash.push(carta);
+  //if (carta) game.jugadores[0].trash.push(carta);
+  //if (carta) game.jugadores[1].trash.push(carta);
 });
 
 // MAZO J1
 ["HV-D01-002", "HV-P02-085", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.unshift(carta);
-  if (carta) game.jugadores[1].mazo.unshift(carta);
+  // if (carta) game.jugadores[0].mazo.unshift(carta);
+  // if (carta) game.jugadores[1].mazo.unshift(carta);
 });
 
 // EVENTOS 
@@ -2769,8 +2810,8 @@ for (let i = 0; i < 5; i++) {
 // MAZO J2
 for (let i = 0; i < 10; i++) {
   let carta = todasLasCartas.find(c => c.info?.id === "HV-P02-044");
-  game.jugadores[0].mazo.push(carta);
-  game.jugadores[1].mazo.push(carta);
+  //game.jugadores[0].mazo.push(carta);
+  //game.jugadores[1].mazo.push(carta);
 }
 // GUTS de pase — Atsumu sin habilidad primero (el que está "jugado"), luego el P02-016 en el GUTS
 let atsumuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-063"); // Atsumu sin habilidad

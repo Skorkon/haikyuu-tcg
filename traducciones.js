@@ -123,7 +123,9 @@ const TRADUCCIONES = {
       "condicionCumplida": "Condición adicional cumplida. Efecto activado",
       "cartaDescartadaCoste": "{carta} descartada como coste",
       "cartaRevelada": "Carta revelada: {carta}",
-      "cartasAlFondoMazo": "Cartas restantes enviadas al fondo del mazo"
+      "cartasAlFondoMazo": "Cartas restantes enviadas al fondo del mazo",
+      "motivar": "Motivación: robas 1 carta extra por el punto del rival",
+      "motivarActivo": "Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra"
     }
   },
   "en": {
@@ -247,7 +249,9 @@ const TRADUCCIONES = {
       "condicionCumplida": "Additional condition met. Effect activated",
       "cartaDescartadaCoste": "{carta} discarded as cost",
       "cartaRevelada": "Card revealed: {carta}",
-      "cartasAlFondoMazo": "Remaining cards sent to the bottom of the deck"
+      "cartasAlFondoMazo": "Remaining cards sent to the bottom of the deck",
+      "motivar": "Motivation: you draw 1 extra card from the rival's point",
+      "motivarActivo": "Active effect: if the rival loses a point next turn, you draw 1 extra card"
     }
   },
   "fr": {
@@ -371,7 +375,9 @@ const TRADUCCIONES = {
       "condicionCumplida": "Condition supplémentaire remplie. Effet activé",
       "cartaDescartadaCoste": "{carta} défaussée comme coût",
       "cartaRevelada": "Carte révélée : {carta}",
-      "cartasAlFondoMazo": "Cartes restantes envoyées au fond du deck"
+      "cartasAlFondoMazo": "Cartes restantes envoyées au fond du deck",
+      "motivar": "Motivation : tu pioches 1 carte supplémentaire grâce au point du rival",
+      "motivarActivo": "Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire"
     }
   },
   "": {
@@ -495,7 +501,9 @@ const TRADUCCIONES = {
       "condicionCumplida": "",
       "cartaDescartadaCoste": "",
       "cartaRevelada": "",
-      "cartasAlFondoMazo": ""
+      "cartasAlFondoMazo": "",
+      "motivar": "",
+      "motivarActivo": ""
     }
   }
 };

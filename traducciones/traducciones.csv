@@ -120,3 +120,5 @@ log.condicionCumplida;Condición adicional cumplida. Efecto activado;Additional 
 log.cartaDescartadaCoste;{carta} descartada como coste;{carta} discarded as cost;{carta} défaussée comme coût;
 log.cartaRevelada;Carta revelada: {carta};Card revealed: {carta};Carte révélée : {carta};
 log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining cards sent to the bottom of the deck;Cartes restantes envoyées au fond du deck;
+log.motivar;Motivación: robas 1 carta extra por el punto del rival;Motivation: you draw 1 extra card from the rival's point;Motivation : tu pioches 1 carte supplémentaire grâce au point du rival;
+log.motivarActivo;Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra;Active effect: if the rival loses a point next turn, you draw 1 extra card;Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire;

@@ -298,6 +298,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Add +2 to the set. Then, search for a <strong>Kotaro Bokuto</strong> in your discard pile and add it to your hand.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Ajoutez +2 à la passe. Ensuite, cherchez un <strong>Kotaro Bokuto</strong> dans votre pile de défausse et ajoutez-le à votre main."
   },
+  "HV-P01-051": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es 4 o más. Descarta la carta superior de tu mazo. Si esa carta es de <strong>Fukurodani</strong>: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : resta 3 al ataque del rival y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. Discard the top card of your deck. If that card is from <strong>Fukurodani</strong>: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span>: subtract 3 from the opponent's attack and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est de 4 ou plus. Défaussez la carte du dessus de votre deck. Si cette carte appartient à <strong>Fukurodani</strong> : <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : réduisez l'attaque adverse de 3 et passez directement à la phase de réception."
+  },
   "HV-P01-054": {
     "nombre_es": "",
     "nombre_en": "",
@@ -465,6 +473,14 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Aoba Jôsai</strong> en juego. Si tienes 3 o menos cartas en la mano, +1 adicional a la recepción.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card and +1 to the reception of an <strong>Aoba Jôsai</strong> character in play. If you have 3 or fewer cards in hand, an additional +1 to the reception.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte et +1 à la réception d'un personnage d'<strong>Aoba Jôsai</strong> en jeu. Si vous avez 3 cartes ou moins en main, +1 supplémentaire à la réception."
+  },
+  "HV-P01-090": {
+    "nombre_es": "Ese momento existe, o no existe",
+    "nombre_en": "That moment exists, or it doesn't",
+    "nombre_fr": "Cet instant existe, ou il n'existe pas",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y +1 al ataque de un personaje de <strong>Fukurodani</strong> en juego. Si todos tus personajes en juego son de <strong>Fukurodani</strong>, durante el siguiente turno rival, si el rival pierde un punto, robas 1 carta extra.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to the attack of a <strong>Fukurodani</strong> character in play. If all your characters in play are from <strong>Fukurodani</strong>, during the opponent's next turn, if the opponent loses a point, you draw 1 extra card.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage de <strong>Fukurodani</strong> en jeu. Si tous vos personnages en jeu sont de <strong>Fukurodani</strong>, pendant le prochain tour adverse, si l'adversaire perd un point, vous piochez 1 carte supplémentaire."
   },
   "HV-P02-016": {
     "nombre_es": "",

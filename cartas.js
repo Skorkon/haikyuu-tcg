@@ -2984,15 +2984,20 @@ function inicializarCartas() {
   crearCarta("Irihata Nobuteru", // ============================================================ P01-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
-    if (!await usarGutsMultiZona(jugador, 8)) return false;             // pagar 8 GUTS de cualquier zona
+      robarCarta(jugador, 1, true);                                        // roba 1 carta al final
+
+      let eleccion = await mostrarEleccion([                               // preguntar si quiere activar
+        { texto: "Gastar 8 GUTS para potenciar a los personajes de Aoba Jôsai este turno." },
+        { texto: "No activar" }
+      ]);
+      if (eleccion !== 0) return;
+    
+      if (!await usarGutsMultiZona(jugador, 8)) return;             // pagar 8 GUTS de cualquier zona
 
       // activar los tres efectos de potenciar para Aoba Jôsai
       potenciarReceptor(1, "Aoba Jôsai");                                  // +1 a receptores de Aoba Jôsai
       potenciarColocador(1, "Aoba Jôsai");                                 // +1 a colocadores de Aoba Jôsai
       potenciarRematador(1, "Aoba Jôsai");                                 // +1 a rematadores de Aoba Jôsai
-
-      robarCarta(jugador, 1, true);                                        // roba 1 carta al final
-      log("Irihata: roba 1 carta.");
 
       renderMano();                                                        // actualizar mano
       renderManoRival();                                                   // actualizar mano rival
@@ -3789,7 +3794,7 @@ function inicializarCartas() {
       if (!await usarGuts(jugador, "bloqueo", 2)) {
         log("Necesitas 2 GUTS en bloqueo.");
         carta.habilidadUsada = false;
-        return;
+        return false;
       }
 
       doshat(7);

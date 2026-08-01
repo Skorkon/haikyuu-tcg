@@ -1,119 +1,122 @@
-clave,es,en,fr,
-log.noEsTuTurno,No es tu turno,Is not your turn,Ce n’est pas ton tour,
-log.mulliganPrimero,Primero hay que resolver el mulligan,Mulligan must be resolved first,Il faut d’abord résoudre le mulligan,
-log.soloMulligan,Sólo puedes devolver cartas durante el mulligan,You can only return cards during mulligan,Tu en peux retourner des cartes que pendant le mulligan,
-log.seleccionaCarta,Selecciona una carta primero,Select a card first,Sélectionne une carte d’abord,
-log.seleccionaCartaMulligan,Selecciona una carta para devolver al mazo,Select a card to return to the deck,Sélectionne une carte à remettre dans le deck,
-log.cartaSeleccionadaCampo,Carta seleccionada: {carta},Card selected: {carta},Carte sélectionnée : {carta},
-log.mulliganYaConfirmado,El mulligan ya ha sido confirmado,Mulligan already confirmed,Le mulligan a été déjà confirmé,
-log.noEsFase,No es fase de {zona},Not the {zona} phase,Ce n'est pas la phase de {zona},
-log.noCartaEnZona ,No has jugado ninguna carta este turno en {zona} ,No card played this turn in {zona} ,Aucune carte jouée ce tour en {zona} ,
-log.eventoUsarBoton,Los eventos se juegan con el botón Jugar Evento,Events are played with the Play Event button,Les événements se jouent avec le bouton Jouer Événement,
-log.zonaProhibida,{carta} no puede jugar en {zona},{carta} cannot play in {zona},{carta} ne peut pas jouer en {zona},
-log.cartaDuplicada,Ya has jugado a {carta} este turno,You already played {carta} this turn,Tu as déjà joué {carta} ce tour,
-log.yaHayCartaEnZona,Ya hay una carta en {zona},There is already a card in {zona},Il y a déjà une carte en {zona},
-log.cartaColocadaEn,{jugador} juega a {carta} en {zona},{jugador} plays {carta} in {zona},{jugador} joue {carta} en {zona},
-log.noReceptorAlto,No puedes colocar un receptor con recepción de 6 o más este turno,You cannot place a receiver with reception 6 or more this turn,Tu ne peux pas placer un receveur avec réception 6 ou plus ce tour,Por ver si dejo o no
-log.sinCartasEnMazo,{jugador} no tiene más cartas en el mazo,{jugador} has no more cards in the deck,{jugador} n'a plus de cartes dans le deck,
-log.robarCartas,{jugador} roba {cantidad} carta(s),{jugador} draws {cantidad} card(s),{jugador} pioche {cantidad} carte(s),
-log.gutsInsuficiente,No hay suficientes cartas en la zona de GUTS indicada,Not enough cards in the indicated GUTS zone,Pas assez de cartes dans la zone GUTS indiquée,
-log.gutsInsuficienteMultiZona,"No hay suficientes GUTS en el campo (necesitas {cantidad}, tienes {total})","Not enough GUTS on the field (need {cantidad}, have {total})","Pas assez de GUTS sur le terrain (besoin de {cantidad}, vous en avez {total})",
-log.gutsUsado,GUTS usado correctamente en {zona},GUTS used correctly in {zona},GUTS utilisé correctement en {zona},
-log.gutsMultiZona,GUTS: {cantidad} cartas enviadas al trash,GUTS: {cantidad} cards sent to discard,GUTS : {cantidad} cartes envoyées à la défausse,
-log.gutsTitulo,GUTS en {zona}: Descarta ( {actual} / {total} ),GUTS in {zona}: Discard ( {actual} / {total} ),GUTS en {zona} : Défaussez ( {actual} / {total} ),
-log.cartaEnGuts,Esta carta está en el GUTS y no puede usar su habilidad,This card is in the GUTS and cannot use its ability,Cette carte est dans le GUTS et ne peut pas utiliser sa capacité,
-log.sinHabilidad,Esta carta no tiene habilidad,This card has no ability,Cette carte n'a pas de capacité,
-log.habilidadYaUsada,Esta habilidad ya fue usada,This ability was already used,Cette capacité a déjà été utilisée,
-log.noEsEvento,Esta carta no es un evento,This card is not an event,Cette carte n'est pas un événement,
-log.eventoFaseIncorrecta,No puedes jugar este evento en fase de {zona},You cannot play this event in {zona} phase,Tu ne peux pas jouer cet événement en phase {zona},
-log.eventoJugado,{jugador} juega el evento: {carta},{jugador} plays the event: {carta},{jugador} joue l'événement : {carta},
-log.eventoEnMano,Necesitas una carta de evento en la mano,You need an event card in hand,Tu as besoin d'une carte événement en main,
-log.eventoPagar,Carta de evento enviada al trash como coste,Event card sent to discard as cost,Carte événement envoyée à la défausse comme coût,
-log.cartaUnica,Ya has jugado una carta de {carta} este turno,You already played a {carta} card this turn,Tu as déjà joué une carte {carta} ce tour,
-log.sacaConPotencia,{carta} saca con una potencia de {valor},{carta} serves with a power of {valor},{carta} sert avec une puissance de {valor},
-log.paseConPotencia,{carta} realiza un pase con una potencia de {valor},{carta} sets with a power of {valor},{carta} effectue une passe avec une puissance de {valor},
-log.remataConPotencia,{carta} remata con una potencia de {valor},{carta} spikes with a power of {valor},{carta} attaque avec une puissance de {valor},
-log.recepcionVsAtaque,Recepción: {recepcion} vs Ataque: {ataque},Reception: {recepcion} vs Attack: {ataque},Réception : {recepcion} vs Attaque : {ataque},
-log.buenaRecepcion,{carta} recibe con una potencia de {valor} = Buena recepción,{carta} receives with a power of {valor} = Good reception,{carta} reçoit avec une puissance de {valor} = Bonne réception,
-log.recepcionFallida,{carta} recibe con una potencia de {valor} = Recepción fallida,{carta} receives with a power of {valor} = Failed reception,{carta} reçoit avec une puissance de {valor} = Réception ratée,
-log.puntoParaRival,Punto para {jugador},Point for {jugador},Point pour {jugador},
-log.defensaTotal,Bloqueo total: {valor},Total block: {valor},Bloc total : {valor},
-log.bloqueoExitoso,Bloqueo exitoso,Block successful,Bloc réussi,
-log.bloqueoFallido,Bloqueo insuficiente,Block insufficient,Bloc insuffisant,
-log.mulliganConfirmado,{jugador} confirma el mulligan,{jugador} confirms the mulligan,{jugador} confirme le mulligan,
-log.mulliganRival,Mulligan de {jugador} — devuelve las cartas que no quieras y confirma,{jugador} mulligan — return the cards you don't want and confirm,Mulligan de {jugador} — retourne les cartes que tu ne veux pas et confirme,
-log.partidaIniciada,¡Partida iniciada! Saca {jugador},Game started! {jugador} serves,Partie lancée ! {jugador} sert,
-log.pierdePartida,{jugador} no tiene cartas en su mazo de puntos. ¡Ha perdido el partido!,{jugador} has no cards in their point deck. They have lost the match!,{jugador} n'a plus de cartes dans son deck de points. Il a perdu le match !,
-log.pierdeUnPunto,{jugador} pierde un punto y roba una carta de su mazo de puntos. Le quedan {cantidad},{jugador} loses a point and draws a card from their point deck. {cantidad} remaining,{jugador} perd un point et pioche une carte de son deck de points. Il en reste {cantidad},
-log.cartaDevuelta,{carta} devuelta al mazo,{carta} returned to the deck,{carta} remise dans le deck,
-log.concedePunto,{jugador} concede el punto,{jugador} concedes the point,{jugador} concède le point,
-log.efectoActivo,Efecto activo: {tipo},Active effect: {tipo},Effet actif : {tipo},
-log.potenciarReceptor,Efecto potenciar receptor: +{valor} a la recepción de {carta},Receiver boost effect: +{valor} to {carta} reception,Effet boost receveur : +{valor} à la réception de {carta},
-log.potenciarColocador,Efecto potenciar colocador: +{valor} al pase de {carta},Setter boost effect: +{valor} to {carta} set,Effet boost passeur : +{valor} à la passe de {carta},
-log.potenciarRematador,Efecto potenciar rematador: +{valor} al remate de {carta},Spiker boost effect: +{valor} to {carta} spike,Effet boost attaquant : +{valor} à l'attaque de {carta},
-log.potenciarReceptorEscuela,Efecto activo: receptores{escuela} tendrán +{valor} a la recepción,Active effect: receivers{escuela} get +{valor} to reception,Effet actif : receveurs{escuela} auront +{valor} à la réception,
-log.potenciarColocadorEscuela,Efecto activo: colocadores{escuela} tendrán +{valor} al pase,Active effect: setters{escuela} get +{valor} to set,Effet actif : passeurs{escuela} auront +{valor} à la passe,
-log.potenciarRematadorEscuela,Efecto activo: rematadores{escuela} tendrán +{valor} al remate,Active effect: spikers{escuela} get +{valor} to spike,Effet actif : attaquants{escuela} auront +{valor} à l'attaque,
-log.potenciarPersonajeActivo,Efecto activo: {nombre} tendrá +{valor} en {zona} este turno,Active effect: {nombre} will get +{valor} to {zona} this turn,Effet actif : {nombre} aura +{valor} en {zona} ce tour,
-log.potenciarPersonaje,Efecto: +{valor} en {zona} de {nombre},Effect: +{valor} to {zona} for {nombre},Effet : +{valor} en {zona} pour {nombre},
-log.efectoDebilitarReceptor,Efecto: -{valor} a la recepción de {carta},Effect: -{valor} to {carta} reception,Effet : -{valor} à la réception de {carta},
-log.efectoDebilitarColocador,Efecto colocador debilitado: -{valor} al pase de {carta},Effect weakened setter: -{valor} to {carta} set,Effet passeur affaibli : -{valor} à la passe de {carta},
-log.efectoDebilitarRematador,Efecto rematador debilitado: -{valor} al remate de {carta},Effect weakened spiker: -{valor} to {carta} spike,Effet attaquant affaibli : -{valor} à l'attaque de {carta},
-log.efectoDebilitarBloqueo,Efecto: -{valor} al bloqueo de {carta},Effect: -{valor} to {carta} block,Effet : -{valor} au bloc de {carta},
-log.debilitarRematadorActivo,Efecto activo: el próximo rematador rival tendrá -{valor} al remate,Active effect: next rival spiker will have -{valor} to spike,Effet actif : le prochain attaquant rival aura -{valor} à l'attaque,
-log.debilitarColocadorActivo,Efecto activo: el próximo colocador rival tendrá -{valor} al pase,Active effect: next rival setter will have -{valor} to set,Effet actif : le prochain passeur rival aura -{valor} à la passe,
-log.debilitarReceptorActivo,Efecto activo: el próximo receptor rival tendrá -{valor} a la recepción,Active effect: next rival receiver will have -{valor} to reception,Effet actif : le prochain receveur rival aura -{valor} à la réception,
-log.debilitarBloqueadorCentralActivo,Efecto activo: el próximo bloqueador central rival tendrá -{valor} al bloqueo,Active effect: next rival central blocker will have -{valor} to block,Effet actif : le prochain bloqueur central rival aura -{valor} au bloc,
-log.blockoutActivo,Efecto activo: los bloqueadores rivales con bloqueo igual o menor a {valor} irán al trash,Active effect: rival blockers with block equal or less than {valor} go to discard,Effet actif : les bloqueurs rivaux avec bloc inférieur ou égal à {valor} vont à la défausse,
-log.blockout,Blockout: {carta} tiene bloqueo igual o menor a {valor} y va al trash,Blockout: {carta} has block equal or less than {valor} and goes to discard,Blockout : {carta} a un bloc inférieur ou égal à {valor} et va à la défausse,
-log.efectoBloqueoOfensivo,Efecto de Bloqueo Ofensivo ({valor}): si el bloqueo es exitoso el contraataque tendrá una potencia de {valor},Offensive Block ({valor}) effect: if block is successful the counterattack will have a power of {valor},Effet Bloc Offensif ({valor}) : si le bloc est réussi le contre-attaque aura une puissance de {valor},
-log.anularBloqueadorCentralActivo,Efecto activo: el bloqueador central rival tendrá su bloqueo anulado,Active effect: rival central blocker will have their block nullified,Effet actif : le bloqueur central rival aura son bloc annulé,
-log.anularBloqueadorCentral,Efecto activo: bloqueo del bloqueador central anulado,Active effect: central blocker block nullified,Effet actif : bloc du bloqueur central annulé,
-log.negarBloqueadoresApoyoActivo,Efecto activo: el rival solo podrá colocar el bloqueador central este turno,Active effect: rival can only place the central blocker this turn,Effet actif : le rival ne peut placer que le bloqueur central ce tour,
-log.negarBloqueadoresApoyo,No puedes colocar bloqueadores de apoyo este turno,You cannot place support blockers this turn,Tu ne peux pas placer de bloqueurs de soutien ce tour,
-log.negarReceptorAltoActivo,Efecto activo: el rival no podrá colocar un receptor con recepción original de 6 o más,Active effect: rival cannot place a receiver with base reception of 6 or more,Effet actif : le rival ne pourra pas placer un receveur avec réception de base de 6 ou plus,
-log.negarReceptorAlto,No puedes colocar un receptor con recepción de 6 o más este turno,You cannot place a receiver with reception of 6 or more this turn,Tu ne peux pas placer un receveur avec réception de 6 ou plus ce tour,
-log.negarColocadorActivo,Efecto activo: el rival no podrá colocar un colocador el próximo turno,Active effect: rival cannot place a setter next turn,Effet actif : le rival ne pourra pas placer un passeur au prochain tour,
-log.negarColocador,No puedes colocar un colocador este turno,You cannot place a setter this turn,Tu ne peux pas placer un passeur ce tour,
-log.negarOneTouchActivo,Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo,Active effect: rival cannot use One Touch in their next block,Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc,
-log.negarOneTouch,One Touch negado por habilidad del rival,One Touch negated by rival ability,One Touch annulé par la capacité du rival,
-log.negarCartaDesdeManoActivo,Efecto activo: el rival no podrá usar habilidades desde la mano en {fases},Active effect: rival cannot use hand abilities in {fases},Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases},
-log.negarCartaDesdeMano,No puedes usar habilidades desde la mano en {fases},You cannot use hand abilities in {fases},Tu ne peux pas utiliser de capacités depuis la main en {fases},
-log.negarEventosActivo,Efecto activo: el rival no podrá jugar eventos de {fase},Active effect: rival cannot play {fase} events,Effet actif : le rival ne pourra pas jouer d'événements de {fase},
-log.negarEventos,No puedes jugar eventos de {fase} este turno,You cannot play {fase} events this turn,Tu ne peux pas jouer d'événements de {fase} ce tour,
-log.negarRobar,Efecto activo: {jugador} no puede robar cartas por habilidad este turno,Active effect: {jugador} cannot draw cards by ability this turn,Effet actif : {jugador} ne peut pas piocher de cartes par capacité ce tour,
-log.anularHabilidadReceptorActivo,Efecto activo: el siguiente receptor rival no podrá usar su habilidad,Active effect: next rival receiver cannot use their ability,Effet actif : le prochain receveur rival ne pourra pas utiliser sa capacité,
-log.anularHabilidadReceptor,El receptor no puede usar su habilidad este turno,The receiver cannot use their ability this turn,Le receveur ne peut pas utiliser sa capacité ce tour,
-log.anularHabilidadColocador,Efecto activo: el colocador no puede usar su habilidad,Active effect: setter cannot use their ability,Effet actif : le passeur ne peut pas utiliser sa capacité,
-log.limitarBloqueadoresActivo,Efecto activo: el rival solo podrá colocar hasta {max} bloqueadores,Active effect: rival can only place up to {max} blockers,Effet actif : le rival ne pourra placer que {max} bloqueurs,
-log.limitarBloqueadores,No puedes colocar más de {max} bloqueadores este turno,You cannot place more than {max} blockers this turn,Tu ne peux pas placer plus de {max} bloqueurs ce tour,
-log.maximoBloqueadores,Máximo 2 bloqueadores de apoyo,Maximum 2 support blockers,Maximum 2 bloqueurs de soutien,
-log.bloqueoMinimoActivo,Efecto activo: el bloqueo rival fallará si su defensa total es {valor} o menos,Active effect: rival block will fail if total defense is {valor} or less,Effet actif : le bloc rival échouera si la défense totale est {valor} ou moins,
-log.bloqueoMinimo,Efecto de bloqueo mínimo: bloqueo insuficiente forzado,Minimum block effect: insufficient block forced,Effet de bloc minimum : bloc insuffisant forcé,
-log.oneTouch,One Touch ({valor}): -{valor} al ataque rival. Ataque actual: {ataque},One Touch ({valor}): -{valor} to rival attack. Current attack: {ataque},One Touch ({valor}) : -{valor} à l'attaque rivale. Attaque actuel : {ataque},
-log.bloqueoOfensivo,Bloqueo ofensivo: el contraataque tiene potencia {valor},Offensive block: counterattack has power {valor},Bloc offensif : le contre-attaque a une puissance de {valor},
-log.mazoPuntosPreparado,{jugador}: mazo de puntos preparado con 2 cartas,{jugador}: point deck prepared with 2 cards,{jugador} : deck de points préparé avec 2 cartes,
-log.cartaColocadaEn,{jugador} juega a {carta} en {zona} ({stat}),{jugador} plays {carta} in {zona} ({stat}),{jugador} joue {carta} en {zona} ({stat}),
-log.cartaColocadaBloqueo,{jugador} juega a {carta} como {tipo} ({stat}) ,{jugador} plays {carta} as {tipo} ({stat}) ,{jugador} joue {carta} en tant que {tipo} ({stat}),
-log.bloqueadorCentral,Bloqueador central,Central blocker,Bloqueur central,
-log.apoyoBloqueo,Bloqueo de apoyo,Support blocker,Bloqueur de soutien,
-log.soloDesdeMano,Esta carta solo puede usar su habilidad desde la mano,This card can only use its ability from hand,Cette carte ne peut utiliser sa capacité que depuis la main,
-log.noHabilidadMano,Esta carta no tiene habilidad de mano,This card has no hand ability,Cette carte n'a pas de capacité depuis la main,
-log.noHabilidadEnFase,No puedes usar esta habilidad en fase de {zona},You cannot use this ability in {zona} phase,Tu ne peux pas utiliser cette capacité en phase {zona},
-log.finta,Finta: el ataque queda fijado en {valor}. Se salta la fase de bloqueo,Feint: attack is set to {valor}. Block phase is skipped,Feinte : l'attaque est fixée à {valor}. La phase de bloc est ignorée,
-log.robarCuandoRival,El rival roba 1 carta por efecto,Rival draws 1 card by effect,Le rival pioche 1 carte par effet,
-log.robarCuandoRivalActivo,Efecto activo: el rival robará 1 carta cada vez que añadas una carta a tu mano,Active effect: rival draws 1 card each time you add a card to your hand,Effet actif : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main,
-log.negarRobarActivo,Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno,Active effect: rival cannot draw cards through abilities next turn,Effet actif : le rival ne pourra pas piocher de cartes via des capacités au prochain tour,
-log.sinCartasValidas,No hay cartas válidas en la búsqueda,No valid cards found,Aucune carte valide trouvée,
-log.esperandoDescarte,Esperando que el rival descarte una carta,Waiting for rival to discard a card,En attente que le rival se défausse d'une carte,
-log.descartarCuandoRoboActivo,Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar,Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means,Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard,
-log.cartaColocadaComoRematador,{carta} colocado como rematador con +{valor} al remate,{carta} placed as spiker with +{valor} to spike,{carta} placé comme attaquant avec +{valor} à l'attaque,
-log.concedePunto,{jugador} concede el punto,{jugador} concedes the point,{jugador} concède le point,
-log.descartaDesdeMano,{jugador} descarta {carta} desde la mano para activar su habilidad,{jugador} discards {carta} from hand to activate their ability,{jugador} se défausse de {carta} depuis la main pour activer sa capacité,
-log.descartaPorEfecto,{jugador} descarta {carta} por efecto,{jugador} discards {carta} by effect,{jugador} se défausse de {carta} par effet,
-log.rivalDescartaCarta,{jugador} ha descartado una carta,{jugador} has discarded a card,{jugador} a défaussé une carte,
-log.cartaAMano,{carta} añadido a la mano,{carta} added to hand,{carta} ajouté à la main,
-log.hasGanado,¡Has ganado!,You win!,Tu as gagné !,
-log.hasPerdido,¡Has perdido!,You lose!,Tu as perdu !,
-log.activarHabilidad,Activar habilidad de {carta},Activate {carta} ability,Activer la capacité de {carta},
-log.noActivar,No activar,Don't activate,Ne pas activer,
+clave;es;en;fr;
+log.noEsTuTurno;No es tu turno;Is not your turn;Ce n’est pas ton tour;
+log.mulliganPrimero;Primero hay que resolver el mulligan;Mulligan must be resolved first;Il faut d’abord résoudre le mulligan;
+log.soloMulligan;Sólo puedes devolver cartas durante el mulligan;You can only return cards during mulligan;Tu en peux retourner des cartes que pendant le mulligan;
+log.seleccionaCarta;Selecciona una carta primero;Select a card first;Sélectionne une carte d’abord;
+log.seleccionaCartaMulligan;Selecciona una carta para devolver al mazo;Select a card to return to the deck;Sélectionne une carte à remettre dans le deck;
+log.cartaSeleccionadaCampo;Carta seleccionada: {carta};Card selected: {carta};Carte sélectionnée : {carta};
+log.mulliganYaConfirmado;El mulligan ya ha sido confirmado;Mulligan already confirmed;Le mulligan a été déjà confirmé;
+log.noEsFase;No es fase de {zona};Not the {zona} phase;Ce n'est pas la phase de {zona};
+log.noEsFaseRecepcion;No es fase de recepción;Not the reception phase;Ce n’est pas la phase de réception;
+log.noEsFasePase ;No es fase de pase ;Not the set phase ;Ce n'est pas la phase de passe ;
+log.noEsFaseRemate ;No es fase de remate ;Not the spike phase ;Ce n'est pas la phase d'attaque ;
+log.noEsFaseBloqueo ;No es fase de bloqueo;Not the block phase ;Ce n'est pas la phase de bloc;
+log.noCartaEnZona ;No has jugado ninguna carta este turno en {zona} ;No card played this turn in {zona} ;Aucune carte jouée ce tour en {zona} ;
+log.eventoUsarBoton;Los eventos se juegan con el botón Jugar Evento;Events are played with the Play Event button;Les événements se jouent avec le bouton Jouer Événement;
+log.zonaProhibida;{carta} no puede jugar en {zona};{carta} cannot play in {zona};{carta} ne peut pas jouer en {zona};
+log.cartaDuplicada;Ya has jugado a {carta} este turno;You already played {carta} this turn;Tu as déjà joué {carta} ce tour;
+log.noColocador;No puedes colocar un colocador (S) este turno;You cannot place a setter (S) this turn;Tu ne peux pas placer un passeur (S) ce tour;
+log.yaHayCartaEnZona;Ya hay una carta en {zona};There is already a card in {zona};Il y a déjà une carte en {zona};
+log.cartaColocadaEn;{jugador} juega a {carta} en {zona};{jugador} plays {carta} in {zona};{jugador} joue {carta} en {zona};
+log.noReceptorAlto;No puedes colocar un receptor con recepción de 6 o más este turno;You cannot place a receiver with reception 6 or more this turn;Tu ne peux pas placer un receveur avec réception 6 ou plus ce tour;Por ver si dejo o no
+log.sinCartasEnMazo;{jugador} no tiene más cartas en el mazo;{jugador} has no more cards in the deck;{jugador} n'a plus de cartes dans le deck;
+log.robarCartas;{jugador} roba {cantidad} carta(s);{jugador} draws {cantidad} card(s);{jugador} pioche {cantidad} carte(s);
+log.gutsInsuficiente;No hay suficientes cartas en la zona de GUTS indicada;Not enough cards in the indicated GUTS zone;Pas assez de cartes dans la zone GUTS indiquée;
+log.gutsInsuficienteMultiZona;No hay suficientes GUTS en el campo (necesitas {cantidad}, tienes {total});Not enough GUTS on the field (need {cantidad}, have {total});Pas assez de GUTS sur le terrain (besoin de {cantidad}, vous en avez {total});
+log.gutsUsado;GUTS usado correctamente en {zona};GUTS used correctly in {zona};GUTS utilisé correctement en {zona};
+log.gutsMultiZona;GUTS: {cantidad} cartas enviadas al trash;GUTS: {cantidad} cards sent to discard;GUTS : {cantidad} cartes envoyées à la défausse;
+log.gutsTitulo;GUTS en {zona}: Descarta ( {actual} / {total} );GUTS in {zona}: Discard ( {actual} / {total} );GUTS en {zona} : Défaussez ( {actual} / {total} );
+log.cartaEnGuts;Esta carta está en el GUTS y no puede usar su habilidad;This card is in the GUTS and cannot use its ability;Cette carte est dans le GUTS et ne peut pas utiliser sa capacité;
+log.sinHabilidad;Esta carta no tiene habilidad;This card has no ability;Cette carte n'a pas de capacité;
+log.habilidadYaUsada;Esta habilidad ya fue usada;This ability was already used;Cette capacité a déjà été utilisée;
+log.noEsEvento;Esta carta no es un evento;This card is not an event;Cette carte n'est pas un événement;
+log.eventoFaseIncorrecta;No puedes jugar este evento en fase de {zona};You cannot play this event in {zona} phase;Tu ne peux pas jouer cet événement en phase {zona};
+log.eventoJugado;{jugador} juega el evento: {carta};{jugador} plays the event: {carta};{jugador} joue l'événement : {carta};
+log.eventoEnMano;Necesitas una carta de evento en la mano;You need an event card in hand;Tu as besoin d'une carte événement en main;
+log.eventoPagar;Carta de evento enviada al trash como coste;Event card sent to discard as cost;Carte événement envoyée à la défausse comme coût;
+log.cartaUnica;Ya has jugado una carta de {carta} este turno;You already played a {carta} card this turn;Tu as déjà joué une carte {carta} ce tour;
+log.sacaConPotencia;{carta} saca con una potencia de {valor};{carta} serves with a power of {valor};{carta} sert avec une puissance de {valor};
+log.paseConPotencia;{carta} realiza un pase con una potencia de {valor};{carta} sets with a power of {valor};{carta} effectue une passe avec une puissance de {valor};
+log.remataConPotencia;{carta} remata con una potencia de {valor};{carta} spikes with a power of {valor};{carta} attaque avec une puissance de {valor};
+log.recepcionVsAtaque;Recepción: {recepcion} vs Ataque: {ataque};Reception: {recepcion} vs Attack: {ataque};Réception : {recepcion} vs Attaque : {ataque};
+log.buenaRecepcion;{carta} recibe con una potencia de {valor} = Buena recepción;{carta} receives with a power of {valor} = Good reception;{carta} reçoit avec une puissance de {valor} = Bonne réception;
+log.recepcionFallida;{carta} recibe con una potencia de {valor} = Recepción fallida;{carta} receives with a power of {valor} = Failed reception;{carta} reçoit avec une puissance de {valor} = Réception ratée;
+log.puntoParaRival;Punto para {jugador};Point for {jugador};Point pour {jugador};
+log.defensaTotal;Bloqueo total: {valor};Total block: {valor};Bloc total : {valor};
+log.bloqueoExitoso;Bloqueo exitoso;Block successful;Bloc réussi;
+log.bloqueoFallido;Bloqueo insuficiente;Block insufficient;Bloc insuffisant;
+log.mulliganConfirmado;{jugador} confirma el mulligan;{jugador} confirms the mulligan;{jugador} confirme le mulligan;
+log.mulliganRival;Mulligan de {jugador} — devuelve las cartas que no quieras y confirma;{jugador} mulligan — return the cards you don't want and confirm;Mulligan de {jugador} — retourne les cartes que tu ne veux pas et confirme;
+log.partidaIniciada;¡Partida iniciada! Saca {jugador};Game started! {jugador} serves;Partie lancée ! {jugador} sert;
+log.pierdePartida;{jugador} no tiene cartas en su mazo de puntos. ¡Ha perdido el partido!;{jugador} has no cards in their point deck. They have lost the match!;{jugador} n'a plus de cartes dans son deck de points. Il a perdu le match !;
+log.pierdeUnPunto;{jugador} pierde un punto y roba una carta de su mazo de puntos. Le quedan {cantidad};{jugador} loses a point and draws a card from their point deck. {cantidad} remaining;{jugador} perd un point et pioche une carte de son deck de points. Il en reste {cantidad};
+log.cartaDevuelta;{carta} devuelta al mazo;{carta} returned to the deck;{carta} remise dans le deck;
+log.concedePunto;{jugador} concede el punto;{jugador} concedes the point;{jugador} concède le point;
+log.efectoActivo;Efecto activo: {tipo};Active effect: {tipo};Effet actif : {tipo};
+log.potenciarReceptor;Efecto potenciar receptor: +{valor} a la recepción de {carta};Receiver boost effect: +{valor} to {carta} reception;Effet boost receveur : +{valor} à la réception de {carta};
+log.potenciarColocador;Efecto potenciar colocador: +{valor} al pase de {carta};Setter boost effect: +{valor} to {carta} set;Effet boost passeur : +{valor} à la passe de {carta};
+log.potenciarRematador;Efecto potenciar rematador: +{valor} al remate de {carta};Spiker boost effect: +{valor} to {carta} spike;Effet boost attaquant : +{valor} à l'attaque de {carta};
+log.potenciarReceptorEscuela;Efecto activo: receptores{escuela} tendrán +{valor} a la recepción;Active effect: receivers{escuela} get +{valor} to reception;Effet actif : receveurs{escuela} auront +{valor} à la réception;
+log.potenciarColocadorEscuela;Efecto activo: colocadores{escuela} tendrán +{valor} al pase;Active effect: setters{escuela} get +{valor} to set;Effet actif : passeurs{escuela} auront +{valor} à la passe;
+log.potenciarRematadorEscuela;Efecto activo: rematadores{escuela} tendrán +{valor} al remate;Active effect: spikers{escuela} get +{valor} to spike;Effet actif : attaquants{escuela} auront +{valor} à l'attaque;
+log.potenciarPersonajeActivo;Efecto activo: {nombre} tendrá +{valor} en {zona} este turno;Active effect: {nombre} will get +{valor} to {zona} this turn;Effet actif : {nombre} aura +{valor} en {zona} ce tour;
+log.potenciarPersonaje;Efecto: +{valor} en {zona} de {nombre};Effect: +{valor} to {zona} for {nombre};Effet : +{valor} en {zona} pour {nombre};
+log.efectoDebilitarReceptor;Efecto: -{valor} a la recepción de {carta};Effect: -{valor} to {carta} reception;Effet : -{valor} à la réception de {carta};
+log.efectoDebilitarColocador;Efecto colocador debilitado: -{valor} al pase de {carta};Effect weakened setter: -{valor} to {carta} set;Effet passeur affaibli : -{valor} à la passe de {carta};
+log.efectoDebilitarRematador;Efecto rematador debilitado: -{valor} al remate de {carta};Effect weakened spiker: -{valor} to {carta} spike;Effet attaquant affaibli : -{valor} à l'attaque de {carta};
+log.efectoDebilitarBloqueo;Efecto: -{valor} al bloqueo de {carta};Effect: -{valor} to {carta} block;Effet : -{valor} au bloc de {carta};
+log.debilitarRematadorActivo;Efecto activo: el próximo rematador rival tendrá -{valor} al remate;Active effect: next rival spiker will have -{valor} to spike;Effet actif : le prochain attaquant rival aura -{valor} à l'attaque;
+log.debilitarColocadorActivo;Efecto activo: el próximo colocador rival tendrá -{valor} al pase;Active effect: next rival setter will have -{valor} to set;Effet actif : le prochain passeur rival aura -{valor} à la passe;
+log.debilitarReceptorActivo;Efecto activo: el próximo receptor rival tendrá -{valor} a la recepción;Active effect: next rival receiver will have -{valor} to reception;Effet actif : le prochain receveur rival aura -{valor} à la réception;
+log.debilitarBloqueadorCentralActivo;Efecto activo: el próximo bloqueador central rival tendrá -{valor} al bloqueo;Active effect: next rival central blocker will have -{valor} to block;Effet actif : le prochain bloqueur central rival aura -{valor} au bloc;
+log.efectoTendo;Efecto Tendo: el rival robará 1 carta cada vez que añadas una carta a tu mano;Tendo effect: rival draws 1 card each time you add a card to your hand;Effet Tendo : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main;
+log.blockoutActivo;Efecto activo: los bloqueadores rivales con bloqueo igual o menor a {valor} irán al trash;Active effect: rival blockers with block equal or less than {valor} go to discard;Effet actif : les bloqueurs rivaux avec bloc inférieur ou égal à {valor} vont à la défausse;
+log.blockout;Blockout: {carta} tiene bloqueo igual o menor a {valor} y va al trash;Blockout: {carta} has block equal or less than {valor} and goes to discard;Blockout : {carta} a un bloc inférieur ou égal à {valor} et va à la défausse;
+log.efectoBloqueoOfensivo;Efecto de Bloqueo Ofensivo ({valor}): si el bloqueo es exitoso el contraataque tendrá una potencia de {valor};Offensive Block ({valor}) effect: if block is successful the counterattack will have a power of {valor};Effet Bloc Offensif ({valor}) : si le bloc est réussi le contre-attaque aura une puissance de {valor};
+log.anularBloqueadorCentralActivo;Efecto activo: el bloqueador central rival tendrá su bloqueo anulado;Active effect: rival central blocker will have their block nullified;Effet actif : le bloqueur central rival aura son bloc annulé;
+log.anularBloqueadorCentral;Efecto activo: bloqueo del bloqueador central anulado;Active effect: central blocker block nullified;Effet actif : bloc du bloqueur central annulé;
+log.negarBloqueadoresApoyoActivo;Efecto activo: el rival solo podrá colocar el bloqueador central este turno;Active effect: rival can only place the central blocker this turn;Effet actif : le rival ne peut placer que le bloqueur central ce tour;
+log.negarBloqueadoresApoyo;No puedes colocar bloqueadores de apoyo este turno;You cannot place support blockers this turn;Tu ne peux pas placer de bloqueurs de soutien ce tour;
+log.negarReceptorAltoActivo;Efecto activo: el rival no podrá colocar un receptor con recepción original de 6 o más;Active effect: rival cannot place a receiver with base reception of 6 or more;Effet actif : le rival ne pourra pas placer un receveur avec réception de base de 6 ou plus;
+log.negarReceptorAlto;No puedes colocar un receptor con recepción de 6 o más este turno;You cannot place a receiver with reception of 6 or more this turn;Tu ne peux pas placer un receveur avec réception de 6 ou plus ce tour;
+log.negarColocadorActivo;Efecto activo: el rival no podrá colocar un colocador el próximo turno;Active effect: rival cannot place a setter next turn;Effet actif : le rival ne pourra pas placer un passeur au prochain tour;
+log.negarColocador;No puedes colocar un colocador este turno;You cannot place a setter this turn;Tu ne peux pas placer un passeur ce tour;
+log.negarOneTouchActivo;Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo;Active effect: rival cannot use One Touch in their next block;Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc;
+log.negarOneTouch;One Touch negado por habilidad del rival;One Touch negated by rival ability;One Touch annulé par la capacité du rival;
+log.negarCartaDesdeManoActivo;Efecto activo: el rival no podrá usar habilidades desde la mano en {fases};Active effect: rival cannot use hand abilities in {fases};Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases};
+log.negarCartaDesdeMano;No puedes usar habilidades desde la mano en {fases};You cannot use hand abilities in {fases};Tu ne peux pas utiliser de capacités depuis la main en {fases};
+log.negarEventosActivo;Efecto activo: el rival no podrá jugar eventos de {fase};Active effect: rival cannot play {fase} events;Effet actif : le rival ne pourra pas jouer d'événements de {fase};
+log.negarEventos;No puedes jugar eventos de {fase} este turno;You cannot play {fase} events this turn;Tu ne peux pas jouer d'événements de {fase} ce tour;
+log.negarRobar;Efecto activo: {jugador} no puede robar cartas por habilidad este turno;Active effect: {jugador} cannot draw cards by ability this turn;Effet actif : {jugador} ne peut pas piocher de cartes par capacité ce tour;
+log.anularHabilidadReceptorActivo;Efecto activo: el siguiente receptor rival no podrá usar su habilidad;Active effect: next rival receiver cannot use their ability;Effet actif : le prochain receveur rival ne pourra pas utiliser sa capacité;
+log.anularHabilidadReceptor;El receptor no puede usar su habilidad este turno;The receiver cannot use their ability this turn;Le receveur ne peut pas utiliser sa capacité ce tour;
+log.anularHabilidadColocador;Efecto activo: el colocador no puede usar su habilidad;Active effect: setter cannot use their ability;Effet actif : le passeur ne peut pas utiliser sa capacité;
+log.limitarBloqueadoresActivo;Efecto activo: el rival solo podrá colocar hasta {max} bloqueadores;Active effect: rival can only place up to {max} blockers;Effet actif : le rival ne pourra placer que {max} bloqueurs;
+log.limitarBloqueadores;No puedes colocar más de {max} bloqueadores este turno;You cannot place more than {max} blockers this turn;Tu ne peux pas placer plus de {max} bloqueurs ce tour;
+log.maximoBloqueadores;Máximo 2 bloqueadores de apoyo;Maximum 2 support blockers;Maximum 2 bloqueurs de soutien;
+log.bloqueoMinimoActivo;Efecto activo: el bloqueo rival fallará si su defensa total es {valor} o menos;Active effect: rival block will fail if total defense is {valor} or less;Effet actif : le bloc rival échouera si la défense totale est {valor} ou moins;
+log.bloqueoMinimo;Efecto de bloqueo mínimo: bloqueo insuficiente forzado;Minimum block effect: insufficient block forced;Effet de bloc minimum : bloc insuffisant forcé;
+log.oneTouch;One Touch ({valor}): -{valor} al ataque rival. Ataque actual: {ataque};One Touch ({valor}): -{valor} to rival attack. Current attack: {ataque};One Touch ({valor}) : -{valor} à l'attaque rivale. Attaque actuel : {ataque};
+log.bloqueoOfensivo;Bloqueo ofensivo: el contraataque tiene potencia {valor};Offensive block: counterattack has power {valor};Bloc offensif : le contre-attaque a une puissance de {valor};
+log.mazoPuntosPreparado;{jugador}: mazo de puntos preparado con 2 cartas;{jugador}: point deck prepared with 2 cards;{jugador} : deck de points préparé avec 2 cartes;
+log.cartaColocadaEn;{jugador} juega a {carta} en {zona} ({stat});{jugador} plays {carta} in {zona} ({stat});{jugador} joue {carta} en {zona} ({stat});
+log.cartaColocadaBloqueo;{jugador} juega a {carta} como {tipo} ({stat}) ;{jugador} plays {carta} as {tipo} ({stat}) ;{jugador} joue {carta} en tant que {tipo} ({stat});
+log.bloqueadorCentral;Bloqueador central;Central blocker;Bloqueur central;
+log.apoyoBloqueo;Bloqueo de apoyo;Support blocker;Bloqueur de soutien;
+log.soloDesdeMano;Esta carta solo puede usar su habilidad desde la mano;This card can only use its ability from hand;Cette carte ne peut utiliser sa capacité que depuis la main;
+log.noHabilidadMano;Esta carta no tiene habilidad de mano;This card has no hand ability;Cette carte n'a pas de capacité depuis la main;
+log.noHabilidadEnFase;No puedes usar esta habilidad en fase de {zona};You cannot use this ability in {zona} phase;Tu ne peux pas utiliser cette capacité en phase {zona};
+log.finta;Finta: el ataque queda fijado en {valor}. Se salta la fase de bloqueo;Feint: attack is set to {valor}. Block phase is skipped;Feinte : l'attaque est fixée à {valor}. La phase de bloc est ignorée;
+log.robarCuandoRival;El rival roba 1 carta por efecto;Rival draws 1 card by effect;Le rival pioche 1 carte par effet;
+log.robarCuandoRivalActivo;Efecto activo: el rival robará 1 carta cada vez que añadas una carta a tu mano;Active effect: rival draws 1 card each time you add a card to your hand;Effet actif : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main;
+log.negarRobarActivo;Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno;Active effect: rival cannot draw cards through abilities next turn;Effet actif : le rival ne pourra pas piocher de cartes via des capacités au prochain tour;
+log.sinCartasValidas;No hay cartas válidas en la búsqueda;No valid cards found;Aucune carte valide trouvée;
+log.esperandoDescarte;Esperando que el rival descarte una carta;Waiting for rival to discard a card;En attente que le rival se défausse d'une carte;
+log.descartarCuandoRoboActivo;Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar;Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means;Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard;
+log.cartaColocadaComoRematador;{carta} colocado como rematador con +{valor} al remate;{carta} placed as spiker with +{valor} to spike;{carta} placé comme attaquant avec +{valor} à l'attaque;
+log.habilidadActivada;Habilidad de {carta} activada;{carta} ability activated;Capacité de {carta} activée;
+log.condicionNoCumplida;Condición no cumplida;Condition not met;Condition non remplie;
+log.condicionCumplida;Condición adicional cumplida. Efecto activado;Additional condition met. Effect activated;Condition supplémentaire remplie. Effet activé;
+log.cartaDescartadaCoste;{carta} descartada como coste;{carta} discarded as cost;{carta} défaussée comme coût;
+log.cartaRevelada;Carta revelada: {carta};Card revealed: {carta};Carte révélée : {carta};
+log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining cards sent to the bottom of the deck;Cartes restantes envoyées au fond du deck;

@@ -199,6 +199,14 @@ function aplicarJugadaRival(jugada) {
       const miIndiceConcede = miNumero - 1;                    // yo gané el punto, yo saco
       game.jugadorActivo = miIndiceConcede;                    // actualizar jugador activo
       game.fase = "saque";                                     // volver a saque
+
+      // robar hasta 6 cartas
+      const miJugadorConcede = game.jugadores[miIndiceConcede]; // jugador local
+      let necesitaConcede = 6 - miJugadorConcede.mano.length;   // cartas que necesita
+      if (necesitaConcede > 0) {
+        robarCarta(miJugadorConcede, necesitaConcede);           // robar hasta 6
+      }
+
       actualizarMarcador();                                    // actualizar marcador
       actualizarFaseUI();                                      // actualizar letrero
       renderMano();                                            // redibujar mano

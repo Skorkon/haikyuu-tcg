@@ -2733,7 +2733,7 @@ game.jugadores[0].mazo.push(gtsr); */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-/*
+
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -2775,28 +2775,28 @@ for (let i = 0; i < 10; i++) {
 // GUTS de pase — Atsumu sin habilidad primero (el que está "jugado"), luego el P02-016 en el GUTS
 let atsumuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-063"); // Atsumu sin habilidad
 let atsumuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-016"); // Atsumu con habilidad
-game.jugadores[1].zonas.pase.push(atsumuTP); // GUTS
-game.jugadores[1].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
-game.jugadores[0].zonas.pase.push(atsumuTP); // GUTS
-game.jugadores[0].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
+// game.jugadores[1].zonas.pase.push(atsumuTP); // GUTS
+// game.jugadores[1].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
+// game.jugadores[0].zonas.pase.push(atsumuTP); // GUTS
+// game.jugadores[0].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
 let kenPas = todasLasCartas.find(c => c.info?.id === "HV-D02-001"); // Osamu sin habilidad
 let yakuPas = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); // Osamu con habilidad
-game.jugadores[1].zonas.pase.push(kenPas); 
-game.jugadores[1].zonas.pase.push(yakuPas); 
+// game.jugadores[1].zonas.pase.push(kenPas); 
+// game.jugadores[1].zonas.pase.push(yakuPas); 
 
 // GUTS de remate — Osamu sin habilidad primero, luego el P02-020 en el GUTS
 let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad
 let osamuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-020"); // Osamu con habilidad
 let levT = todasLasCartas.find(c => c.info?.id === "HV-P01-025"); // Lev con habilidad
 let levT2 = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); // Lev con habilidad
-game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
-game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
-game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
-game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
-game.jugadores[0].zonas.remate.push(levT); // GUTS
-game.jugadores[1].zonas.remate.push(levT); // el "jugado" — siempre el último
-game.jugadores[0].zonas.remate.push(levT2); // GUTS
-game.jugadores[1].zonas.remate.push(levT2); // el "jugado" — siempre el último
+// game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
+// game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
+// game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
+// game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
+// game.jugadores[0].zonas.remate.push(levT); // GUTS
+// game.jugadores[1].zonas.remate.push(levT); // el "jugado" — siempre el último
+// game.jugadores[0].zonas.remate.push(levT2); // GUTS
+// game.jugadores[1].zonas.remate.push(levT2); // el "jugado" — siempre el último
 // PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 
 // mazos de prueba
@@ -2815,8 +2815,8 @@ game.jugadores[0].trash.push(aoneP01);
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-036"); // Sasaya, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    //game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    //game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 
@@ -2825,7 +2825,7 @@ for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

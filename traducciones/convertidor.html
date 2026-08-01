@@ -43,7 +43,7 @@
 
         // La primera línea es la cabecera: clave, es, en, fr
         // La separamos por ";" para obtener cada columna
-        let cabecera = lineas[0].split(",");
+        let cabecera = lineas[0].split(";");
 
         // Quitamos la primera columna ("clave") y nos quedamos con los idiomas: es, en, fr
         let idiomas = cabecera.slice(1).map(i => i.trim());
@@ -55,7 +55,7 @@
 
         // Recorremos todas las filas del CSV saltando la cabecera (empezamos en 1)
         for (let i = 1; i < lineas.length; i++) {
-          let columnas = lineas[i].split(",");
+          let columnas = lineas[i].split(";");
 
           // Si la línea está vacía o incompleta, la ignoramos
           if (columnas.length < 2) continue;

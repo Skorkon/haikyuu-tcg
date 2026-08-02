@@ -25,7 +25,7 @@ log.gutsInsuficiente;No hay suficientes cartas en la zona de GUTS indicada;Not e
 log.gutsInsuficienteMultiZona;No hay suficientes GUTS en el campo (necesitas {cantidad}, tienes {total});Not enough GUTS on the field (need {cantidad}, have {total});Pas assez de GUTS sur le terrain (besoin de {cantidad}, vous en avez {total});
 log.gutsUsado;GUTS usado correctamente en {zona};GUTS used correctly in {zona};GUTS utilisé correctement en {zona};
 log.gutsMultiZona;GUTS: {cantidad} cartas enviadas al trash;GUTS: {cantidad} cards sent to discard;GUTS : {cantidad} cartes envoyées à la défausse;
-log.gutsTitulo;GUTS en {zona}: Descarta ( {actual} / {total} );GUTS in {zona}: Discard ( {actual} / {total} );GUTS en {zona} : Défaussez ( {actual} / {total} );
+log.gutsTitulo;GUTS en {zona}: </br>Descarta ( {actual} / {total} );GUTS in {zona}: </br>Discard ( {actual} / {total} );GUTS en {zona} :</br>Défaussez ( {actual} / {total} );
 log.cartaEnGuts;Esta carta está en el GUTS y no puede usar su habilidad;This card is in the GUTS and cannot use its ability;Cette carte est dans le GUTS et ne peut pas utiliser sa capacité;
 log.sinHabilidad;Esta carta no tiene habilidad;This card has no ability;Cette carte n'a pas de capacité;
 log.habilidadYaUsada;Esta habilidad ya fue usada;This ability was already used;Cette capacité a déjà été utilisée;
@@ -112,7 +112,6 @@ log.robarCuandoRivalActivo;Efecto activo: el rival robará 1 carta cada vez que 
 log.negarRobarActivo;Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno;Active effect: rival cannot draw cards through abilities next turn;Effet actif : le rival ne pourra pas piocher de cartes via des capacités au prochain tour;
 log.sinCartasValidas;No hay cartas válidas en la búsqueda;No valid cards found;Aucune carte valide trouvée;
 log.esperandoDescarte;Esperando que el rival descarte una carta;Waiting for rival to discard a card;En attente que le rival se défausse d'une carte;
-log.descartarCuandoRoboActivo;Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar;Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means;Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard;
 log.cartaColocadaComoRematador;{carta} colocado como rematador con +{valor} al remate;{carta} placed as spiker with +{valor} to spike;{carta} placé comme attaquant avec +{valor} à l'attaque;
 log.habilidadActivada;Habilidad de {carta} activada;{carta} ability activated;Capacité de {carta} activée;
 log.condicionNoCumplida;Condición no cumplida;Condition not met;Condition non remplie;
@@ -122,3 +121,4 @@ log.cartaRevelada;Carta revelada: {carta};Card revealed: {carta};Carte révélé
 log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining cards sent to the bottom of the deck;Cartes restantes envoyées au fond du deck;
 log.motivar;Motivación: robas 1 carta extra por el punto del rival;Motivation: you draw 1 extra card from the rival's point;Motivation : tu pioches 1 carte supplémentaire grâce au point du rival;
 log.motivarActivo;Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra;Active effect: if the rival loses a point next turn, you draw 1 extra card;Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire;
+log.descartarCuandoRoboActivo;Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar;Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means;Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard;

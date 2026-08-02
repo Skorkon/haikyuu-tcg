@@ -8,25 +8,27 @@
   margin: 0;
   padding: 0;
 }
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 1 */
+:root {
+  --bg: #f2f0e8;              /* fondo gris clarito, papel de manga */
+  --surface: #16161a;         /* superficie oscura de paneles */
+  --surface2: #1e1e24;        /* superficie secundaria (inputs) */
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #e8e8ec;            /* texto claro (sobre fondos oscuros) */
+  --text2: #9090a0;           /* texto gris apagado */
+  --accent: #E8761A;          /* naranja de marca */
+  --font-body: 'Noto Sans JP', sans-serif;
+}
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body), Arial, sans-serif;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #d0d0d0;
+  background: var(--bg);      /* ← antes #d0d0d0, ahora el gris clarito de toda la app */
 }
 
-/* -------------------------------------------------- BARRA SUPERIOR */
-.top-bar {
-  background: black;
-  color: white;
-  padding: 8px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
 
 /* -------------------------------------------------- ZONA PRINCIPAL */
 .main {
@@ -35,14 +37,159 @@ body {
   overflow: hidden;
 }
 
-/* -------------------------------------------------- IZQUIERDA 20% */
+/* -------------------------------------------------- IZQUIERDA */
 .panel-izquierda {
   width: 30%;
-  background: #f2f2f2;
+  background: var(--bg);        /* ← antes #f2f2f2 */
   padding: 10px;
   overflow-y: auto;
-  border-right: 2px solid #ccc;
+  border-right: 2px solid var(--accent);   
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
 }
+
+/* -------------------------------------------------- DERECHA */
+.panel-derecha {
+  width: 20%;
+  background: var(--bg);        /* ← antes #f9f9f9 */
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 2px solid var(--accent);    
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: var(--bg);          /* ← antes white, ahora negro (paneles estilo deckbuilder) */
+  /* border: 2px solid var(--accent); */
+  border-radius: 8px;
+  color: var(--text);            /* texto claro sobre fondo negro */
+}
+
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 2 */
+.panel h3 {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.panel button {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  padding: 9px;
+  background: #000000;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.panel button:hover {
+  background: var(--accent);
+  color: #000000;
+}
+
+.panel button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mano-bottom {
+  background: var(--bg);
+  /* border: 2px solid var(--accent); */
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 3 Columna derecha */
+.panel-derecha h3 {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+#log-container {
+  border-bottom: 2px solid var(--accent) !important;   /* sustituye el #ccc inline del HTML */
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+}
+
+#log {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#selector-cartas {
+  background: #000000;
+  color: var(--text);
+  border-radius: 8px;
+}
+
+#selector-cartas button {
+  background: #000000;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 9px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#selector-cartas button:hover {
+  background: var(--accent);
+  color: #000000;
+}
+
+#selector-mano {
+  display: flex;
+  flex-wrap: nowrap;      /* ← cambia esto: nunca salta de línea */
+  overflow-x: auto;        /* scroll horizontal si no caben todas */
+  gap: 5px;
+}
+
+  /* -------------------- BARRA DE SCROLL PERSONALIZADA  ------------------------- */
+  /* ── SCROLLBAR PANEL IZQUIERDA ────────────────────────────── */
+.panel-izquierda::-webkit-scrollbar { width: 6px; }
+.panel-izquierda::-webkit-scrollbar-track { background: var(--bg); }
+.panel-izquierda::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.panel-izquierda::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
+
+/* ── SCROLLBAR PANEL DERECHA ──────────────────────────────── */
+.panel-derecha::-webkit-scrollbar { width: 6px; }
+.panel-derecha::-webkit-scrollbar-track { background: var(--bg); }
+.panel-derecha::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.panel-derecha::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
+  
+  #log-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  #log-container::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  #log-container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 6px;
+  }
+  #log-container::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+    border: 2px solid var(--accent);
+  }
 
 /* -------------------------------------------------- CENTRO 60% */
 .campo-central {
@@ -100,14 +247,6 @@ body {
   left: 70px;    /* un poco más a la derecha que el ataque */
 }
 
-/* -------------------------------------------------- DERECHA 20% */
-.panel-derecha {
-  width: 20%;
-  background: #f9f9f9;
-  padding: 10px;
-  overflow-y: auto;
-  border-left: 2px solid #ccc;
-}
 
 /* -------------------------------------------------- LOG */
 #log {
@@ -118,13 +257,6 @@ body {
 }
 
 /* -------------------------------------------------- MANO */
-.mano-bottom {
-  background: transparent;
-  border-bottom: 2px solid #ccc;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-}
 
 #mano {
   display: flex;
@@ -255,12 +387,6 @@ button {
   cursor: pointer;
 }
 
-.panel {
-  margin-bottom: 15px;
-  padding: 10px;
-  background: white;
-  border: 1px solid #ccc;
-}
 /* -------------------------------------------------- LADO JUGADOR */
 .lado {
   display: flex;
@@ -420,45 +546,37 @@ button {
 <!----------------------------------------------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------------------------------------- HTML -->
 <link rel="icon" type="image/png" href="favicon.png"> <!-- Icono navegador -->
-<!------------------------------------------------------------------------------------------------ BARRA SUPERIOR -->
-<div class="top-bar">
-  <!-- <div class="marcador">
-    <span id="puntos-j1">Andres: 2 📛</span>
-    <span>—</span>
-    <span id="puntos-j2">Raul: 2 📛</span>
-  </div> -->
-  <h3 id="faseActual">Fase: Saque</h3>
-  <div id="selector-idioma">
-    <button onclick="setLang('es')">ES</button>
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('fr')">FR</button>
-  </div>
-</div>
 
 <!------------------------------------------------------------------------------------------------ ZONA PRINCIPAL -->
 <div class="main">
   <!--------------------------------------------------------------------------- IZQUIERDA: PREVIEW + BOTONES -->
   <div class="panel-izquierda">
-  <!----------------------------------------------------------------------- ACCIONES -->
-
-<div class="panel">
-  <h3 data-i18n="ui.panelBotones">Otros</h3>
-  <button onclick="usarHabilidad()" data-i18n="ui.btnHabilidad">Usar habilidad</button>
-  <button onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano">Habilidad desde mano</button>
-  <button onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
-  <button onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
-  <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
-  <!-- <button onclick="mostrarEstado()" data-i18n="ui.btnEstado">Mostrar estado</button> -->
-</div>
-<div class="panel">
-  <h3 data-i18n="ui.panelAcciones">Acciones</h3>
-  <button onclick="jugarCarta()" data-i18n="ui.btnJugarCarta">Jugar carta</button>
-</div>
-<div class="mano-bottom">
-  <h3 id="nombreJugadorActivo" data-i18n="ui.etiquetaJugador">Jugador: </h3>
-  <div id="mano"></div>
-</div>
-</div>
+    <!----------------------------------------------------------------------- ACCIONES -->
+    <div class="panel">
+      <h3 data-i18n="ui.panelBotones">Otros</h3>
+      <div style="display:flex; gap:6px;">
+        <button style="flex:1;" onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
+        <button style="flex:1;" onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
+      </div>
+      <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
+    </div>
+    <div class="panel">
+      <h3 data-i18n="ui.panelAcciones">Acciones</h3>
+      <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
+      <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
+      <button id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
+      <button id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
+      <button id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
+      <button id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
+      <button id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
+      <button id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
+      <button id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
+      <button id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
+    </div>
+    <div class="mano-bottom">
+      <div id="mano"></div>
+    </div>
+  </div> <!-- fin panel izquierda -->
 
 <div class="campo-central">
   <div id="pelota" style="position:absolute; font-size:24px; z-index:50; transition: all 0.3s ease;">🏐</div>
@@ -521,13 +639,13 @@ button {
 <!-------------------------------------------------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------------------------------- DERECHA: LOG -->
   <div class="panel-derecha">
-    <div id="log-container" style="height:50%; overflow-y:auto; border-bottom: 2px solid #ccc; padding:10px;">
+    <div id="log-container" style="height:65%; overflow-y:auto; border-bottom: 2px solid #ccc; padding:10px;">
       <h3 data-i18n="ui.tituloLog">Log</h3>
       <div id="log"></div>
     </div>
-    <div id="selector-cartas" style="height:50%; padding:10px; display:none; flex-direction:column; gap:8px;">
+    <div id="selector-cartas" style="height:30%; padding:10px; display:none; flex-direction:column; gap:8px; margin-top:auto;">
       <h3 id="selector-titulo" data-i18n="ui.elegirCarta">Elige una carta:</h3>
-      <div id="selector-mano" style="display:flex; flex-wrap:wrap; gap:5px; overflow-y:auto;" onmouseleave="document.getElementById('tooltip').style.display='none'">
+      <div id="selector-mano" style="display:flex; flex-wrap:nowrap; gap:5px; overflow-x:auto;" onmouseleave="document.getElementById('tooltip').style.display='none'">
       <button onclick="cancelarSelector()" data-i18n="ui.cancelar">Cancelar</button>
     </div>
   </div>

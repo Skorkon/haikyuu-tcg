@@ -469,11 +469,21 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       document.addEventListener("click", window._cerrarFuera, { capture: true }); // añadir listener
     }
 
-    cartas.forEach(carta => {
+    // Cálculo de solapamiento, igual que en renderMano()
+    let totalCartas = cartas.length;
+    let contenedorAncho = contenedor.offsetWidth;
+    let cartaAncho = 80;
+    let overlapNecesario = totalCartas > 1
+      ? Math.max(0, (totalCartas * cartaAncho - contenedorAncho) / (totalCartas - 1))
+      : 0;
+
+    cartas.forEach((carta, index) => {
       let div = document.createElement("div");
       div.classList.add("carta");
+      div.style.marginRight = index === cartas.length - 1 ? "0" : `-${overlapNecesario}px`;
+      div.style.zIndex = cartas.length - index;
 
-      if (carta.info?.id) {
+      if (carta.info?.id) { 
         div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`;
       } else {
         div.textContent = carta.nombre;
@@ -1159,6 +1169,7 @@ function resolverSaque() {
   log(t("log.sacaConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
 
   game.gutsDescartados = [];
+  game.ultimaCarta = null;
   game.fase = "recepcion";
 
   // en online el que roba tras el saque es siempre el rival local
@@ -1199,6 +1210,7 @@ function resolverRecepcion() {
   if (valorRecepcion >= defensa) { // ================================================================= Recepción exitosa
     log(t("log.buenaRecepcion", { carta: carta.nombre, valor: valorRecepcion }));
     game.fase = "pase";                                 // cambiar fase a pase
+    game.ultimaCarta = null;
     game.valorAtaque = 0;                               // resetear ataque
     game.valorDefensa = 0;                              // resetear defensa
     if (modoOnline) enviarFase("pase");                 // avisar al rival del cambio de fase
@@ -1257,6 +1269,7 @@ function resolverPase(){
 
   log(t("log.paseConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
+  game.ultimaCarta = null;
   game.fase = "remate";
   if (modoOnline) enviarFase("remate"); // avisar al rival del cambio de fase
   actualizarFaseUI();
@@ -1297,6 +1310,7 @@ function resolverRemate() {
       robarCarta(game.jugadores[rivalIndex], 1);                           // el rival roba en local
     }
     game.fase = "recepcion";                                           // saltar a recepción
+    game.ultimaCarta = null;
     if (modoOnline) enviarFase("recepcion");                           // sincronizar fase
     cambiarJugador();                                                  // turno al rival
     actualizarFaseUI();                                                // actualizar letrero
@@ -1307,6 +1321,7 @@ function resolverRemate() {
   }
 
   game.fase = "bloqueo";
+  game.ultimaCarta = null;
   if (modoOnline) enviarFase("bloqueo"); // avisar al rival del cambio de fase
   cambiarJugador();
   actualizarFaseUI();
@@ -1371,6 +1386,7 @@ function resolverBloqueo() {
     }
 
     game.fase = "recepcion";                            // cambiar fase
+    game.ultimaCarta = null;
     if (modoOnline) enviarFase("recepcion");            // avisar al rival del cambio de fase
     cambiarJugador();                                   // cambiar turno
     actualizarFaseUI();                                 // actualizar letrero
@@ -1390,6 +1406,7 @@ function resolverBloqueo() {
     }
 
     game.fase = "recepcion";                            // cambiar fase
+    game.ultimaCarta = null;
     if (modoOnline) enviarFase("recepcion");            // avisar al rival del cambio de fase
     actualizarFaseUI();                                 // actualizar letrero
     renderMano();                                       // redibujar mano
@@ -1622,13 +1639,71 @@ function deseleccionarCarta() {
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
 function actualizarFaseUI() { // texto que indica la fase de juego en directo
-  document.getElementById("faseActual").textContent =
-    "Fase: " + game.fase;
   let btnMulligan = document.getElementById("btn-confirmar-mulligan");
   btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none"; // solo visible en mulligan
   document.getElementById("contador-ataque").textContent = "⚔️ " + game.valorAtaque;  // actualiza contador ataque
   document.getElementById("contador-defensa").textContent = "🛡️ " + game.valorDefensa; // actualiza contador defensa
-  moverPelota()
+  moverPelota();
+  actualizarBotonesAccion();
+}
+
+// ===================================================================================================================================
+// ========================================================================================================= ACTUALIZAR BOTONES ACCIÓN
+function actualizarBotonesAccion() {
+  const ids = ['btn-accion-jugarCarta','btn-accion-jugarEvento','btn-accion-usarHabilidad',
+               'btn-accion-habilidadMano','btn-accion-saque','btn-accion-recepcion',
+               'btn-accion-pase','btn-accion-remate','btn-accion-bloqueo','btn-accion-noBloquear'];
+  ids.forEach(id => document.getElementById(id).style.display = 'none');
+
+  if (modoOnline && game.jugadorActivo !== miNumero - 1) return;
+  if (game.fase === 'mulligan') return;
+
+  const jugador = modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
+  const fase = game.fase;
+  const sel = game.cartaSeleccionada;
+
+  let yaJugada;
+  if (fase === 'bloqueo') {
+    yaJugada = !!game.bloqueoActual.central;
+  } else {
+    const ultima = jugador.zonas[fase]?.at(-1);
+    yaJugada = ultima?.recienJugada;
+  }
+
+  if (sel?.info?.tipo === 'evento' && sel.info?.fases?.includes(fase)) {
+    document.getElementById('btn-accion-jugarEvento').style.display = 'block';
+  }
+
+  if (fase === 'bloqueo') {
+    const totalBloqueadores = (game.bloqueoActual.central ? 1 : 0) + game.bloqueoActual.apoyos.length;
+    if (sel?.info?.tipo === 'personaje' && !sel.info?.zonasProhibidas?.includes('bloqueo') && totalBloqueadores < 3) {
+      document.getElementById('btn-accion-jugarCarta').style.display = 'block';
+    }
+    // ── NUEVO: alternar entre "No bloquear" y "Resolver bloqueo" ──
+    if (totalBloqueadores === 0) {
+      document.getElementById('btn-accion-noBloquear').style.display = 'block';
+    } else {
+      document.getElementById('btn-accion-bloqueo').style.display = 'block';
+    }
+  } else if (!yaJugada) {
+    if (sel?.info?.tipo === 'personaje' && !sel.info?.zonasProhibidas?.includes(fase)) {
+      document.getElementById('btn-accion-jugarCarta').style.display = 'block';
+    }
+    if (sel?.info?.tipo === 'personaje' && sel.info?.activacionMano && sel.info?.fases?.includes(fase)) {
+      document.getElementById('btn-accion-habilidadMano').style.display = 'block';
+    }
+  } else {
+    document.getElementById('btn-accion-' + fase).style.display = 'block';
+  }
+
+  if (game.ultimaCarta && game.ultimaCarta.habilidad &&
+      !game.ultimaCarta.habilidadUsada && !game.ultimaCarta.info?.activacionMano) {
+    const fasesCarta = game.ultimaCarta.info?.fases;
+    const faseValida = !fasesCarta || fasesCarta.length === 0 || fasesCarta.includes(fase);
+    if (faseValida) {
+      document.getElementById('btn-accion-usarHabilidad').style.display = 'block';
+    }
+  }
 }
 
 // ===================================================================================================================================
@@ -1639,7 +1714,6 @@ function renderMano() {
     ? game.jugadores[miNumero - 1] 
     : game.jugadores[game.jugadorActivo];
   const contenedor = document.getElementById("mano");
-  document.getElementById("nombreJugadorActivo").textContent = t("ui.etiquetaJugador") + jugador.nombre;
   contenedor.innerHTML = "";
 
   let totalCartas = jugador.mano.length;
@@ -1690,6 +1764,7 @@ function renderMano() {
     contenedor.appendChild(div);
   });
   if (modoOnline) enviarCantidadMano();                        // enviar cantidad de cartas al rival
+  actualizarBotonesAccion();
 }
 // ======================================================================================================= MANO DEL RIVAL
 function renderManoRival() {
@@ -1851,6 +1926,7 @@ function renderCampo() {
           log(t("log.cartaSeleccionadaCampo", { carta: carta.nombre }));
           renderMano();
           renderCampo();
+          actualizarBotonesAccion();
         });
 
         cont.appendChild(div);
@@ -2783,8 +2859,8 @@ game.jugadores[0].mazo.push(gtsr); */
 // MANO AOBA JOSAI
 [ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P01-003"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[0].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 
 

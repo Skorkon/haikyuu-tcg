@@ -30,7 +30,7 @@ const TRADUCCIONES = {
       "gutsInsuficienteMultiZona": "No hay suficientes GUTS en el campo (necesitas {cantidad}, tienes {total})",
       "gutsUsado": "GUTS usado correctamente en {zona}",
       "gutsMultiZona": "GUTS: {cantidad} cartas enviadas al trash",
-      "gutsTitulo": "GUTS en {zona}: Descarta ( {actual} / {total} )",
+      "gutsTitulo": "GUTS en {zona}: </br>Descarta ( {actual} / {total} )",
       "cartaEnGuts": "Esta carta está en el GUTS y no puede usar su habilidad",
       "sinHabilidad": "Esta carta no tiene habilidad",
       "habilidadYaUsada": "Esta habilidad ya fue usada",
@@ -116,7 +116,6 @@ const TRADUCCIONES = {
       "negarRobarActivo": "Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno",
       "sinCartasValidas": "No hay cartas válidas en la búsqueda",
       "esperandoDescarte": "Esperando que el rival descarte una carta",
-      "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar",
       "cartaColocadaComoRematador": "{carta} colocado como rematador con +{valor} al remate",
       "habilidadActivada": "Habilidad de {carta} activada",
       "condicionNoCumplida": "Condición no cumplida",
@@ -125,7 +124,8 @@ const TRADUCCIONES = {
       "cartaRevelada": "Carta revelada: {carta}",
       "cartasAlFondoMazo": "Cartas restantes enviadas al fondo del mazo",
       "motivar": "Motivación: robas 1 carta extra por el punto del rival",
-      "motivarActivo": "Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra"
+      "motivarActivo": "Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra",
+      "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar"
     }
   },
   "en": {
@@ -156,7 +156,7 @@ const TRADUCCIONES = {
       "gutsInsuficienteMultiZona": "Not enough GUTS on the field (need {cantidad}, have {total})",
       "gutsUsado": "GUTS used correctly in {zona}",
       "gutsMultiZona": "GUTS: {cantidad} cards sent to discard",
-      "gutsTitulo": "GUTS in {zona}: Discard ( {actual} / {total} )",
+      "gutsTitulo": "GUTS in {zona}: </br>Discard ( {actual} / {total} )",
       "cartaEnGuts": "This card is in the GUTS and cannot use its ability",
       "sinHabilidad": "This card has no ability",
       "habilidadYaUsada": "This ability was already used",
@@ -242,7 +242,6 @@ const TRADUCCIONES = {
       "negarRobarActivo": "Active effect: rival cannot draw cards through abilities next turn",
       "sinCartasValidas": "No valid cards found",
       "esperandoDescarte": "Waiting for rival to discard a card",
-      "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means",
       "cartaColocadaComoRematador": "{carta} placed as spiker with +{valor} to spike",
       "habilidadActivada": "{carta} ability activated",
       "condicionNoCumplida": "Condition not met",
@@ -251,7 +250,8 @@ const TRADUCCIONES = {
       "cartaRevelada": "Card revealed: {carta}",
       "cartasAlFondoMazo": "Remaining cards sent to the bottom of the deck",
       "motivar": "Motivation: you draw 1 extra card from the rival's point",
-      "motivarActivo": "Active effect: if the rival loses a point next turn, you draw 1 extra card"
+      "motivarActivo": "Active effect: if the rival loses a point next turn, you draw 1 extra card",
+      "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means"
     }
   },
   "fr": {
@@ -282,7 +282,7 @@ const TRADUCCIONES = {
       "gutsInsuficienteMultiZona": "Pas assez de GUTS sur le terrain (besoin de {cantidad}, vous en avez {total})",
       "gutsUsado": "GUTS utilisé correctement en {zona}",
       "gutsMultiZona": "GUTS : {cantidad} cartes envoyées à la défausse",
-      "gutsTitulo": "GUTS en {zona} : Défaussez ( {actual} / {total} )",
+      "gutsTitulo": "GUTS en {zona} :</br>Défaussez ( {actual} / {total} )",
       "cartaEnGuts": "Cette carte est dans le GUTS et ne peut pas utiliser sa capacité",
       "sinHabilidad": "Cette carte n'a pas de capacité",
       "habilidadYaUsada": "Cette capacité a déjà été utilisée",
@@ -368,7 +368,6 @@ const TRADUCCIONES = {
       "negarRobarActivo": "Effet actif : le rival ne pourra pas piocher de cartes via des capacités au prochain tour",
       "sinCartasValidas": "Aucune carte valide trouvée",
       "esperandoDescarte": "En attente que le rival se défausse d'une carte",
-      "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard",
       "cartaColocadaComoRematador": "{carta} placé comme attaquant avec +{valor} à l'attaque",
       "habilidadActivada": "Capacité de {carta} activée",
       "condicionNoCumplida": "Condition non remplie",
@@ -377,7 +376,8 @@ const TRADUCCIONES = {
       "cartaRevelada": "Carte révélée : {carta}",
       "cartasAlFondoMazo": "Cartes restantes envoyées au fond du deck",
       "motivar": "Motivation : tu pioches 1 carte supplémentaire grâce au point du rival",
-      "motivarActivo": "Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire"
+      "motivarActivo": "Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire",
+      "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard"
     }
   },
   "": {
@@ -494,7 +494,6 @@ const TRADUCCIONES = {
       "negarRobarActivo": "",
       "sinCartasValidas": "",
       "esperandoDescarte": "",
-      "descartarCuandoRoboActivo": "",
       "cartaColocadaComoRematador": "",
       "habilidadActivada": "",
       "condicionNoCumplida": "",
@@ -503,7 +502,8 @@ const TRADUCCIONES = {
       "cartaRevelada": "",
       "cartasAlFondoMazo": "",
       "motivar": "",
-      "motivarActivo": ""
+      "motivarActivo": "",
+      "descartarCuandoRoboActivo": ""
     }
   }
 };

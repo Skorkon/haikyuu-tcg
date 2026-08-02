@@ -404,16 +404,16 @@ button {
 }
 
 /* -------------------------------------------------- COLORES */
-.zona-recepcion  { background: #1565c0; }
-.zona-pase       { background: #2e7d32; }
-.zona-remate     { background: #c62828; }
-.zona-bloqueo    { background: #212121; }
-.zona-apoyo      { background: #616161; }
-.zona-mazo       { background: #ebebeb; }
-.zona-puntos     { background: #ebebeb; }
-.zona-trash      { background: #b0bec5; color: #333; }
-.zona-saque      { background: #e65100; }
-.zona-eventos    { background: #b0bec5; color: #333; }
+.zona-recepcion  { background: #2b6bc4; border: 4px solid #0f4a8d; }
+.zona-pase       { background: #3d9142; border: 4px solid #27692a; }
+.zona-remate     { background: #d94040; border: 4px solid #9c1f1f; }
+.zona-bloqueo    { background: #3a3a3a; border: 4px solid #070707; }
+.zona-apoyo      { background: #757575; border: 4px solid #070707; }
+.zona-mazo       { background: #dcdcdc; border: 4px solid #bdbdbd; color: #333; }
+.zona-puntos     { background: #dcdcdc; border: 4px solid #bdbdbd; color: #333; }
+.zona-trash      { background: #a3b4bd; border: 4px solid #90a4ae; color: #333; }
+.zona-saque      { background: #f26a00; border: 4px solid #e65100; }
+.zona-eventos    { background: #a3b4bd; border: 4px solid #90a4ae; color: #333; }
 
 /* -------------------------------------------------- ZONA LATERAL */
 .lateral {
@@ -426,12 +426,6 @@ button {
 /* -------------------------------------------------- POSICIONES JUGADOR 1 */
 #campo-j1 .zona-puntos    { top: 0px;    left: 50px; }
 #campo-j1 .zona-saque     { top: 150px;   left: 80px; }
-#campo-j1 #j1-bloqueo     { top: 0px;    left: 256px; }
-#campo-j1 #j1-recepcion   { top: 118px;  left: 170px; }
-#campo-j1 #j1-pase        { top: 118px;  left: 256px; }
-#campo-j1 #j1-remate      { top: 118px;  left: 342px; }
-#campo-j1 #j1-bloqueoApoyoIzq { top: 0px; left: 170px; }
-#campo-j1 #j1-bloqueoApoyo    { top: 0px; left: 342px; }
 #campo-j1 #j1-eventos     { top: 150px;  left: -5px; }
 #campo-j1 #j1-mazo        { top: 75px;    left: 430px;}
 #campo-j1 #j1-trash       { top: 75px;  left: 515px; }
@@ -439,12 +433,6 @@ button {
 /* -------------------------------------------------- POSICIONES JUGADOR 2 (espejo) */
 #campo-j2 .zona-puntos    { top: 160px;  left: 430px; }
 #campo-j2 .zona-saque     { top: -20px;   left: 430px; }
-#campo-j2 #j2-bloqueo     { top: 130px;  left: 256px; }
-#campo-j2 #j2-recepcion   { top: 12px;    left: 342px; }
-#campo-j2 #j2-pase        { top: 12px;    left: 256px; }
-#campo-j2 #j2-remate      { top: 12px;    left: 170px; }
-#campo-j2 #j2-bloqueoApoyoIzq { top: 130px; left: 170px; }
-#campo-j2 #j2-bloqueoApoyo           { top: 130px; left: 342px; }
 #campo-j2 #j2-eventos     { top: -20px;    left: 515px; }
 #campo-j2 #j2-mazo        { top: 65px;  left: 80px; }
 #campo-j2 #j2-trash       { top: 65px;   left: -5px; }
@@ -542,6 +530,77 @@ button {
   gap: 4px;
 }
 
+/* --------------------------------------------------------------------------------- NUEVA CANCHA */
+.cancha-rect {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: 112px 16px 112px;
+  gap: 6px;
+  padding: 8px;
+  border: 5px solid white;
+  border-radius: 0px;
+  background: #E8761A;   /* fondo ligeramente distinguible del resto de la cancha */
+}
+
+  /* posición del rectángulo dentro de cada .lado-jugador — ajusta estos valores según el resto de tus zonas */
+  #cancha-j1 { top: 0px; left: 170px; }
+  #cancha-j2 { top: -20px; left: 170px; }
+
+  .cancha-rect .zona {
+  position: relative;   /* dentro del grid, no queremos position:absolute */
+  top: auto;
+  left: auto;
+}
+
+  /* la línea divisoria, ocupa toda la fila del medio */
+  .cancha-rect::before {
+    content: "";
+    grid-column: 1 / 4;    /* ocupa las 3 columnas */
+    grid-row: 2;            /* la fila del medio */
+    height: 6px;
+    background: white;
+    align-self: center;
+    margin: 0 -8px;
+  }
+
+  #cancha-j1 {
+    top: 0px;
+    left: 170px;
+    border-top: none;    /* ← quita el borde que mira hacia la red */
+  }
+
+  #cancha-j2 {
+    top: -20px;
+    left: 170px;
+    border-bottom: none;  /* ← quita el borde que mira hacia la red */
+    z-index: 2;
+  }
+
+  .cancha-conector {
+    position: absolute;
+    left: 170px;              /* mismo left que #cancha-j1/j2, ahora sí en el mismo sistema de coordenadas */
+    top: -40px;                 /* sube por encima del propio #campo-j1, para tapar el hueco hacia la red */
+    width: 277px;               /* ancho recalculado con box-sizing: border-box */
+    height: 40px;
+    background: #E8761A;
+    border-left: 5px solid white;
+    border-right: 5px solid white;
+    z-index: 1;
+  }
+
+  .cancha-marco {
+    position: absolute;
+    left: 130px;      /* un poco más ancho que el left:170px de las canchas, para que sobresalga como marco */
+    top: -30px;         /* ajustar según donde empiece #cancha-j2 */
+    width: 380px;       /* un poco más ancho que .cancha-rect (284px), para que sobresalga por los lados */
+    height: 800px;       /* altura que cubra desde arriba de cancha-j2 hasta abajo de cancha-j1 */
+    bottom: 0;
+    background: rgb(185, 185, 185);   /* gris del marco */
+    border: 8px solid white;
+    z-index: 0;    /* por detrás de todo lo demás */
+  }
+
 </style>
 <!----------------------------------------------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------------------------------------- HTML -->
@@ -591,16 +650,21 @@ button {
     z-index: 99;
     pointer-events: none;  
   "></div>
+  <div class="cancha-marco"></div>
   <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
   <div class="lado-jugador" id="campo-j2">
+    <!-- Dentro de #campo-j2, mismo bloque pero con orden invertido (espejo vertical) -->
+    <div class="cancha-rect" id="cancha-j2">
+      <div class="zona zona-remate" id="j2-remate" data-i18n="ui.zonaRemate">Remate</div>
+      <div class="zona zona-pase" id="j2-pase" data-i18n="ui.zonaPase">Pase</div>
+      <div class="zona zona-recepcion" id="j2-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+      <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+      <div class="zona zona-bloqueo" id="j2-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+      <div class="zona zona-apoyo" id="j2-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+    </div>
+
     <div class="zona zona-puntos horizontal" id="j2-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
     <div class="zona zona-saque" id="j2-saque" data-i18n="ui.zonaSaque">Saque</div>
-    <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
-    <div class="zona zona-bloqueo" id="j2-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
-    <div class="zona zona-apoyo" id="j2-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
-    <div class="zona zona-recepcion" id="j2-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
-    <div class="zona zona-pase" id="j2-pase" data-i18n="ui.zonaPase">Pase</div>
-    <div class="zona zona-remate" id="j2-remate" data-i18n="ui.zonaRemate">Remate</div>
     <div class="zona zona-eventos" id="j2-eventos" data-i18n="ui.zonaEventos">Eventos</div>
     <div class="zona zona-mazo" id="j2-mazo" data-i18n="ui.zonaMazo">Mazo</div>
     <div class="zona zona-trash" id="j2-trash" data-i18n="ui.zonaTrash">Trash</div>
@@ -612,24 +676,24 @@ button {
     <div id="contador-defensa" class="contador-campo">🛡️ 0</div>
   </div>
 
+  
+
   <!------------------------------------------------------------------------------------------------------------------------ JUGADOR 1 -->
   <div class="lado-jugador" id="campo-j1">
-    <!-- BOTONES -->
-    <button id="btn-evento" class="btn-campo" onclick="jugarEvento()" data-i18n="ui.btnEvento">Jugar Evento</button>
-    <button id="btn-saque" class="btn-campo" onclick="resolverSaque()" data-i18n="ui.btnSaque">Saque</button>
-    <button id="btn-recepcion" class="btn-campo" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion">Recepción</button>
-    <button id="btn-pase" class="btn-campo" onclick="resolverPase()" data-i18n="ui.btnPase">Pase</button>
-    <button id="btn-remate" class="btn-campo" onclick="resolverRemate()" data-i18n="ui.btnRemate">Remate</button>
-    <button id="btn-bloqueo" class="btn-campo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo">Bloqueo</button>
-    <!-- ZONAS -->
+    <div class="cancha-conector"></div>
+    <!-- Dentro de #campo-j1 -->
+    <div class="cancha-rect" id="cancha-j1">
+      <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+      <div class="zona zona-bloqueo" id="j1-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+      <div class="zona zona-apoyo" id="j1-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+      <div class="zona zona-recepcion" id="j1-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+      <div class="zona zona-pase" id="j1-pase" data-i18n="ui.zonaPase">Pase</div>
+      <div class="zona zona-remate" id="j1-remate" data-i18n="ui.zonaRemate">Remate</div>
+    </div>
+
+    <!-- El resto de zonas de J1 se quedan fuera, con su posición absoluta normal -->
     <div class="zona zona-puntos horizontal" id="j1-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
     <div class="zona zona-saque" id="j1-saque" data-i18n="ui.zonaSaque">Saque</div>
-    <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
-    <div class="zona zona-bloqueo" id="j1-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
-    <div class="zona zona-apoyo" id="j1-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
-    <div class="zona zona-recepcion" id="j1-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
-    <div class="zona zona-pase" id="j1-pase" data-i18n="ui.zonaPase">Pase</div>
-    <div class="zona zona-remate" id="j1-remate" data-i18n="ui.zonaRemate">Remate</div>
     <div class="zona zona-eventos" id="j1-eventos" data-i18n="ui.zonaEventos">Eventos</div>
     <div class="zona zona-mazo" id="j1-mazo" data-i18n="ui.zonaMazo">Mazo</div>
     <div class="zona zona-trash" id="j1-trash" data-i18n="ui.zonaTrash">Trash</div>

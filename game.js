@@ -2745,6 +2745,9 @@ function aplicarMatsukawa037() { // +3 a la recepción de receptores de Aoba Jô
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
   log(t("log.potenciarReceptorEscuela", { escuela: " de Aoba Jôsai", valor: 3 }));
 }
+
+
+
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 function mostrarFinPartida(gane) {

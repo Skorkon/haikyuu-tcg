@@ -17,7 +17,6 @@ log.zonaProhibida;{carta} no puede jugar en {zona};{carta} cannot play in {zona}
 log.cartaDuplicada;Ya has jugado a {carta} este turno;You already played {carta} this turn;Tu as déjà joué {carta} ce tour;
 log.noColocador;No puedes colocar un colocador (S) este turno;You cannot place a setter (S) this turn;Tu ne peux pas placer un passeur (S) ce tour;
 log.yaHayCartaEnZona;Ya hay una carta en {zona};There is already a card in {zona};Il y a déjà une carte en {zona};
-log.cartaColocadaEn;{jugador} juega a {carta} en {zona};{jugador} plays {carta} in {zona};{jugador} joue {carta} en {zona};
 log.noReceptorAlto;No puedes colocar un receptor con recepción de 6 o más este turno;You cannot place a receiver with reception 6 or more this turn;Tu ne peux pas placer un receveur avec réception 6 ou plus ce tour;Por ver si dejo o no
 log.sinCartasEnMazo;{jugador} no tiene más cartas en el mazo;{jugador} has no more cards in the deck;{jugador} n'a plus de cartes dans le deck;
 log.robarCartas;{jugador} roba {cantidad} carta(s);{jugador} draws {cantidad} card(s);{jugador} pioche {cantidad} carte(s);
@@ -81,6 +80,8 @@ log.negarReceptorAltoActivo;Efecto activo: el rival no podrá colocar un recepto
 log.negarReceptorAlto;No puedes colocar un receptor con recepción de 6 o más este turno;You cannot place a receiver with reception of 6 or more this turn;Tu ne peux pas placer un receveur avec réception de 6 ou plus ce tour;
 log.negarColocadorActivo;Efecto activo: el rival no podrá colocar un colocador el próximo turno;Active effect: rival cannot place a setter next turn;Effet actif : le rival ne pourra pas placer un passeur au prochain tour;
 log.negarColocador;No puedes colocar un colocador este turno;You cannot place a setter this turn;Tu ne peux pas placer un passeur ce tour;
+log.negarRematadorMBActivo;Efecto activo: el rival no podrá usar un MB como rematador el próximo turno;Active effect: rival cannot use a MB as spiker next turn;Effet actif : le rival ne pourra pas utiliser un MB comme attaquant au prochain tour;
+log.negarRematadorMB;No puedes usar un MB como rematador este turno;You cannot use a MB as spiker this turn;Tu ne peux pas utiliser un MB comme attaquant ce tour;
 log.negarOneTouchActivo;Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo;Active effect: rival cannot use One Touch in their next block;Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc;
 log.negarOneTouch;One Touch negado por habilidad del rival;One Touch negated by rival ability;One Touch annulé par la capacité du rival;
 log.negarCartaDesdeManoActivo;Efecto activo: el rival no podrá usar habilidades desde la mano en {fases};Active effect: rival cannot use hand abilities in {fases};Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases};
@@ -122,3 +123,7 @@ log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining card
 log.motivar;Motivación: robas 1 carta extra por el punto del rival;Motivation: you draw 1 extra card from the rival's point;Motivation : tu pioches 1 carte supplémentaire grâce au point du rival;
 log.motivarActivo;Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra;Active effect: if the rival loses a point next turn, you draw 1 extra card;Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire;
 log.descartarCuandoRoboActivo;Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar;Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means;Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard;
+log.personajeDoble;Personaje doble: carta tratada como {carta};Double character: card treated as {carta};Personnage double : carte traitée comme {carta};
+log.cartasReveladas;Cartas reveladas: {cartas};Cards revealed: {cartas};Cartes révélées : {cartas};
+log.elegirCartaOpcional;Elige una carta para añadir a tu mano (opcional);Choose a card to add to your hand (optional);Choisissez une carte à ajouter à votre main (optionnel);
+log.elegirCarta;Elige una carta;Choose a card;Choisissez une carte;

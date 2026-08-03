@@ -362,6 +362,22 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong> If you have 3 or fewer cards in hand and your players on the field belong to more than 4 different schools, add +2 to the spike. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Blockout (2)</strong></span>: On the next turn, if the opponent's middle blocker has an original block of 2 or lower, it will go to the discard pile instead of staying in the block zone.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> Si vous avez 3 cartes ou moins en main et que vos joueurs sur le terrain appartiennent à plus de 4 écoles différentes, ajoutez +2 à l'attaque. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Blockout (2)</strong></span> : Au prochain tour, si le contreur central adverse a un contre original de 2 ou moins, il ira à la défausse au lieu de rester dans la zone de contre."
   },
+  "HV-P01-072": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al colocar esta carta, elige si su nombre es <strong>Hinata Shoyo</strong> o <strong>Kozume Kenma</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.",
+    "en": "When placing this card, choose whether its name is <strong>Hinata Shoyo</strong> or <strong>Kozume Kenma</strong>. The chosen name, school, and position apply permanently.",
+    "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Hinata Shoyo</strong> ou <strong>Kozume Kenma</strong>. Le nom, l'école et le poste choisis s'appliquent de façon définitive."
+  },
+  "HV-P01-073": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al colocar esta carta, elige si su nombre es <strong>Tsukishima Kei</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.",
+    "en": "When placing this card, choose whether its name is <strong>Tsukishima Kei</strong> or <strong>Kuroo Tetsuro</strong>. The chosen name, school, and position apply permanently.",
+    "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Tsukishima Kei</strong> ou <strong>Kuroo Tetsuro</strong>. Le nom, l'école et le poste choisis s'appliquent de façon définitive."
+  },
   "HV-P01-074": {
     "nombre_es": "",
     "nombre_en": "",
@@ -441,6 +457,14 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar <strong>6 GUTS</strong> de cualquier zona de tu campo para añadir <strong>+3 al remate</strong>.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card. If all your characters in play are from <strong>Nekoma</strong>, you may spend <strong>6 GUTS</strong> from any zone on your field to add <strong>+3 to the spike</strong>.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte. Si tous vos personnages en jeu sont de <strong>Nekoma</strong>, vous pouvez dépenser <strong>6 GUTS</strong> de n'importe quelle zone de votre terrain pour ajouter <strong>+3 à l'attaque</strong>."
+  },
+  "HV-P02-078": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al colocar esta carta, elige si su nombre es <strong>Sawamura Daichi</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.",
+    "en": "When placing this card, choose whether its name is <strong>Sawamura Daichi</strong> or <strong>Kuroo Tetsuro</strong>. The chosen name, school, and position apply permanently.",
+    "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Sawamura Daichi</strong> ou <strong>Kuroo Tetsuro</strong>. Le nom, l'école et le poste choisis s'appliquent de façon définitive."
   },
   "HV-P01-085": {
     "nombre_es": "",
@@ -633,6 +657,38 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Roba cartas hasta tener 3 en la mano.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Draw cards until you have 3 in hand.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Piochez des cartes jusqu'à en avoir 3 en main."
+  },
+  "HV-P02-060": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Cuando coloques un rematador con remate base de 3, si esta carta está en <strong><span style=&quot;color:#2e7d32&quot;>pase</span></strong>, descarta 1 carta de la parte superior de tu mazo para +1 al pase y traer 1 carta del GUTS de remate al remate activo.",
+    "en": "When you place a spiker with a base spike of 3, if this card is in <strong><span style=&quot;color:#2e7d32&quot;>set</span></strong>, discard 1 card from the top of your deck to add +1 to the set and bring 1 card from the spike GUTS to the active spike.",
+    "fr": "Lorsque vous placez un attaquant avec une attaque de base de 3, si cette carte est en <strong><span style=&quot;color:#2e7d32&quot;>passe</span></strong>, défaussez 1 carte du dessus de votre deck pour +1 à la passe et amener 1 carte du GUTS d'attaque vers l'attaque active."
+  },
+  "HV-P02-061": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: +3 a la recepción. Si el rematador rival tiene un remate base de 0, +3 adicional a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: +3 to the reception. If the opponent's spiker has a base spike of 0, an additional +3 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : +3 à la réception. Si l'attaquant adverse a une attaque de base de 0, +3 supplémentaire à la réception."
+  },
+  "HV-P02-062": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Mira las 2 primeras cartas de tu mazo. Puedes añadir a tu mano hasta 1 carta de <strong>Nekoma</strong> de entre ellas. Las demás van al fondo del mazo.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Look at the top 2 cards of your deck. You may add up to 1 <strong>Nekoma</strong> card from among them to your hand. The rest go to the bottom of the deck.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Regardez les 2 premières cartes de votre deck. Vous pouvez ajouter à votre main jusqu'à 1 carte de <strong>Nekoma</strong> parmi elles. Les autres vont au fond du deck."
+  },
+  "HV-P02-077": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al colocar esta carta, elige si su nombre es <strong>Miya Atsumu</strong> o <strong>Miya Osamu</strong>. El nombre y posición elegidos se aplican de forma definitiva.",
+    "en": "When placing this card, choose whether its name is <strong>Miya Atsumu</strong> or <strong>Miya Osamu</strong>. The chosen name and position apply permanently.",
+    "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Miya Atsumu</strong> ou <strong>Miya Osamu</strong>. Le nom et le poste choisis s'appliquent de façon définitive."
   },
   "HV-P02-084": {
     "nombre_es": "",

@@ -2663,6 +2663,56 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
+  crearCarta("Hinata Shoyo · Kozume Kenma", // ============================================================= P01-072
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // habilidad gestionada por aplicarPersonajeDoble
+    {
+      tipo: "personaje",
+      id: "HV-P01-072",
+      escuela: "Karasuno",                                                   // escuela inicial
+      posicion: "MB",                                                        // posición inicial
+      anyo: 1,
+      rareza: "N",
+      personajeDoble: true,                                                  // flag de personaje doble
+      opcionesDoble: [
+        { nombre: "Hinata Shoyo", escuela: "Karasuno", posicion: "MB" },
+        { nombre: "Kozume Kenma", escuela: "Nekoma",   posicion: "S" }
+      ],
+      escuelasDoble: ["Karasuno", "Nekoma"],      
+      descripcion: `Al colocar esta carta, elige si su nombre es <strong>Hinata Shoyo</strong> o <strong>Kozume Kenma</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.`
+    }
+  ),
+  crearCarta("Tsukishima Kei· Kuroo Tetsuro", // =========================================================== P01-073
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    null, // habilidad gestionada por aplicarPersonajeDoble
+    {
+      tipo: "personaje",
+      id: "HV-P01-073",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "N",
+      personajeDoble: true,
+      opcionesDoble: [
+        { nombre: "Tsukishima Kei", escuela: "Karasuno", posicion: "MB" },
+        { nombre: "Kuroo Tetsuro",  escuela: "Nekoma",   posicion: "MB" }
+      ],
+      escuelasDoble: ["Karasuno", "Nekoma"],     
+      descripcion: `Al colocar esta carta, elige si su nombre es <strong>Tsukishima Kei</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.`
+    }
+  ),
 // ========================================================================================================================= KARASUNO Eventos
   crearCarta("Ukai Ikki", // ============================================================== P01-074
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
@@ -3100,6 +3150,34 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes gastar <strong>6 GUTS</strong> de cualquier zona de tu campo para añadir <strong>+3 al remate</strong>.`
     }
   ),
+  crearCarta("El impulso son las alas de Shoyo", // ====================================================== P01-084
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      // comprobar que el colocador es Kozume Kenma
+      let colocador = jugador.zonas.pase.at(-1);                         // buscar colocador en pase
+      if (!colocador || colocador.nombre !== "Kozume Kenma") {           // comprobar que es Kenma
+        log(t("log.condicionNoCumplida"));
+        jugador.mano.push(carta);                                        // devolver carta a la mano
+        jugador.zonas.eventos.splice(jugador.zonas.eventos.indexOf(carta), 1); // sacar de eventos
+        renderMano();                                                    // actualizar mano
+        renderManoRival();                                               // actualizar mano rival
+        return false;                                                    // return false: condición no cumplida                                                  
+      }
+
+      robarCarta(jugador, 1, true);                                       // roba 1 carta
+      game.valorAtaque += 1;                                              // +1 al pase
+      log(t("log.habilidadActivada", { carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre }));
+      negarRematadorMB();                                                 // activar efecto
+    },
+    {
+      tipo: "evento",
+      id: "HV-P01-084",
+      fases: ["pase"],
+      escuela: "Nekoma",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Solo puedes jugar este evento si tu colocador es <strong>Kozume Kenma</strong>. Roba 1 carta y +1 al pase. Durante el próximo turno rival, el rival no podrá colocar un <strong>MB</strong> como rematador desde su mano.`
+    }
+  ),
   crearCarta("Irihata Nobuteru", // ============================================================ P01-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
@@ -3368,7 +3446,7 @@ function inicializarCartas() {
       escuela: "Inarizaki",
       posicion: "S",
       anyo: 2,
-      rareza: "HI"
+      rareza: "HI",
     }
   ),
   crearCarta("Miya Atsumu", // ============================================================ P02-016
@@ -4523,8 +4601,130 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  crearCarta("Kozume Kenma", // ================================================================ P02-060
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 1,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // habilidad gestionada automáticamente en colocarCarta()
+    {
+      tipo: "personaje",
+      id: "HV-P02-060",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R",
+      descripcion: `Cuando coloques un rematador con remate base de 3, si esta carta está en <strong><span style="color:#2e7d32">pase</span></strong>, descarta 1 carta de la parte superior de tu mazo para +1 al pase y traer 1 carta del GUTS de remate al remate activo.`
+    }
+  ),
+  crearCarta("Kuroo Tetsuro", // =============================================================== P02-061
+    {
+      saque: 1,
+      recepcion: 3,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                            // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;                                                    // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "recepcion", 2)) {                    // pagar 2 GUTS de recepción
+        return false;                                                    // return false: GUTS insuficientes
+      }
 
+      game.valorDefensa += 3;                                            // +3 a la recepción
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
+      // buscar rematador rival
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;     // índice del rival
+      let rival = game.jugadores[rivalIndex];                             // jugador rival
+      let rematadorRival = rival.zonas.remate.at(-1);                     // último rematador rival
+
+      if (rematadorRival && rematadorRival.stats.remate === 0) {         // si remate base del rival es 0
+        game.valorDefensa += 3;                                          // +3 adicional a la recepción
+        log(t("log.condicionCumplida"));
+      }
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-061",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: +3 a la recepción. Si el rematador rival tiene un remate base de 0, +3 adicional a la recepción.`
+    }
+  ),
+  crearCarta("Yaku Morisuke", // =============================================================== P02-062
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                            // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;                                                    // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "recepcion", 2)) {                    // pagar 2 GUTS de recepción
+        return false;                                                    // return false: GUTS insuficientes
+      }
+
+      if (jugador.mazo.length < 2) {                                     // comprobar que hay al menos 2 cartas
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      // mirar las 2 primeras cartas
+      let dosCartas = jugador.mazo.slice(0, 2);                          // coger las 2 primeras
+      log(t("log.cartasReveladas", { cartas: dosCartas.map(c => c.nombre).join(", ") }));
+
+      // filtrar solo Nekoma
+      let elegibles = dosCartas.filter(c => c.info?.escuela === "Nekoma"); // solo Nekoma
+      if (elegibles.length === 0) {                                      // si no hay ninguna de Nekoma
+        log(t("log.condicionNoCumplida"));
+      } else {
+        // mostrar selector
+        let cartaElegida = await mostrarSelectorCartas(                  // abrir selector
+          t("log.elegirCartaOpcional"),
+          elegibles,                                                     // solo Nekoma
+          true                                                           // cancelable
+        );
+        if (cartaElegida) {                                              // si elige una
+          let index = jugador.mazo.indexOf(cartaElegida);                // buscar en el mazo
+          jugador.mazo.splice(index, 1);                                 // sacar del mazo
+          añadirCartaAMano(jugador, cartaElegida);                       // añadir a la mano
+          log(t("log.cartaAMano", { carta: cartaElegida.nombre }));
+        }
+      }
+
+      // las restantes al fondo en cualquier orden
+      let restantes = jugador.mazo.splice(0, jugador.mazo[0] === dosCartas[0] ? 2 : 1); // las que quedan de las 2 primeras
+      jugador.mazo.push(...restantes);                                   // enviar al fondo
+      log(t("log.cartasAlFondoMazo"));
+
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-062",
+      escuela: "Nekoma",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: Mira las 2 primeras cartas de tu mazo. Puedes añadir a tu mano hasta 1 carta de <strong>Nekoma</strong> de entre ellas. Las demás van al fondo del mazo.`
+    }
+  ),
   crearCarta("Haiba Lev", // =================================================================== P02-063
     {
       saque: 2,
@@ -4544,6 +4744,55 @@ function inicializarCartas() {
     }
   ),
 
+  crearCarta("Miya Atsumu · Miya Osamu", // =============================================================== P02-077
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // habilidad gestionada por aplicarPersonajeDoble
+    {
+      tipo: "personaje",
+      id: "HV-P02-077",
+      escuela: "Inarizaki",
+      posicion: "S",
+      anyo: 2,
+      rareza: "S",
+      personajeDoble: true,
+      opcionesDoble: [
+        { nombre: "Miya Atsumu", escuela: "Inarizaki", posicion: "S"  },
+        { nombre: "Miya Osamu",  escuela: "Inarizaki", posicion: "WS" }
+      ],
+      descripcion: `Al colocar esta carta, elige si su nombre es <strong>Miya Atsumu</strong> o <strong>Miya Osamu</strong>. El nombre y posición elegidos se aplican de forma definitiva.`
+    }
+  ),
+  crearCarta("Sawamura Daichi· Kuroo Tetsuro", // =========================================================== P02-078
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 1
+    },
+    null, // habilidad gestionada por aplicarPersonajeDoble
+    {
+      tipo: "personaje",
+      id: "HV-P02-078",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R",
+      personajeDoble: true,
+      opcionesDoble: [
+        { nombre: "Sawamura Daichi", escuela: "Karasuno", posicion: "WS" },
+        { nombre: "Kuroo Tetsuro",   escuela: "Nekoma",   posicion: "MB" }
+      ],
+      escuelasDoble: ["Karasuno", "Nekoma"],      
+      descripcion: `Al colocar esta carta, elige si su nombre es <strong>Sawamura Daichi</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.`
+    }
+  ),
   crearCarta("Kurosu Norimune", // ============================================================ P02-084
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {

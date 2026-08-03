@@ -805,6 +805,9 @@
         fases:           info.fases           || [],
         descripcion:     info.descripcion     || '',
         zonasProhibidas: info.zonasProhibidas || [],
+        personajeDoble:  info.personajeDoble  || false,         
+        opcionesDoble:   info.opcionesDoble   || [],              
+        escuelasDoble:   info.escuelasDoble   || [],
       };
     }
   </script>
@@ -972,13 +975,14 @@
         }
 
       const resultado = CATALOGUE.filter(c => {                        // mostrar o no según se encuentre en el filtro
-        if (q) {                                                               // filtro por texto escrito
+        if (c.oculta) return false;                                             // excluir cartas ocultas del catálogo
+        if (q) {                                                                // filtro por texto escrito
           const nombreTraducido = getCardName(c).toLowerCase();   
           const coincideNombre  = c.nombre.toLowerCase().includes(q) || nombreTraducido.includes(q); // ← comprueba ambos
           const coincideId      = (c.id || '').toLowerCase().includes(q);
           if (!coincideNombre && !coincideId) return false;
         }
-        if (escuela  && c.escuela  !== escuela)  return false;
+        if (escuela && c.escuela !== escuela && !c.escuelasDoble?.includes(escuela)) return false;
         if (posicion && c.posicion !== posicion) return false;
         if (rareza   && c.rareza   !== rareza)   return false;
         if (activeFilters.tipo && c.tipo !== activeFilters.tipo) return false;  // filtro personaje/evento

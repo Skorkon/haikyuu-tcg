@@ -22,7 +22,6 @@ const TRADUCCIONES = {
       "cartaDuplicada": "Ya has jugado a {carta} este turno",
       "noColocador": "No puedes colocar un colocador (S) este turno",
       "yaHayCartaEnZona": "Ya hay una carta en {zona}",
-      "cartaColocadaEn": "{jugador} juega a {carta} en {zona} ({stat})",
       "noReceptorAlto": "No puedes colocar un receptor con recepción de 6 o más este turno",
       "sinCartasEnMazo": "{jugador} no tiene más cartas en el mazo",
       "robarCartas": "{jugador} roba {cantidad} carta(s)",
@@ -86,6 +85,8 @@ const TRADUCCIONES = {
       "negarReceptorAlto": "No puedes colocar un receptor con recepción de 6 o más este turno",
       "negarColocadorActivo": "Efecto activo: el rival no podrá colocar un colocador el próximo turno",
       "negarColocador": "No puedes colocar un colocador este turno",
+      "negarRematadorMBActivo": "Efecto activo: el rival no podrá usar un MB como rematador el próximo turno",
+      "negarRematadorMB": "No puedes usar un MB como rematador este turno",
       "negarOneTouchActivo": "Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo",
       "negarOneTouch": "One Touch negado por habilidad del rival",
       "negarCartaDesdeManoActivo": "Efecto activo: el rival no podrá usar habilidades desde la mano en {fases}",
@@ -104,6 +105,7 @@ const TRADUCCIONES = {
       "oneTouch": "One Touch ({valor}): -{valor} al ataque rival. Ataque actual: {ataque}",
       "bloqueoOfensivo": "Bloqueo ofensivo: el contraataque tiene potencia {valor}",
       "mazoPuntosPreparado": "{jugador}: mazo de puntos preparado con 2 cartas",
+      "cartaColocadaEn": "{jugador} juega a {carta} en {zona} ({stat})",
       "cartaColocadaBloqueo": "{jugador} juega a {carta} como {tipo} ({stat})",
       "bloqueadorCentral": "Bloqueador central",
       "apoyoBloqueo": "Bloqueo de apoyo",
@@ -125,7 +127,11 @@ const TRADUCCIONES = {
       "cartasAlFondoMazo": "Cartas restantes enviadas al fondo del mazo",
       "motivar": "Motivación: robas 1 carta extra por el punto del rival",
       "motivarActivo": "Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra",
-      "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar"
+      "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar",
+      "personajeDoble": "Personaje doble: carta tratada como {carta}",
+      "cartasReveladas": "Cartas reveladas: {cartas}",
+      "elegirCartaOpcional": "Elige una carta para añadir a tu mano (opcional)",
+      "elegirCarta": "Elige una carta"
     }
   },
   "en": {
@@ -148,7 +154,6 @@ const TRADUCCIONES = {
       "cartaDuplicada": "You already played {carta} this turn",
       "noColocador": "You cannot place a setter (S) this turn",
       "yaHayCartaEnZona": "There is already a card in {zona}",
-      "cartaColocadaEn": "{jugador} plays {carta} in {zona} ({stat})",
       "noReceptorAlto": "You cannot place a receiver with reception 6 or more this turn",
       "sinCartasEnMazo": "{jugador} has no more cards in the deck",
       "robarCartas": "{jugador} draws {cantidad} card(s)",
@@ -212,6 +217,8 @@ const TRADUCCIONES = {
       "negarReceptorAlto": "You cannot place a receiver with reception of 6 or more this turn",
       "negarColocadorActivo": "Active effect: rival cannot place a setter next turn",
       "negarColocador": "You cannot place a setter this turn",
+      "negarRematadorMBActivo": "Active effect: rival cannot use a MB as spiker next turn",
+      "negarRematadorMB": "You cannot use a MB as spiker this turn",
       "negarOneTouchActivo": "Active effect: rival cannot use One Touch in their next block",
       "negarOneTouch": "One Touch negated by rival ability",
       "negarCartaDesdeManoActivo": "Active effect: rival cannot use hand abilities in {fases}",
@@ -230,6 +237,7 @@ const TRADUCCIONES = {
       "oneTouch": "One Touch ({valor}): -{valor} to rival attack. Current attack: {ataque}",
       "bloqueoOfensivo": "Offensive block: counterattack has power {valor}",
       "mazoPuntosPreparado": "{jugador}: point deck prepared with 2 cards",
+      "cartaColocadaEn": "{jugador} plays {carta} in {zona} ({stat})",
       "cartaColocadaBloqueo": "{jugador} plays {carta} as {tipo} ({stat})",
       "bloqueadorCentral": "Central blocker",
       "apoyoBloqueo": "Support blocker",
@@ -251,7 +259,11 @@ const TRADUCCIONES = {
       "cartasAlFondoMazo": "Remaining cards sent to the bottom of the deck",
       "motivar": "Motivation: you draw 1 extra card from the rival's point",
       "motivarActivo": "Active effect: if the rival loses a point next turn, you draw 1 extra card",
-      "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means"
+      "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means",
+      "personajeDoble": "Double character: card treated as {carta}",
+      "cartasReveladas": "Cards revealed: {cartas}",
+      "elegirCartaOpcional": "Choose a card to add to your hand (optional)",
+      "elegirCarta": "Choose a card"
     }
   },
   "fr": {
@@ -274,7 +286,6 @@ const TRADUCCIONES = {
       "cartaDuplicada": "Tu as déjà joué {carta} ce tour",
       "noColocador": "Tu ne peux pas placer un passeur (S) ce tour",
       "yaHayCartaEnZona": "Il y a déjà une carte en {zona}",
-      "cartaColocadaEn": "{jugador} joue {carta} en {zona} ({stat})",
       "noReceptorAlto": "Tu ne peux pas placer un receveur avec réception 6 ou plus ce tour",
       "sinCartasEnMazo": "{jugador} n'a plus de cartes dans le deck",
       "robarCartas": "{jugador} pioche {cantidad} carte(s)",
@@ -338,6 +349,8 @@ const TRADUCCIONES = {
       "negarReceptorAlto": "Tu ne peux pas placer un receveur avec réception de 6 ou plus ce tour",
       "negarColocadorActivo": "Effet actif : le rival ne pourra pas placer un passeur au prochain tour",
       "negarColocador": "Tu ne peux pas placer un passeur ce tour",
+      "negarRematadorMBActivo": "Effet actif : le rival ne pourra pas utiliser un MB comme attaquant au prochain tour",
+      "negarRematadorMB": "Tu ne peux pas utiliser un MB comme attaquant ce tour",
       "negarOneTouchActivo": "Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc",
       "negarOneTouch": "One Touch annulé par la capacité du rival",
       "negarCartaDesdeManoActivo": "Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases}",
@@ -356,6 +369,7 @@ const TRADUCCIONES = {
       "oneTouch": "One Touch ({valor}) : -{valor} à l'attaque rivale. Attaque actuel : {ataque}",
       "bloqueoOfensivo": "Bloc offensif : le contre-attaque a une puissance de {valor}",
       "mazoPuntosPreparado": "{jugador} : deck de points préparé avec 2 cartes",
+      "cartaColocadaEn": "{jugador} joue {carta} en {zona} ({stat})",
       "cartaColocadaBloqueo": "{jugador} joue {carta} en tant que {tipo} ({stat})",
       "bloqueadorCentral": "Bloqueur central",
       "apoyoBloqueo": "Bloqueur de soutien",
@@ -377,7 +391,11 @@ const TRADUCCIONES = {
       "cartasAlFondoMazo": "Cartes restantes envoyées au fond du deck",
       "motivar": "Motivation : tu pioches 1 carte supplémentaire grâce au point du rival",
       "motivarActivo": "Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire",
-      "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard"
+      "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard",
+      "personajeDoble": "Personnage double : carte traitée comme {carta}",
+      "cartasReveladas": "Cartes révélées : {cartas}",
+      "elegirCartaOpcional": "Choisissez une carte à ajouter à votre main (optionnel)",
+      "elegirCarta": "Choisissez une carte"
     }
   },
   "": {
@@ -400,7 +418,6 @@ const TRADUCCIONES = {
       "cartaDuplicada": "",
       "noColocador": "",
       "yaHayCartaEnZona": "",
-      "cartaColocadaEn": "",
       "noReceptorAlto": "Por ver si dejo o no",
       "sinCartasEnMazo": "",
       "robarCartas": "",
@@ -464,6 +481,8 @@ const TRADUCCIONES = {
       "negarReceptorAlto": "",
       "negarColocadorActivo": "",
       "negarColocador": "",
+      "negarRematadorMBActivo": "",
+      "negarRematadorMB": "",
       "negarOneTouchActivo": "",
       "negarOneTouch": "",
       "negarCartaDesdeManoActivo": "",
@@ -482,6 +501,7 @@ const TRADUCCIONES = {
       "oneTouch": "",
       "bloqueoOfensivo": "",
       "mazoPuntosPreparado": "",
+      "cartaColocadaEn": "",
       "cartaColocadaBloqueo": "",
       "bloqueadorCentral": "",
       "apoyoBloqueo": "",
@@ -503,7 +523,11 @@ const TRADUCCIONES = {
       "cartasAlFondoMazo": "",
       "motivar": "",
       "motivarActivo": "",
-      "descartarCuandoRoboActivo": ""
+      "descartarCuandoRoboActivo": "",
+      "personajeDoble": "",
+      "cartasReveladas": "",
+      "elegirCartaOpcional": "",
+      "elegirCarta": ""
     }
   }
 };

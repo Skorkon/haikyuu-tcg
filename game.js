@@ -1710,8 +1710,26 @@ function actualizarFaseUI() { // texto que indica la fase de juego en directo
   document.getElementById("contador-defensa").textContent = "🛡️ " + game.valorDefensa; // actualiza contador defensa
   moverPelota();
   actualizarBotonesAccion();
+  actualizarFaseTracker();
 }
 
+function actualizarFaseTracker() {
+  const jugador = modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
+  
+  let faseVisual = game.fase;
+
+  // caso especial: "recepcion" se muestra como "robo" si aún no hay receptor jugado
+  if (game.fase === "recepcion") {
+    const ultimaRecepcion = jugador.zonas.recepcion.at(-1);
+    if (!ultimaRecepcion || !ultimaRecepcion.recienJugada) {
+      faseVisual = "robo";
+    }
+  }
+
+  document.querySelectorAll(".fase-barra").forEach(barra => {
+    barra.classList.toggle("activa", barra.dataset.fase === faseVisual);
+  });
+}
 // ===================================================================================================================================
 // ========================================================================================================= ACTUALIZAR BOTONES ACCIÓN
 function actualizarBotonesAccion() {
@@ -1947,7 +1965,7 @@ function renderCampo() {
 
         // apilar visualmente — cada carta se desplaza 3px hacia abajo
         div.style.top = (2 + index * 3) + "px";
-        div.style.left = "2px";
+        div.style.left = "3px";
         div.style.zIndex = index; // las últimas encima
 
         // TOOLTIP
@@ -2035,7 +2053,7 @@ function renderCampo() {
             let div = document.createElement("div");                     // crea un div
             div.classList.add("carta");                                  // le aplica el CSS de carta
             div.style.position = "absolute";                             // posición absoluta
-            div.style.top = (2 + i * -1) + "px";                         // cada capa un poco más abajo
+            div.style.top = (7 + i * -3) + "px";                         // cada capa un poco más abajo
             div.style.right = (2 + i * 0.5) + "px";                        // cada capa un poco más a la derecha
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
@@ -2097,8 +2115,8 @@ function renderCampo() {
           div.classList.add("carta");                            // le aplica el CSS de carta
           div.style.backgroundImage = "url('img/cartas/cardback.png')"; // imagen de dorso
           div.style.position = "absolute";                       // posición absoluta
-          div.style.top = (2 + i * -1) + "px";                   // cada capa un poco más abajo
-          div.style.right = (2 + i * 0.5) + "px";                  // cada capa un poco más a la derecha
+          div.style.top = (7 + i * -3) + "px";                   // cada capa un poco más abajo
+          div.style.right = (1 + i * 0.5) + "px";                  // cada capa un poco más a la derecha
           div.style.zIndex = i;                                  // las últimas encima
           mazoCont.appendChild(div);                             // añade al contenedor
         }
@@ -2116,7 +2134,7 @@ function renderCampo() {
             let div = document.createElement("div");                     // crea un div
             div.classList.add("carta");                                   // le aplica el CSS de carta
             div.style.position = "absolute";                             // posición absoluta
-            div.style.top = (2 + i * -1) + "px";                         // cada capa un poco más abajo
+            div.style.top = (7 + i * -3) + "px";                         // cada capa un poco más abajo
             div.style.right = (2 + i * 0.5) + "px";                        // cada capa un poco más a la derecha
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen

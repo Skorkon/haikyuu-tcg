@@ -215,7 +215,9 @@ body {
   height: 8px;
   background: black;
   margin: 8px 0;
-  border-radius: 4px;
+  border-radius: 2px;
+  z-index: 10;
+  top: 5px;
 }
 .red-linea {
   position: relative;
@@ -237,14 +239,14 @@ body {
 
 #contador-ataque {
   position: absolute;
-  top: -20px;    /* ajusta hacia arriba */
-  left: 10px;    /* ajusta hacia la izquierda */
+  top: 20px;    /* ajusta hacia arriba */
+  left: 600px;    /* ajusta hacia la izquierda */
 }
 
 #contador-defensa {
   position: absolute;
-  top: -20px;    /* ajusta hacia arriba */
-  left: 70px;    /* un poco más a la derecha que el ataque */
+  top: -40px;    /* ajusta hacia arriba */
+  left: 600px;    /* un poco más a la derecha que el ataque */
 }
 
 
@@ -347,8 +349,8 @@ body {
 
 .zona .carta {
   position: absolute;
-  width: 74px;
-  height: 104px;
+  width: 68px;
+  height: 92px;
   background: white;
   border: 1px solid black;
   font-size: 10px;
@@ -362,6 +364,8 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  image-rendering: -webkit-optimize-contrast;   /* mejora nitidez en Chrome/Edge/Safari al reducir imágenes */
+  image-rendering: crisp-edges;                    /* fallback para otros navegadores */
 }
 
 .lado {
@@ -409,11 +413,11 @@ button {
 .zona-remate     { background: #d94040; border: 4px solid #9c1f1f; }
 .zona-bloqueo    { background: #3a3a3a; border: 4px solid #070707; }
 .zona-apoyo      { background: #757575; border: 4px solid #070707; }
-.zona-mazo       { background: #dcdcdc; border: 4px solid #bdbdbd; color: #333; }
-.zona-puntos     { background: #dcdcdc; border: 4px solid #bdbdbd; color: #333; }
-.zona-trash      { background: #a3b4bd; border: 4px solid #90a4ae; color: #333; }
-.zona-saque      { background: #f26a00; border: 4px solid #e65100; }
-.zona-eventos    { background: #a3b4bd; border: 4px solid #90a4ae; color: #333; }
+.zona-mazo       { background: #dcdcdc; border: 4px solid white; color: #333; }
+.zona-puntos     { background: #dcdcdc; border: 4px solid white; color: #333; }
+.zona-trash      { background: #464e52; border: 4px solid white; color: #333; }
+.zona-saque      { background: #f26a00; border: 4px solid white; }
+.zona-eventos    { background: #a3b4bd; border: 4px solid white; color: #333; }
 
 /* -------------------------------------------------- ZONA LATERAL */
 .lateral {
@@ -424,18 +428,18 @@ button {
 }
 
 /* -------------------------------------------------- POSICIONES JUGADOR 1 */
-#campo-j1 .zona-puntos    { top: 0px;    left: 50px; }
-#campo-j1 .zona-saque     { top: 150px;   left: 80px; }
-#campo-j1 #j1-eventos     { top: 150px;  left: -5px; }
-#campo-j1 #j1-mazo        { top: 75px;    left: 430px;}
-#campo-j1 #j1-trash       { top: 75px;  left: 515px; }
+#campo-j1 .zona-puntos    { top: 10px;    left: 40px; }
+#campo-j1 .zona-saque     { top: 170px; left: 80px; }
+#campo-j1 #j1-eventos     { top: 170px;  left: -5px; }
+#campo-j1 #j1-mazo        { top: 8px;    left: 460px;}
+#campo-j1 #j1-trash       { top: 150px;  left: 460px; }
 
 /* -------------------------------------------------- POSICIONES JUGADOR 2 (espejo) */
-#campo-j2 .zona-puntos    { top: 160px;  left: 430px; }
-#campo-j2 .zona-saque     { top: -20px;   left: 430px; }
-#campo-j2 #j2-eventos     { top: -20px;    left: 515px; }
-#campo-j2 #j2-mazo        { top: 65px;  left: 80px; }
-#campo-j2 #j2-trash       { top: 65px;   left: -5px; }
+#campo-j2 .zona-puntos    { top: 160px;  left: 460px; }
+#campo-j2 .zona-saque     { top: -40px; left: 460px; }
+#campo-j2 #j2-eventos     { top: -40px; left: 545px; }
+#campo-j2 #j2-mazo        { top: 130px;  left: 80px; }
+#campo-j2 #j2-trash       { top: -10px;   left: 80px; }
 
 .zona.horizontal .carta {/* las cartas de las zonas horizontales están en horizontal */
   width: 104px;
@@ -591,15 +595,56 @@ button {
 
   .cancha-marco {
     position: absolute;
-    left: 130px;      /* un poco más ancho que el left:170px de las canchas, para que sobresalga como marco */
-    top: -30px;         /* ajustar según donde empiece #cancha-j2 */
-    width: 380px;       /* un poco más ancho que .cancha-rect (284px), para que sobresalga por los lados */
-    height: 800px;       /* altura que cubra desde arriba de cancha-j2 hasta abajo de cancha-j1 */
+    left: 18%;      
+    width: 57%;      
+    top: -30px;         
+    height: 1200px;       
     bottom: 0;
     background: rgb(185, 185, 185);   /* gris del marco */
     border: 8px solid white;
     z-index: 0;    /* por detrás de todo lo demás */
   }
+
+  .fase-tracker {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    z-index: 20;
+  }
+
+  .fase-barra {
+    width: 80px;
+    padding: 3px 6px;
+    background: #999999;    /* gris por defecto, fase inactiva */
+    border: 2px solid #777777;
+    border-radius: 4px;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .fase-flecha {
+    font-size: 8px;
+    color: #999999;
+    line-height: 1;
+  }
+
+  /* ── FASE ACTIVA: color de esa fase + borde más grueso ── */
+  .fase-barra.activa {
+    border-width: 3px;
+  }
+  .fase-barra[data-fase="saque"].activa      { background: #f26a00; border-color: #e65100; }
+  .fase-barra[data-fase="robo"].activa       { background: #7986cb; border-color: #5c6bc0; }
+  .fase-barra[data-fase="recepcion"].activa  { background: #2b6bc4; border-color: #1565c0; }
+  .fase-barra[data-fase="pase"].activa       { background: #3d9142; border-color: #2e7d32; }
+  .fase-barra[data-fase="remate"].activa     { background: #d94040; border-color: #c62828; }
+  .fase-barra[data-fase="bloqueo"].activa    { background: #3a3a3a; border-color: #212121; }
+
 
 </style>
 <!----------------------------------------------------------------------------------------------------------------------------->
@@ -699,7 +744,20 @@ button {
     <div class="zona zona-trash" id="j1-trash" data-i18n="ui.zonaTrash">Trash</div>
   </div>
 
-</div>
+  <div class="fase-tracker" id="faseTracker">
+    <div class="fase-barra" data-fase="saque" data-i18n="ui.zonaSaque">Saque</div>
+    <div class="fase-flecha">▼</div>
+    <div class="fase-barra" data-fase="robo" data-i18n="ui.zonaRobo">Robo</div>
+    <div class="fase-flecha">▼</div>
+    <div class="fase-barra" data-fase="recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+    <div class="fase-flecha">▼</div>
+    <div class="fase-barra" data-fase="pase" data-i18n="ui.zonaPase">Pase</div>
+    <div class="fase-flecha">▼</div>
+    <div class="fase-barra" data-fase="remate" data-i18n="ui.zonaRemate">Remate</div>
+    <div class="fase-flecha">▼</div>
+    <div class="fase-barra" data-fase="bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+  </div>
+</div> <!-- fin campo central -->
 <!-------------------------------------------------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------------------------------- DERECHA: LOG -->
   <div class="panel-derecha">

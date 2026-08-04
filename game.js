@@ -1703,11 +1703,13 @@ function deseleccionarCarta() {
 
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
-function actualizarFaseUI() { // texto que indica la fase de juego en directo
+function actualizarFaseUI() {
   let btnMulligan = document.getElementById("btn-confirmar-mulligan");
-  btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none"; // solo visible en mulligan
-  document.getElementById("contador-ataque").textContent = "⚔️ " + game.valorAtaque;  // actualiza contador ataque
-  document.getElementById("contador-defensa").textContent = "🛡️ " + game.valorDefensa; // actualiza contador defensa
+  btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none";
+  
+  actualizarContadorValores('contador-ataque', game.valorAtaque);     
+  actualizarContadorValores('contador-defensa', game.valorDefensa);    
+  
   moverPelota();
   actualizarBotonesAccion();
   actualizarFaseTracker();
@@ -1729,6 +1731,15 @@ function actualizarFaseTracker() {
   document.querySelectorAll(".fase-barra").forEach(barra => {
     barra.classList.toggle("activa", barra.dataset.fase === faseVisual);
   });
+}
+
+function actualizarContadorValores(elementoId, valor) {
+  const tarjeta = document.querySelector(`#${elementoId} .tarjeta-papel`);
+  if (tarjeta.textContent != valor) {   // solo animar si el valor realmente cambia
+    tarjeta.classList.add('cambiando');
+    setTimeout(() => tarjeta.classList.remove('cambiando'), 220);
+  }
+  tarjeta.textContent = valor;
 }
 // ===================================================================================================================================
 // ========================================================================================================= ACTUALIZAR BOTONES ACCIÓN

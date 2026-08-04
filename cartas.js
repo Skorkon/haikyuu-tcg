@@ -3374,6 +3374,191 @@ function inicializarCartas() {
 
   // =================================================================================================================================== P02
 
+  crearCarta("Kageyama Tobio", // ============================================================== P02-002
+    {
+      saque: 4,
+      recepcion: 0,
+      pase: 1,
+      remate: 0,
+      bloqueo: 1
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                            // comprobar que está en pase
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (jugador.mano.length === 0) {                              // comprobar que hay cartas en mano
+        log(t("log.sinCartasParaDescartar"));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      let cartaDescarte = await mostrarSelectorCartas(              // abrir selector de descarte
+        t("log.elegirCarta"),               
+        jugador.mano                                                // mostrar toda la mano
+      );
+      if (!cartaDescarte) {                                         // si cancela
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      let indexDescarte = jugador.mano.indexOf(cartaDescarte);      // buscar en la mano
+      jugador.mano.splice(indexDescarte, 1);                        // sacar de la mano
+      jugador.trash.push(cartaDescarte);                            // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+      if (!await usarGuts(jugador, "pase", 2)) {                    // pagar 2 GUTS de pase
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      game.valorAtaque += 2;                                        // +2 al pase
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      let tanakasEnTrash = jugador.trash.filter(c =>                // filtrar trash
+        c.nombre === "Tanaka Ryunosuke"                             // solo Tanaka
+      );
+      if (tanakasEnTrash.length === 0) {                            // si no hay ninguno
+        log(t("log.condicionNoCumplida"));
+        return;                                                     // terminar sin error
+      }
+      let tanakaElegido = await mostrarSelectorCartas(              // abrir selector
+        t("log.elegirCarta"),                     // título
+        tanakasEnTrash                                              // solo Tanaka
+      );
+      if (!tanakaElegido) return false;                             // return false: si cancela
+
+      let indexTrash = jugador.trash.indexOf(tanakaElegido);        // buscar en el trash
+      jugador.trash.splice(indexTrash, 1);                          // sacar del trash
+      añadirCartaAMano(jugador, tanakaElegido);                     // añadir a la mano
+      log(t("log.cartaAMano", { carta: "Tanaka Ryunosuke" }));
+
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-002",
+      escuela: "Karasuno",
+      posicion: "S",
+      anyo: 1,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong>: Descarta 1 carta de tu mano y +2 al pase. Busca 1 <strong>Tanaka Ryunosuke</strong> en tu descarte y añádelo a tu mano.`
+    }
+  ),
+  crearCarta("Tsukishima Kei", // ============================================================== P02-003
+    {
+      saque: 1,
+      recepcion: 3,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo") {                         // comprobar que está en bloqueo
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
+      let rival = game.jugadores[rivalIndex];                       // jugador rival
+
+      if (rival.zonas.eventos.length < 2) {                         // comprobar 2 o más eventos del rival
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let eventosEnMano = jugador.mano.filter(c =>                  // filtrar eventos en mano
+        c.info?.tipo === "evento"                                   // solo eventos
+      );
+      if (eventosEnMano.length === 0) {                             // si no hay eventos en mano
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let eventoElegido = await mostrarSelectorCartas(              // abrir selector de eventos
+        t("log.elegirCarta"), 
+        eventosEnMano                                               // solo eventos
+      );
+      if (!eventoElegido) {                                         // si cancela
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let index = jugador.mano.indexOf(eventoElegido);              // buscar en la mano
+      jugador.mano.splice(index, 1);                                // sacar de la mano
+      jugador.zonas.eventos.push(eventoElegido);                    // colocar en zona de eventos
+      eventoElegido.zonaActual = "eventos";                         // actualizar zona
+      log(t("log.cartaDescartadaCoste", { carta: eventoElegido.nombre }));
+
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
+      game.valorDefensa += 6;                                       // +6 al bloqueo
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-003",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "I",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el rival tiene 2 o más cartas en su zona de eventos, puedes jugar 1 carta de evento de tu mano a tu zona de eventos como coste para robar 1 carta y añadir +6 al bloqueo.`
+    }
+  ),
+
+  crearCarta("Nishinoya Yu", // ============================================================== P02-006
+    {
+      saque: 0,
+      recepcion: 4,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                       // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
+      let rival = game.jugadores[rivalIndex];                       // jugador rival
+
+      let cartasValidas = rival.zonas.eventos.filter(c =>           // filtrar eventos del rival
+        c.info?.fases?.includes("saque")                            // jugables en saque
+      );
+
+      if (cartasValidas.length < 3) {                               // si hay menos de 3
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
+      game.valorDefensa += 3;                                       // +3 a la recepción
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-006",
+      escuela: "Karasuno",
+      posicion: "Li",
+      anyo: 2,
+      rareza: "R",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si el rival tiene 3 o más cartas de eventos de <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> en su zona de eventos, roba 1 carta y +3 a la recepción.`
+    }
+  ),
+
   crearCarta("Tanaka Ryunosuke", // ============================================================ P02-008
     {
       saque: 4,
@@ -3429,7 +3614,49 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
+  crearCarta("Azumane Asahi", // ============================================================== P02-014
+    {
+      saque: 4,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque") {                           // comprobar que está en saque
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
 
+      let eventosKarasuno = jugador.zonas.eventos.filter(c =>       // filtrar eventos de Karasuno
+        c.info?.escuela === "Karasuno"                              // solo Karasuno
+      );
+
+      if (eventosKarasuno.length < 4) {                             // si hay menos de 4
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      game.valorAtaque += 2;                                        // +2 al saque
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      if (eventosKarasuno.length >= 6) {                            // si hay 6 o más
+        game.valorAtaque += 1;                                      // +1 adicional al saque
+        log(t("log.condicionCumplida"));
+      }
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-014",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si tienes 4 o más cartas de evento de <strong>Karasuno</strong> en tu zona de eventos, +2 al saque. Si tienes 6 o más, +1 adicional.`
+    }
+  ),
 
   crearCarta("Miya Atsumu", // =================================================================================== P02-015
     {

@@ -127,3 +127,4 @@ log.personajeDoble;Personaje doble: carta tratada como {carta};Double character:
 log.cartasReveladas;Cartas reveladas: {cartas};Cards revealed: {cartas};Cartes révélées : {cartas};
 log.elegirCartaOpcional;Elige una carta para añadir a tu mano (opcional);Choose a card to add to your hand (optional);Choisissez une carte à ajouter à votre main (optionnel);
 log.elegirCarta;Elige una carta;Choose a card;Choisissez une carte;
+log.sinCartasParaDescartar;No tienes cartas en la mano para descartar;No cards in hand to discard;Pas de cartes en main à défausser;

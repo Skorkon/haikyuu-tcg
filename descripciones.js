@@ -506,6 +506,38 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to the attack of a <strong>Fukurodani</strong> character in play. If all your characters in play are from <strong>Fukurodani</strong>, during the opponent's next turn, if the opponent loses a point, you draw 1 extra card.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage de <strong>Fukurodani</strong> en jeu. Si tous vos personnages en jeu sont de <strong>Fukurodani</strong>, pendant le prochain tour adverse, si l'adversaire perd un point, vous piochez 1 carte supplémentaire."
   },
+  "HV-P02-002": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Descarta 1 carta de tu mano y +2 al pase. Busca 1 <strong>Tanaka Ryunosuke</strong> en tu descarte y añádelo a tu mano.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Discard 1 card from your hand and +2 to the set. Search for 1 <strong>Tanaka Ryunosuke</strong> in your discard pile and add it to your hand.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Défaussez 1 carte de votre main et +2 à la passe. Cherchez 1 <strong>Tanaka Ryunosuke</strong> dans votre défausse et ajoutez-le à votre main."
+  },
+  "HV-P02-003": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Si el rival tiene 2 o más cartas en su zona de eventos, puedes colocar 1 carta de evento de tu mano a tu zona de eventos como coste para robar 1 carta y añadir +6 al bloqueo.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> If the opponent has 2 or more cards in their event zone, you may place 1 event card from your hand into your event zone as a cost to draw 1 card and add +6 to the block.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Si l'adversaire a 2 cartes ou plus dans sa zone d'événements, vous pouvez placer 1 carte événement de votre main dans votre zone d'événements comme coût pour piocher 1 carte et ajouter +6 au contre."
+  },
+  "HV-P02-006": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si el rival tiene 3 o más cartas de eventos de <strong><span style=&quot;color:#e65100&quot;>Saque</span></strong> en su zona de eventos, roba 1 carta y +3 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If the opponent has 3 or more <strong><span style=&quot;color:#e65100&quot;>Serve</span></strong> type event cards in their event zone, draw 1 card and +3 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si l'adversaire a 3 cartes événements de type <strong><span style=&quot;color:#e65100&quot;>Service</span></strong> ou plus dans sa zone d'événements, piochez 1 carte et +3 à la réception."
+  },
+  "HV-P02-014": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Si tienes 4 o más cartas de evento de <strong>Karasuno</strong> en tu zona de eventos, +2 al saque. Si tienes 6 o más, +1 adicional.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> If you have 4 or more <strong>Karasuno</strong> event cards in your event zone, +2 to the serve. If you have 6 or more, an additional +1.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Si vous avez 4 cartes événements de <strong>Karasuno</strong> ou plus dans votre zone d'événements, +2 au service. Si vous en avez 6 ou plus, +1 supplémentaire."
+  },
   "HV-P02-016": {
     "nombre_es": "",
     "nombre_en": "",

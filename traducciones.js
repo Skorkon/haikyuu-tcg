@@ -131,7 +131,8 @@ const TRADUCCIONES = {
       "personajeDoble": "Personaje doble: carta tratada como {carta}",
       "cartasReveladas": "Cartas reveladas: {cartas}",
       "elegirCartaOpcional": "Elige una carta para añadir a tu mano (opcional)",
-      "elegirCarta": "Elige una carta"
+      "elegirCarta": "Elige una carta",
+      "sinCartasParaDescartar": "No tienes cartas en la mano para descartar"
     }
   },
   "en": {
@@ -263,7 +264,8 @@ const TRADUCCIONES = {
       "personajeDoble": "Double character: card treated as {carta}",
       "cartasReveladas": "Cards revealed: {cartas}",
       "elegirCartaOpcional": "Choose a card to add to your hand (optional)",
-      "elegirCarta": "Choose a card"
+      "elegirCarta": "Choose a card",
+      "sinCartasParaDescartar": "No cards in hand to discard"
     }
   },
   "fr": {
@@ -395,7 +397,8 @@ const TRADUCCIONES = {
       "personajeDoble": "Personnage double : carte traitée comme {carta}",
       "cartasReveladas": "Cartes révélées : {cartas}",
       "elegirCartaOpcional": "Choisissez une carte à ajouter à votre main (optionnel)",
-      "elegirCarta": "Choisissez une carte"
+      "elegirCarta": "Choisissez une carte",
+      "sinCartasParaDescartar": "Pas de cartes en main à défausser"
     }
   },
   "": {
@@ -527,7 +530,8 @@ const TRADUCCIONES = {
       "personajeDoble": "",
       "cartasReveladas": "",
       "elegirCartaOpcional": "",
-      "elegirCarta": ""
+      "elegirCarta": "",
+      "sinCartasParaDescartar": ""
     }
   }
 };

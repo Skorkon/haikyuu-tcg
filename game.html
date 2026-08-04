@@ -49,6 +49,11 @@ body {
   margin-top: auto;
 }
 
+.panel-acciones {
+  height: 150px;
+  overflow-y: auto;
+}
+
 /* -------------------------------------------------- DERECHA */
 .panel-derecha {
   width: 20%;
@@ -639,7 +644,7 @@ button {
     border-width: 3px;
   }
   .fase-barra[data-fase="saque"].activa      { background: #f26a00; border-color: #e65100; }
-  .fase-barra[data-fase="robo"].activa       { background: #7986cb; border-color: #5c6bc0; }
+  .fase-barra[data-fase="robo"].activa       { background: #9c27b0; border-color: #7b1fa2; }
   .fase-barra[data-fase="recepcion"].activa  { background: #2b6bc4; border-color: #1565c0; }
   .fase-barra[data-fase="pase"].activa       { background: #3d9142; border-color: #2e7d32; }
   .fase-barra[data-fase="remate"].activa     { background: #d94040; border-color: #c62828; }
@@ -664,7 +669,7 @@ button {
       </div>
       <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
     </div>
-    <div class="panel">
+    <div class="panel panel-acciones">
       <h3 data-i18n="ui.panelAcciones">Acciones</h3>
       <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
       <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>

@@ -488,7 +488,7 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       div.style.zIndex = cartas.length - index;
 
       if (carta.info?.id) { 
-        div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`;
+        div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
       } else {
         div.textContent = carta.nombre;
       }
@@ -1813,7 +1813,7 @@ function renderMano() {
     div.style.marginLeft = index === 0 ? "0" : `-${overlapNecesario}px`;
 
     if (carta.info?.id) {
-      div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`;
+      div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
     } else {
       div.textContent = carta.nombre;
     }
@@ -1958,7 +1958,7 @@ function renderCampo() {
           div.classList.add("seleccionada");
         }
         if (carta.info?.id) {
-          div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`;
+          div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
         } else {
           div.textContent = carta.nombre;
         }
@@ -2028,7 +2028,7 @@ function renderCampo() {
         let div = document.createElement("div");                                 // crea un div
         div.classList.add("carta");                                              // le aplica el CSS
         if (carta.info?.id) {
-          div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // imagen de la carta
+          div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
         } else {
           div.textContent = carta.nombre;                                        // si no, el nombre
         }
@@ -2058,7 +2058,7 @@ function renderCampo() {
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
               if (carta.info?.id) {
-                div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // imagen de la carta
+                div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
               } else {
                 div.textContent = carta.nombre;                          // si no, el nombre
               }
@@ -2139,7 +2139,7 @@ function renderCampo() {
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
               if (carta.info?.id) {
-                div.style.backgroundImage = `url('img/cartas/${carta.info.id}.png')`; // imagen de la carta
+                div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
               } else {
                 div.textContent = carta.nombre;                          // si no, el nombre
               }

@@ -930,6 +930,21 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
           }
         }
 
+        if (tieneEfecto("blockoutApoyo")) {                              // si efecto activo
+        let efecto = game.efectosActivos.find(e => e.tipo === "blockoutApoyo"); // buscar efecto
+        if (efecto.activadoPor !== game.jugadorActivo) {               // si lo activó el rival
+          log(t("log.blockoutApoyo", { carta: carta.nombre }));
+          jugador.trash.push(carta);                                   // carta al trash
+          game.efectosActivos = game.efectosActivos.filter(            // eliminar el efecto tras usarse
+            e => e.tipo !== "blockoutApoyo"
+          );
+          renderMano();
+          renderManoRival();
+          renderCampo();
+          return;                                                      // no colocar como apoyo
+        }
+      }
+
         if (game.bloqueoActual.apoyos.length >= 2) {  // comprobar máximo de bloqueadores de apoyo
           log(t("log.maximoBloqueadores"));
           jugador.mano.push(carta);                   // devolver carta a la mano
@@ -958,6 +973,7 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
         }
         log(t("log.cartaColocadaBloqueo", { jugador: jugador.nombre, carta: carta.nombre, stat: carta.stats.bloqueo, tipo: t("log.apoyoBloqueo") }));
       }
+      actualizarFaseUI();
       renderMano(); 
       renderManoRival()
       renderCampo(); 
@@ -1499,7 +1515,7 @@ function resolverBloqueo() {
 }
 // ============================================================================================================================= BOTÓN
 // ==================================================================================================================== USAR HABILIDAD 
-function usarHabilidad() {
+async function usarHabilidad() {
   // =================================================== variables por si acaso
   let carta = game.ultimaCarta;
   let jugador = game.ultimoJugador;
@@ -1535,18 +1551,19 @@ function usarHabilidad() {
     log(t("log.habilidadYaUsada"));
     return;
   }
-  let resultado = carta.habilidad(jugador, game, carta);
+  let resultado = await carta.habilidad(jugador, game, carta);
   if (resultado !== false) {            // solo marcar como usada si no fue cancelada
     carta.habilidadUsada = true;
   }
+  actualizarFaseUI();
   renderCampo();
   renderMano();
-  renderManoRival()
+  renderManoRival();
 }
 
 // ============================================================================================================================= BOTÓN
 // ====================================================================================================================== JUGAR EVENTO 
-function jugarEvento() {
+async function jugarEvento() {
   // ==================================================================================================== Comprobaciones
   if (!game.cartaSeleccionada) {
     log(t("log.seleccionaCarta")); // "selecciona una carta primero"
@@ -1595,7 +1612,7 @@ function jugarEvento() {
   log(t("log.eventoJugado", { jugador: jugador.nombre, carta: carta.nombre }));
 
   if (carta.habilidad) { // activar el efecto
-    carta.habilidad(jugador, game, carta);
+    await carta.habilidad(jugador, game, carta);
   }
 
   game.cartaSeleccionada = null;
@@ -1604,6 +1621,8 @@ function jugarEvento() {
       cartaId: carta.info.id          // id del evento jugado
     });
   }
+
+  actualizarFaseUI();
   renderMano();
   renderManoRival()
   renderCampo();
@@ -1707,14 +1726,14 @@ function actualizarFaseUI() {
   let btnMulligan = document.getElementById("btn-confirmar-mulligan");
   btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none";
   
-  actualizarContadorValores('contador-ataque', game.valorAtaque);     
-  actualizarContadorValores('contador-defensa', game.valorDefensa);    
+  actualizarContadoresVisual();  
   
   moverPelota();
   actualizarBotonesAccion();
   actualizarFaseTracker();
 }
-
+// ===================================================================================================================================
+// =========================================================================================================== ACTUALIZAR FASE TRACKER
 function actualizarFaseTracker() {
   const jugador = modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
   
@@ -1732,7 +1751,8 @@ function actualizarFaseTracker() {
     barra.classList.toggle("activa", barra.dataset.fase === faseVisual);
   });
 }
-
+// ===================================================================================================================================
+// ========================================================================================= ACTUALIZAR CONTADORES DE ATAQUE Y DEFENSA
 function actualizarContadorValores(elementoId, valor) {
   const tarjeta = document.querySelector(`#${elementoId} .tarjeta-papel`);
   if (tarjeta.textContent != valor) {   // solo animar si el valor realmente cambia
@@ -1740,6 +1760,55 @@ function actualizarContadorValores(elementoId, valor) {
     setTimeout(() => tarjeta.classList.remove('cambiando'), 220);
   }
   tarjeta.textContent = valor;
+}
+// CALCULAR DEFENSA ACTUAL EN VIVO (durante fase de bloqueo) : Para actualizar el contador, sin modificar resolverBloqueo
+function calcularDefensaBloqueoActual() {
+  let defensaTotal = game.valorDefensa;   // efectos acumulados (igual que en resolverBloqueo)
+
+  if (game.bloqueoActual.central) {
+    let efecto = game.efectosActivos.find(e => e.tipo === "anularBloqueadorCentral");
+    if (!(efecto && efecto.activadoPor !== game.jugadorActivo)) {
+      defensaTotal += game.bloqueoActual.central.stats.bloqueo;
+    }
+  }
+  game.bloqueoActual.apoyos.forEach(carta => {
+    defensaTotal += carta.stats.bloqueo;
+  });
+
+  return defensaTotal;
+}
+// CALCULAR ATAQUE / DEFENSA en vivo según la fase
+function calcularValoresEnVivo() {
+  const jugador = modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
+  let ataque = game.valorAtaque;
+  let defensa = game.valorDefensa;
+
+  if (game.fase === 'recepcion') {
+    const carta = jugador.zonas.recepcion.at(-1);
+    if (carta && carta.recienJugada) {
+      defensa = carta.stats.recepcion + game.valorDefensa;
+    }
+  }
+
+  if (game.fase === 'remate') {   
+    const carta = jugador.zonas.remate.at(-1);
+    if (carta && carta.recienJugada) {
+      ataque = game.valorAtaque + carta.stats.remate;
+    }
+  }
+
+  if (game.fase === 'bloqueo') {
+    defensa = calcularDefensaBloqueoActual();
+  }
+
+  return { ataque, defensa };
+}
+
+// ACTUALIZAR AMBOS CONTADORES, TENIENDO EN CUENTA LA FASE ACTUAL 
+function actualizarContadoresVisual() {
+  const { ataque, defensa } = calcularValoresEnVivo();
+  actualizarContadorValores('contador-ataque', ataque);
+  actualizarContadorValores('contador-defensa', defensa);
 }
 // ===================================================================================================================================
 // ========================================================================================================= ACTUALIZAR BOTONES ACCIÓN
@@ -2385,6 +2454,16 @@ function blockout(nivelBloqueo) {
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log(t("log.blockoutActivo", { valor: nivelBloqueo }));
 }
+function blockoutApoyo() {
+  game.efectosActivos.push({                                     // añadir efecto
+    tipo: "blockoutApoyo",                                       // tipo del efecto
+    activadoPor: game.jugadorActivo,                             // quién lo activó
+    expira: game.turno + 2                                       // dura hasta el próximo turno rival
+  });
+  if (modoOnline) enviarEfectos();                               // sincronizar con el rival
+  log(t("log.blockoutApoyoActivo"));
+}
+
 function debilitarRematador(cantidad = 2) {
   game.efectosActivos.push({
     tipo: "debilitarRematador",
@@ -3067,15 +3146,15 @@ game.jugadores[0].mazo.push(gtsr); */
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018", "HV-P01-084", "HV-P02-061", "HV-P02-060"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); // Sasaya, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); 
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -3103,10 +3182,57 @@ const mazoPruebaNekoma = [
 ];
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- NEKOMA <
+
+// ---------------------------------------------------------------------------------- KARASUNO > 
+// MANO KARASUNO
+["HV-P02-002", "HV-P02-003", "HV-P02-006", "HV-P02-007", "HV-P02-014", "HV-P02-082"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
+});
+// GUTS KARASUNO
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-009"); 
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// MAZO KARASUNO
+const mazoPruebaKarasuno = [
+  "HV-P02-001", "HV-P02-001",                          // Hinata S x2
+  "HV-P02-002", "HV-P02-002",                          // Kageyama S x2
+  "HV-P02-003", "HV-P02-003",                          // Tsukishima I x2
+  "HV-P02-004", "HV-P02-004",                          // Yamaguchi I x2
+  "HV-P02-006", "HV-P02-006",                          // Nishinoya R x2
+  "HV-P02-007", "HV-P02-007",                          // Tanaka S x2
+  "HV-P02-014", "HV-P02-014",                          // Asahi N x2
+  "HV-P01-002", "HV-P01-002",                          // Hinata TP x2
+  "HV-P01-006", "HV-P01-006",                          // Kageyama T x2
+  "HV-P01-008", "HV-P01-008",                          // Tsukishima S x2
+  "HV-P01-010", "HV-P01-010",                          // Yamaguchi S x2
+  "HV-P01-011", "HV-P01-011",                          // Nishinoya RP x2
+  "HV-P01-015", "HV-P01-015",                          // Sugawara N x2
+  "HV-P01-016", "HV-P01-016",                          // Asahi N x2
+  "HV-P01-074", "HV-P01-074",                          // Ukai Ikki N x2
+  "HV-P01-075", "HV-P01-075",                          // Shimizu N x2
+  "HV-P01-077", "HV-P01-077",                          // ¡Vamos a por ello! N x2
+  "HV-P01-078", "HV-P01-078",                          // Ataque abierto S x2
+  "HV-P01-079", "HV-P01-079",                          // Nunca pensé... N x2
+  "HV-P02-082", "HV-P02-082",                          // ¡Super Inner Cross!!! S x2
+];
+mazoPruebaKarasuno.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
-// ---------------------------------------------------------------------------------- NEKOMA <
+// ---------------------------------------------------------------------------------- KARASUNO
+
+
 
 // ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
@@ -3115,14 +3241,6 @@ mazoPruebaNekoma.forEach(id => {
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
 });
-
-// ---------------------------------------------------------------------------------- MANO KARASUNO
-["HV-D01-001", "HV-D01-003", "HV-D01-004", "HV-P01-002", "HV-P01-008", "HV-P01-010"].forEach(id => {
-  let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
-});
-
 
 // TRASH 
 ["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
@@ -3191,9 +3309,10 @@ game.jugadores[0].trash.push(aoneP01);
 });
 
 // mazo evento de pruebas
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 7; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
+  // game.jugadores[0].zonas.eventos.push(evento);
 }
 
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

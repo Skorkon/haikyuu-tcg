@@ -3491,6 +3491,13 @@ function inicializarCartas() {
       let index = jugador.mano.indexOf(eventoElegido);              // buscar en la mano
       jugador.mano.splice(index, 1);                                // sacar de la mano
       jugador.zonas.eventos.push(eventoElegido);                    // colocar en zona de eventos
+
+      if (modoOnline) {                                             // sincronizar con el rival
+        enviarJugada("eventoJugado", {                              // enviar evento al rival
+          cartaId: eventoElegido.info.id                            // id del evento jugado
+        });
+      }
+
       eventoElegido.zonaActual = "eventos";                         // actualizar zona
       log(t("log.cartaDescartadaCoste", { carta: eventoElegido.nombre }));
 
@@ -3558,7 +3565,25 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si el rival tiene 3 o más cartas de eventos de <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> en su zona de eventos, roba 1 carta y +3 a la recepción.`
     }
   ),
-
+  crearCarta("Tanaka Ryunosuke", // ============================================================== P02-007
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 0,
+      remate: 1,
+      bloqueo: 2
+    },
+    null,  // habilidad gestionada por el evento ¡Super Diagonal!
+    {
+      tipo: "personaje",
+      id: "HV-P02-007",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Cuando se juega <strong>¡Super Diagonal!</strong>, si esta carta está en remate, <strong>GUTS 3</strong>: +4 al remate y -2 al receptor rival el próximo turno.`
+    }
+  ),
   crearCarta("Tanaka Ryunosuke", // ============================================================ P02-008
     {
       saque: 4,
@@ -3646,6 +3671,7 @@ function inicializarCartas() {
         game.valorAtaque += 1;                                      // +1 adicional al saque
         log(t("log.condicionCumplida"));
       }
+      carta.habilidadUsada = true; 
     },
     {
       tipo: "personaje",
@@ -5020,6 +5046,47 @@ function inicializarCartas() {
       descripcion: `Al colocar esta carta, elige si su nombre es <strong>Sawamura Daichi</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.`
     }
   ),
+
+  crearCarta("¡Super Diagonal!", // ============================================================== P02-082
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
+
+      let rematador = jugador.zonas.remate.at(-1);                  // buscar el rematador en juego
+
+      if (!rematador || rematador.nombre !== "Tanaka Ryunosuke") {  // si no es Tanaka
+        log(t("log.condicionNoCumplida"));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      game.valorAtaque += 1;                                        // +1 al remate de Tanaka
+      log(t("log.habilidadActivada", { carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre }));
+      blockoutApoyo();                                              // activar efecto blockout de apoyo
+
+    if (rematador.info?.id === "HV-P02-007") {                   // si es el Tanaka P02-007 específico
+      let eleccion = await mostrarEleccion([                       // preguntar si quiere usar el efecto
+        { texto: t("log.activarHabilidad", { carta: "Tanaka Ryunosuke" }) },
+        { texto: t("log.noActivar") }
+      ]);
+      if (eleccion === 0) {                                        // si quiere usar el efecto
+        if (!await usarGuts(jugador, "remate", 3)) return;         // pagar 3 GUTS de remate
+        game.valorAtaque += 4;                                     // +4 al remate
+        log(t("log.condicionCumplida"));
+        debilitarReceptor(2);                                      // -2 al receptor rival
+      }
+    }
+    },
+    {
+      tipo: "evento",
+      id: "HV-P02-082",
+      fases: ["remate"],
+      escuela: "Karasuno",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate de <strong>Tanaka Ryunosuke</strong>. Si el rematador es <strong>Tanaka Ryunosuke</strong>, durante el siguiente turno rival, el primer bloqueador de apoyo que coloque irá directamente al trash.`
+    }
+  ),
+
   crearCarta("Kurosu Norimune", // ============================================================ P02-084
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {

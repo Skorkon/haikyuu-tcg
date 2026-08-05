@@ -530,6 +530,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If the opponent has 3 or more <strong><span style=&quot;color:#e65100&quot;>Serve</span></strong> type event cards in their event zone, draw 1 card and +3 to the reception.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si l'adversaire a 3 cartes événements de type <strong><span style=&quot;color:#e65100&quot;>Service</span></strong> ou plus dans sa zone d'événements, piochez 1 carte et +3 à la réception."
   },
+  "HV-P02-007": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Cuando se juega <strong>¡Super Inner Cross!!!</strong>, si esta carta está en remate, <strong>GUTS 3</strong>: +4 al remate y -2 al receptor rival el próximo turno.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> When <strong>Super Cross Attack!!!</strong> is played, if this card is in the spike zone, <strong>GUTS 3</strong>: +4 to the spike and -2 to the opponent's receiver on the next turn.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Lorsque <strong>Super Attaque croisée !!!</strong> est jouée, si cette carte est en zone d'attaque, <strong>GUTS 3</strong> : +4 à l'attaque et -2 au réceptionneur adverse au prochain tour."
+  },
   "HV-P02-014": {
     "nombre_es": "",
     "nombre_en": "",
@@ -721,6 +729,14 @@ const DESCRIPCIONES = {
     "es": "Al colocar esta carta, elige si su nombre es <strong>Miya Atsumu</strong> o <strong>Miya Osamu</strong>. El nombre y posición elegidos se aplican de forma definitiva.",
     "en": "When placing this card, choose whether its name is <strong>Miya Atsumu</strong> or <strong>Miya Osamu</strong>. The chosen name and position apply permanently.",
     "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Miya Atsumu</strong> ou <strong>Miya Osamu</strong>. Le nom et le poste choisis s'appliquent de façon définitive."
+  },
+  "HV-P02-082": {
+    "nombre_es": "¡Super Diagonal!",
+    "nombre_en": "Super Inner Cross!!!",
+    "nombre_fr": "Super Diagonale !!!",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y +1 al remate de <strong>Tanaka Ryunosuke</strong>. </br>Si el rematador es <strong>Tanaka Ryunosuke</strong>, durante el siguiente turno rival, el primer bloqueador de apoyo que coloque irá directamente al trash.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to Tanaka Ryunosuke's spike. </br>If the spiker is <strong>Tanaka Ryunosuke</strong>, during the opponent's next turn, the first support blocker they place will go directly to the trash.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque de <strong>Tanaka Ryunosuke</strong>. </br>Si l'attaquant est <strong>Tanaka Ryunosuke</strong>, pendant le prochain tour adverse, le premier contreur de soutien qu'il place ira directement à la défausse."
   },
   "HV-P02-084": {
     "nombre_es": "",

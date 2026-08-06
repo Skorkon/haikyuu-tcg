@@ -58,6 +58,7 @@ function log(texto) {
 const game = {         // estado general del juego
   jugadorActivo: 0,    // 0 o 1
   fase : "mulligan",   // fase inicial
+  faseAnterior: null,  // detectar fase anterior para algunas jugadas
   turno: 0, 
   valorAtaque: 0,
   valorDefensa: 0,
@@ -1260,6 +1261,7 @@ function resolverSaque() {
     let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;    // índice del rival
     robarCarta(game.jugadores[rivalIndex], 1);            // el rival roba
   }
+  game.faseAnterior = "saque";
   if (modoOnline) enviarFase("recepcion"); // avisar al rival del cambio de fase
   cambiarJugador();
   actualizarFaseUI();
@@ -1294,6 +1296,7 @@ function resolverRecepcion() {
     game.ultimaCarta = null;
     game.valorAtaque = 0;                               // resetear ataque
     game.valorDefensa = 0;                              // resetear defensa
+    game.faseAnterior = "recepcion";
     if (modoOnline) enviarFase("pase");                 // avisar al rival del cambio de fase
     actualizarFaseUI();                                 // actualizar letrero
     renderMano();                                       
@@ -1321,7 +1324,7 @@ function resolverRecepcion() {
     } else {
       cambiarJugador(rivalIndex);                       // cambiar al rival en local
     }
-
+    game.faseAnterior = "recepcion";
     actualizarFaseUI();                                 // actualizar letrero
     actualizarMarcador();                               // actualizar marcador
     renderMano();                                       // redibujar mano
@@ -1352,6 +1355,7 @@ function resolverPase(){
   game.gutsDescartados = [];
   game.ultimaCarta = null;
   game.fase = "remate";
+  game.faseAnterior = "pase";
   if (modoOnline) enviarFase("remate"); // avisar al rival del cambio de fase
   actualizarFaseUI();
   renderMano();
@@ -1392,6 +1396,7 @@ function resolverRemate() {
     }
     game.fase = "recepcion";                                           // saltar a recepción
     game.ultimaCarta = null;
+    game.faseAnterior = "remate";
     if (modoOnline) enviarFase("recepcion");                           // sincronizar fase
     cambiarJugador();                                                  // turno al rival
     actualizarFaseUI();                                                // actualizar letrero
@@ -1468,6 +1473,7 @@ function resolverBloqueo() {
 
     game.fase = "recepcion";                            // cambiar fase
     game.ultimaCarta = null;
+    game.faseAnterior = "bloqueo";
     if (modoOnline) enviarFase("recepcion");            // avisar al rival del cambio de fase
     cambiarJugador();                                   // cambiar turno
     actualizarFaseUI();                                 // actualizar letrero
@@ -1487,6 +1493,7 @@ function resolverBloqueo() {
     }
 
     game.fase = "recepcion";                            // cambiar fase
+    game.faseAnterior = "bloqueo";
     game.ultimaCarta = null;
     if (modoOnline) enviarFase("recepcion");            // avisar al rival del cambio de fase
     actualizarFaseUI();                                 // actualizar letrero
@@ -1642,6 +1649,7 @@ function jugarHabilidadDesdeMano() {
   }
 
   let carta = game.cartaSeleccionada;
+  let jugador = game.jugadores[game.jugadorActivo];
 
   if (carta.info?.tipo !== "personaje" || !carta.info?.activacionMano) {
     log(t("log.noHabilidadMano"));
@@ -1653,7 +1661,13 @@ function jugarHabilidadDesdeMano() {
     return;
   }
 
-  let jugador = game.jugadores[game.jugadorActivo];
+  // comprobar que hay un personaje colocado este turno en la fase actual
+  let zonaFase = game.fase;                                        // zona equivalente a la fase actual
+  let cartaEnJuego = jugador.zonas[zonaFase]?.at(-1);              // última carta de esa zona
+  if (!cartaEnJuego || !cartaEnJuego.recienJugada) {               // si no hay carta jugada este turno
+    log(t("log.noCartaEnZona", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
+    return;                                                         // cancelar sin descartar
+  }
 
   let index = jugador.mano.indexOf(carta);
   if (index !== -1) jugador.mano.splice(index, 1);
@@ -1676,6 +1690,7 @@ function jugarHabilidadDesdeMano() {
   renderMano();
   renderManoRival()
   renderCampo();
+  actualizarFaseUI()
 }
 // ============================================================================================================================= BOTÓN
 // ==================================================================================================================== CONCEDER PUNTO
@@ -1837,12 +1852,17 @@ function actualizarBotonesAccion() {
     document.getElementById('btn-accion-jugarEvento').style.display = 'block';
   }
 
+  // habilidad desde mano
+  if (sel?.info?.tipo === 'personaje' && sel.info?.activacionMano && sel.info?.fases?.includes(fase)) {
+    document.getElementById('btn-accion-habilidadMano').style.display = 'block';
+  }
+
   if (fase === 'bloqueo') {
     const totalBloqueadores = (game.bloqueoActual.central ? 1 : 0) + game.bloqueoActual.apoyos.length;
     if (sel?.info?.tipo === 'personaje' && !sel.info?.zonasProhibidas?.includes('bloqueo') && totalBloqueadores < 3) {
       document.getElementById('btn-accion-jugarCarta').style.display = 'block';
     }
-    // ── NUEVO: alternar entre "No bloquear" y "Resolver bloqueo" ──
+    // alternar entre "No bloquear" y "Resolver bloqueo"
     if (totalBloqueadores === 0) {
       document.getElementById('btn-accion-noBloquear').style.display = 'block';
     } else {
@@ -1851,9 +1871,6 @@ function actualizarBotonesAccion() {
   } else if (!yaJugada) {
     if (sel?.info?.tipo === 'personaje' && !sel.info?.zonasProhibidas?.includes(fase)) {
       document.getElementById('btn-accion-jugarCarta').style.display = 'block';
-    }
-    if (sel?.info?.tipo === 'personaje' && sel.info?.activacionMano && sel.info?.fases?.includes(fase)) {
-      document.getElementById('btn-accion-habilidadMano').style.display = 'block';
     }
   } else {
     document.getElementById('btn-accion-' + fase).style.display = 'block';
@@ -3155,10 +3172,10 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-P02-006", "HV-P02-007", "HV-P02-014", "HV-P02-082"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-P02-006", "HV-P02-007", "HV-P02-014", "HV-P02-001"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[0].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {

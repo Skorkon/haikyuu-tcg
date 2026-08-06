@@ -3373,7 +3373,59 @@ function inicializarCartas() {
   ),
 
   // =================================================================================================================================== P02
+  crearCarta("Hinata Shoyo", // ============================================================== P02-001
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                       // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
 
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
+      let rival = game.jugadores[rivalIndex];                       // jugador rival
+      let saqueRival = rival.zonas.saque.at(-1);                   // última carta del saque rival
+
+      if (game.faseAnterior !== "saque") {                             // si la fase anterior no fue saque
+        log("Solo puedes usar esta habilidad justo después del saque rival ❌");
+        carta.habilidadUsada = false;
+        return false;
+      }
+
+      if (!await usarGuts(jugador, "recepcion", 3)) {              // pagar 3 GUTS de recepción
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      game.valorDefensa += 6;                                       // +6 a la recepción
+      log("Habilidad Hinata: +6 a la recepción 💪");
+
+      await buscarEnTrashAMano(jugador, {                           // buscar en el trash
+        escuela: "Karasuno",                                        // solo Karasuno
+        tipo: "personaje"                                           // solo personajes
+      }, 1);                                                        // 1 carta
+      if (modoOnline) enviarTrash(jugador);
+      renderMano();                                                 // actualizar mano
+      renderManoRival();                                            // actualizar mano rival
+      renderCampo();                                                // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-001",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "S",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 3</strong>: Solo si el rival acaba de sacar, +6 a la recepción y añade 1 personaje de <strong>Karasuno</strong> desde tu descarte a tu mano.`
+    }
+  ),
   crearCarta("Kageyama Tobio", // ============================================================== P02-002
     {
       saque: 4,

@@ -119,6 +119,7 @@ log.cartaColocadaComoRematador;{carta} colocado como rematador con +{valor} al r
 log.habilidadActivada;Habilidad de {carta} activada;{carta} ability activated;Capacité de {carta} activée;
 log.condicionNoCumplida;Condición no cumplida;Condition not met;Condition non remplie;
 log.condicionCumplida;Condición adicional cumplida. Efecto activado;Additional condition met. Effect activated;Condition supplémentaire remplie. Effet activé;
+log.descartaDesdeMano;{jugador} descarta {carta} desde la mano para activar su habilidad;{jugador} discards {carta} from hand to activate their ability;{jugador} se défausse de {carta} depuis la main pour activer sa capacité;
 log.cartaDescartadaCoste;{carta} descartada como coste;{carta} discarded as cost;{carta} défaussée comme coût;
 log.cartaRevelada;Carta revelada: {carta};Card revealed: {carta};Carte révélée : {carta};
 log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining cards sent to the bottom of the deck;Cartes restantes envoyées au fond du deck;

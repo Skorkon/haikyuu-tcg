@@ -54,9 +54,9 @@ const DESCRIPCIONES = {
     "nombre_es": "Ataque amplio",
     "nombre_en": "Wide Attack",
     "nombre_fr": "Attaque large",
-    "es": "<strong><span style=background:#c62828; color:white; padding:1px 4px; border-radius:2px;>Remate</span></strong> Roba 1 carta y añade +1 al remate. Si en la jugada están presentes <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> y <strong><span style= color:#c62828>Hinata Shoyo</span></strong>, el rival no podrá usar bloqueadores laterales para defender.",
-    "en": "<strong><span style=background:#c62828; color:white; padding:1px 4px; border-radius:2px;>Spike</span></strong> Draw 1 card and add +1 to spike. If <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> and <strong><span style= color:#c62828>Hinata Shoyo</span></strong> are both present in the play, the rival cannot use side blockers to defend.",
-    "fr": "<strong><span style=background:#c62828; color:white; padding:1px 4px; border-radius:2px;>Attaque</span></strong> Pioche 1 carte et ajoute +1 à l'attaque. Si <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> et <strong><span style= color:#c62828>Hinata Shoyo</span></strong> sont tous deux présents dans la jouée, l'adversaire ne pourra pas utiliser de bloqueurs latéraux pour défendre."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y añade +1 al remate. Si en la jugada están presentes <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> y <strong><span style= color:#c62828>Hinata Shoyo</span></strong>, el rival no podrá usar bloqueadores laterales para defender.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and add +1 to spike. If <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> and <strong><span style= color:#c62828>Hinata Shoyo</span></strong> are both present in the play, the rival cannot use side blockers to defend.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Pioche 1 carte et ajoute +1 à l'attaque. Si <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> et <strong><span style= color:#c62828>Hinata Shoyo</span></strong> sont tous deux présents dans la jouée, l'adversaire ne pourra pas utiliser de bloqueurs latéraux pour défendre."
   },
   "HV-D02-001": {
     "nombre_es": "",

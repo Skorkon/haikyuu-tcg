@@ -65,6 +65,9 @@ function llenarListaMazosGuardados() {
 
   select.innerHTML = `<option value="">${t("lobby.elegirMazoGuardado")}</option>` +
     savedDecks.map(d => `<option value="${d.id}">${d.nombre} (${d.total}/40)</option>`).join('');
+
+  select.value = savedDecks[0].id;              // cargar primer mazo por defecto
+  cargarMazoGuardado(savedDecks[0].id);
 }
 
 function cargarMazoGuardado(id) {

@@ -167,16 +167,18 @@
     .swatch-color {
       width: 36px;
       height: 36px;
-      border-radius: 50%;           /* círculo */
+      border-radius: 50%;
       border: 2px solid var(--border2);
       cursor: pointer;
       transition: transform 0.15s, border-color 0.15s;
     }
+
     .swatch-color:hover {
-      transform: scale(1.1);        /* pequeño efecto al pasar el ratón */
+      transform: scale(1.1);
     }
+
     .swatch-color.activo {
-      border-color: white;        /* marco blanco en el color seleccionado actualmente */
+      border-color: white;
       box-shadow: 0 0 0 2px var(--accent);
     }
   </style>
@@ -234,7 +236,14 @@
         <!-- ============================================================ COLORES -->
         <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
           <label style="font-size:13px; color:var(--text2);" data-i18n="menu.colorSecundario">Color secundario</label>
-          <input type="color" id="color-libre" onchange="elegirColorLibre(this.value)" style="width:50px; height:36px; border:2px solid var(--border2); border-radius:6px; padding:0; cursor:pointer; background:none;">
+          <div id="paleta-colores" style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="swatch-color" data-color="#E8761A" style="background:#E8761A;" title="Karasuno" onclick="elegirColorPreset('#E8761A')"></button>
+            <button type="button" class="swatch-color" data-color="#C62828" style="background:#C62828;" title="Nekoma" onclick="elegirColorPreset('#C62828')"></button>
+            <button type="button" class="swatch-color" data-color="#D4AF37" style="background:#D4AF37;" title="Fukurodani" onclick="elegirColorPreset('#D4AF37')"></button>
+            <button type="button" class="swatch-color" data-color="#6A1B9A" style="background:#a72bf3;" title="Shiratorizawa" onclick="elegirColorPreset('#6A1B9A')"></button>
+            <button type="button" class="swatch-color" data-color="#4a9ee6" style="background:#4a9ee6;" title="Kamomedai" onclick="elegirColorPreset('#4a9ee6')"></button>
+            <button type="button" class="swatch-color" data-color="#1AA6A0" style="background:#1AA6A0;" title="Aoba Jôsai" onclick="elegirColorPreset('#1AA6A0')"></button>
+          </div>
         </div>
       </div>
         <button onclick="guardarSettings()" class="btn-menu" data-i18n="menu.btnGuardar">Guardar</button>
@@ -271,8 +280,8 @@
       document.getElementById("input-nombre-settings").value = localStorage.getItem("hv-nombre") || ""; // rellenar nombre actual
       idiomaTemporal = localStorage.getItem("hv-idioma") || "es";           // recuperar idioma actual
       colorTemporal = localStorage.getItem("hv-accent") || "#E8761A";       // recuperar color actual
-      document.getElementById("color-libre").value = colorTemporal;         // pinta el input con ese color
       marcarIdiomaSettings();                                               // pintar el botón activo
+      marcarColorActivo();
       mostrarPantalla("settings");                                          // mostrar la pantalla
     }
     // ======================================================================================== CAMBIAR IDIOMA
@@ -286,10 +295,21 @@
         boton.classList.toggle("activo", boton.dataset.idioma === idiomaTemporal); // activa solo el botón que coincide
       });
     }
-    let colorTemporal = localStorage.getItem("hv-accent") || "#E8761A"; // color actual guardado, o naranja por defecto
-    // =========================================================================================== ELEGIR COLOR
-    function elegirColorLibre(color) {
-      colorTemporal = color;  // guarda el color elegido en la variable temporal (aún no se aplica ni se guarda)
+    // =================================================================================== SELECTOR DE COLORES
+    // variable de color
+    let colorTemporal = localStorage.getItem("hv-accent") || "#E8761A";
+
+    // Elegir el color de la paleta
+    function elegirColorPreset(color) {
+      colorTemporal = color;
+      marcarColorActivo();
+    }
+
+    // Marcar color activo
+    function marcarColorActivo() {
+      document.querySelectorAll(".swatch-color").forEach(function(swatch) {
+        swatch.classList.toggle("activo", swatch.dataset.color === colorTemporal);
+      });
     }
     // ========================================================================================= GUARDAR CAMBIOS
     function guardarSettings() {

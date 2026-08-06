@@ -1931,11 +1931,20 @@ function renderMano() {
 }
 // ======================================================================================================= MANO DEL RIVAL
 function renderManoRival() {
-  if (!modoOnline) return;                               // solo en modo online
-
+  const titulo = document.getElementById("tituloManoRival");
+  if (!modoOnline) {
+    if (titulo) titulo.style.display = "none";
+    return;                               // solo en modo online
+  }
+  
   const rivalIndice = miNumero === 1 ? 1 : 0;           // índice del rival
   const rival = game.jugadores[rivalIndice];             // jugador rival
   const contenedor = document.getElementById("mano-rival"); // contenedor de la mano rival
+
+  if (titulo) {
+    titulo.style.display = "block";
+    titulo.textContent = t("ui.manoRival", { cantidad: rival.mano.length });   
+  }
 
   if (!contenedor) return;                               // si no existe el contenedor, ignorar
   contenedor.innerHTML = "";                             // limpiar contenedor
@@ -2267,34 +2276,35 @@ function actualizarContador(contenedor, cantidad) {
 // =================================================================================================================== MOSTRAR TOOLTIP
 function mostrarTooltip(carta, e) {
   let tooltip = document.getElementById("tooltip");
-
-  let infoAnyo = carta.info?.tipo === "evento" ? "" : `· ${carta.info?.anyo || ""}º`;
   
-  let infoStats = carta.info?.tipo === "evento" ? "" : `
-    <strong style="color:#1565c0">Rec: ${carta.stats.recepcion}</strong> · 
-    <strong style="color:#2e7d32">Pase: ${carta.stats.pase}</strong> · 
-    <strong style="color:#c62828">Rem: ${carta.stats.remate}</strong><br>
-    <strong style="color:#e65100">Saque: ${carta.stats.saque}</strong> · 
-    <strong style="color:#424242">Bloqueo: ${carta.stats.bloqueo}</strong><br>
-  `;
+  const colorEscuela = getSchoolColor(carta.info?.escuela);
+  const nombre = DESCRIPCIONES?.[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre;
 
-  tooltip.innerHTML = `
-    <img src="img/cartas/${carta.info?.id}.png" 
-        style="width:100%; display:block;"
-        onerror="this.style.display='none'">
-    <div style="background:white; padding:8px; font-size:11px; border: 2px solid black; border-top: none;">
-      <strong>${DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre}</strong><br>
-      <span style="color:#888">${carta.info?.escuela || ""} · ${carta.info?.posicion || ""} ${infoAnyo}</span><br><br>
-      ${infoStats}
-      ${(() => { let d = DESCRIPCIONES[carta.info?.id]?.[idiomaActivo] || carta.info?.descripcion;
-        return d ? `<br>${d.replace(/&quot;/g, '"')}` : ""; 
-      })()}
+  let infoStats = carta.info?.tipo === "evento" ? "" : `
+    <div class="tooltip-stats">
+      <div class="tstat tstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${carta.stats.saque}</strong></div>
+      <div class="tstat tstat-bloqueo"><span>${t("deckbuilder.statBloqueoCorto")}</span><strong>${carta.stats.bloqueo}</strong></div>
+      <div class="tstat tstat-recepcion"><span>${t("deckbuilder.statRecepcionCorto")}</span><strong>${carta.stats.recepcion}</strong></div>
+      <div class="tstat tstat-pase"><span>${t("deckbuilder.statPaseCorto")}</span><strong>${carta.stats.pase}</strong></div>
+      <div class="tstat tstat-remate"><span>${t("deckbuilder.statRemateCorto")}</span><strong>${carta.stats.remate}</strong></div>
     </div>
   `;
 
+  const descripcion = DESCRIPCIONES?.[carta.info?.id]?.[idiomaActivo] || carta.info?.descripcion || "";
+
+  tooltip.innerHTML = `
+    <div class="tooltip-imagen" style="background-image:url('img/cartas/${carta.info?.id}.png'); border-bottom: 3px solid ${colorEscuela};"></div>
+    <div class="tooltip-info">
+      <h3 style="color:${colorEscuela}">${nombre}</h3>
+      <div class="tooltip-meta">${carta.info?.escuela || (carta.info?.tipo === 'evento' ? 'Evento' : '')} ${carta.info?.posicion ? '· ' + carta.info.posicion : ''}</div>
+      ${infoStats}
+      <div class="tooltip-desc">${descripcion ? descripcion.replace(/&quot;/g, '"') : ''}</div>
+    </div>
+  `;
+
+  tooltip.style.border = `2px solid ${colorEscuela}`;
   tooltip.style.display = "block";
 
-  // posición — comprobar bordes
   let x = e.clientX + 15;
   let y = e.clientY + 15;
   if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - 15;
@@ -2303,6 +2313,29 @@ function mostrarTooltip(carta, e) {
   tooltip.style.left = x + "px";
   tooltip.style.top = y + "px";
 }
+
+// ======================================================================================================= COLORES ESCUELA PARA TOOLTIP
+function getSchoolColor(escuela) {
+  const colores = {
+    Karasuno:          '#E8761A',
+    Nekoma:            '#C62828',
+    Fukurodani:        '#D4AF37',
+    Shiratorizawa:     '#6A1B9A',
+    Inarizaki:         '#5C0A1E',
+    Kamomedai:         '#4a9ee6',
+    Itachiyama:        '#F9A825',
+    'Wakutani Minami': '#E91E8C',
+    'Date Kôgyô':      '#0F5C3D',
+    'Aoba Jôsai':      '#1AA6A0',
+    'Tokonami':        '#4A7FA5',
+    'Ōgiminami':       '#2C3E70',
+    'Kakugawa':        '#7CB342',
+    'Sōryūkawa Kōgyō': '#2E3A6E',
+    'Tsubakihara':     '#C9A63C',
+  };
+  return colores[escuela] || '#999999';
+}
+
 // ===================================================================================================================================
 // ================================================================================================================= EFECTOS DE CARTAS
 function negarBloqueadoresApoyo() {
@@ -3061,73 +3094,6 @@ function volverLobby() {
 
 const todasLasCartas = inicializarCartas();
 
-// cartas de prueba
-/*let akaashi = todasLasCartas.find(c => c.nombre === "Keiji Akaashi");
-game.jugadores[1].mano.push(akaashi);
-game.jugadores[0].mano.push(
-  crearCarta("Tanaka", { saque : 1, pase: 5 })
-);
-
-game.jugadores[0].mano.push(
-  crearCarta("Hinata", { saque : 1, remate: 6 })
-);
-
-game.jugadores[0].mano.push(
-  crearCarta("Kageyama", { pase: 4 })
-);
-
-game.jugadores[1].mano.push(
-  crearCarta("Oikawa", { pase: 5 })
-);
-
-game.jugadores[1].mano.push(
-  crearCarta("Kunimi", { remate: 6 })
-);
-// test guts y bokuto
-//game.jugadores[1].trash.push(crearCarta("Kotaro Bokuto", { remate: 3 }));
-//game.jugadores[1].zonas.pase.push(crearCarta("GUTS test 1", { pase: 3 }));
-//game.jugadores[1].zonas.pase.push(crearCarta("GUTS test 2", { pase: 3 }));
-// test bloqueo
-//game.jugadores[0].mano.push(crearCarta("BLOQ 1", { bloqueo : 1 }));
-//game.jugadores[0].mano.push(crearCarta("BLOQ 2", { bloqueo : 1  }));
-//game.jugadores[0].mano.push(crearCarta("BLOQ 3", { bloqueo : 1  }));
-game.jugadores[1].mano.push(
-  crearCarta("Iwaizumi", { recepcion : 3 , pase: 4 }, habilidadTestRecepcion)
-);*/
-
-/*["Tsukishima Kei", "Hinata Shoyo", "Haruki Komi"].forEach(nombre => {
-  let carta = todasLasCartas.find(c => c.nombre === nombre);
-  if (carta) game.jugadores[0].mazo.push(carta);
-});
-["Tsukishima Kei", "Hinata Shoyo", "Nishinoya Yu", "Kageyama Tobio", "Keiji Akaashi", "Ataque amplio"].forEach(nombre => {
-  let carta = todasLasCartas.find(c => c.nombre === nombre);
-  if (carta) game.jugadores[1].mazo.push(carta);
-});
-
-let kageyama = todasLasCartas.find(c => c.info?.id === "HV-P01-008");
-game.jugadores[0].mazo.push(kageyama);
-let yu = todasLasCartas.find(c => c.info?.id === "HV-D01-004");
-game.jugadores[0].mazo.push(yu);
-let evento1 = todasLasCartas.find(c => c.info?.id === "HV-P01-066");
-game.jugadores[0].mazo.push(evento1);
-let usj = todasLasCartas.find(c => c.info?.id === "HV-P02-037");
-game.jugadores[0].mazo.push(usj);
-let aaz = todasLasCartas.find(c => c.info?.id === "HV-D01-010");
-game.jugadores[0].mazo.push(aaz);
-let aa = todasLasCartas.find(c => c.info?.id === "HV-P01-003");
-game.jugadores[1].mazo.push(aa);
-let st = todasLasCartas.find(c => c.info?.id === "HV-P01-068");
-game.jugadores[1].mazo.push(st);
-let kf = todasLasCartas.find(c => c.info?.id === "HV-P01-010");
-game.jugadores[1].mazo.push(kf);
-let hy = todasLasCartas.find(c => c.info?.id === "HV-P02-036");
-game.jugadores[0].mazo.push(hy);
-let hss = todasLasCartas.find(c => c.info?.id === "HV-D02-011");
-game.jugadores[1].mazo.push(hss);
-let gtsr = todasLasCartas.find(c => c.info?.id === "HV-P01-058");
-game.jugadores[0].mazo.push(gtsr); */
-
-
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
@@ -3198,8 +3164,8 @@ mazoPruebaNekoma.forEach(id => {
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-009"); 
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO KARASUNO
@@ -3227,8 +3193,8 @@ const mazoPruebaKarasuno = [
 ];
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 

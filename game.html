@@ -48,12 +48,35 @@ body {
   border-right: 2px solid var(--accent);   
   display: flex;
   flex-direction: column;
-  margin-top: auto;
 }
 
 .panel-acciones {
-  height: 150px;
+  height: 180px;
   overflow-y: auto;
+}
+
+.titulo-mano-rival {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 6px 0 10px;
+  text-align: center;
+}
+#mano-rival {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: -10px -10px 10px -10px;
+  padding-top: 4px;
+  flex-shrink: 0;   /* ← nuevo: nunca se encoge, siempre arriba del todo */
+}
+
+.contenido-inferior {
+  display: flex;
+  flex-direction: column;              
+  margin-top: auto;      
 }
 
 /* -------------------------------------------------- DERECHA */
@@ -319,12 +342,66 @@ body {
 .tooltip {
   display: none;
   position: fixed;
-  background: none;
-  border: none;
+  background: var(--bg);
+  border-radius: 8px;
+  overflow: hidden;
   padding: 0;
   z-index: 100;
-  width: 250px;
+  width: 220px;
   pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+.tooltip-imagen {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+}
+.tooltip-info {
+  background: #000000;
+  color: var(--text);
+  padding: 12px;
+}
+.tooltip-info h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.tooltip-info .tooltip-meta {
+  font-size: 10px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+.tooltip-info .tooltip-stats {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+.tstat {
+  flex: 1;
+  text-align: center;
+  padding: 3px 2px;
+  border-radius: 3px;
+  font-size: 9px;
+}
+.tstat span {
+  display: block;
+  font-size: 7px;
+  opacity: 0.8;
+}
+.tstat strong {
+  display: block;
+  font-size: 11px;
+}
+.tstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
+.tstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
+.tstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
+.tstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
+.tstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
+.tooltip-info .tooltip-desc {
+  font-size: 10px;
+  line-height: 1.5;
+  border-top: 1px solid var(--border2);
+  padding-top: 8px;
 }
 
 /* -------------------------------------------------- ZONAS */
@@ -430,14 +507,14 @@ button {
 }
 
 /* -------------------------------------------------- POSICIONES JUGADOR 1 */
-#campo-j1 .zona-puntos    { top: 10px;    left: 40px; }
+#campo-j1 .zona-puntos    { top: 20px;    left: 40px; }
 #campo-j1 .zona-saque     { top: 170px; left: 80px; }
 #campo-j1 #j1-eventos     { top: 170px;  left: -5px; }
 #campo-j1 #j1-mazo        { top: 8px;    left: 460px;}
 #campo-j1 #j1-trash       { top: 150px;  left: 460px; }
 
 /* -------------------------------------------------- POSICIONES JUGADOR 2 (espejo) */
-#campo-j2 .zona-puntos    { top: 160px;  left: 460px; }
+#campo-j2 .zona-puntos    { top: 150px;  left: 460px; }
 #campo-j2 .zona-saque     { top: -40px; left: 460px; }
 #campo-j2 #j2-eventos     { top: -40px; left: 545px; }
 #campo-j2 #j2-mazo        { top: 130px;  left: 80px; }
@@ -649,14 +726,14 @@ button {
 
   /* CONTADOR DE ATAQUE Y DEFENSA */
   .contador-campo {
-    background: linear-gradient(135deg, #8b5a2b, #6b4423);
-    border: 3px solid #4a2f18;
+    background: #fdfaf0;
+    border: 2px solid #2a2a2a;
     border-radius: 4px;
     padding: 6px;
     display: flex;
-    flex-direction: column;      /* ← nuevo: tarjeta arriba, texto debajo */
+    flex-direction: column;      
     align-items: center;
-    gap: 2px;
+    gap: 4px;
     z-index: 10;
   }
 
@@ -674,26 +751,33 @@ button {
     font-weight: 900;
     color: #1a1a1a;
     box-shadow: inset 0 0 3px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.3);
-    transform: rotate(-1.5deg);
+    /* transform: rotate(-1.5deg); */
   }
 
   .etiqueta-marcador {
-    font-size: 9px;
-    font-weight: bold;
-    color: #fdfaf0;
+    background: #fdfaf0;
+    border: 2px solid #2a2a2a;
+    border-radius: 2px;
+    padding: 2px 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 900;
+    color: #1a1a1a;
     letter-spacing: 1px;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.15), 1px 2px 2px rgba(0,0,0,0.2);
+    /* transform: rotate(1deg);   rotación ligera */
   }
 
   #contador-ataque {
     position: absolute;
     top: 340px;
-    right: 60px;
+    right: 62.5px;
   }
 
   #contador-defensa {
     position: absolute;
     top: 340px;
-    right: 10px;
+    right: 7.5px;
   }
 
   @keyframes flipPapel {
@@ -716,46 +800,43 @@ button {
 <div class="main">
   <!--------------------------------------------------------------------------- IZQUIERDA: PREVIEW + BOTONES -->
   <div class="panel-izquierda">
+
+    <!----------------------------------------------------------------------- MANO DEL RIVAL -->
+    <div id="mano-rival"></div>
+    <h3 class="titulo-mano-rival" id="tituloManoRival"></h3>
     <!----------------------------------------------------------------------- ACCIONES -->
-    <div class="panel">
-      <h3 data-i18n="ui.panelBotones">Otros</h3>
-      <div style="display:flex; gap:6px;">
-        <button style="flex:1;" onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
-        <button style="flex:1;" onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
+    <div class="contenido-inferior">
+      <div class="panel">
+        <h3 data-i18n="ui.panelBotones">Otros</h3>
+        <div style="display:flex; gap:6px;">
+          <button style="flex:1;" onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
+          <button style="flex:1;" onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
+        </div>
+        <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
+      </div> <!-- fin panel otros -->
+      <div class="panel panel-acciones">
+        <h3 data-i18n="ui.panelAcciones">Acciones</h3>
+        <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
+        <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
+        <button id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
+        <button id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
+        <button id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
+        <button id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
+        <button id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
+        <button id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
+        <button id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
+        <button id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
+      </div> <!-- fin panel acciones -->
+      <div class="mano-bottom">
+        <div id="mano"></div>
       </div>
-      <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
-    </div>
-    <div class="panel panel-acciones">
-      <h3 data-i18n="ui.panelAcciones">Acciones</h3>
-      <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
-      <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
-      <button id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
-      <button id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
-      <button id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
-      <button id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
-      <button id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
-      <button id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
-      <button id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
-      <button id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
-    </div>
-    <div class="mano-bottom">
-      <div id="mano"></div>
-    </div>
+    </div> <!-- fin panel contenido inferior -->
   </div> <!-- fin panel izquierda -->
 
 <div class="campo-central">
-  <div id="pelota" style="position:absolute; font-size:24px; z-index:50; transition: all 0.3s ease;">🏐</div>
-  <!-- MANO DEL RIVAL (dorsos) — fijo en la parte superior de la pantalla -->
-  <div id="mano-rival" style="
-    position: fixed;
-    top: 20px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 99;
-    pointer-events: none;  
-  "></div>
+  <div id="pelota" style="position:absolute; width:32px; height:32px; z-index:50; transition: all 0.3s ease;">
+    <img src="img/pelota.png" alt="pelota" style="width:100%; height:100%; object-fit:contain; filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));">
+  </div>
   <div class="cancha-marco"></div>
   <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
   <div class="lado-jugador" id="campo-j2">
@@ -879,6 +960,13 @@ button {
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <!-- Otros JS -->
+<script>
+  // APLICAR COLOR SECUNDARIO ACCENT
+  const colorGuardado = localStorage.getItem("hv-accent");
+  if (colorGuardado) {
+    document.documentElement.style.setProperty("--accent", colorGuardado);
+  }
+</script>
 <script src="descripciones.js"></script>
 <script src="cartas.js"></script>
 <script src="online.js"></script>

@@ -2868,11 +2868,11 @@ function inicializarCartas() {
     async function(jugador, game, carta) {
       robarCarta(jugador, 2, true);                                // roba 2 cartas
       if (jugador.mano.length === 0) {                             // comprobar que hay cartas en mano
-        log("No tienes cartas en la mano para descartar.");
+        log(t("log.sinCartasParaDescartar"));
         return false;                                              // return false: habilidad no ejecutada
       }
       let cartaDescarte = await mostrarSelectorCartas(             // abrir selector de descarte
-        "Elige una carta de tu mano para descartar:",              // título del selector
+        t("log.elegirCarta"),              
         jugador.mano                                               // mostrar toda la mano
       );
       if (!cartaDescarte) return false;                            // return false: si cancela
@@ -2880,14 +2880,14 @@ function inicializarCartas() {
       let indexDescarte = jugador.mano.indexOf(cartaDescarte);     // buscar en la mano
       jugador.mano.splice(indexDescarte, 1);                       // sacar de la mano
       jugador.trash.push(cartaDescarte);                           // enviar al trash
-      log(cartaDescarte.nombre + " descartada de la mano.");
+      log(t("log.cartaDescartada", { carta: cartaDescarte.nombre }));
 
       // comprobar cuántos "Ataque abierto" hay en la zona de eventos
       let ataquesAbiertos = jugador.zonas.eventos.filter(c =>      // filtrar zona de eventos
         c.nombre === "Ataque abierto"                              // solo "Ataque abierto"
       );
       if (ataquesAbiertos.length > 2) {                            // si hay más de 2
-        log("Ya hay 2 o más Ataque abierto en tu zona de eventos. No se activa el efecto adicional.");
+        log(t("log.condicionNoCumplida"));
         return false;                                              // return false: habilidad no ejecutada
       }
 
@@ -2901,13 +2901,13 @@ function inicializarCartas() {
       }
 
       let hinataElegido = await mostrarSelectorCartas(             // abrir selector
-        "Elige un Hinata Shoyo del trash para colocar en remate:", // título del selector
+        t("log.elegirCarta"), 
         hinatasEnTrash                                             // solo Hinata
       );
       if (!hinataElegido) return false;                            // return false: si cancela
 
       let rematadorActual = jugador.zonas.remate.at(-1);           // buscar rematador actual
-      if (rematadorActual && rematadorActual.recienJugada) {                                       // si hay rematador
+      if (rematadorActual && rematadorActual.recienJugada) {       // si hay rematador
         game.valorAtaque -= rematadorActual.stats.remate;          // restar su remate al ataque
         let indexActual = jugador.zonas.remate.indexOf(rematadorActual); // buscar en la zona
         jugador.zonas.remate.splice(indexActual, 1);               // sacar de la zona
@@ -2923,8 +2923,9 @@ function inicializarCartas() {
       game.ultimaCarta = hinataElegido;                            // actualizar última carta
       game.ultimoJugador = jugador;                                // actualizar último jugador
 
-      game.valorAtaque += 1;          // sumar remate de Hinata + 1
-      log("Hinata Shoyo traído del trash al remate con + 1 al remate.");
+      game.valorAtaque += hinataElegido.stats.remate;
+      game.valorAtaque += 1; 
+      log(t("log.cartaJugadaEnZona", { carta: "Hinata Shoyo", zona: t("ui.zonaRemate") }));
 
       renderMano();                                                // actualizar mano
       renderManoRival();                                           // actualizar mano rival
@@ -3393,7 +3394,7 @@ function inicializarCartas() {
       let saqueRival = rival.zonas.saque.at(-1);                   // última carta del saque rival
 
       if (game.faseAnterior !== "saque") {                             // si la fase anterior no fue saque
-        log("Solo puedes usar esta habilidad justo después del saque rival ❌");
+        
         carta.habilidadUsada = false;
         return false;
       }
@@ -3404,7 +3405,7 @@ function inicializarCartas() {
       }
 
       game.valorDefensa += 6;                                       // +6 a la recepción
-      log("Habilidad Hinata: +6 a la recepción 💪");
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
 
       await buscarEnTrashAMano(jugador, {                           // buscar en el trash
         escuela: "Karasuno",                                        // solo Karasuno
@@ -3673,6 +3674,82 @@ function inicializarCartas() {
     }
   ),
 
+  crearCarta("Narita Kazuhito", // ============================================================== P02-011
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 0,
+      bloqueo: 2
+    },
+    function(jugador, game, carta) {
+      if (game.fase === "bloqueo") {                                 // si estamos en bloqueo
+        let bloqueador = game.bloqueoActual.central;                 // buscar el bloqueador central
+        if (!bloqueador || bloqueador.info?.escuela !== "Karasuno") { // comprobar que es de Karasuno
+          log(t("log.condicionNoCumplida"));
+          return false;                                              // return false: habilidad no ejecutada
+        }
+        game.valorDefensa += 1;                                      // +1 al bloqueo
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      } else if (game.fase === "recepcion") {                        // si estamos en recepción
+        let receptor = jugador.zonas.recepcion.at(-1);               // buscar el receptor en juego
+        if (!receptor || receptor.info?.escuela !== "Karasuno") {    // comprobar que es de Karasuno
+          log(t("log.condicionNoCumplida"));
+          return false;                                              // return false: habilidad no ejecutada
+        }
+        game.valorDefensa += 1;                                      // +1 a la recepción
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
+      }
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-011",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 2,
+      rareza: "N",
+      activacionMano: true,
+      fases: ["bloqueo", "recepcion"],
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta para +1 al parámetro de un personaje de <strong>Karasuno</strong> en juego según la fase.`
+    }
+  ),
+  crearCarta("Sawamura Daichi", // ============================================================== P02-012
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                       // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (game.faseAnterior !== "saque") {                         // comprobar que la fase anterior fue saque
+        log("Solo puedes usar esta habilidad justo después del saque rival ❌");
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (!await usarGuts(jugador, "recepcion", 3)) {              // pagar 3 GUTS de recepción
+        carta.habilidadUsada = false;                               // resetear habilidad
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      game.valorDefensa += 3;                                       // +3 a la recepción
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-012",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS - 3</strong>: Solo si el rival acaba de sacar, +3 a la recepción.`
+    }
+  ),
   crearCarta("Sugawara Koshi", // ============================================================== P02-013
     {
       saque: 3,
@@ -4140,7 +4217,7 @@ function inicializarCartas() {
       }
 
       if (contarNombresUnicosEnTrash(jugador, "Inarizaki") < 6) {
-        log("Necesitas 6 nombres distintos de Inarizaki en el trash (tienes " + contarNombresUnicosEnTrash(jugador, "Inarizaki") + ") ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return false;
       }
@@ -5099,6 +5176,38 @@ function inicializarCartas() {
     }
   ),
 
+  crearCarta("Tanaka Saeko", // ============================================================== P02-081
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
+
+      let receptor = jugador.zonas.recepcion.at(-1);                // buscar el receptor en juego
+      if (!receptor || receptor.info?.escuela !== "Karasuno") {     // comprobar que es de Karasuno
+        log(t("log.condicionNoCumplida"));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+
+      let debuff = game.efectosActivos.find(e =>                    // buscar efecto debilitarReceptor
+        e.tipo === "debilitarReceptor" &&                           // del tipo correcto
+        e.activadoPor !== game.jugadorActivo                        // activado por el rival
+      );
+      if (debuff) {                                                 // si había debuff
+        game.valorDefensa += debuff.valor;                         // recuperar el valor perdido
+      }
+      game.valorDefensa += 1;                                       // +1 a la recepción
+      log(t("log.condicionCumplida"));
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P02-081",
+      fases: ["recepcion"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Puedes anular el debuff de recepción del rival sobre tu receptor de <strong>Karasuno</strong>. Después, +1 a la recepción.`
+    }
+  ),
   crearCarta("¡Super Diagonal!", // ============================================================== P02-082
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {

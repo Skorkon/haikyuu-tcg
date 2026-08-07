@@ -12,6 +12,7 @@ const TRADUCCIONES = {
       "cartaSeleccionadaCampo": "Carta seleccionada: {carta}",
       "mulliganYaConfirmado": "El mulligan ya ha sido confirmado",
       "noEsFase": "No es fase de {zona}",
+      "cartaJugadaEnZona": "{carta} colocado en {zona}",
       "noEsFaseRecepcion": "No es fase de recepción",
       "noEsFasePase": "No es fase de pase",
       "noEsFaseRemate": "No es fase de remate",
@@ -135,7 +136,10 @@ const TRADUCCIONES = {
       "cartasReveladas": "Cartas reveladas: {cartas}",
       "elegirCartaOpcional": "Elige una carta para añadir a tu mano (opcional)",
       "elegirCarta": "Elige una carta",
-      "sinCartasParaDescartar": "No tienes cartas en la mano para descartar"
+      "sinCartasParaDescartar": "No tienes cartas en la mano para descartar",
+      "cartaAMano": "{carta} añadida a la mano",
+      "cartaDescartada": "{carta} descartada de la mano",
+      "sinBloqueadorCentral": "No hay bloqueadores. El ataque pasa sin bloqueo"
     }
   },
   "en": {
@@ -148,6 +152,7 @@ const TRADUCCIONES = {
       "cartaSeleccionadaCampo": "Card selected: {carta}",
       "mulliganYaConfirmado": "Mulligan already confirmed",
       "noEsFase": "Not the {zona} phase",
+      "cartaJugadaEnZona": "{carta} placed in {zona}",
       "noEsFaseRecepcion": "Not the reception phase",
       "noEsFasePase": "Not the set phase",
       "noEsFaseRemate": "Not the spike phase",
@@ -271,7 +276,10 @@ const TRADUCCIONES = {
       "cartasReveladas": "Cards revealed: {cartas}",
       "elegirCartaOpcional": "Choose a card to add to your hand (optional)",
       "elegirCarta": "Choose a card",
-      "sinCartasParaDescartar": "No cards in hand to discard"
+      "sinCartasParaDescartar": "No cards in hand to discard",
+      "cartaAMano": "{carta} added to hand",
+      "cartaDescartada": "{carta} discarded from hand",
+      "sinBloqueadorCentral": "No blockers. The attack passes without block"
     }
   },
   "fr": {
@@ -284,6 +292,7 @@ const TRADUCCIONES = {
       "cartaSeleccionadaCampo": "Carte sélectionnée : {carta}",
       "mulliganYaConfirmado": "Le mulligan a été déjà confirmé",
       "noEsFase": "Ce n'est pas la phase de {zona}",
+      "cartaJugadaEnZona": "{carta} placé en {zona}",
       "noEsFaseRecepcion": "Ce n’est pas la phase de réception",
       "noEsFasePase": "Ce n'est pas la phase de passe",
       "noEsFaseRemate": "Ce n'est pas la phase d'attaque",
@@ -407,7 +416,10 @@ const TRADUCCIONES = {
       "cartasReveladas": "Cartes révélées : {cartas}",
       "elegirCartaOpcional": "Choisissez une carte à ajouter à votre main (optionnel)",
       "elegirCarta": "Choisissez une carte",
-      "sinCartasParaDescartar": "Pas de cartes en main à défausser"
+      "sinCartasParaDescartar": "Pas de cartes en main à défausser",
+      "cartaAMano": "{carta} ajoutée à la main",
+      "cartaDescartada": "{carta} défaussée de la main",
+      "sinBloqueadorCentral": "Pas de bloqueurs. L'attaque passe sans bloc"
     }
   },
   "": {
@@ -420,6 +432,7 @@ const TRADUCCIONES = {
       "cartaSeleccionadaCampo": "",
       "mulliganYaConfirmado": "",
       "noEsFase": "",
+      "cartaJugadaEnZona": "",
       "noEsFaseRecepcion": "",
       "noEsFasePase": "",
       "noEsFaseRemate": "",
@@ -543,7 +556,10 @@ const TRADUCCIONES = {
       "cartasReveladas": "",
       "elegirCartaOpcional": "",
       "elegirCarta": "",
-      "sinCartasParaDescartar": ""
+      "sinCartasParaDescartar": "",
+      "cartaAMano": "",
+      "cartaDescartada": "",
+      "sinBloqueadorCentral": ""
     }
   }
 };

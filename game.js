@@ -489,7 +489,7 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
       div.style.zIndex = cartas.length - index;
 
       if (carta.info?.id) { 
-        div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
+        mostrarIMGmini(div, carta.info.id);
       } else {
         div.textContent = carta.nombre;
       }
@@ -1424,6 +1424,17 @@ function resolverBloqueo() {
   }
   if (!esResolverValido()) return;                      // comprobar turno en online
 
+  if (!game.bloqueoActual.central) {                    // si no hay cartas colocadas en bloqueo
+    log(t("log.sinBloqueadorCentral"));
+    game.fase = "recepcion";
+    game.valorDefensa = 0;
+    robarCarta(game.jugadores[game.jugadorActivo], 1);
+    actualizarFaseUI();
+    renderMano();
+    renderCampo();
+    return;
+  }
+
   let jugador = game.jugadores[game.jugadorActivo];     // jugador activo
   let defensaTotal = game.valorDefensa;                 // empezar con los bonuses acumulados
 
@@ -1700,6 +1711,9 @@ function concederPunto() {
     return;
   }
 
+  const confirmado = confirm(t("ui.confirmarConcederPunto"));
+  if (!confirmado) return;
+
   let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;      // índice del rival
   let rival = game.jugadores[rivalIndex];                 // jugador rival
 
@@ -1910,7 +1924,7 @@ function renderMano() {
     div.style.marginLeft = index === 0 ? "0" : `-${overlapNecesario}px`;
 
     if (carta.info?.id) {
-      div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
+      mostrarIMGmini(div, carta.info.id);
     } else {
       div.textContent = carta.nombre;
     }
@@ -2064,7 +2078,7 @@ function renderCampo() {
           div.classList.add("seleccionada");
         }
         if (carta.info?.id) {
-          div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`;
+          mostrarIMGmini(div, carta.info.id);
         } else {
           div.textContent = carta.nombre;
         }
@@ -2134,7 +2148,7 @@ function renderCampo() {
         let div = document.createElement("div");                                 // crea un div
         div.classList.add("carta");                                              // le aplica el CSS
         if (carta.info?.id) {
-          div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
+          mostrarIMGmini(div, carta.info.id);
         } else {
           div.textContent = carta.nombre;                                        // si no, el nombre
         }
@@ -2164,7 +2178,7 @@ function renderCampo() {
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
               if (carta.info?.id) {
-                div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
+                mostrarIMGmini(div, carta.info.id);
               } else {
                 div.textContent = carta.nombre;                          // si no, el nombre
               }
@@ -2245,7 +2259,7 @@ function renderCampo() {
             div.style.zIndex = i;                                        // las últimas encima
             if (i === capas - 1) {                                       // solo la carta de arriba muestra imagen
               if (carta.info?.id) {
-                div.style.backgroundImage = `url('img/cartas-mini/${carta.info.id}.png')`; // imagen de la carta
+                mostrarIMGmini(div, carta.info.id);
               } else {
                 div.textContent = carta.nombre;                          // si no, el nombre
               }
@@ -2275,6 +2289,16 @@ function renderCampo() {
       }
   }); 
 }
+
+// ===================================================================================================================================
+// ======================================================================================= MOSTRAR IMÁGENES EN MINI EN EL CAMPO Y MANO
+function mostrarIMGmini(elemento, id) {
+  const testImg = new Image();
+  testImg.onload = () => { elemento.style.backgroundImage = `url('img/cartas-mini/${id}.png')`; };
+  testImg.onerror = () => { elemento.style.backgroundImage = `url('img/cartas/${id}.png')`; };
+  testImg.src = `img/cartas-mini/${id}.png`;
+}
+
 // ===================================================================================================================================
 // ================================================================================================================== CONTADOR DE ZONA
 // Muestra un número pequeño en la esquina de una zona indicando cuántas cartas hay
@@ -2631,6 +2655,13 @@ function oneTouch(n) {
   game.valorAtaque -= n;
   log(t("log.oneTouch", { valor: n, ataque: game.valorAtaque }));
   game.fase = "recepcion";
+
+  let jugadorBloqueo = game.jugadores[game.jugadorActivo];
+    jugadorBloqueo.zonas.bloqueoApoyo.forEach(carta => {     // enviar apoyos al trash
+    jugadorBloqueo.trash.push(carta);
+  });
+
+  jugadorBloqueo.zonas.bloqueoApoyo = [];
   game.bloqueoActual = { central: null, apoyos: [] };
   actualizarFaseUI();
   renderMano();
@@ -2707,14 +2738,14 @@ async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porq
   }
 
   for (let i = 0; i < cantidad; i++) {
-    let cartaElegida = await mostrarSelectorCartas("Elige una carta del trash:", elegibles);
+    let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles);
     if (!cartaElegida) return false;
 
     // añadir carta a la mano y sacarla del trash
     let index = jugador.trash.indexOf(cartaElegida);
     jugador.trash.splice(index, 1);
     añadirCartaAMano(jugador, cartaElegida);
-    log(cartaElegida.nombre + " añadido a la mano desde el trash.");
+    log(t("log.cartaAMano", { carta: cartaElegida.nombre }));
 
     elegibles = filtrarTrash(jugador, filtros);
   }
@@ -3172,16 +3203,16 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-P02-006", "HV-P02-007", "HV-P02-014", "HV-P02-001"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-P02-081"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-009"); 
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
@@ -3210,12 +3241,67 @@ const mazoPruebaKarasuno = [
 ];
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
+// ---------------------------------------------------------------------------------- DATE KÔGYÔ >
+// MANO DATE
+["HV-P02-036", "HV-P02-037", "HV-P02-038", "HV-P02-039", "HV-P02-041", "HV-P02-042"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+});
+// GUTS DATE
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-044"); // Sasaya sin habilidad
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// TRASH DATE — para Aone P02-037 y Sakunami P02-041
+["HV-P01-054", "HV-P02-036", "HV-P02-040", "HV-P02-043", "HV-P02-044", "HV-P02-045"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
+// MAZO DATE
+const mazoPruebaDate = [
+  "HV-P01-054", "HV-P01-054",                          // Aone P01 x2
+  "HV-P01-055", "HV-P01-055",                          // Futakuchi P01 x2
+  "HV-P02-036", "HV-P02-036",                          // Aone P02-036 x2
+  "HV-P02-037", "HV-P02-037",                          // Aone P02-037 x2
+  "HV-P02-038", "HV-P02-038",                          // Futakuchi P02-038 x2
+  "HV-P02-039", "HV-P02-039",                          // Futakuchi P02-039 x2
+  "HV-P02-040", "HV-P02-040",                          // Koganegawa x2
+  "HV-P02-041", "HV-P02-041",                          // Sakunami x2
+  "HV-P02-042", "HV-P02-042",                          // Kamasaki x2
+  "HV-P02-043", "HV-P02-043",                          // Moniwa x2
+  "HV-P02-044", "HV-P02-044",                          // Sasaya x2
+  "HV-P02-045", "HV-P02-045",                          // Obara x2
+  "HV-P02-090", "HV-P02-090",                          // Oiwake (evento) x2
+  "HV-P02-091", "HV-P02-091",                          // La defensa más fuerte x2
+  "HV-P02-092", "HV-P02-092",                          // La muralla del año que viene x2
+  "HV-P02-093", "HV-P02-093",                          // Bloqueo en grupo coordinado x2
+];
+mazoPruebaDate.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- DATE KÔGYÔ
 
+
+
+
+// TRASH 
+["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(carta);
+  if (carta) game.jugadores[1].trash.push(carta);
+});
 
 // ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
@@ -3228,8 +3314,8 @@ mazoPruebaKarasuno.forEach(id => {
 // TRASH 
 ["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  //if (carta) game.jugadores[0].trash.push(carta);
-  //if (carta) game.jugadores[1].trash.push(carta);
+  if (carta) game.jugadores[0].trash.push(carta);
+  if (carta) game.jugadores[1].trash.push(carta);
 });
 
 // MAZO J1
@@ -3242,7 +3328,7 @@ mazoPruebaKarasuno.forEach(id => {
 // EVENTOS 
 for (let i = 0; i < 5; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-078");
-  game.jugadores[1].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO J2
 for (let i = 0; i < 10; i++) {

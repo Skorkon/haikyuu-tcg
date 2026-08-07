@@ -7,6 +7,7 @@ log.seleccionaCartaMulligan;Selecciona una carta para devolver al mazo;Select a 
 log.cartaSeleccionadaCampo;Carta seleccionada: {carta};Card selected: {carta};Carte sélectionnée : {carta};
 log.mulliganYaConfirmado;El mulligan ya ha sido confirmado;Mulligan already confirmed;Le mulligan a été déjà confirmé;
 log.noEsFase;No es fase de {zona};Not the {zona} phase;Ce n'est pas la phase de {zona};
+log.cartaJugadaEnZona;{carta} colocado en {zona};{carta} placed in {zona};{carta} placé en {zona};
 log.noEsFaseRecepcion;No es fase de recepción;Not the reception phase;Ce n’est pas la phase de réception;
 log.noEsFasePase ;No es fase de pase ;Not the set phase ;Ce n'est pas la phase de passe ;
 log.noEsFaseRemate ;No es fase de remate ;Not the spike phase ;Ce n'est pas la phase d'attaque ;
@@ -131,3 +132,6 @@ log.cartasReveladas;Cartas reveladas: {cartas};Cards revealed: {cartas};Cartes r
 log.elegirCartaOpcional;Elige una carta para añadir a tu mano (opcional);Choose a card to add to your hand (optional);Choisissez une carte à ajouter à votre main (optionnel);
 log.elegirCarta;Elige una carta;Choose a card;Choisissez une carte;
 log.sinCartasParaDescartar;No tienes cartas en la mano para descartar;No cards in hand to discard;Pas de cartes en main à défausser;
+log.cartaAMano;{carta} añadida a la mano;{carta} added to hand;{carta} ajoutée à la main;
+log.cartaDescartada;{carta} descartada de la mano;{carta} discarded from hand;{carta} défaussée de la main;
+log.sinBloqueadorCentral;No hay bloqueadores. El ataque pasa sin bloqueo;No blockers. The attack passes without block;Pas de bloqueurs. L'attaque passe sans bloc;

@@ -302,9 +302,9 @@ const DESCRIPCIONES = {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es 4 o más. Descarta la carta superior de tu mazo. Si esa carta es de <strong>Fukurodani</strong>: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : resta 3 al ataque del rival y pasa directamente a fase de recepción.",
-    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. Discard the top card of your deck. If that card is from <strong>Fukurodani</strong>: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span>: subtract 3 from the opponent's attack and go directly to the reception phase.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est de 4 ou plus. Défaussez la carte du dessus de votre deck. Si cette carte appartient à <strong>Fukurodani</strong> : <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : réduisez l'attaque adverse de 3 et passez directement à la phase de réception."
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es 4 o más. Descarta la carta superior de tu mazo. Si esa carta es de <strong>Fukurodani</strong>: ></br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : resta 3 al ataque del rival y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. Discard the top card of your deck. If that card is from <strong>Fukurodani</strong>: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span>: subtract 3 from the opponent's attack and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est de 4 ou plus. Défaussez la carte du dessus de votre deck. Si cette carte appartient à <strong>Fukurodani</strong> : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (3)</strong></span> : réduisez l'attaque adverse de 3 et passez directement à la phase de réception."
   },
   "HV-P01-054": {
     "nombre_es": "",
@@ -506,6 +506,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to the attack of a <strong>Fukurodani</strong> character in play. If all your characters in play are from <strong>Fukurodani</strong>, during the opponent's next turn, if the opponent loses a point, you draw 1 extra card.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage de <strong>Fukurodani</strong> en jeu. Si tous vos personnages en jeu sont de <strong>Fukurodani</strong>, pendant le prochain tour adverse, si l'adversaire perd un point, vous piochez 1 carte supplémentaire."
   },
+  "HV-P02-001": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: Solo si el rival acaba de sacar, +6 a la recepción y añade 1 personaje de <strong>Karasuno</strong> desde tu descarte a tu mano.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: Only if the opponent has just served, +6 to the reception and add 1 <strong>Karasuno</strong> character from your discard pile to your hand.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : Seulement si l'adversaire vient de servir, +6 à la réception et ajoutez 1 personnage de <strong>Karasuno</strong> depuis votre défausse à votre main."
+  },
   "HV-P02-002": {
     "nombre_es": "",
     "nombre_en": "",
@@ -537,6 +545,22 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Cuando se juega <strong>¡Super Inner Cross!!!</strong>, si esta carta está en remate, <strong>GUTS 3</strong>: +4 al remate y -2 al receptor rival el próximo turno.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> When <strong>Super Cross Attack!!!</strong> is played, if this card is in the spike zone, <strong>GUTS 3</strong>: +4 to the spike and -2 to the opponent's receiver on the next turn.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Lorsque <strong>Super Attaque croisée !!!</strong> est jouée, si cette carte est en zone d'attaque, <strong>GUTS 3</strong> : +4 à l'attaque et -2 au réceptionneur adverse au prochain tour."
+  },
+  "HV-P02-011": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Descarta esta carta para +1 al parámetro de un personaje de <strong>Karasuno</strong> en juego según la fase.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Discard this card to add +1 to the parameter of a <strong>Karasuno</strong> character in play according to the phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Défaussez cette carte pour +1 au paramètre d'un personnage de <strong>Karasuno</strong> en jeu selon la phase."
+  },
+  "HV-P02-012": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "HV-P02-012",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: Solo si el rival acaba de sacar, +3 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: Only if the opponent has just served, +3 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : Seulement si l'adversaire vient de servir, +3 à la réception."
   },
   "HV-P02-014": {
     "nombre_es": "",
@@ -729,6 +753,14 @@ const DESCRIPCIONES = {
     "es": "Al colocar esta carta, elige si su nombre es <strong>Miya Atsumu</strong> o <strong>Miya Osamu</strong>. El nombre y posición elegidos se aplican de forma definitiva.",
     "en": "When placing this card, choose whether its name is <strong>Miya Atsumu</strong> or <strong>Miya Osamu</strong>. The chosen name and position apply permanently.",
     "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Miya Atsumu</strong> ou <strong>Miya Osamu</strong>. Le nom et le poste choisis s'appliquent de façon définitive."
+  },
+  "HV-P02-081": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta. Puedes anular el debuff de recepción del rival sobre tu receptor de <strong>Karasuno</strong>. Después, +1 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card. You may nullify the opponent's reception debuff on your <strong>Karasuno</strong> receiver. Then, +1 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte. Vous pouvez annuler le débuff de réception adverse sur votre réceptionneur de <strong>Karasuno</strong>. Ensuite, +1 à la réception."
   },
   "HV-P02-082": {
     "nombre_es": "¡Super Diagonal!",

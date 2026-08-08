@@ -2882,6 +2882,53 @@ function motivacionRobar() {                                            // robar
   if (modoOnline) enviarEfectos();                                      // sincronizar efectos
   log(t("log.motivarActivo"));
 }
+
+// ======================================== TRASHEAR GUTS DE RECEPCIÓN DEL RIVAL
+// ======================================== TRASHEAR GUTS DE UNA ZONA DEL RIVAL
+async function trashearGutsZonaRival(rival, rivalIndex, zona, cartasIds) { 
+  if (!modoOnline) {                                                      // modo local: mutación directa
+    cartasIds.forEach(id => {                                             // para cada id elegido
+      let index = rival.zonas[zona].findIndex(c => c.info?.id === id);    // buscar en la zona indicada
+      if (index !== -1) {                                                 // si existe
+        let cartaQuitada = rival.zonas[zona].splice(index, 1)[0];         // sacar de la zona
+        rival.trash.push(cartaQuitada);                                   // enviar al trash
+        log(t("log.cartaTrasheadaDeZona", { carta: cartaQuitada.nombre, zona: zona, jugador: rival.nombre }));
+      }
+    });
+    renderCampo();                                                         
+    return;
+  }
+
+  // modo online: enviar petición al rival y esperar confirmación
+  log(t("log.esperandoDescarte"));
+  bloquearUI();                                                            // bloquear mientras espera
+  enviarJugada("pedirTrashearGuts", { rivalIndex: rivalIndex, zona: zona, cartasIds: cartasIds }); // avisar al rival
+
+  await new Promise(resolve => {                                          // esperar respuesta del rival
+    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");        // escuchar Firebase
+    ref.on("value", function(snap) {                                      // cuando cambie
+      let jugada = snap.val();                                            // leer datos
+      if (!jugada) return;                                                // ignorar si vacío
+      if (jugada.tipo !== "gutsRivalTrasheado") return;                  // ignorar si no es la respuesta
+      if (jugada.jugador === miNumero) return;                            // ignorar si es mío
+
+      ref.off();                                                          // desactivar listener
+            
+      // aplicar en MI vista local del rival las mismas cartas que él quitó de verdad en su cliente
+      // (el trash se sincroniza aparte vía escucharTrashRival, aquí solo hace falta actualizar la zona)
+      jugada.cartasIds.forEach(id => {
+        let index = rival.zonas[jugada.zona].findIndex(c => c.info?.id === id);
+        if (index !== -1) {
+          rival.zonas[jugada.zona].splice(index, 1);
+        }
+      });
+      log(t("log.rivalDescartaGuts", { valor: 2, zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) }));
+      desbloquearUI();                                                    
+      renderCampo();                                                      
+      resolve();                                                          
+    });
+  });
+}
 // ===================================================================================================================================
 // ================================================================================================================ HABILIDADES ÚNICAS
 async function aplicarKenma019(jugador, carta) { // ========================================== KENMA P01-019
@@ -3403,23 +3450,23 @@ mazoPruebaDate.forEach(id => {
 
 // ---------------------------------------------------------------------------------- FUKURODANI >
 // MANO FUKURODANI
-["HV-P02-064", "HV-P02-067", "HV-P01-051", "HV-P01-089", "HV-P01-093"].forEach(id => {
+["HV-P02-064", "HV-P02-067", "HV-P01-051"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS FUKURODANI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga, sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH FUKURODANI — para Akaashi P01-045 (busca Bokuto)
 ["HV-P01-044", "HV-P01-046", "HV-P01-048", "HV-P01-049", "HV-P01-050"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO FUKURODANI
@@ -3437,10 +3484,43 @@ const mazoPruebaFukurodani = [
 ];
 mazoPruebaFukurodani.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- FUKURODANI <
+
+// ---------------------------------------------------------------------------------- SHIRATORIZAWA >
+// MANO SHIRATORIZAWA
+["HV-P02-048", "HV-P02-047", "HV-P01-046"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+});
+// GUTS SHIRATORIZAWA
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-054"); // Onaga, sin habilidad
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+
+// MAZO SHIRATORIZAWA
+const mazoPruebaShiratorizawa = [
+  "HV-P01-056", "HV-P01-056",                          // Ushiwaka
+  "HV-P01-057", "HV-P01-057",                          // Tendo
+  "HV-P01-058", "HV-P01-058",                          // Keiji Akaashi (sin habilidad) x2
+  "HV-P02-047", "HV-P02-047",                          
+  "HV-P02-053", "HV-P02-053",
+  "HV-P02-054", "HV-P02-054",
+  "HV-P02-055", "HV-P02-055",
+];
+mazoPruebaShiratorizawa.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- SHIRATORIZAWA <
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA

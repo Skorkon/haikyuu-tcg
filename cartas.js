@@ -5061,7 +5061,71 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  crearCarta("Ushijima Wakatoshi", // ============================================================== P02-046
+    {
+      saque: 3,
+      recepcion: 3,
+      pase: 0,
+      remate: 2,
+      bloqueo: 1
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                                  // comprobar que está en remate
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;                                                       // return false: condición no cumplida
+      }
 
+      let colocador = jugador.zonas.pase.at(-1);                           // buscar el colocador en pase
+      if (!colocador || colocador.info?.escuela !== "Shiratorizawa" || colocador.info?.posicion !== "S") {
+        log(t("log.condicionNoCumplida"));                                  // comprobar escuela y posición
+        return false;                                                       // return false: condición no cumplida
+      }
+
+      if (!await usarGuts(jugador, "remate", 3)) {                          // pagar 3 GUTS de remate
+        return false;                                                       // return false: GUTS insuficientes
+      }
+
+      game.valorAtaque += 3;                                                 // +3 al remate
+      log(t("log.ataqueAumentado", { valor: 3 }));
+
+      // elegir hasta 2 cartas del GUTS de recepción del rival
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;      // índice del rival
+      let rival = game.jugadores[rivalIndex];                               // jugador rival
+
+      let elegidas = [];                                                    // cartas elegidas para trashear
+      for (let i = 0; i < 2; i++) {                                        // hasta 2 elecciones
+        let disponibles = rival.zonas.recepcion.filter(c => !elegidas.includes(c)); // excluir ya elegidas
+        if (disponibles.length === 0) break;                               // si no quedan cartas, parar
+
+        let cartaElegida = await mostrarSelectorCartas(                    // abrir selector cancelable
+          t("log.elegirCarta"),
+          disponibles,
+          true                                                              // permite cancelar (dejar de elegir)
+        );
+        if (!cartaElegida) break;                                          // si cancela, parar de elegir
+
+        elegidas.push(cartaElegida);                                       // añadir a las elegidas
+      }
+
+      if (elegidas.length > 0) {                                           // si eligió al menos 1
+        let idsElegidos = elegidas.map(c => c.info?.id);                   // convertir a array de ids
+        await trashearGutsZonaRival(rival, rivalIndex, "recepcion", idsElegidos); // ejecutar el trasheo (local u online)
+      }
+
+      renderMano();                                                         // actualizar mano
+      renderManoRival();                                                    // actualizar mano rival
+      renderCampo();                                                        // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-046",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS 3</strong>: Si tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> es el <strong>S</strong> de <strong>Shiratorizawa</strong>, +3 al remate y trashea hasta 2 cartas del GUTS de recepción del rival.`
+    }
+  ),
   crearCarta("Ushijima Wakatoshi", // ============================================================== P02-047
     {
       saque: 1,
@@ -5080,7 +5144,87 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
+  crearCarta("Tendo Satori", // ============================================================== P02-048
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") { // comprobar zona válida (central o apoyo)
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;                                                        // return false: condición no cumplida
+      }
 
+      let esCara = Math.random() < 0.5;
+      let resultado = esCara ? t("log.cara") : t("log.cruz");
+      log(t("log.lanzamientoMoneda", { resultado: resultado }));
+
+      if (esCara) {                                                 // si sale cara
+        game.valorDefensa += 4;                                              // +4 al bloqueo
+        log(t("log.defensaAumentada", { valor: 4 }));
+
+      } else {                                                                // si sale cruz
+        if (jugador.mazo.length === 0) {                                    // comprobar que hay cartas en el mazo
+          log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        } else {
+          let cantidad = Math.min(3, jugador.mazo.length);                  // como máximo 3, o las que queden
+          let cartasTrasheadas = jugador.mazo.splice(0, cantidad);          // sacar del mazo
+          cartasTrasheadas.forEach(c => jugador.trash.push(c));             // enviarlas al trash
+          log(t("log.cartasDescartadasDelMazo", { cantidad: cartasTrasheadas.length }));
+
+          if (modoOnline) {
+            enviarTrash(jugador);                                           // sincronizar trash
+            enviarMazo();                                                   // sincronizar conteo de mazo
+          }
+        }
+      }
+
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-048",
+      escuela: "Shiratorizawa",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Lanza una moneda: si sale cara, +4 al bloqueo. Si sale cruz, trashea las 3 primeras cartas de tu mazo.`
+    }
+  ),
+  crearCarta("Tendo Satori", // ============================================================== P02-049
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") { // comprobar zona válida (central o apoyo)
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return;
+      }
+      if (game.valorAtaque < 4) {                                            // comprobar ataque rival
+        log(t("log.condicionNoCumplida"));
+        return;
+      }
+      oneTouch(2);
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-049",
+      escuela: "Shiratorizawa",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
+    }
+  ),
   crearCarta("Hayato Yamagata", // ============================================================== P02-053
     {
       saque: 0,

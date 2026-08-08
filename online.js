@@ -317,6 +317,27 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                                     // actualizar campo
       break;
 
+    case "pedirTrashearGuts": // ========================================= PEDIR TRASHEAR GUTS (ej. USHIJIMA)
+      const miJugadorTrashear = game.jugadores[miNumero - 1];                  // jugador local (afectado)
+      const zonaTrashear = jugada.zona;                                       // zona indicada por el rival
+      jugada.cartasIds.forEach(id => {                                        // para cada carta pedida
+        let index = miJugadorTrashear.zonas[zonaTrashear].findIndex(c => c.info?.id === id); // buscar en la zona
+        if (index !== -1) {                                                   // si existe
+          let carta = miJugadorTrashear.zonas[zonaTrashear].splice(index, 1)[0]; // sacar de la zona
+          miJugadorTrashear.trash.push(carta);                                 // enviar al trash
+          log(t("log.cartaTrasheadaDeZona", { carta: carta.nombre, zona: zonaTrashear, jugador: jugador.nombre }));
+        }
+      });
+
+      enviarJugada("gutsRivalTrasheado", { zona: zonaTrashear, cartasIds: jugada.cartasIds }); // avisar al rival que ya se aplicó
+      if (modoOnline) enviarTrash(miJugadorTrashear);                        // sincronizar trash
+
+      renderCampo();                                                          // actualizar campo
+      break;
+
+    case "gutsRivalTrasheado": // ============================================ CONFIRMACIÓN TRASHEO
+      break; // gestionado por el Promise en trashearGutsZonaRival
+
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste
       break;

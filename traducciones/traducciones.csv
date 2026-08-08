@@ -61,6 +61,9 @@ log.potenciarColocadorEscuela;Efecto activo: colocadores{escuela} tendrán +{val
 log.potenciarRematadorEscuela;Efecto activo: rematadores{escuela} tendrán +{valor} al remate;Active effect: spikers{escuela} get +{valor} to spike;Effet actif : attaquants{escuela} auront +{valor} à l'attaque;
 log.potenciarPersonajeActivo;Efecto activo: {nombre} tendrá +{valor} en {zona} este turno;Active effect: {nombre} will get +{valor} to {zona} this turn;Effet actif : {nombre} aura +{valor} en {zona} ce tour;
 log.potenciarPersonaje;Efecto: +{valor} en {zona} de {nombre};Effect: +{valor} to {zona} for {nombre};Effet : +{valor} en {zona} pour {nombre};
+log.ataqueAumentado;+{valor} al ataque;+{valor} to attack;+{valor} à l'attaque;
+log.defensaAumentada;+{valor} a la defensa;+{valor} to defense;+{valor} à la défense;
+log.ataqueReducido;-{valor} al ataque del rival;-{valor} to rival attack;-{valor} à l'attaque du rival;
 log.efectoDebilitarReceptor;Efecto: -{valor} a la recepción de {carta};Effect: -{valor} to {carta} reception;Effet : -{valor} à la réception de {carta};
 log.efectoDebilitarColocador;Efecto colocador debilitado: -{valor} al pase de {carta};Effect weakened setter: -{valor} to {carta} set;Effet passeur affaibli : -{valor} à la passe de {carta};
 log.efectoDebilitarRematador;Efecto rematador debilitado: -{valor} al remate de {carta};Effect weakened spiker: -{valor} to {carta} spike;Effet attaquant affaibli : -{valor} à l'attaque de {carta};
@@ -77,6 +80,8 @@ log.blockoutApoyo;Blockout de apoyo: {carta} va directamente al trash;Support bl
 log.efectoBloqueoOfensivo;Efecto de Bloqueo Ofensivo ({valor}): si el bloqueo es exitoso el contraataque tendrá una potencia de {valor};Offensive Block ({valor}) effect: if block is successful the counterattack will have a power of {valor};Effet Bloc Offensif ({valor}) : si le bloc est réussi le contre-attaque aura une puissance de {valor};
 log.anularBloqueadorCentralActivo;Efecto activo: el bloqueador central rival tendrá su bloqueo anulado;Active effect: rival central blocker will have their block nullified;Effet actif : le bloqueur central rival aura son bloc annulé;
 log.anularBloqueadorCentral;Efecto activo: bloqueo del bloqueador central anulado;Active effect: central blocker block nullified;Effet actif : bloc du bloqueur central annulé;
+log.anularHabilidadPersonajeActivo;Efecto activo: la habilidad de {carta} queda anulada este turno;Active effect: {carta} ability is nullified this turn;Effet actif : la capacité de {carta} est annulée ce tour;
+log.anularHabilidadPersonaje;La habilidad de {carta} está anulada este turno;{carta} ability is nullified this turn;La capacité de {carta} est annulée ce tour;
 log.negarBloqueadoresApoyoActivo;Efecto activo: el rival solo podrá colocar el bloqueador central este turno;Active effect: rival can only place the central blocker this turn;Effet actif : le rival ne peut placer que le bloqueur central ce tour;
 log.negarBloqueadoresApoyo;No puedes colocar bloqueadores de apoyo este turno;You cannot place support blockers this turn;Tu ne peux pas placer de bloqueurs de soutien ce tour;
 log.negarReceptorAltoActivo;Efecto activo: el rival no podrá colocar un receptor con recepción original de 6 o más;Active effect: rival cannot place a receiver with base reception of 6 or more;Effet actif : le rival ne pourra pas placer un receveur avec réception de base de 6 ou plus;
@@ -123,6 +128,7 @@ log.condicionCumplida;Condición adicional cumplida. Efecto activado;Additional 
 log.descartaDesdeMano;{jugador} descarta {carta} desde la mano para activar su habilidad;{jugador} discards {carta} from hand to activate their ability;{jugador} se défausse de {carta} depuis la main pour activer sa capacité;
 log.cartaDescartadaCoste;{carta} descartada como coste;{carta} discarded as cost;{carta} défaussée comme coût;
 log.cartaRevelada;Carta revelada: {carta};Card revealed: {carta};Carte révélée : {carta};
+log.cartaReveladaEscuela;Carta revelada: {carta} ({escuela});Card revealed: {carta} ({escuela});Carte révélée : {carta} ({escuela});
 log.cartasAlFondoMazo;Cartas restantes enviadas al fondo del mazo;Remaining cards sent to the bottom of the deck;Cartes restantes envoyées au fond du deck;
 log.motivar;Motivación: robas 1 carta extra por el punto del rival;Motivation: you draw 1 extra card from the rival's point;Motivation : tu pioches 1 carte supplémentaire grâce au point du rival;
 log.motivarActivo;Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra;Active effect: if the rival loses a point next turn, you draw 1 extra card;Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire;
@@ -131,7 +137,9 @@ log.personajeDoble;Personaje doble: carta tratada como {carta};Double character:
 log.cartasReveladas;Cartas reveladas: {cartas};Cards revealed: {cartas};Cartes révélées : {cartas};
 log.elegirCartaOpcional;Elige una carta para añadir a tu mano (opcional);Choose a card to add to your hand (optional);Choisissez une carte à ajouter à votre main (optionnel);
 log.elegirCarta;Elige una carta;Choose a card;Choisissez une carte;
+log.elegirEnOrden;Elige en orden;Choose in order;Choisissez dans l'ordre;
 log.sinCartasParaDescartar;No tienes cartas en la mano para descartar;No cards in hand to discard;Pas de cartes en main à défausser;
 log.cartaAMano;{carta} añadida a la mano;{carta} added to hand;{carta} ajoutée à la main;
 log.cartaDescartada;{carta} descartada de la mano;{carta} discarded from hand;{carta} défaussée de la main;
+log.cartasDescartadasDelMazo;{cantidad} cartas enviadas al trash desde el mazo;{cantidad} cards sent to discard from deck;{cantidad} cartes envoyées à la défausse depuis le deck;
 log.sinBloqueadorCentral;No hay bloqueadores. El ataque pasa sin bloqueo;No blockers. The attack passes without block;Pas de bloqueurs. L'attaque passe sans bloc;

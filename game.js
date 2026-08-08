@@ -524,6 +524,26 @@ function cancelarSelector() {
     window._selectorResolve(null); // null = cancelado
   }
 }
+
+// ======================================================= ORDENAR PARA ENVIAR EL FONDO DEL MAZO
+// =============================================================================================
+async function ordenarCartasAlFondo(jugador, cartas, titulo = t("log.elegirEnOrden")) {
+
+  let restantes = cartas.slice();                                          // copia para no mutar el array original
+
+  while (restantes.length > 0) {                                           // mientras queden cartas por colocar
+    let cartaElegida = await mostrarSelectorCartas(                        // selector obligatorio, sin cancelable
+      titulo,
+      restantes                                                            // cartas restantes por ordenar
+    );
+    let index = restantes.indexOf(cartaElegida);                          // buscar en las restantes
+    restantes.splice(index, 1);                                           // sacarla de las restantes
+    jugador.mazo.push(cartaElegida);                                      // colocarla al fondo del mazo
+  }
+  log(t("log.cartasAlFondoMazo"));
+}
+
+
 // ===================================================================== RESOLVER LOG : ESCRIBIR (POR BORRAR)
 // =============================================================================================
 // A BORRAR cuando tenga terminado el excel
@@ -616,9 +636,13 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     game.valorAtaque = carta.stats.saque;   
     log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "saque", stat: carta.stats.saque }));
 
+    // ---------------------------------------------------------- Efectos automáticos
     // comprobar personaje doble
-    if (carta.info?.personajeDoble) {                  // si es personaje doble
+    if (carta.info?.personajeDoble) {                                     // si es personaje doble
       aplicarPersonajeDoble(jugador, carta);                              // lanzar elección
+    }
+    if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
+      aplicarBokuto064(jugador, carta);
     }
 
     actualizarFaseUI(); 
@@ -683,9 +707,11 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
           log(t("log.potenciarReceptor", { valor: efecto.valor, carta: carta.nombre }));
         }
       }
-      // comprobar personaje doble
       if (carta.info?.personajeDoble) {                  // si es personaje doble
-        aplicarPersonajeDoble(jugador, carta);                              // lanzar elección
+        aplicarPersonajeDoble(jugador, carta);           // lanzar elección
+      }
+      if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
+        aplicarBokuto064(jugador, carta);
       }
 
       actualizarFaseUI();
@@ -750,6 +776,9 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     // comprobar personaje doble
     if (carta.info?.personajeDoble) {                  // si es personaje doble
       aplicarPersonajeDoble(jugador, carta);                              // lanzar elección
+    }
+    if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
+      aplicarBokuto064(jugador, carta);
     }
 
     actualizarFaseUI();
@@ -833,6 +862,9 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     if (carta.info?.personajeDoble) {                  // si es personaje doble
       aplicarPersonajeDoble(jugador, carta);                              // lanzar elección
     }
+    if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
+      aplicarBokuto064(jugador, carta);
+    }
 
     actualizarFaseUI();
     renderMano(); 
@@ -894,6 +926,9 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
         // comprobar personaje doble
         if (carta.info?.personajeDoble) {                                 // si es personaje doble
           aplicarPersonajeDoble(jugador, carta);                          // lanzar elección
+        }
+        if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
+          aplicarBokuto064(jugador, carta);
         }
 
         // avisar al rival de la carta colocada en bloqueo
@@ -961,8 +996,11 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
         game.ultimoJugador = jugador;                 // último jugador que jugó
 
         // comprobar personaje doble
-        if (carta.info?.personajeDoble) {                                 // si es personaje doble
-          aplicarPersonajeDoble(jugador, carta);                          // lanzar elección
+        if (carta.info?.personajeDoble) {             // si es personaje doble
+          aplicarPersonajeDoble(jugador, carta);      // lanzar elección
+        }
+        if (carta.info?.id === "HV-P02-064") {        // comprobar Bokuto 064
+          aplicarBokuto064(jugador, carta);
         }
 
         // avisar al rival de la carta colocada como apoyo
@@ -1599,10 +1637,17 @@ async function jugarEvento() {
   }
 
   // ==================================================================================================== Efectos
-  if (tieneEfecto("negarEventos")) {
-    let efecto = game.efectosActivos.find(e => e.tipo === "negarEventos");
-    if (efecto.activadoPor !== game.jugadorActivo && carta.info?.fases?.includes(efecto.fase)) {
-      log(t("log.negarEventos", { fase: t("ui.zona" + efecto.fase.charAt(0).toUpperCase() + efecto.fase.slice(1)) }));
+  if (tieneEfecto("negarEventos")) {                                                // si hay algún efecto negarEventos activo
+    let efectosNegar = game.efectosActivos.filter(e => e.tipo === "negarEventos");  // recoger TODOS los efectos, no solo el primero
+    let efectoBloqueante = efectosNegar.find(efecto =>                              // buscar el primero que realmente bloquee esta carta
+      efecto.activadoPor !== game.jugadorActivo &&                                  // activado por el rival
+      carta.info?.fases?.some(f => efecto.fases.includes(f))                        // alguna fase de la carta coincide con alguna fase negada
+    );
+    if (efectoBloqueante) {                                                         // si se encontró un efecto que bloquea
+      let nombresFases = efectoBloqueante.fases.map(f =>                            // construir el texto de fases negadas
+        t("ui.zona" + f.charAt(0).toUpperCase() + f.slice(1))
+      ).join(", ");
+      log(t("log.negarEventos", { fase: nombresFases }));
       return;
     }
   }
@@ -2444,19 +2489,25 @@ function negarRematadorMB() {
   if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
   log(t("log.negarRematadorMBActivo"));
 }
-function pagarConEvento(jugador) {
-  let indexEvento = jugador.mano.findIndex(c => c.info?.tipo === "evento"); // buscar eventos en mano
-  if (indexEvento === -1) { // si no tiene eventos en mano
+async function pagarConEvento(jugador) {
+  let eventosEnMano = jugador.mano.filter(c => c.info?.tipo === "evento");   // filtrar eventos en la mano
+  if (eventosEnMano.length === 0) {                                          // si no tiene eventos en mano
     log(t("log.eventoEnMano"));
-    carta.habilidadUsada = true;
-    return false;
+    return false;                                                            // return false: coste no pagable
   }
-  let evento = jugador.mano.splice(indexEvento, 1)[0];
-  jugador.trash.push(evento); // trasehar evento de la mano
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
+
+  let eventoElegido = await mostrarSelectorCartas(                           // abrir selector
+    t("log.elegirCarta"),
+    eventosEnMano
+  );
+
+  let index = jugador.mano.indexOf(eventoElegido);                          // buscar en la mano
+  jugador.mano.splice(index, 1);                                            // sacar de la mano
+  jugador.trash.push(eventoElegido);                                        // enviar al trash
+  if (modoOnline) enviarTrash(jugador);                                     // sincronizar trash con el rival
   log(t("log.eventoPagar"));
   renderMano();
-  renderManoRival()
+  renderManoRival();
   return true;
 }
 function añadirCartaAMano(jugador, carta) {
@@ -2688,16 +2739,19 @@ function negarCartaDesdeMano(fases) {
   log(t("log.negarCartaDesdeManoActivo", { fases: fases.join(", ") }));
 }
 // ======================================== NEGAR EVENTOS
-function negarEventos(fase) {
-  // Guarda el efecto con la fase donde se niegan los eventos
+function negarEventos(fases) {                                     // fases: string o array de fases a negar
+  let listaFases = Array.isArray(fases) ? fases : [fases];         // normalizar siempre a array
   game.efectosActivos.push({
     tipo: "negarEventos",
-    fase: fase,
+    fases: listaFases,                                              // array de fases afectadas (antes era "fase" singular)
     activadoPor: game.jugadorActivo,
     expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos();
-  log(t("log.negarEventosActivo", { fase: t("ui.zona" + fase.charAt(0).toUpperCase() + fase.slice(1)) }));
+  if (modoOnline) enviarEfectos();                                  // sincronizar efectos con el rival
+  let nombresFases = listaFases.map(f =>                            // construir el texto de fases para el log
+    t("ui.zona" + f.charAt(0).toUpperCase() + f.slice(1))
+  ).join(", ");
+  log(t("log.negarEventosActivo", { fase: nombresFases }));
 }
 // ======================================== NEGAR ROBAR POR HABILIDADES
 function negarRobar() {
@@ -2709,6 +2763,18 @@ function negarRobar() {
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
   log(t("log.negarRobarActivo"));
 }
+// ======================================== NEGAR HABILIDAD PERSONAJE
+function negarHabilidadPersonaje(nombrePersonaje) { // anula la habilidad de un personaje propio por nombre, durante este turno
+  game.efectosActivos.push({
+    tipo: "negarHabilidadPersonaje",
+    nombrePersonaje: nombrePersonaje,                                    // nombre exacto del personaje afectado
+    activadoPor: game.jugadorActivo,                                     // quién lo activó (uno mismo, no el rival)
+    expira: game.turno + 1                                               // dura hasta el próximo cambio de turno
+  });
+  if (modoOnline) enviarEfectos();                                       // sincronizar efectos con el rival
+  log(t("log.anularHabilidadPersonajeActivo", { carta: nombrePersonaje }));
+}
+
 // ======================================== BUSCAR EN EL TRASH
 function filtrarTrash(jugador, { escuela, posicion, anyo, tipo, sinHabilidad } = {}) {
   return jugador.trash.filter(c => {
@@ -3091,6 +3157,58 @@ function aplicarMatsukawa037() { // +3 a la recepción de receptores de Aoba Jô
   log(t("log.potenciarReceptorEscuela", { escuela: " de Aoba Jôsai", valor: 3 }));
 }
 
+async function aplicarBokuto064(jugador, carta) { // ========================================= BOKUTO P02-064
+  // comprobar si la habilidad de Bokuto está anulada este turno (por Akaashi P02-066)
+  let negado = game.efectosActivos.some(e =>
+    e.tipo === "negarHabilidadPersonaje" &&
+    e.nombrePersonaje === carta.nombre &&
+    e.activadoPor === game.jugadorActivo
+  );
+  if (negado) {                                             // si está anulada
+    log(t("log.anularHabilidadPersonaje", { carta: carta.nombre }));
+    return;                                                 // no se ejecuta nada, mantiene stats normales
+  }
+
+  // preguntar si quiere descartar 2 cartas
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidad", { carta: "Kotaro Bokuto" }) },
+    { texto: t("log.noActivar") }
+  ]);
+
+  if (eleccion === 0 && jugador.mano.length >= 2) {          // si acepta y tiene al menos 2 cartas
+    for (let i = 0; i < 2; i++) {                            // descartar 2 cartas una a una
+      let cartaDescarte = await mostrarSelectorCartas(
+        t("log.elegirCarta"),
+        jugador.mano
+      );
+      let index = jugador.mano.indexOf(cartaDescarte);       // buscar en la mano
+      jugador.mano.splice(index, 1);                         // sacar de la mano
+      jugador.trash.push(cartaDescarte);                     // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+    }
+    if (modoOnline) enviarTrash(jugador);                    // sincronizar trash
+    log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+  } else {                                                    // si no descarta (o no tiene 2 cartas)
+    carta.stats = {                                          // stats nuevos, exclusivos de esta instancia
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    };
+    log(t("log.condicionNoCumplida"));
+
+    // ajustar el valor de ataque actual si entró en saque o pase (ya se calculó antes del trigger)
+    if (carta.zonaActual === "saque" || carta.zonaActual === "pase") {
+      game.valorAtaque = 0;
+    }
+  }
+  renderMano();                                               // actualizar mano
+  renderManoRival();                                          // actualizar mano rival
+  renderCampo();                                              // actualizar campo
+}
+
 async function aplicarPersonajeDoble(jugador, carta) { // ======================== PERSONAJE DOBLE
   let eleccion = await mostrarEleccion(                                    // mostrar opciones de la carta
     carta.info.opcionesDoble.map(op => ({ texto: op.nombre + " (" + op.escuela + " · " + op.posicion + ")" }))
@@ -3145,16 +3263,6 @@ const todasLasCartas = inicializarCartas();
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------- FUKURODANI
-// GUTS de prueba Fukurodani
-["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
-  for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga, sin habilidad
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
-  }
-});
 
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
@@ -3250,21 +3358,21 @@ mazoPruebaKarasuno.forEach(id => {
 // MANO DATE
 ["HV-P02-036", "HV-P02-037", "HV-P02-038", "HV-P02-039", "HV-P02-041", "HV-P02-042"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS DATE
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-044"); // Sasaya sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH DATE — para Aone P02-037 y Sakunami P02-041
 ["HV-P01-054", "HV-P02-036", "HV-P02-040", "HV-P02-043", "HV-P02-044", "HV-P02-045"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO DATE
@@ -3288,11 +3396,93 @@ const mazoPruebaDate = [
 ];
 mazoPruebaDate.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
 
+// ---------------------------------------------------------------------------------- FUKURODANI >
+// MANO FUKURODANI
+["HV-P02-064", "HV-P02-067", "HV-P01-051", "HV-P01-089", "HV-P01-093"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+});
+// GUTS FUKURODANI
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga, sin habilidad
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// TRASH FUKURODANI — para Akaashi P01-045 (busca Bokuto)
+["HV-P01-044", "HV-P01-046", "HV-P01-048", "HV-P01-049", "HV-P01-050"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
+// MAZO FUKURODANI
+const mazoPruebaFukurodani = [
+  "HV-P01-044", "HV-P01-044",                          // Kotaro Bokuto x2
+  "HV-P01-045", "HV-P01-045",                          // Keiji Akaashi (GUTS) x2
+  "HV-P01-046", "HV-P01-046",                          // Keiji Akaashi (sin habilidad) x2
+  "HV-P01-048", "HV-P01-048",                          // Konoha Akinori x2
+  "HV-P01-049", "HV-P01-049",                          // Sarukui Yamato x2
+  "HV-P01-050", "HV-P01-050",                          // Haruki Komi x2
+  "HV-P01-051", "HV-P01-051",                          // Washio Tatsuki x2
+  "HV-P01-052", "HV-P01-052",                          // Onaga Wataru x2
+  "HV-P01-089", "HV-P01-089",                          // Yamiji Takeyuki (evento) x2
+  "HV-P01-090", "HV-P01-090",                          // Ese momento existe, o no existe (evento) x2
+];
+mazoPruebaFukurodani.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- FUKURODANI <
+
+// ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
+// MANO MULTI-ESCUELA
+["HV-P01-093", "HV-P01-056"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+});
+// GUTS MULTI-ESCUELA
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga Wataru (Fukurodani)
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
+const mazoPruebaMultiEscuela = [
+  "HV-P01-001",                                        // Karasuno
+  "HV-P01-017",                                         // Nekoma
+  "HV-P01-033",                                         // Aoba Jôsai
+  "HV-P01-044",                                         // Fukurodani
+  "HV-P01-054",                                         // Date Kôgyô
+  "HV-P01-056",                                         // Shiratorizawa
+  "HV-P01-059",                                         // Ohgiminami
+  "HV-P01-060",                                         // Kakugawa
+  "HV-P01-061",                                         // Jōzenji
+  "HV-P01-062",                                         // Wakutani Minami
+  "HV-P01-063",                                         // Inarizaki
+  "HV-P01-066",                                         // Kamomedai
+  "HV-P01-068",                                         // Itachiyama
+  "HV-P01-069",                                         // Tsubakihara
+  "HV-P01-070",                                         // Sarukawa Kōgyō
+  "HV-P01-071",                                         // Nohebi
+  "HV-P01-053",                                         // Tokonami
+];
+mazoPruebaMultiEscuela.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- MULTI-ESCUELA <
 
 
 
@@ -3318,50 +3508,6 @@ mazoPruebaDate.forEach(id => {
   if (carta) game.jugadores[1].trash.push(carta);
 });
 
-// MAZO J1
-["HV-D01-002", "HV-P02-085", "HV-P01-003", "HV-P02-015", "HV-P02-040", "HV-P02-041"].forEach(id => {
-  let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.unshift(carta);
-  // if (carta) game.jugadores[1].mazo.unshift(carta);
-});
-
-// EVENTOS 
-for (let i = 0; i < 5; i++) {
-  let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-078");
-  // game.jugadores[1].zonas.eventos.push(evento);
-}
-// MAZO J2
-for (let i = 0; i < 10; i++) {
-  let carta = todasLasCartas.find(c => c.info?.id === "HV-P02-044");
-  //game.jugadores[0].mazo.push(carta);
-  //game.jugadores[1].mazo.push(carta);
-}
-// GUTS de pase — Atsumu sin habilidad primero (el que está "jugado"), luego el P02-016 en el GUTS
-let atsumuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-063"); // Atsumu sin habilidad
-let atsumuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-016"); // Atsumu con habilidad
-// game.jugadores[1].zonas.pase.push(atsumuTP); // GUTS
-// game.jugadores[1].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
-// game.jugadores[0].zonas.pase.push(atsumuTP); // GUTS
-// game.jugadores[0].zonas.pase.push(atsumuBase); // el "jugado" — siempre el último
-let kenPas = todasLasCartas.find(c => c.info?.id === "HV-D02-001"); // Osamu sin habilidad
-let yakuPas = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); // Osamu con habilidad
-// game.jugadores[1].zonas.pase.push(kenPas); 
-// game.jugadores[1].zonas.pase.push(yakuPas); 
-
-// GUTS de remate — Osamu sin habilidad primero, luego el P02-020 en el GUTS
-let osamuBase = todasLasCartas.find(c => c.info?.id === "HV-P01-064"); // Osamu sin habilidad
-let osamuTP = todasLasCartas.find(c => c.info?.id === "HV-P02-020"); // Osamu con habilidad
-let levT = todasLasCartas.find(c => c.info?.id === "HV-P01-025"); // Lev con habilidad
-let levT2 = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); // Lev con habilidad
-// game.jugadores[1].zonas.remate.push(osamuTP); // GUTS
-// game.jugadores[1].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
-// game.jugadores[0].zonas.remate.push(osamuTP); // GUTS
-// game.jugadores[0].zonas.remate.push(osamuBase); // el "jugado" — siempre el último
-// game.jugadores[0].zonas.remate.push(levT); // GUTS
-// game.jugadores[1].zonas.remate.push(levT); // el "jugado" — siempre el último
-// game.jugadores[0].zonas.remate.push(levT2); // GUTS
-// game.jugadores[1].zonas.remate.push(levT2); // el "jugado" — siempre el último
-// PRUEBA INARIZAKI -----------------------------------------------------------------------------------------------------------------
 
 // mazos de prueba
 let aoneP01 = todasLasCartas.find(c => c.info?.id === "HV-P01-054");

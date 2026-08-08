@@ -498,6 +498,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card and +1 to the reception of an <strong>Aoba Jôsai</strong> character in play. If you have 3 or fewer cards in hand, an additional +1 to the reception.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte et +1 à la réception d'un personnage d'<strong>Aoba Jôsai</strong> en jeu. Si vous avez 3 cartes ou moins en main, +1 supplémentaire à la réception."
   },
+  "HV-P01-089": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Mira las 3 primeras cartas de tu mazo y revela hasta 1 carta de <strong>Fukurodani</strong> de entre ellas para añadirla a tu mano. Las cartas no añadidas van al fondo del mazo en el orden que elijas.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Look at the top 3 cards of your deck and reveal up to 1 <strong>Fukurodani</strong> card among them to add it to your hand. The cards not added go to the bottom of the deck in the order of your choice.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Regardez les 3 premières cartes de votre deck et révélez jusqu'à 1 carte de <strong>Fukurodani</strong> parmi elles pour l'ajouter à votre main. Les cartes non ajoutées vont au fond du deck dans l'ordre de votre choix."
+  },
   "HV-P01-090": {
     "nombre_es": "Ese momento existe, o no existe",
     "nombre_en": "That moment exists, or it doesn't",
@@ -505,6 +513,30 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y +1 al ataque de un personaje de <strong>Fukurodani</strong> en juego. Si todos tus personajes en juego son de <strong>Fukurodani</strong>, durante el siguiente turno rival, si el rival pierde un punto, robas 1 carta extra.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to the attack of a <strong>Fukurodani</strong> character in play. If all your characters in play are from <strong>Fukurodani</strong>, during the opponent's next turn, if the opponent loses a point, you draw 1 extra card.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage de <strong>Fukurodani</strong> en jeu. Si tous vos personnages en jeu sont de <strong>Fukurodani</strong>, pendant le prochain tour adverse, si l'adversaire perd un point, vous piochez 1 carte supplémentaire."
+  },
+  "HV-P01-091": {
+    "nombre_es": "¡El Nekoma no tiene la patente de eso!",
+    "nombre_en": "Nekoma doesn't have a patent on that!",
+    "nombre_fr": "Nekoma n'a pas le brevet de ça !",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Fukurodani</strong> en juego. Puedes descartar 1 personaje bloqueador (<strong>MB</strong>) de <strong>Fukurodani</strong> de tu mano para restar -1 al ataque del rival.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card and +1 to the reception of a <strong>Fukurodani</strong> character in play. You may discard 1 <strong>Fukurodani</strong> blocker character (<strong>MB</strong>) from your hand to subtract -1 from the opponent's attack.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte et +1 à la réception d'un personnage de <strong>Fukurodani</strong> en jeu. Vous pouvez défausser 1 personnage contreur (<strong>MB</strong>) de <strong>Fukurodani</strong> de votre main pour réduire l'attaque adverse de -1."
+  },
+  "HV-P01-092": {
+    "nombre_es": "Este año parece que se va a poner interesante",
+    "nombre_en": "This year is looking interesting",
+    "nombre_fr": "Cette année s'annonce intéressante",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta y +1 a la recepción de tu receptor. Revela la carta superior de tu mazo; si no hay ningún personaje de la misma escuela que esa carta en tu campo, +1 adicional a la recepción. Coloca la carta revelada al fondo del mazo.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Draw 1 card and +1 to your receiver's reception. Reveal the top card of your deck; if there is no character of the same school as that card on your field, an additional +1 to the reception. Place the revealed card at the bottom of the deck.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;>: You may only play 1 card with this name per turn.</span>",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Piochez 1 carte et +1 à la réception de votre réceptionneur. Révélez la carte du dessus de votre deck ; s'il n'y a aucun personnage de la même école que cette carte sur votre terrain, +1 supplémentaire à la réception. Placez la carte révélée au fond du deck.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
+  },
+  "HV-P01-093": {
+    "nombre_es": "Le haré frente a quien sea",
+    "nombre_en": "I'll face anyone",
+    "nombre_fr": "Je ferai face à qui que ce soit",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span> <span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta. Revela la carta superior de tu mazo; si no hay ningún personaje de la misma escuela que esa carta en tu campo, +1 al atributo en curso. </br>Durante el próximo turno rival, el rival no podrá jugar cartas de evento jugables en <strong><span style=&quot;color:#2e7d32&quot;>Pase</span></strong> o <strong><span style=&quot;color:#c62828&quot;>Remate</span></strong>. Coloca la carta revelada al fondo del mazo.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
+    "en": "<strong><span style=background:#e65100; color:white; padding:1px 4px; border-radius:2px;>Serve</span> <span style=background:#424242; color:white; padding:1px 4px; border-radius:2px;>Block</span> <span style=background:#c62828; color:white; padding:1px 4px; border-radius:2px;>Spike</span></strong> <strong><span style=background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;>Unique</span></strong> Draw 1 card. Reveal the top card of your deck; if there is no character of the same school as that card on your field, +1 to the current attribute. </br>During the opponent's next turn, the opponent will not be able to play <strong><span style=color:#2e7d32>Set</span></strong> or <strong><span style=color:#c62828>Spike</span></strong> type event cards. Place the revealed card at the bottom of the deck.</br><strong><span style=background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;>Unique</span></strong><span style=font-size:0.85em>: You may only play 1 card with this name per turn.</span>",
+    "fr": "<strong><span style=background:#e65100; color:white; padding:1px 4px; border-radius:2px;>Service</span> <span style=background:#424242; color:white; padding:1px 4px; border-radius:2px;>Contre</span> <span style=background:#c62828; color:white; padding:1px 4px; border-radius:2px;>Attaque</span></strong> <strong><span style=background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;>Unique</span></strong> Piochez 1 carte. Révélez la carte du dessus de votre deck ; s'il n'y a aucun personnage de la même école que cette carte sur votre terrain, +1 à l'attribut en cours. </br>Pendant le prochain tour adverse, l'adversaire ne pourra pas jouer d'événements de type <strong><span style=color:#2e7d32>Passe</span></strong> ou <strong><span style=color:#c62828>Attaque</span></strong>. Placez la carte révélée au fond du deck.</br><strong><span style=background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;>Unique</span></strong><span style=font-size:0.85em> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
   },
   "HV-P02-001": {
     "nombre_es": "",
@@ -745,6 +777,30 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Mira las 2 primeras cartas de tu mazo. Puedes añadir a tu mano hasta 1 carta de <strong>Nekoma</strong> de entre ellas. Las demás van al fondo del mazo.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Look at the top 2 cards of your deck. You may add up to 1 <strong>Nekoma</strong> card from among them to your hand. The rest go to the bottom of the deck.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Regardez les 2 premières cartes de votre deck. Vous pouvez ajouter à votre main jusqu'à 1 carte de <strong>Nekoma</strong> parmi elles. Les autres vont au fond du deck."
+  },
+  "HV-P02-064": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al entrar en juego, puedes descartar 2 cartas de tu mano. Si no lo haces, todos los parámetros de este personaje pasan a 0.",
+    "en": "When entering play, you may discard 2 cards from your hand. If you do not, all of this character's parameters become 0.",
+    "fr": "Lorsqu'il entre en jeu, vous pouvez défausser 2 cartes de votre main. Si vous ne le faites pas, tous les paramètres de ce personnage passent à 0."
+  },
+  "HV-P02-066": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Descarta las 3 primeras cartas de tu mazo. +2 al pase. Durante este turno, se anula la habilidad de tu personaje <strong>Kotaro Bokuto</strong>.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Discard the top 3 cards of your deck. +2 to the set. During this turn, your character <strong>Kotaro Bokuto</strong>'s ability is nullified.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Défaussez les 3 premières cartes de votre deck. +2 à la passe. Pendant ce tour, la capacité de votre personnage <strong>Kotaro Bokuto</strong> est annulée."
+  },
+  "HV-P02-067": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Dropea la carta superior de tu mazo. Si es un personaje de <strong>Fukurodani</strong>, puedes descartar 1 carta de tu mano para hacer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span>: fija tu ataque en 3 y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> Discard the top card of your deck. If it is a <strong>Fukurodani</strong> character, you may discard 1 card from your hand to perform <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span>: fix your attack at 3 and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Défaussez la carte du dessus de votre deck. Si c'est un personnage de <strong>Fukurodani</strong>, vous pouvez défausser 1 carte de votre main pour effectuer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span> : fixez votre attaque à 3 et passez directement à la phase de réception."
   },
   "HV-P02-077": {
     "nombre_es": "",

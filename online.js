@@ -338,6 +338,21 @@ function aplicarJugadaRival(jugada) {
     case "gutsRivalTrasheado": // ============================================ CONFIRMACIÓN TRASHEO
       break; // gestionado por el Promise en trashearGutsZonaRival
 
+    case "cartaMovidaEntreGuts": // ========================================= CARTA MOVIDA ENTRE GUTS
+      const rivalIndiceGutsGuts = miNumero === 1 ? 1 : 0;                      // índice del rival
+      const rivalGutsGuts = game.jugadores[rivalIndiceGutsGuts];               // jugador rival
+
+      const indexGutsGuts = rivalGutsGuts.zonas[jugada.zonaOrigen]             // buscar en la zona de origen
+        .findIndex(c => c.info?.id === jugada.cartaId);
+      if (indexGutsGuts !== -1) {                                              // si se encuentra
+        let carta = rivalGutsGuts.zonas[jugada.zonaOrigen].splice(indexGutsGuts, 1)[0]; // sacar de origen
+        carta.zonaActual = jugada.zonaDestino;                                 // actualizar zona
+        carta.recienJugada = false;                                            // sigue siendo GUTS
+        rivalGutsGuts.zonas[jugada.zonaDestino].unshift(carta);                // añadir al GUTS de destino
+      }
+      renderCampo();                                                           // actualizar campo
+      break;
+
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste
       break;

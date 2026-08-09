@@ -3461,7 +3461,7 @@ function inicializarCartas() {
 
       if (bloqueadoresEnMano.length > 0) {                                  // si hay al menos uno disponible
         let eleccion = await mostrarEleccion([                              // preguntar si quiere activar
-          { texto: t("log.activarHabilidad", { carta: "Fukurodani MB" }) },
+          { texto: t("log.activarHabilidad")},
           { texto: t("log.noActivar") }
         ]);
 
@@ -5144,7 +5144,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Tendo Satori", // ============================================================== P02-048
+  crearCarta("Tendo Satori", // ==================================================================== P02-048
     {
       saque: 1,
       recepcion: 1,
@@ -5196,7 +5196,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Lanza una moneda: si sale cara, +4 al bloqueo. Si sale cruz, trashea las 3 primeras cartas de tu mazo.`
     }
   ),
-  crearCarta("Tendo Satori", // ============================================================== P02-049
+  crearCarta("Tendo Satori", // ==================================================================== P02-049
     {
       saque: 2,
       recepcion: 0,
@@ -5205,11 +5205,11 @@ function inicializarCartas() {
       bloqueo: 3
     },
     function(jugador, game, carta) {
-      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") { // comprobar zona válida (central o apoyo)
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") {
         log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
         return;
       }
-      if (game.valorAtaque < 4) {                                            // comprobar ataque rival
+      if (game.valorAtaque < 4) {                                            
         log(t("log.condicionNoCumplida"));
         return;
       }
@@ -5225,7 +5225,144 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
     }
   ),
-  crearCarta("Hayato Yamagata", // ============================================================== P02-053
+  crearCarta("Shirabu Kenjiro", // ================================================================= P02-050
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 1,
+      remate: 2,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                                    // comprobar que está en pase
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;                                                       
+      }
+      // comprobar que todos los personajes en juego son de Shiratorizawa
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                         
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1), 
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);  
+
+      let todasShiratorizawa = cartasEnJuego.every(c => c.info?.escuela === "Shiratorizawa"); // comprobar escuela
+      if (!todasShiratorizawa) {                                             // si no todas son de Shiratorizawa
+        log(t("log.condicionNoCumplida"));
+        return false; 
+      }
+
+      if (!await usarGuts(jugador, "pase", 2)) {                             // pagar 2 GUTS de pase
+        return false; 
+      }
+
+      game.valorAtaque += 2;                                                 // +2 al pase
+      log(t("log.ataqueAumentado", { valor : 2}));
+
+      // comprobar si todo el GUTS pagado era de posición S
+      let todoS = game.gutsDescartados.every(c => c.info?.posicion === "S"); // comprobar posición del GUTS descartado
+      if (!todoS) {                                                          // si no todo era S
+        log(t("log.condicionNoCumplida"));
+        renderMano();                                                        // actualizar mano
+        renderManoRival();                                                   // actualizar mano rival
+        renderCampo();                                                       // actualizar campo
+        return;                                                              // termina sin el bonus
+      }
+
+      // buscar cartas de Shiratorizawa en el GUTS de las 5 zonas
+      let gutsShiratorizawa = [];                                            // array de cartas elegibles
+      ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {  // para cada zona
+        jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {      // excluir la carta activa
+          if (c.info?.escuela === "Shiratorizawa") {                         // solo Shiratorizawa
+            gutsShiratorizawa.push(c);                                       // añadir a elegibles
+          }
+        });
+      });
+
+      if (gutsShiratorizawa.length === 0) {                                  // si no hay ninguna elegible
+        log(t("log.sinCartasValidas"));
+        renderMano();
+        renderManoRival();
+        renderCampo();
+        return;
+      }
+
+      let cartaElegida = await mostrarSelectorCartas(                       // abrir selector cancelable
+        t("log.elegirCarta"),
+        gutsShiratorizawa,
+        true                                                                 // permite cancelar (hasta 1, no obligatorio)
+      );
+
+      if (cartaElegida) {                                                    // si eligió una carta
+        moverCartaAGutsZona(jugador, cartaElegida, "remate");                // mover al GUTS de remate
+      }
+
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-050",
+      escuela: "Shiratorizawa",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Solo si todos tus personajes en juego son de <strong>Shiratorizawa</strong>. +2 al pase. Si todo el GUTS pagado era de posición <strong>S</strong>, puedes mover hasta 1 carta de <strong>Shiratorizawa</strong> de tu GUTS a la zona de GUTS de <strong><span style="color:#c62828">remate</span></strong>.`
+    }
+  ),
+  crearCarta("Goshiki Tsutomu", // ================================================================= P02-051
+    {
+      saque: 4,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    null, 
+    {
+      tipo: "personaje",
+      id: "HV-P02-051",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `Si esta carta entra en juego desde la mano encima de <strong>Ushijima Wakatoshi</strong> y tienes 3 cartas o menos en tu mano, +2 al remate de esta carta.`
+    }
+  ),
+  crearCarta("Ohira Reon", // ====================================================================== P02-052
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                              // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;                                                       // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "recepcion", 3)) {                      // pagar 3 GUTS de recepción
+        return false;                                                       // return false: GUTS insuficientes
+      }
+      game.valorDefensa += 2;                                              // +2 a la recepción
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 2 }))
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-052",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 3</strong>: +2 a la recepción.`
+    }
+  ),
+  crearCarta("Hayato Yamagata", // ================================================================= P02-053
     {
       saque: 0,
       recepcion: 6,
@@ -5244,7 +5381,7 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-  crearCarta("Taichi Kawanishi", // ============================================================== P02-054
+  crearCarta("Taichi Kawanishi", // ================================================================ P02-054
     {
       saque: 2,
       recepcion: 3,
@@ -5262,7 +5399,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Eita Semi", // ============================================================== P02-055
+  crearCarta("Eita Semi", // ======================================================================= P02-055
     {
       saque: 4,
       recepcion: 1,
@@ -5870,7 +6007,7 @@ function inicializarCartas() {
 
     if (rematador.info?.id === "HV-P02-007") {                   // si es el Tanaka P02-007 específico
       let eleccion = await mostrarEleccion([                       // preguntar si quiere usar el efecto
-        { texto: t("log.activarHabilidad", { carta: "Tanaka Ryunosuke" }) },
+        { texto: t("log.activarHabilidad")},
         { texto: t("log.noActivar") }
       ]);
       if (eleccion === 0) {                                        // si quiere usar el efecto
@@ -6509,6 +6646,216 @@ function inicializarCartas() {
       escuela: "Date Kôgyô",
       rareza: "R",
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Roba 1 carta y añade +1 al bloqueo. </br>Si hay 2 o más personajes de <strong>Date Kôgyô</strong> en tu bloqueo y el bloqueo es exitoso: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (5)</strong></span>. </br>Si hay 3, además el próximo receptor rival tendrá <strong>-1 a su recepción</strong>.`
+    }
+  ),
+  crearCarta("Washijo Tanji", // ============================================================== P02-094
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+
+      let receptor = jugador.zonas.recepcion.at(-1);                        // buscar el receptor en juego
+      if (!receptor || receptor.info?.escuela !== "Shiratorizawa") {        // comprobar que es de Shiratorizawa
+        log(t("log.condicionNoCumplida"));
+        renderMano();
+        renderManoRival();
+        renderCampo();
+        return;                                                              // termina sin el bonus base ni el extra
+      }
+      game.valorDefensa += 1;                                                // +1 a la recepción
+      log(t("log.defensaAumentada", { valor: 1 }));
+
+      // buscar personajes de Shiratorizawa SIN habilidad en la mano
+      let elegibles = jugador.mano.filter(c =>
+        c.info?.escuela === "Shiratorizawa" && c.info?.tipo === "personaje" && c.habilidad === null
+      );
+      if (elegibles.length > 0) {                                           // si hay al menos uno disponible
+        let eleccion = await mostrarEleccion([                              // preguntar si quiere activar
+          { texto: t("log.activarHabilidad")},
+          { texto: t("log.noActivar") }
+        ]);
+
+        if (eleccion === 0) {                                                // si quiere activar
+          let cartaDescarte = await mostrarSelectorCartas(                  // abrir selector
+            t("log.elegirCarta"),
+            elegibles
+          );
+          let index = jugador.mano.indexOf(cartaDescarte);                 // buscar en la mano
+          jugador.mano.splice(index, 1);                                   // sacar de la mano
+          jugador.trash.push(cartaDescarte);                               // enviar al trash
+          log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+          if (modoOnline) enviarTrash(jugador);                            // sincronizar trash
+
+          game.valorDefensa += 2;                                           // +2 adicional a la recepción
+          log(t("log.condicionCumplida"));
+          log(t("log.defensaAumentada", { valor: 2 }));
+        }
+      }
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P02-094",
+      fases: ["recepcion"],
+      escuela: "Shiratorizawa",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Shiratorizawa</strong> en juego. Puedes descartar 1 personaje de <strong>Shiratorizawa</strong> sin habilidad de tu mano para +2 adicional a la recepción.`
+    }
+  ),
+  crearCarta("Saito Akira", // ================================================================ P02-095
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      let elegibles = filtrarTrash(jugador, {                               // filtrar el trash
+        escuela: "Shiratorizawa",
+        tipo: "personaje",
+        sinHabilidad: true                                                  // solo personajes sin habilidad
+      });
+
+      if (elegibles.length === 0) {                                         // si no hay ninguna elegible
+        log(t("log.sinCartasValidas"));
+        return false;                                                        // return false: condición no cumplida
+      }
+
+      let elegidas = [];                                                    // cartas añadidas a la mano
+      for (let i = 0; i < 2; i++) {                                         // hasta 2 elecciones
+        let disponibles = elegibles.filter(c => !elegidas.includes(c));     // excluir ya elegidas
+        if (disponibles.length === 0) break;                                // si no quedan, parar
+
+        let cartaElegida = await mostrarSelectorCartas(                     // abrir selector cancelable
+          t("log.elegirCarta"),
+          disponibles,
+          true                                                               // permite cancelar (hasta 2, no obligatorio)
+        );
+        if (!cartaElegida) break;                                           // si cancela, parar de elegir
+
+        elegidas.push(cartaElegida);                                        // añadir a las elegidas
+      }
+
+      elegidas.forEach(c => {                                                // para cada carta elegida
+        let index = jugador.trash.indexOf(c);                               // buscar en el trash
+        jugador.trash.splice(index, 1);                                     // sacar del trash
+        añadirCartaAMano(jugador, c);                                       // añadir a la mano
+        log(t("log.cartaAMano", { carta: c.nombre }));
+      });
+
+      if (elegidas.length > 0 && modoOnline) enviarTrash(jugador);          // sincronizar trash si hubo cambios
+
+      if (elegidas.length === 2) {                                          // si se añadieron las 2 cartas
+        if (jugador.mano.length === 0) {                                   // comprobar que hay cartas en mano
+          log(t("log.log.sinCartasParaDescartar"));
+        } else {
+          let cartaDescarte = await mostrarSelectorCartas(                 // abrir selector obligatorio
+            t("log.elegirCarta"),
+            jugador.mano
+          );
+          let index = jugador.mano.indexOf(cartaDescarte);                 // buscar en la mano
+          jugador.mano.splice(index, 1);                                   // sacar de la mano
+          jugador.trash.push(cartaDescarte);                               // enviar al trash
+          log(cartaDescarte.nombre + " descartada de la mano como coste.");
+          if (modoOnline) enviarTrash(jugador);                            // sincronizar trash
+        }
+      }
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P02-095",
+      fases: ["recepcion"],
+      escuela: "Shiratorizawa",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Añade a tu mano hasta 2 cartas de personaje de <strong>Shiratorizawa</strong> sin habilidad de tu descarte. Si añades las 2, descarta 1 carta de tu mano.`
+    }
+  ),
+  crearCarta("Abran paso a nuestro rematador", // ============================================= P02-096
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                          // roba 1 carta
+
+      // +1 al rematador actual si es de Shiratorizawa
+      let rematador = jugador.zonas.remate.at(-1);                          // buscar el rematador en juego
+      if (!rematador || rematador.info?.escuela !== "Shiratorizawa") {      // comprobar que es de Shiratorizawa
+        log(t("log.condicionNoCumplida"));
+      } else {
+        game.valorAtaque += 1;                                               // +1 al remate
+        log(t("log.ataqueAumentado", { valor: 1}));
+      }
+
+      // comprobar condición para poder traer a Ushijima Wakatoshi
+      let colocador = jugador.zonas.pase.at(-1);                            // buscar el colocador en pase
+      let colocadorValido = colocador?.nombre === "Shirabu Kenjiro";        // comprobar que es Shirabu Kenjiro
+      let rematadorValido = rematador && rematador.stats.remate === 3;      // comprobar remate BASE del rematador
+
+      if (colocadorValido && rematadorValido) {                             // si se cumple la condición
+        let ushijimasEnGuts = jugador.zonas.remate.slice(0, -1)             // buscar en el GUTS de remate (sin el activo)
+          .filter(c => c.nombre === "Ushijima Wakatoshi");                  // solo Ushijima
+
+        if (ushijimasEnGuts.length > 0) {                                   // si hay al menos uno disponible
+          let eleccion = await mostrarEleccion([                            // preguntar si quiere activar
+            { texto: t("log.activarHabilidad") },
+            { texto: t("log.noActivar") }
+          ]);
+
+          if (eleccion === 0) {                                              // si quiere activar
+            let ushijimaElegido = await mostrarSelectorCartas(               // abrir selector
+              t("log.elegirCarta"),
+              ushijimasEnGuts
+            );
+
+            // restar remate del rematador anterior y mandarlo al GUTS
+            game.valorAtaque -= rematador.stats.remate;                     // restar su remate base actual
+            let indexActual = jugador.zonas.remate.indexOf(rematador);      // buscar en la zona
+            jugador.zonas.remate.splice(indexActual, 1);                    // sacar de la zona
+            jugador.zonas.remate.unshift(rematador);                        // enviar al GUTS
+
+            // colocar el Ushijima elegido como rematador activo
+            let indexElegido = jugador.zonas.remate.indexOf(ushijimaElegido); // buscar en la zona
+            jugador.zonas.remate.splice(indexElegido, 1);                   // sacar del GUTS
+            jugador.zonas.remate.push(ushijimaElegido);                     // colocar al final
+            ushijimaElegido.zonaActual = "remate";                          // actualizar zona
+            ushijimaElegido.recienJugada = true;                            // marcar como recién jugado
+            ushijimaElegido.habilidadUsada = false;                         // habilidad no usada
+            game.ultimaCarta = ushijimaElegido;                             // actualizar última carta
+            game.ultimoJugador = jugador;                                   // actualizar último jugador
+
+            game.valorAtaque += ushijimaElegido.stats.remate;               // sumar su remate base
+            game.valorAtaque += 1;                                          // +1 adicional por el efecto
+            log(t("log.cartaColocadaComoRematador", { carta: "Ushijima Wakatoshi", valor: 1 }));
+
+            if (modoOnline) {
+              enviarJugada("cartaMovida", {                                 // rematador anterior al GUTS
+                zona: "remate",
+                cartaId: rematador.info?.id,
+                posicion: "guts"
+              });
+              enviarJugada("cartaMovida", {                                 // nuevo rematador al frente
+                zona: "remate",
+                cartaId: ushijimaElegido.info.id,
+                posicion: "ultimo"
+              });
+            }
+          }
+        } else {
+          log(t("log.condicionNoCumplida"));
+        }
+      }
+
+      renderMano();                                                          // actualizar mano
+      renderManoRival();                                                     // actualizar mano rival
+      renderCampo();                                                         // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P02-096",
+      fases: ["remate"],
+      escuela: "Shiratorizawa",
+      rareza: "R",
+      unica: true,                                                           // solo se puede jugar 1 por turno
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si tu colocador es <strong>Shirabu Kenjiro</strong> y el remate base de tu rematador es 3, puedes traer 1 <strong>Ushijima Wakatoshi</strong> del GUTS de remate y añadir +1 a su remate.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),  
   // ===================================================================================================================== PROMOS

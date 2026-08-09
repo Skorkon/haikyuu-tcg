@@ -26,7 +26,6 @@ log.gutsInsuficienteMultiZona;No hay suficientes GUTS en el campo (necesitas {ca
 log.gutsUsado;GUTS usado correctamente en {zona};GUTS used correctly in {zona};GUTS utilisé correctement en {zona};
 log.gutsMultiZona;GUTS: {cantidad} cartas enviadas al trash;GUTS: {cantidad} cards sent to discard;GUTS : {cantidad} cartes envoyées à la défausse;
 log.gutsTitulo;GUTS en {zona}: </br>Descarta ( {actual} / {total} );GUTS in {zona}: </br>Discard ( {actual} / {total} );GUTS en {zona} :</br>Défaussez ( {actual} / {total} );
-log.cartaTrasheadaDeZona;{carta} enviada al trash desde la zona de {zona} de {jugador};{carta} sent to discard from {jugador}'s {zona} zone;{carta} envoyée à la défausse depuis la zone {zona} de {jugador};
 log.cartaEnGuts;Esta carta está en el GUTS y no puede usar su habilidad;This card is in the GUTS and cannot use its ability;Cette carte est dans le GUTS et ne peut pas utiliser sa capacité;
 log.sinHabilidad;Esta carta no tiene habilidad;This card has no ability;Cette carte n'a pas de capacité;
 log.habilidadYaUsada;Esta habilidad ya fue usada;This ability was already used;Cette capacité a déjà été utilisée;
@@ -144,10 +143,3 @@ log.cartaAMano;{carta} añadida a la mano;{carta} added to hand;{carta} ajoutée
 log.cartaDescartada;{carta} descartada de la mano;{carta} discarded from hand;{carta} défaussée de la main;
 log.cartasDescartadasDelMazo;{cantidad} cartas enviadas al trash desde el mazo;{cantidad} cards sent to discard from deck;{cantidad} cartes envoyées à la défausse depuis le deck;
 log.sinBloqueadorCentral;No hay bloqueadores. El ataque pasa sin bloqueo;No blockers. The attack passes without block;Pas de bloqueurs. L'attaque passe sans bloc;
-log.rivalDescartaGuts;El rival se descarta de {valor} cartas de su GUTS de {zona};The rival discards {valor} cards from their {zona} GUTS;Le rival se défausse de {valor} cartes de son GUTS de {zona};
-log.lanzamientoMoneda;Lanzamiento de moneda: sale {resultado};Coin flip: {resultado};Lancer de pièce : {resultado};
-log.cara;cara;heads;face;
-log.cruz;cruz;tails;pile;
-log.cartaMovidaEntreGuts;{carta} movida del GUTS de {origen} al GUTS de {destino};{carta} moved from {origen} GUTS to {destino} GUTS;{carta} déplacée du GUTS de {origen} au GUTS de {destino};
-log.activarHabilidad;Activar habilidad;Activate ability;Activer la capacité;
-log.noActivar;No activar;Don't activate;Ne pas activer;

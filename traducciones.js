@@ -31,6 +31,7 @@ const TRADUCCIONES = {
       "gutsUsado": "GUTS usado correctamente en {zona}",
       "gutsMultiZona": "GUTS: {cantidad} cartas enviadas al trash",
       "gutsTitulo": "GUTS en {zona}: </br>Descarta ( {actual} / {total} )",
+      "cartaTrasheadaDeZona": "{carta} enviada al trash desde la zona de {zona} de {jugador}",
       "cartaEnGuts": "Esta carta está en el GUTS y no puede usar su habilidad",
       "sinHabilidad": "Esta carta no tiene habilidad",
       "habilidadYaUsada": "Esta habilidad ya fue usada",
@@ -147,7 +148,14 @@ const TRADUCCIONES = {
       "cartaAMano": "{carta} añadida a la mano",
       "cartaDescartada": "{carta} descartada de la mano",
       "cartasDescartadasDelMazo": "{cantidad} cartas enviadas al trash desde el mazo",
-      "sinBloqueadorCentral": "No hay bloqueadores. El ataque pasa sin bloqueo"
+      "sinBloqueadorCentral": "No hay bloqueadores. El ataque pasa sin bloqueo",
+      "rivalDescartaGuts": "El rival se descarta de {valor} cartas de su GUTS de {zona}",
+      "lanzamientoMoneda": "Lanzamiento de moneda: sale {resultado}",
+      "cara": "cara",
+      "cruz": "cruz",
+      "cartaMovidaEntreGuts": "{carta} movida del GUTS de {origen} al GUTS de {destino}",
+      "activarHabilidad": "Activar habilidad",
+      "noActivar": "No activar"
     }
   },
   "en": {
@@ -179,6 +187,7 @@ const TRADUCCIONES = {
       "gutsUsado": "GUTS used correctly in {zona}",
       "gutsMultiZona": "GUTS: {cantidad} cards sent to discard",
       "gutsTitulo": "GUTS in {zona}: </br>Discard ( {actual} / {total} )",
+      "cartaTrasheadaDeZona": "{carta} sent to discard from {jugador}'s {zona} zone",
       "cartaEnGuts": "This card is in the GUTS and cannot use its ability",
       "sinHabilidad": "This card has no ability",
       "habilidadYaUsada": "This ability was already used",
@@ -295,7 +304,14 @@ const TRADUCCIONES = {
       "cartaAMano": "{carta} added to hand",
       "cartaDescartada": "{carta} discarded from hand",
       "cartasDescartadasDelMazo": "{cantidad} cards sent to discard from deck",
-      "sinBloqueadorCentral": "No blockers. The attack passes without block"
+      "sinBloqueadorCentral": "No blockers. The attack passes without block",
+      "rivalDescartaGuts": "The rival discards {valor} cards from their {zona} GUTS",
+      "lanzamientoMoneda": "Coin flip: {resultado}",
+      "cara": "heads",
+      "cruz": "tails",
+      "cartaMovidaEntreGuts": "{carta} moved from {origen} GUTS to {destino} GUTS",
+      "activarHabilidad": "Activate ability",
+      "noActivar": "Don't activate"
     }
   },
   "fr": {
@@ -327,6 +343,7 @@ const TRADUCCIONES = {
       "gutsUsado": "GUTS utilisé correctement en {zona}",
       "gutsMultiZona": "GUTS : {cantidad} cartes envoyées à la défausse",
       "gutsTitulo": "GUTS en {zona} :</br>Défaussez ( {actual} / {total} )",
+      "cartaTrasheadaDeZona": "{carta} envoyée à la défausse depuis la zone {zona} de {jugador}",
       "cartaEnGuts": "Cette carte est dans le GUTS et ne peut pas utiliser sa capacité",
       "sinHabilidad": "Cette carte n'a pas de capacité",
       "habilidadYaUsada": "Cette capacité a déjà été utilisée",
@@ -443,7 +460,14 @@ const TRADUCCIONES = {
       "cartaAMano": "{carta} ajoutée à la main",
       "cartaDescartada": "{carta} défaussée de la main",
       "cartasDescartadasDelMazo": "{cantidad} cartes envoyées à la défausse depuis le deck",
-      "sinBloqueadorCentral": "Pas de bloqueurs. L'attaque passe sans bloc"
+      "sinBloqueadorCentral": "Pas de bloqueurs. L'attaque passe sans bloc",
+      "rivalDescartaGuts": "Le rival se défausse de {valor} cartes de son GUTS de {zona}",
+      "lanzamientoMoneda": "Lancer de pièce : {resultado}",
+      "cara": "face",
+      "cruz": "pile",
+      "cartaMovidaEntreGuts": "{carta} déplacée du GUTS de {origen} au GUTS de {destino}",
+      "activarHabilidad": "Activer la capacité",
+      "noActivar": "Ne pas activer"
     }
   },
   "": {
@@ -475,6 +499,7 @@ const TRADUCCIONES = {
       "gutsUsado": "",
       "gutsMultiZona": "",
       "gutsTitulo": "",
+      "cartaTrasheadaDeZona": "",
       "cartaEnGuts": "",
       "sinHabilidad": "",
       "habilidadYaUsada": "",
@@ -591,7 +616,14 @@ const TRADUCCIONES = {
       "cartaAMano": "",
       "cartaDescartada": "",
       "cartasDescartadasDelMazo": "",
-      "sinBloqueadorCentral": ""
+      "sinBloqueadorCentral": "",
+      "rivalDescartaGuts": "",
+      "lanzamientoMoneda": "",
+      "cara": "",
+      "cruz": "",
+      "cartaMovidaEntreGuts": "",
+      "activarHabilidad": "",
+      "noActivar": ""
     }
   }
 };

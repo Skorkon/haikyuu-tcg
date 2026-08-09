@@ -730,6 +730,54 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> If the opponent has 4 or more <strong><span style=&quot;color:#c62828&quot;>Spike</span></strong> or <strong><span style=&quot;color:#2e7d32&quot;>Set</span></strong> type event cards in their event zone, add +5 to the block.",
     "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Si l'adversaire a 4 cartes événements ou plus de type <strong><span style=&quot;color:#c62828&quot;>Attaque</span></strong> ou <strong><span style=&quot;color:#2e7d32&quot;>Passe</span></strong> dans sa zone d'événements, ajoutez +5 au contre."
   },
+  "HV-P02-046": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: Si tu personaje de <strong><span style=&quot;color:#2e7d32&quot;>Pase</span></strong> es el <strong>S</strong> de <strong>Shiratorizawa</strong>, +3 al remate y trashea hasta 2 cartas del GUTS de recepción del rival.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: If your <strong><span style=&quot;color:#2e7d32&quot;>Set</span></strong> character is the <strong>S</strong> from <strong>Shiratorizawa</strong>, +3 to the spike and discard up to 2 cards from the opponent's reception GUTS.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : Si votre personnage en <strong><span style=&quot;color:#2e7d32&quot;>Passe</span></strong> est le <strong>S</strong> du <strong>Shiratorizawa</strong>, +3 à l'attaque et défaussez jusqu'à 2 cartes du GUTS de réception adverse."
+  },
+  "HV-P02-048": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Lanza una moneda: si sale cara, +4 al bloqueo. Si sale cruz, trashea las 3 primeras cartas de tu mazo.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> Flip a coin: if it lands heads, +4 to the block. If it lands tails, discard the top 3 cards of your deck.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Lancez une pièce : si c'est face, +4 au contre. Si c'est pile, défaussez les 3 premières cartes de votre deck."
+  },
+  "HV-P02-049": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span>: subtract 2 from the opponent's attack and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est égale ou supérieure à 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : réduisez l'attaque adverse de 2 et passez directement à la phase de réception."
+  },
+  "HV-P02-050": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Solo si todos tus personajes en juego son de <strong>Shiratorizawa</strong>. +2 al pase. Si todo el GUTS pagado era de posición <strong>S</strong>, puedes mover hasta 1 carta de <strong>Shiratorizawa</strong> de tu GUTS a la zona de GUTS de <strong><span style=&quot;color:#c62828&quot;>remate</span></strong>.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Only if all your characters in play are from <strong>Shiratorizawa</strong>. +2 to the set. If all the GUTS paid was from the <strong>S</strong> position, you may move up to 1 <strong>Shiratorizawa</strong> card from your GUTS to the <strong><span style=&quot;color:#c62828&quot;>spike</span></strong> GUTS zone.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Seulement si tous vos personnages en jeu sont du <strong>Shiratorizawa</strong>. +2 à la passe. Si tout le GUTS payé venait de la position <strong>S</strong>, vous pouvez déplacer jusqu'à 1 carte du <strong>Shiratorizawa</strong> de votre GUTS vers la zone de GUTS de <strong><span style=&quot;color:#c62828&quot;>attaque</span></strong>."
+  },
+  "HV-P02-051": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Si esta carta entra en juego desde la mano encima de <strong>Ushijima Wakatoshi</strong> y tienes 3 cartas o menos en tu mano, +2 al remate de esta carta.",
+    "en": "If this card enters play from your hand on top of <strong>Ushijima Wakatoshi</strong> and you have 3 or fewer cards in your hand, +2 to this card's spike.",
+    "fr": "Si cette carte entre en jeu depuis votre main par-dessus <strong>Ushijima Wakatoshi</strong> et que vous avez 3 cartes ou moins en main, +2 à l'attaque de cette carte."
+  },
+  "HV-P02-052": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: +2 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: +2 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : +2 à la réception."
+  },
   "HV-P02-056": {
     "nombre_es": "",
     "nombre_en": "",
@@ -905,5 +953,29 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Roba 1 carta y añade +1 al bloqueo. </br>Si hay 2 o más personajes de <strong>Date Kôgyô</strong> en tu bloqueo y el bloqueo es exitoso: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo Ofensivo (5)</strong></span>. </br>Si hay 3, además el próximo receptor rival tendrá <strong>-1 a su recepción</strong>.",
     "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> Draw 1 card and add +1 to the block. </br>If there are 2 or more <strong>Date Kôgyô</strong> characters in your block and the block is successful: <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive Block (5)</strong></span>. </br>If there are 3, additionally the opponent's next receiver will have <strong>-1 to their reception</strong>.",
     "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Piochez 1 carte et ajoutez +1 au contre. </br>S'il y a 2 personnages du <strong>Date Kôgyô</strong> ou plus dans votre contre et que le contre réussit : <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre Offensif (5)</strong></span>. </br>S'il y en a 3, le prochain réceptionneur adverse aura également <strong>-1 à sa réception</strong>."
+  },
+  "HV-P02-094": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Shiratorizawa</strong> en juego. Puedes descartar 1 personaje de <strong>Shiratorizawa</strong> sin habilidad de tu mano para +2 adicional a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card and +1 to the reception of a <strong>Shiratorizawa</strong> character in play. You may discard 1 <strong>Shiratorizawa</strong> character with no ability from your hand for an additional +2 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte et +1 à la réception d'un personnage du <strong>Shiratorizawa</strong> en jeu. Vous pouvez défausser 1 personnage du <strong>Shiratorizawa</strong> sans capacité de votre main pour +2 supplémentaire à la réception."
+  },
+  "HV-P02-095": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Añade a tu mano hasta 2 cartas de personaje de <strong>Shiratorizawa</strong> sin habilidad de tu descarte. Si añades las 2, descarta 1 carta de tu mano.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Add up to 2 <strong>Shiratorizawa</strong> character cards with no ability from your discard pile to your hand. If you add both, discard 1 card from your hand.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Ajoutez à votre main jusqu'à 2 cartes personnage du <strong>Shiratorizawa</strong> sans capacité depuis votre défausse. Si vous en ajoutez 2, défaussez 1 carte de votre main."
+  },
+  "HV-P02-096": {
+    "nombre_es": "Abran paso a nuestro rematador",
+    "nombre_en": "Make way for our spiker",
+    "nombre_fr": "Laissez passer notre attaquant",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si tu colocador es <strong>Shirabu Kenjiro</strong> y el remate base de tu rematador es 3, puedes traer 1 <strong>Ushijima Wakatoshi</strong> del GUTS de remate y añadir +1 a su remate.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Draw 1 card and +1 to the spike of a <strong>Shiratorizawa</strong> character in play. If your setter is <strong>Shirabu Kenjiro</strong> and your spiker's base spike is 3, you may bring 1 <strong>Ushijima Wakatoshi</strong> from the spike GUTS and add +1 to its spike.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;>: You may only play 1 card with this name per turn.</span>",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage du <strong>Shiratorizawa</strong> en jeu. Si votre passeur est <strong>Shirabu Kenjiro</strong> et que l'attaque de base de votre attaquant est de 3, vous pouvez amener 1 <strong>Ushijima Wakatoshi</strong> depuis le GUTS d'attaque et ajouter +1 à son attaque.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
   }
 };

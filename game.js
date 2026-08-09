@@ -451,6 +451,15 @@ function mostrarEleccion(opciones) { // ===================================== MO
 // =============================================================================================
 function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
   bloquearUI();
+
+  // limpiar cualquier listener de cancelable residual de una llamada anterior,
+  // sin importar si aquel selector se cerró clicando dentro o fuera —
+  // esto evita que listeners "zombi" se acumulen en document y se disparen más tarde
+  if (window._cerrarFuera) {
+    document.removeEventListener("click", window._cerrarFuera, { capture: true });
+    window._cerrarFuera = null;
+  }
+
   return new Promise(resolve => {
     let selector = document.getElementById("selector-cartas");
     let contenedor = document.getElementById("selector-mano");
@@ -502,7 +511,13 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
 
       div.onclick = () => {
         cerrarSelector();
-        desbloquearUI();           
+        desbloquearUI();
+        // elegir una carta normalmente también debe anular la posibilidad de cancelar por fuera de ESTE selector,
+        // si no, su listener se queda huérfano ligado a un elemento del DOM ya eliminado
+        if (window._cerrarFuera) {
+          document.removeEventListener("click", window._cerrarFuera, { capture: true });
+          window._cerrarFuera = null;
+        }           
         resolve(carta);                     // resolver con la carta elegida
       };
       contenedor.appendChild(div);           // añadir al contenedor
@@ -839,6 +854,12 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     // ------------------------------------------------------------------------- Kenma P02-060
     if (jugador.zonas.pase.at(-1)?.info?.id === "HV-P02-060" && carta.stats.remate === 3) {
       aplicarKenma060(jugador, carta);                            // lanzar habilidad de Kenma
+    }
+    // ------------------------------------------------------------------------- Goshiki P02-051
+    if (carta.info?.id === "HV-P02-051" &&                                 // si es este Goshiki en concreto
+        jugador.zonas.remate.at(-2)?.nombre === "Ushijima Wakatoshi" &&    // si debajo hay un Ushijima
+        jugador.mano.length <= 3) {                                        // y tiene 3 cartas o menos en mano
+      aplicarGoshiki051(jugador, carta);
     }
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS GENÉRICOS
     // ------------------------------------------------------------------------- EFECTO : DEBILITAR REMATADOR
@@ -2820,7 +2841,36 @@ async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porq
   renderCampo();
   return true;
 }
+// ======================================== MOVER CARTA DE GUTS A GUTS DE OTRA ZONA
+function moverCartaAGutsZona(jugador, carta, zonaDestino) { 
+  let zonaOrigen = null;                        // buscar la zona de origen de la carta (cualquiera de las 5)
+  for (let zona of ["saque", "recepcion", "pase", "remate", "bloqueo"]) {
+    if (jugador.zonas[zona].includes(carta)) {                             // si la carta está en esta zona
+      zonaOrigen = zona;                                                   // guardar zona de origen
+      break;
+    }
+  }
+  if (!zonaOrigen) return false;                                          // return false: carta no encontrada en ninguna zona
 
+  let index = jugador.zonas[zonaOrigen].indexOf(carta);                   // buscar posición en la zona de origen
+  jugador.zonas[zonaOrigen].splice(index, 1);                             // sacar de la zona de origen
+
+  carta.zonaActual = zonaDestino;                                          // actualizar zona actual de la carta
+  carta.recienJugada = false;                                              // se mantiene como GUTS, no como carta activa
+  jugador.zonas[zonaDestino].unshift(carta);                               // añadir al GUTS de la zona destino (no al final)
+
+  log(t("log.cartaMovidaEntreGuts", { carta: carta.nombre, origen: zonaOrigen, destino: zonaDestino }));
+
+  if (modoOnline) {
+    enviarJugada("cartaMovidaEntreGuts", {                                 // avisar al rival
+      zonaOrigen: zonaOrigen,                                              // zona de origen
+      zonaDestino: zonaDestino,                                            // zona de destino
+      cartaId: carta.info?.id                                              // id de la carta
+    });
+  }
+
+  return true;                                                             // return true: movimiento exitoso
+}
 // ======================================== FORZAR DESCARTE RIVAL
 async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
   if (!modoOnline) {                                                   // modo local: selector directo
@@ -2883,7 +2933,7 @@ function motivacionRobar() {                                            // robar
   log(t("log.motivarActivo"));
 }
 
-// ======================================== TRASHEAR GUTS DE RECEPCIÓN DEL RIVAL
+// ============================================================================
 // ======================================== TRASHEAR GUTS DE UNA ZONA DEL RIVAL
 async function trashearGutsZonaRival(rival, rivalIndex, zona, cartasIds) { 
   if (!modoOnline) {                                                      // modo local: mutación directa
@@ -3256,6 +3306,12 @@ async function aplicarBokuto064(jugador, carta) { // ===========================
   renderCampo();                                              // actualizar campo
 }
 
+function aplicarGoshiki051(jugador, carta) { // ========================================= GOSHIKI P02-051
+  game.valorAtaque += 2;                                            // +2 al remate
+  log(t("log.habilidadActivada", { carta: carta.nombre }));
+  log(t("log.ataqueAumentado", { valor: 2 }))
+}
+
 async function aplicarPersonajeDoble(jugador, carta) { // ======================== PERSONAJE DOBLE
   let eleccion = await mostrarEleccion(                                    // mostrar opciones de la carta
     carta.info.opcionesDoble.map(op => ({ texto: op.nombre + " (" + op.escuela + " · " + op.posicion + ")" }))
@@ -3448,7 +3504,7 @@ mazoPruebaDate.forEach(id => {
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
 
-// ---------------------------------------------------------------------------------- FUKURODANI >
+// ---------------------------------------------------------------------------------- TEST FUKURODANI >
 // MANO FUKURODANI
 ["HV-P02-064", "HV-P02-067", "HV-P01-051"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
@@ -3489,9 +3545,9 @@ mazoPruebaFukurodani.forEach(id => {
 });
 // ---------------------------------------------------------------------------------- FUKURODANI <
 
-// ---------------------------------------------------------------------------------- SHIRATORIZAWA >
+// ---------------------------------------------------------------------------------- TEST SHIRATORIZAWA >
 // MANO SHIRATORIZAWA
-["HV-P02-048", "HV-P02-047", "HV-P01-046"].forEach(id => {
+["HV-P02-048", "HV-P02-047", "HV-P02-050", "HV-P02-094", "HV-P02-096", "HV-P01-058", "HV-P01-058"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
@@ -3499,17 +3555,22 @@ mazoPruebaFukurodani.forEach(id => {
 // GUTS SHIRATORIZAWA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-054"); // Onaga, sin habilidad
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-056"); 
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
-
+// TRASH SHIRATORIZAWA 
+["HV-P02-047", "HV-P02-047", "HV-P01-058", "HV-P01-058", "HV-P02-050"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
 // MAZO SHIRATORIZAWA
 const mazoPruebaShiratorizawa = [
   "HV-P01-056", "HV-P01-056",                          // Ushiwaka
   "HV-P01-057", "HV-P01-057",                          // Tendo
-  "HV-P01-058", "HV-P01-058",                          // Keiji Akaashi (sin habilidad) x2
+  "HV-P01-058", "HV-P01-058",
   "HV-P02-047", "HV-P02-047",                          
   "HV-P02-053", "HV-P02-053",
   "HV-P02-054", "HV-P02-054",
@@ -3565,14 +3626,6 @@ mazoPruebaMultiEscuela.forEach(id => {
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <
 
 
-
-// TRASH 
-["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
-  let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(carta);
-  if (carta) game.jugadores[1].trash.push(carta);
-});
-
 // ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
 [ "HV-P01-033", "HV-P01-085", "HV-P01-035", "HV-P01-037", "HV-P01-041", "HV-P01-039", "HV-P01-087", "HV-P01-003"].forEach(id => {
@@ -3580,19 +3633,6 @@ mazoPruebaMultiEscuela.forEach(id => {
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
 });
-
-// TRASH 
-["HV-P01-003", "HV-P01-004", "HV-P02-032", "HV-P02-030", "HV-P02-028", "HV-P02-023", "HV-P01-035"].forEach(id => {
-  let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(carta);
-  if (carta) game.jugadores[1].trash.push(carta);
-});
-
-
-// mazos de prueba
-let aoneP01 = todasLasCartas.find(c => c.info?.id === "HV-P01-054");
-game.jugadores[0].trash.push(aoneP01);
-
 
 // GUTS AOBA JOSAI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {

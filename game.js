@@ -774,7 +774,8 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     // ================================================== Efectos
     if (tieneEfecto("debilitarColocador")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "debilitarColocador");
-      if (efecto.activadoPor !== game.jugadorActivo) {
+      if (efecto.activadoPor !== game.jugadorActivo &&
+          (!efecto.posicion || carta.info?.posicion === efecto.posicion)) {  // sin filtro, o coincide la posición
         game.valorAtaque -= efecto.valor;
         log(t("log.efectoDebilitarColocador", { valor: efecto.valor, carta: carta.nombre }));
       }
@@ -902,8 +903,20 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
 // ======================================================================================================================================================= 
   if (game.fase === "bloqueo") { // ======================================================================================================= FASE : BLOQUEO
       if (!game.bloqueoActual.central) { // ================================ BLOQUEADOR CENTRAL
-
-        // comprobar Blockout antes de colocar
+        // ----------------------------------------------------------------- EFECTOS
+        // ----------------------------------------------------------------- NEGAR MB BLOCK
+        if (tieneEfecto("negarBloqueadorMB")) {
+          let efecto = game.efectosActivos.find(e => e.tipo === "negarBloqueadorMB");
+          if (efecto.activadoPor !== game.jugadorActivo && carta.info?.posicion === "MB") {
+            log(t("log.negarBloqueadorMB"));
+            jugador.mano.push(carta);
+            renderMano();
+            renderManoRival();
+            renderCampo();
+            return;
+          }
+        }
+        // ------------------------------------------------------------------ BLOCKOUT
         if (tieneEfecto("blockout")) {
           let efecto = game.efectosActivos.find(e => e.tipo === "blockout"); // buscar efecto
           if (carta.stats.bloqueo <= efecto.valor) {                         // si bloqueo insuficiente
@@ -963,7 +976,18 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
       }
       else { // ============================================================ BLOQUEADOR DE APOYO
         // ============================================ Comprobar efectos
-        // comprobar efecto negarBloqueadoresApoyo
+        // ============================================ Negar MB
+        if (tieneEfecto("negarBloqueadorMB")) {
+          let efecto = game.efectosActivos.find(e => e.tipo === "negarBloqueadorMB");
+          if (efecto.activadoPor !== game.jugadorActivo && carta.info?.posicion === "MB") {
+            log(t("log.negarBloqueadorMB"));
+            jugador.mano.push(carta);
+            renderMano();
+            renderManoRival();
+            return;
+          }
+        }
+        // ============================================= Negar bloqueadores de apoyo
         if (tieneEfecto("negarBloqueadoresApoyo")) {
           log(t("log.negarBloqueadoresApoyo"));
           jugador.mano.push(carta);                   // devolver carta a la mano
@@ -2510,6 +2534,15 @@ function negarRematadorMB() {
   if (modoOnline) enviarEfectos();                              // sincronizar efectos con el rival
   log(t("log.negarRematadorMBActivo"));
 }
+function negarBloqueadorMB() {
+  game.efectosActivos.push({
+    tipo: "negarBloqueadorMB",
+    activadoPor: game.jugadorActivo,
+    expira: game.turno + 2
+  });
+  if (modoOnline) enviarEfectos();                                    // sincronizar efectos con el rival
+  log(t("log.negarBloqueadorMBActivo"));
+}
 async function pagarConEvento(jugador) {
   let eventosEnMano = jugador.mano.filter(c => c.info?.tipo === "evento");   // filtrar eventos en la mano
   if (eventosEnMano.length === 0) {                                          // si no tiene eventos en mano
@@ -2621,7 +2654,7 @@ function debilitarRematador(cantidad = 2) {
   log(t("log.debilitarRematadorActivo", { valor: cantidad }));
 }
 
-function debilitarColocador(cantidad = 2) {
+function debilitarColocador(cantidad = 2, posicion = null) {
   game.efectosActivos.push({
     tipo: "debilitarColocador",
     activadoPor: game.jugadorActivo,
@@ -3547,23 +3580,23 @@ mazoPruebaFukurodani.forEach(id => {
 
 // ---------------------------------------------------------------------------------- TEST SHIRATORIZAWA >
 // MANO SHIRATORIZAWA
-["HV-P02-048", "HV-P02-047", "HV-P02-050", "HV-P02-094", "HV-P02-096", "HV-P01-058", "HV-P01-058"].forEach(id => {
+["HV-P02-048", "HV-P02-047", "HV-P02-050", "HV-P02-094", "HV-P02-098", "HV-P01-058", "HV-P01-058"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS SHIRATORIZAWA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-056"); 
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH SHIRATORIZAWA 
 ["HV-P02-047", "HV-P02-047", "HV-P01-058", "HV-P01-058", "HV-P02-050"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO SHIRATORIZAWA
@@ -3578,23 +3611,23 @@ const mazoPruebaShiratorizawa = [
 ];
 mazoPruebaShiratorizawa.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- SHIRATORIZAWA <
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P01-093", "HV-P01-056"].forEach(id => {
+["HV-P01-093", "HV-P01-056", "HV-P02-070"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga Wataru (Fukurodani)
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
@@ -3614,13 +3647,13 @@ const mazoPruebaMultiEscuela = [
   "HV-P01-066",                                         // Kamomedai
   "HV-P01-068",                                         // Itachiyama
   "HV-P01-069",                                         // Tsubakihara
-  "HV-P01-070",                                         // Sarukawa Kōgyō
+  "HV-P01-070",                                         // Sarukawa Kôgyô
   "HV-P01-071",                                         // Nohebi
   "HV-P01-053",                                         // Tokonami
 ];
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <

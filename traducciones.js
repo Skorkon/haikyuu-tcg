@@ -96,6 +96,8 @@ const TRADUCCIONES = {
       "negarColocador": "No puedes colocar un colocador este turno",
       "negarRematadorMBActivo": "Efecto activo: el rival no podrá usar un MB como rematador el próximo turno",
       "negarRematadorMB": "No puedes usar un MB como rematador este turno",
+      "negarBloqueadorMBActivo": "Efecto activo: el rival no podrá colocar un bloqueador MB desde la mano el próximo turno",
+      "negarBloqueadorMB": "No puedes colocar un bloqueador MB desde la mano este turno",
       "negarOneTouchActivo": "Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo",
       "negarOneTouch": "One Touch negado por habilidad del rival",
       "negarCartaDesdeManoActivo": "Efecto activo: el rival no podrá usar habilidades desde la mano en {fases}",
@@ -155,7 +157,11 @@ const TRADUCCIONES = {
       "cruz": "cruz",
       "cartaMovidaEntreGuts": "{carta} movida del GUTS de {origen} al GUTS de {destino}",
       "activarHabilidad": "Activar habilidad",
-      "noActivar": "No activar"
+      "noActivar": "No activar",
+      "colocarArribaMazo": "Colocar arriba del mazo",
+      "colocarFondoMazo": "Colocar al fondo del mazo",
+      "cartaArribaMazo": "{carta} colocada arriba del mazo",
+      "cartaAlFondoMazo": "{carta} colocada al fondo del mazo"
     }
   },
   "en": {
@@ -252,6 +258,8 @@ const TRADUCCIONES = {
       "negarColocador": "You cannot place a setter this turn",
       "negarRematadorMBActivo": "Active effect: rival cannot use a MB as spiker next turn",
       "negarRematadorMB": "You cannot use a MB as spiker this turn",
+      "negarBloqueadorMBActivo": "Active effect: rival cannot place a MB blocker from hand next turn",
+      "negarBloqueadorMB": "You cannot place a MB blocker from hand this turn",
       "negarOneTouchActivo": "Active effect: rival cannot use One Touch in their next block",
       "negarOneTouch": "One Touch negated by rival ability",
       "negarCartaDesdeManoActivo": "Active effect: rival cannot use hand abilities in {fases}",
@@ -311,7 +319,11 @@ const TRADUCCIONES = {
       "cruz": "tails",
       "cartaMovidaEntreGuts": "{carta} moved from {origen} GUTS to {destino} GUTS",
       "activarHabilidad": "Activate ability",
-      "noActivar": "Don't activate"
+      "noActivar": "Don't activate",
+      "colocarArribaMazo": "Place on top of the deck",
+      "colocarFondoMazo": "Place at the bottom of the deck",
+      "cartaArribaMazo": "{carta} placed on top of the deck",
+      "cartaAlFondoMazo": "{carta} placed at the bottom of the deck"
     }
   },
   "fr": {
@@ -408,6 +420,8 @@ const TRADUCCIONES = {
       "negarColocador": "Tu ne peux pas placer un passeur ce tour",
       "negarRematadorMBActivo": "Effet actif : le rival ne pourra pas utiliser un MB comme attaquant au prochain tour",
       "negarRematadorMB": "Tu ne peux pas utiliser un MB comme attaquant ce tour",
+      "negarBloqueadorMBActivo": "Effet actif : le rival ne pourra pas placer un bloqueur MB depuis la main au prochain tour",
+      "negarBloqueadorMB": "Tu ne peux pas placer un bloqueur MB depuis la main ce tour",
       "negarOneTouchActivo": "Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc",
       "negarOneTouch": "One Touch annulé par la capacité du rival",
       "negarCartaDesdeManoActivo": "Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases}",
@@ -467,7 +481,11 @@ const TRADUCCIONES = {
       "cruz": "pile",
       "cartaMovidaEntreGuts": "{carta} déplacée du GUTS de {origen} au GUTS de {destino}",
       "activarHabilidad": "Activer la capacité",
-      "noActivar": "Ne pas activer"
+      "noActivar": "Ne pas activer",
+      "colocarArribaMazo": "Placer au-dessus du deck",
+      "colocarFondoMazo": "Placer au fond du deck",
+      "cartaArribaMazo": "{carta} placée au-dessus du deck",
+      "cartaAlFondoMazo": "{carta} placée au fond du deck"
     }
   },
   "": {
@@ -564,6 +582,8 @@ const TRADUCCIONES = {
       "negarColocador": "",
       "negarRematadorMBActivo": "",
       "negarRematadorMB": "",
+      "negarBloqueadorMBActivo": "",
+      "negarBloqueadorMB": "",
       "negarOneTouchActivo": "",
       "negarOneTouch": "",
       "negarCartaDesdeManoActivo": "",
@@ -623,7 +643,11 @@ const TRADUCCIONES = {
       "cruz": "",
       "cartaMovidaEntreGuts": "",
       "activarHabilidad": "",
-      "noActivar": ""
+      "noActivar": "",
+      "colocarArribaMazo": "",
+      "colocarFondoMazo": "",
+      "cartaArribaMazo": "",
+      "cartaAlFondoMazo": ""
     }
   }
 };

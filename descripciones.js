@@ -850,6 +850,38 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> Discard the top card of your deck. If it is a <strong>Fukurodani</strong> character, you may discard 1 card from your hand to perform <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span>: fix your attack at 3 and go directly to the reception phase.",
     "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Défaussez la carte du dessus de votre deck. Si c'est un personnage de <strong>Fukurodani</strong>, vous pouvez défausser 1 carte de votre main pour effectuer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span> : fixez votre attaque à 3 et passez directement à la phase de réception."
   },
+  "HV-P02-070": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 4</strong>: Roba 2 cartas, coloca 1 carta de tu mano arriba o al fondo de tu mazo, y +3 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 4</strong>: Draw 2 cards, place 1 card from your hand on top of or at the bottom of your deck, and +3 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 4</strong> : Piochez 2 cartes, placez 1 carte de votre main au-dessus ou au fond de votre deck, et +3 à la réception."
+  },
+  "HV-P02-071": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Roba 1 carta y +2 a la recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Draw 1 card and +2 to the reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Piochez 1 carte et +2 à la réception."
+  },
+  "HV-P02-073": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: +4 al remate. Añade hasta 1 carta de <strong>Nohebi</strong> de tu zona de eventos a tu mano. Si la añades, descarta 1 carta de tu mano.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: +4 to the spike. Add up to 1 <strong>Nohebi</strong> card from your event zone to your hand. If you add it, discard 1 card from your hand.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : +4 à l'attaque. Ajoutez jusqu'à 1 carte de <strong>Nohebi</strong> de votre zone d'événements à votre main. Si vous l'ajoutez, défaussez 1 carte de votre main."
+  },
+  "HV-P02-074": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span> GUTS 1</strong>: Si la carta descartada es de <strong>Nohebi</strong>, +2 al saque. Durante el próximo turno rival, cada vez que el rival coloque un colocador <strong>S</strong>, tendrá <strong>-1 al pase</strong>.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span> GUTS 1</strong>: If the discarded card is from <strong>Nohebi</strong>, +2 to the serve. During the opponent's next turn, whenever the opponent places an <strong>S</strong> setter, they will have <strong>-1 to the set</strong>.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span> GUTS 1</strong> : Si la carte défaussée appartient à <strong>Nohebi</strong>, +2 au service. Pendant le prochain tour adverse, chaque fois que l'adversaire place un passeur <strong>S</strong>, il aura <strong>-1 à la passe</strong>."
+  },
   "HV-P02-077": {
     "nombre_es": "",
     "nombre_en": "",
@@ -977,5 +1009,29 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si tu colocador es <strong>Shirabu Kenjiro</strong> y el remate base de tu rematador es 3, puedes traer 1 <strong>Ushijima Wakatoshi</strong> del GUTS de remate y añadir +1 a su remate.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Draw 1 card and +1 to the spike of a <strong>Shiratorizawa</strong> character in play. If your setter is <strong>Shirabu Kenjiro</strong> and your spiker's base spike is 3, you may bring 1 <strong>Ushijima Wakatoshi</strong> from the spike GUTS and add +1 to its spike.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;>: You may only play 1 card with this name per turn.</span>",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage du <strong>Shiratorizawa</strong> en jeu. Si votre passeur est <strong>Shirabu Kenjiro</strong> et que l'attaque de base de votre attaquant est de 3, vous pouvez amener 1 <strong>Ushijima Wakatoshi</strong> depuis le GUTS d'attaque et ajouter +1 à son attaque.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
+  },
+  "HV-P02-097": {
+    "nombre_es": "Joder, es demasiado bueno...",
+    "nombre_en": "Damn, he's too good...",
+    "nombre_fr": "Merde, il est trop fort...",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si ese personaje es <strong>Ushijima Wakatoshi</strong>, durante el próximo turno rival, el rival no podrá colocar un bloqueador <strong>MB</strong> desde la mano.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to the spike of a <strong>Shiratorizawa</strong> character in play. If that character is <strong>Ushijima Wakatoshi</strong>, during the opponent's next turn, the opponent will not be able to place an <strong>MB</strong> blocker from their hand.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage du <strong>Shiratorizawa</strong> en jeu. Si ce personnage est <strong>Ushijima Wakatoshi</strong>, pendant le prochain tour adverse, l'adversaire ne pourra pas placer de contreur <strong>MB</strong> depuis sa main."
+  },
+  "HV-P02-098": {
+    "nombre_es": "Confío en tí",
+    "nombre_en": "I trust you",
+    "nombre_fr": "J'ai confiance en toi",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si ese personaje es <strong>Goshiki Tsutomu</strong>, puedes descartar 1 <strong>Ushijima Wakatoshi</strong> de tu mano para +1 adicional al remate.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Draw 1 card and +1 to the spike of a <strong>Shiratorizawa</strong> character in play. If that character is <strong>Goshiki Tsutomu</strong>, you may discard 1 <strong>Ushijima Wakatoshi</strong> from your hand for an additional +1 to the spike.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;>: You may only play 1 card with this name per turn.</span>",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Piochez 1 carte et +1 à l'attaque d'un personnage du <strong>Shiratorizawa</strong> en jeu. Si ce personnage est <strong>Goshiki Tsutomu</strong>, vous pouvez défausser 1 <strong>Ushijima Wakatoshi</strong> de votre main pour +1 supplémentaire à l'attaque.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
+  },
+  "HV-P02-099": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade 1 <strong>Daishou Suguru</strong> de tu descarte a tu mano. Si lo añades, añade hasta 1 carta del GUTS de <strong>Nohebi</strong> de tu campo a tu mano.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> If you have 4 or fewer cards in hand, add 1 <strong>Daishou Suguru</strong> from your discard pile to your hand. If you add it, add up to 1 <strong>Nohebi</strong> card from your field's GUTS to your hand.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Si vous avez 4 cartes ou moins en main, ajoutez 1 <strong>Daishou Suguru</strong> depuis votre défausse à votre main. Si vous l'ajoutez, ajoutez jusqu'à 1 carte du GUTS de <strong>Nohebi</strong> de votre terrain à votre main."
   }
 };

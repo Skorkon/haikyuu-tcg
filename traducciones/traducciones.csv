@@ -91,6 +91,8 @@ log.negarColocadorActivo;Efecto activo: el rival no podrá colocar un colocador 
 log.negarColocador;No puedes colocar un colocador este turno;You cannot place a setter this turn;Tu ne peux pas placer un passeur ce tour;
 log.negarRematadorMBActivo;Efecto activo: el rival no podrá usar un MB como rematador el próximo turno;Active effect: rival cannot use a MB as spiker next turn;Effet actif : le rival ne pourra pas utiliser un MB comme attaquant au prochain tour;
 log.negarRematadorMB;No puedes usar un MB como rematador este turno;You cannot use a MB as spiker this turn;Tu ne peux pas utiliser un MB comme attaquant ce tour;
+log.negarBloqueadorMBActivo;Efecto activo: el rival no podrá colocar un bloqueador MB desde la mano el próximo turno;Active effect: rival cannot place a MB blocker from hand next turn;Effet actif : le rival ne pourra pas placer un bloqueur MB depuis la main au prochain tour;
+log.negarBloqueadorMB;No puedes colocar un bloqueador MB desde la mano este turno;You cannot place a MB blocker from hand this turn;Tu ne peux pas placer un bloqueur MB depuis la main ce tour;
 log.negarOneTouchActivo;Efecto activo: el rival no podrá usar One Touch en su próximo bloqueo;Active effect: rival cannot use One Touch in their next block;Effet actif : le rival ne pourra pas utiliser One Touch dans son prochain bloc;
 log.negarOneTouch;One Touch negado por habilidad del rival;One Touch negated by rival ability;One Touch annulé par la capacité du rival;
 log.negarCartaDesdeManoActivo;Efecto activo: el rival no podrá usar habilidades desde la mano en {fases};Active effect: rival cannot use hand abilities in {fases};Effet actif : le rival ne pourra pas utiliser de capacités depuis la main en {fases};
@@ -151,3 +153,7 @@ log.cruz;cruz;tails;pile;
 log.cartaMovidaEntreGuts;{carta} movida del GUTS de {origen} al GUTS de {destino};{carta} moved from {origen} GUTS to {destino} GUTS;{carta} déplacée du GUTS de {origen} au GUTS de {destino};
 log.activarHabilidad;Activar habilidad;Activate ability;Activer la capacité;
 log.noActivar;No activar;Don't activate;Ne pas activer;
+log.colocarArribaMazo;Colocar arriba del mazo;Place on top of the deck;Placer au-dessus du deck;
+log.colocarFondoMazo;Colocar al fondo del mazo;Place at the bottom of the deck;Placer au fond du deck;
+log.cartaArribaMazo;{carta} colocada arriba del mazo;{carta} placed on top of the deck;{carta} placée au-dessus du deck;
+log.cartaAlFondoMazo;{carta} colocada al fondo del mazo;{carta} placed at the bottom of the deck;{carta} placée au fond du deck;

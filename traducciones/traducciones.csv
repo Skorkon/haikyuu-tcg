@@ -138,7 +138,7 @@ log.motivarActivo;Efecto activo: si el rival pierde un punto en el siguiente tur
 log.descartarCuandoRoboActivo;Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar;Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means;Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard;
 log.personajeDoble;Personaje doble: carta tratada como {carta};Double character: card treated as {carta};Personnage double : carte traitée comme {carta};
 log.cartasReveladas;Cartas reveladas: {cartas};Cards revealed: {cartas};Cartes révélées : {cartas};
-log.elegirCartaOpcional;Elige una carta para añadir a tu mano (opcional);Choose a card to add to your hand (optional);Choisissez une carte à ajouter à votre main (optionnel);
+log.elegirCartaOpcional;Elige una carta (opcional);Choose a card (optional);Choisissez une carte (optionnel);
 log.elegirCarta;Elige una carta;Choose a card;Choisissez une carte;
 log.elegirEnOrden;Elige en orden;Choose in order;Choisissez dans l'ordre;
 log.sinCartasParaDescartar;No tienes cartas en la mano para descartar;No cards in hand to discard;Pas de cartes en main à défausser;
@@ -157,3 +157,6 @@ log.colocarArribaMazo;Colocar arriba del mazo;Place on top of the deck;Placer au
 log.colocarFondoMazo;Colocar al fondo del mazo;Place at the bottom of the deck;Placer au fond du deck;
 log.cartaArribaMazo;{carta} colocada arriba del mazo;{carta} placed on top of the deck;{carta} placée au-dessus du deck;
 log.cartaAlFondoMazo;{carta} colocada al fondo del mazo;{carta} placed at the bottom of the deck;{carta} placée au fond du deck;
+log.colocarEventoZona;Colocar 1 carta de evento de tu mano en tu zona de eventos;Place 1 event card from your hand in your event zone;Placer 1 carte événement de votre main dans votre zone d'événements;
+log.noColocar;No colocar;Don't place;Ne pas placer;
+log.eventoColocadoEnZona;{carta} colocado en la zona de eventos;{carta} placed in the event zone;{carta} placé dans la zone d'événements;

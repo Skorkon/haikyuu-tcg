@@ -3807,7 +3807,106 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el rival tiene 2 o más cartas en su zona de eventos, puedes jugar 1 carta de evento de tu mano a tu zona de eventos como coste para robar 1 carta y añadir +6 al bloqueo.`
     }
   ),
+  crearCarta("Yamaguchi Tadashi", // ============================================================== P02-004
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque") {                           // comprobar que está en saque
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
+        return false;                                               // return false: habilidad no ejecutada
+      }
 
+      // comprobar que hay una carta de Karasuno debajo
+      let cartaDebajo = jugador.zonas.saque.at(-2);                      // carta debajo de Yamaguchi
+      if (!cartaDebajo || cartaDebajo.info?.escuela !== "Karasuno") {    // si no hay o no es de Karasuno
+        log(t("log.condicionNoCumplida"));
+        return false;                                                    // return false: condición no cumplida
+      }
+
+      if (!modoOnline) { // ================================================ MODO LOCAL
+        let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
+        let rival = game.jugadores[rivalIndex];                          // jugador rival
+
+        // buscar eventos en la mano del rival
+        let eventosEnMano = rival.mano.filter(c => c.info?.tipo === "evento"); // filtrar eventos
+
+        if (eventosEnMano.length === 0) {                                // si no tiene eventos
+          log("El rival no tiene eventos en la mano. Efecto tendoSatori activado.");
+          log(t("log.sinCartasParaDescartar"));
+          log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
+          robarCuandoRival();                                           // activar robar cuando rival
+          return;
+        }
+
+        let eleccion = await mostrarEleccion([                           // preguntar al rival
+          { texto: t("log.colocarEventoZona") },
+          { texto: t("log.noColocar") }
+        ]);
+
+        if (eleccion === 0) {                                            // si quiere colocar
+          let eventoElegido = await mostrarSelectorCartas(               // abrir selector
+            t("log.elegirCarta"),
+            eventosEnMano                                                // solo eventos
+          );
+          if (!eventoElegido) {                                          // si cancela
+            robarCuandoRival();                                          // activar robar cuando rival
+            return;
+          }
+          let index = rival.mano.indexOf(eventoElegido);                 // buscar en la mano
+          rival.mano.splice(index, 1);                                   // sacar de la mano
+          rival.zonas.eventos.push(eventoElegido);                       // colocar en zona de eventos
+          eventoElegido.zonaActual = "eventos";                          // actualizar zona
+          log(t("log.eventoColocadoEnZona", { carta: eventoElegido.nombre }));
+        } else {                                                         // si no quiere colocar
+          robarCuandoRival();
+          log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
+        }
+
+    } else { // ============================================================ MODO ONLINE
+      bloquearUI();                                                    // bloquear mientras espera
+      enviarJugada("pedirEventoVoluntario", {});                       // avisar al rival
+
+      await new Promise(resolve => {                                   // esperar respuesta del rival
+        let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");  // escuchar Firebase
+        ref.on("value", function(snap) {                               // cuando cambie
+          let jugada = snap.val();                                     // leer datos
+          if (!jugada) return;                                         // ignorar si vacío
+          if (jugada.jugador === miNumero) return;                     // ignorar si es mío
+
+          if (jugada.tipo === "eventoColocadoVoluntario") {            // si el rival colocó evento
+            ref.off();                                                 // desactivar listener
+            desbloquearUI();                                           // desbloquear UI
+            resolve();                                                 // resolver Promise
+          } else if (jugada.tipo === "eventoRechazado") {              // si el rival rechazó
+            ref.off();                                                 // desactivar listener
+            robarCuandoRival();                                        // activar tendoSatori
+            log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
+            desbloquearUI();                                           // desbloquear UI
+            resolve();                                                 // resolver Promise
+          }
+        });
+      });
+    }
+
+    renderMano();                                                      // actualizar mano
+    renderManoRival();                                                 // actualizar mano rival
+    renderCampo();                                                     // actualizar campo
+  },
+    {
+      tipo: "personaje",
+      id: "HV-P02-004",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "I",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta está encima de un personaje de <strong>Karasuno</strong> en el GUTS de saque, el rival puede descartar 1 evento de su mano. Si no lo hace, durante el siguiente turno rival, cada vez que el rival añada una carta a su mano, tú robas 1 carta.`
+    }
+  ),
   crearCarta("Nishinoya Yu", // ============================================================== P02-006
     {
       saque: 0,
@@ -6044,7 +6143,7 @@ function inicializarCartas() {
       }
 
       let cartaElegida = await mostrarSelectorCartas(                      // abrir selector cancelable
-        t("log.log.elegirCartaOpcional"),
+        t("log.elegirCartaOpcional"),
         elegibles,
         true                                                                // permite cancelar (hasta 1, no obligatorio)
       );
@@ -6143,6 +6242,40 @@ function inicializarCartas() {
       posicion: "WS",
       anyo: 1,
       rareza: "N"
+    }
+  ),
+  crearCarta("Amanai Kanoka", // ============================================================== P02-076
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 3,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                                  // comprobar que está en remate
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;                                                       // return false: condición no cumplida
+      }
+      if (jugador.zonas.remate.at(-2)?.nombre !== "Tanaka Ryunosuke") {     // comprobar carta justo debajo
+        log(t("log.condicionNoCumplida"));
+        return false;                                                       // return false: condición no cumplida
+      }
+      if (!await usarGuts(jugador, "remate", 4)) {                          // pagar 4 GUTS de remate
+        return false;                                                       // return false: GUTS insuficientes
+      }
+      game.valorAtaque += 2;                                                // +2 al remate
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 2 }));
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-076",
+      escuela: "Niiyama Joshi",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS 4</strong>: Solo si esta carta entró en juego encima de <strong>Tanaka Ryunosuke</strong>. +2 al remate.`
     }
   ),
   crearCarta("Miya Atsumu · Miya Osamu", // =============================================================== P02-077
@@ -7178,7 +7311,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si ese personaje es <strong>Goshiki Tsutomu</strong>, puedes descartar 1 <strong>Ushijima Wakatoshi</strong> de tu mano para +1 adicional al remate.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
-  crearCarta("Yamaka Mika", // ============================================================== P02-099
+  crearCarta("Yamaka Mika", // ================================================================ P02-099
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mano.length > 4) {                                        // comprobar 4 cartas o menos en mano
@@ -7260,7 +7393,82 @@ function inicializarCartas() {
     }
   ),
   // ===================================================================================================================== PROMOS
-  crearCarta("Hinata Shoyo", // ============================================================== PR-005
+  crearCarta("Hinata Shoyo", // =============================================================== PR-003
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 2,
+      bloqueo: 1
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                          // comprobar que está en remate
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (jugador.mano.length === 0) {                              // comprobar que hay cartas en mano
+        log(t("log.sinCartasParaDescartar"));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      let cartaDescarte = await mostrarSelectorCartas(              // abrir selector de descarte
+        t("log.elegirCarta"),                                       // título del selector
+        jugador.mano                                                // mostrar toda la mano
+      );
+      if (!cartaDescarte) {                                         // si cancela
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      let index = jugador.mano.indexOf(cartaDescarte);              // buscar en la mano
+      jugador.mano.splice(index, 1);                                // sacar de la mano
+      jugador.trash.push(cartaDescarte);                            // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre}));
+      if (modoOnline) enviarTrash(jugador);  
+
+      game.valorAtaque += 2;                                        // +2 al remate
+      log(t("log.ataqueAumentado", { valor: 2 }));
+
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-PR-003",
+      escuela: "Karasuno",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "P",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Descarta 1 carta de tu mano para añadir +2 al remate.`
+    }
+  ),
+  crearCarta("Kageyama Tobio", // ============================================================= PR-004
+    {
+      saque: 3,
+      recepcion: 1,
+      pase: 1,
+      remate: 2,
+      bloqueo: 1
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                            // comprobar que está en pase
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (!await usarGuts(jugador, "pase", 2)) {                    // pagar 2 GUTS de pase
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      robarCarta(jugador, 1, true);                                 // roba 1 carta
+    },
+    {
+      tipo: "personaje",
+      id: "HV-PR-004",
+      escuela: "Karasuno",
+      posicion: "S",
+      anyo: 1,
+      rareza: "P",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong>: Roba 1 carta.`
+    }
+  ),
+  crearCarta("Hinata Shoyo", // =============================================================== PR-005
     {
       saque: 2,
       recepcion: 3,

@@ -2406,6 +2406,7 @@ function actualizarContador(contenedor, cantidad) {
 // ===================================================================================================================================
 // =================================================================================================================== MOSTRAR TOOLTIP
 function mostrarTooltip(carta, e) {
+  if (!carta || !carta.info) return;
   let tooltip = document.getElementById("tooltip");
   
   const colorEscuela = getSchoolColor(carta.info?.escuela);
@@ -2463,6 +2464,7 @@ function getSchoolColor(escuela) {
     'Kakugawa':        '#7CB342',
     'Sōryūkawa Kōgyō': '#2E3A6E',
     'Tsubakihara':     '#C9A63C',
+    'Niiyama Joshi':   '#E63950',
   };
   return colores[escuela] || '#999999';
 }
@@ -3447,7 +3449,7 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-P02-081"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -3618,7 +3620,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P01-093", "HV-P01-056", "HV-P02-070"].forEach(id => {
+["HV-P02-073", "HV-P02-074", "HV-P02-075"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
@@ -3626,11 +3628,23 @@ mazoPruebaShiratorizawa.forEach(id => {
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 4; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-052"); // Onaga Wataru (Fukurodani)
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-075"); // Onaga Wataru (Fukurodani)
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
+// TRASH MULTI ESCUELA 
+["HV-P02-073", "HV-P02-047"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
+// MAZO EVENTOS PRUEBAS
+for (let i = 0; i < 3; i++) {
+  let evento = todasLasCartas.find(c => c.info?.id === "HV-P02-099");
+  game.jugadores[0].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
+}
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
 const mazoPruebaMultiEscuela = [
   "HV-P01-001",                                        // Karasuno
@@ -3679,7 +3693,7 @@ mazoPruebaMultiEscuela.forEach(id => {
 // mazo evento de pruebas
 for (let i = 0; i < 7; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
-  game.jugadores[1].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
 

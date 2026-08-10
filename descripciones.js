@@ -589,7 +589,7 @@ const DESCRIPCIONES = {
   "HV-P02-012": {
     "nombre_es": "",
     "nombre_en": "",
-    "nombre_fr": "HV-P02-012",
+    "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: Solo si el rival acaba de sacar, +3 a la recepción.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: Only if the opponent has just served, +3 to the reception.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : Seulement si l'adversaire vient de servir, +3 à la réception."
@@ -882,6 +882,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span> GUTS 1</strong>: If the discarded card is from <strong>Nohebi</strong>, +2 to the serve. During the opponent's next turn, whenever the opponent places an <strong>S</strong> setter, they will have <strong>-1 to the set</strong>.",
     "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span> GUTS 1</strong> : Si la carte défaussée appartient à <strong>Nohebi</strong>, +2 au service. Pendant le prochain tour adverse, chaque fois que l'adversaire place un passeur <strong>S</strong>, il aura <strong>-1 à la passe</strong>."
   },
+  "HV-P02-076": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 4</strong>: Solo si esta carta entró en juego encima de <strong>Tanaka Ryunosuke</strong>. +2 al remate.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 4</strong>: Only if this card entered play on top of <strong>Tanaka Ryunosuke</strong>. +2 to the spike.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 4</strong> : Seulement si cette carte est entrée en jeu par-dessus <strong>Tanaka Ryunosuke</strong>. +2 à l'attaque."
+  },
   "HV-P02-077": {
     "nombre_es": "",
     "nombre_en": "",
@@ -1033,5 +1041,21 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade 1 <strong>Daishou Suguru</strong> de tu descarte a tu mano. Si lo añades, añade hasta 1 carta del GUTS de <strong>Nohebi</strong> de tu campo a tu mano.",
     "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> If you have 4 or fewer cards in hand, add 1 <strong>Daishou Suguru</strong> from your discard pile to your hand. If you add it, add up to 1 <strong>Nohebi</strong> card from your field's GUTS to your hand.",
     "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Si vous avez 4 cartes ou moins en main, ajoutez 1 <strong>Daishou Suguru</strong> depuis votre défausse à votre main. Si vous l'ajoutez, ajoutez jusqu'à 1 carte du GUTS de <strong>Nohebi</strong> de votre terrain à votre main."
+  },
+  "HV-PR-003": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Descarta 1 carta de tu mano para añadir +2 al remate.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Discard 1 card from your hand to add +2 to the spike.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Défaussez 1 carte de votre main pour ajouter +2 à l'attaque."
+  },
+  "HV-PR-004": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS - 2</strong>: Roba 1 carta.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 2</strong>: Draw 1 card.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : Piochez 1 carte."
   }
 };

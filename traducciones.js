@@ -143,7 +143,7 @@ const TRADUCCIONES = {
       "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar",
       "personajeDoble": "Personaje doble: carta tratada como {carta}",
       "cartasReveladas": "Cartas reveladas: {cartas}",
-      "elegirCartaOpcional": "Elige una carta para añadir a tu mano (opcional)",
+      "elegirCartaOpcional": "Elige una carta (opcional)",
       "elegirCarta": "Elige una carta",
       "elegirEnOrden": "Elige en orden",
       "sinCartasParaDescartar": "No tienes cartas en la mano para descartar",
@@ -161,7 +161,10 @@ const TRADUCCIONES = {
       "colocarArribaMazo": "Colocar arriba del mazo",
       "colocarFondoMazo": "Colocar al fondo del mazo",
       "cartaArribaMazo": "{carta} colocada arriba del mazo",
-      "cartaAlFondoMazo": "{carta} colocada al fondo del mazo"
+      "cartaAlFondoMazo": "{carta} colocada al fondo del mazo",
+      "colocarEventoZona": "Colocar 1 carta de evento de tu mano en tu zona de eventos",
+      "noColocar": "No colocar",
+      "eventoColocadoEnZona": "{carta} colocado en la zona de eventos"
     }
   },
   "en": {
@@ -305,7 +308,7 @@ const TRADUCCIONES = {
       "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means",
       "personajeDoble": "Double character: card treated as {carta}",
       "cartasReveladas": "Cards revealed: {cartas}",
-      "elegirCartaOpcional": "Choose a card to add to your hand (optional)",
+      "elegirCartaOpcional": "Choose a card (optional)",
       "elegirCarta": "Choose a card",
       "elegirEnOrden": "Choose in order",
       "sinCartasParaDescartar": "No cards in hand to discard",
@@ -323,7 +326,10 @@ const TRADUCCIONES = {
       "colocarArribaMazo": "Place on top of the deck",
       "colocarFondoMazo": "Place at the bottom of the deck",
       "cartaArribaMazo": "{carta} placed on top of the deck",
-      "cartaAlFondoMazo": "{carta} placed at the bottom of the deck"
+      "cartaAlFondoMazo": "{carta} placed at the bottom of the deck",
+      "colocarEventoZona": "Place 1 event card from your hand in your event zone",
+      "noColocar": "Don't place",
+      "eventoColocadoEnZona": "{carta} placed in the event zone"
     }
   },
   "fr": {
@@ -467,7 +473,7 @@ const TRADUCCIONES = {
       "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard",
       "personajeDoble": "Personnage double : carte traitée comme {carta}",
       "cartasReveladas": "Cartes révélées : {cartas}",
-      "elegirCartaOpcional": "Choisissez une carte à ajouter à votre main (optionnel)",
+      "elegirCartaOpcional": "Choisissez une carte (optionnel)",
       "elegirCarta": "Choisissez une carte",
       "elegirEnOrden": "Choisissez dans l'ordre",
       "sinCartasParaDescartar": "Pas de cartes en main à défausser",
@@ -485,7 +491,10 @@ const TRADUCCIONES = {
       "colocarArribaMazo": "Placer au-dessus du deck",
       "colocarFondoMazo": "Placer au fond du deck",
       "cartaArribaMazo": "{carta} placée au-dessus du deck",
-      "cartaAlFondoMazo": "{carta} placée au fond du deck"
+      "cartaAlFondoMazo": "{carta} placée au fond du deck",
+      "colocarEventoZona": "Placer 1 carte événement de votre main dans votre zone d'événements",
+      "noColocar": "Ne pas placer",
+      "eventoColocadoEnZona": "{carta} placé dans la zone d'événements"
     }
   },
   "": {
@@ -647,7 +656,10 @@ const TRADUCCIONES = {
       "colocarArribaMazo": "",
       "colocarFondoMazo": "",
       "cartaArribaMazo": "",
-      "cartaAlFondoMazo": ""
+      "cartaAlFondoMazo": "",
+      "colocarEventoZona": "",
+      "noColocar": "",
+      "eventoColocadoEnZona": ""
     }
   }
 };

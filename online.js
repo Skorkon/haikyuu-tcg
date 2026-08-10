@@ -301,6 +301,66 @@ function aplicarJugadaRival(jugada) {
 
     case "cartaDescartadaRival": // ============================================= CARTA DESCARTADA
       break; // gestionado por el Promise en forzarDescarteRival
+// =============================================================================================== PEDIR DESCARTE DE EVENTO >
+    case "pedirEventoVoluntario": // ======================================= PEDIR EVENTO VOLUNTARIO
+      const miJugadorEvento = game.jugadores[miNumero - 1];                // jugador local (el que decide)
+      const eventosEnMano = miJugadorEvento.mano.filter(                   // filtrar eventos en mano
+        c => c.info?.tipo === "evento"
+      );
+
+      if (eventosEnMano.length === 0) {                                    // si no tiene eventos
+        enviarJugada("eventoRechazado", {});                               // avisar que no puede colocar
+        return;
+      }
+
+      mostrarEleccion([                                                    // preguntar al rival
+        { texto: t("log.colocarEventoZona") },
+        { texto: t("log.noColocar") }
+      ]).then(async eleccion => {                                          // cuando elige
+        if (eleccion === 0) {                                              // si quiere colocar
+          let eventoElegido = await mostrarSelectorCartas(                 // abrir selector
+            t("log.elegirCarta"),
+            eventosEnMano
+          );
+          if (!eventoElegido) {                                            // si cancela el selector
+            enviarJugada("eventoRechazado", {});                           // avisar que rechazó
+            return;
+          }
+          let index = miJugadorEvento.mano.indexOf(eventoElegido);        // buscar en la mano
+          miJugadorEvento.mano.splice(index, 1);                          // sacar de la mano
+          miJugadorEvento.zonas.eventos.push(eventoElegido);              // colocar en zona de eventos
+          eventoElegido.zonaActual = "eventos";                           // actualizar zona
+          log(t("log.eventoColocadoEnZona", { carta: eventoElegido.nombre }));
+          enviarJugada("eventoColocadoVoluntario", {                       // avisar al rival
+            cartaId: eventoElegido.info?.id                                // id del evento colocado
+          });
+          enviarCantidadMano();                                            // sincronizar mano
+          renderMano();                                                    // actualizar mano
+          renderManoRival();                                               // actualizar mano rival
+          renderCampo();                                                   // actualizar campo
+        } else {                                                           // si no quiere colocar
+          enviarJugada("eventoRechazado", {});                             // avisar que rechazó
+        }
+      });
+      break;
+
+    case "eventoColocadoVoluntario": // ==================================== EVENTO COLOCADO VOLUNTARIO
+      const rivalIndiceEventoVol = miNumero === 1 ? 1 : 0;                // índice del rival
+      const rivalEventoVol = game.jugadores[rivalIndiceEventoVol];        // jugador rival
+      const todasCartasEventoVol = inicializarCartas();                   // cargar catálogo
+      const eventoVol = todasCartasEventoVol.find(                        // buscar evento por id
+        c => c.info?.id === jugada.cartaId
+      );
+      if (eventoVol) {                                                    // si se encontró
+        rivalEventoVol.zonas.eventos.push(eventoVol);                     // colocar en zona de eventos
+        log(t("log.eventoColocadoEnZona", { carta: eventoVol.nombre}));
+      }
+      renderCampo();                                                       // actualizar campo
+      break;
+
+    case "eventoRechazado": // ============================================= EVENTO RECHAZADO
+      break; // gestionado por el Promise de la propia habilidad
+// =============================================================================================== PEDIR DESCARTE DE EVENTO <
 
     case "resetearManoRival": // ====================================================== RESETEAR MANO RIVAL (OIKAWA P01-034)
       const miJugadorReset = game.jugadores[miNumero - 1];               // jugador local (el que resetea)

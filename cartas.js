@@ -3807,7 +3807,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el rival tiene 2 o más cartas en su zona de eventos, puedes jugar 1 carta de evento de tu mano a tu zona de eventos como coste para robar 1 carta y añadir +6 al bloqueo.`
     }
   ),
-  crearCarta("Yamaguchi Tadashi", // ============================================================== P02-004
+  crearCarta("Yamaguchi Tadashi", // =========================================================== P02-004
     {
       saque: 2,
       recepcion: 0,
@@ -3816,95 +3816,86 @@ function inicializarCartas() {
       bloqueo: 3
     },
     async function(jugador, game, carta) {
-      if (carta.zonaActual !== "saque") {                           // comprobar que está en saque
+      if (carta.zonaActual !== "saque") {                                // comprobar zona válida
         log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
-        return false;                                               // return false: habilidad no ejecutada
+        return false;
       }
-
-      // comprobar que hay una carta de Karasuno debajo
       let cartaDebajo = jugador.zonas.saque.at(-2);                      // carta debajo de Yamaguchi
       if (!cartaDebajo || cartaDebajo.info?.escuela !== "Karasuno") {    // si no hay o no es de Karasuno
         log(t("log.condicionNoCumplida"));
-        return false;                                                    // return false: condición no cumplida
+        return false;
       }
 
       if (!modoOnline) { // ================================================ MODO LOCAL
         let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0; // índice del rival
         let rival = game.jugadores[rivalIndex];                          // jugador rival
-
-        // buscar eventos en la mano del rival
         let eventosEnMano = rival.mano.filter(c => c.info?.tipo === "evento"); // filtrar eventos
 
         if (eventosEnMano.length === 0) {                                // si no tiene eventos
-          log("El rival no tiene eventos en la mano. Efecto tendoSatori activado.");
-          log(t("log.sinCartasParaDescartar"));
-          log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
-          robarCuandoRival();                                           // activar robar cuando rival
-          return;
+          log("El rival no tiene eventos en la mano.");
+          return;                                                        // termina sin efecto
         }
 
         let eleccion = await mostrarEleccion([                           // preguntar al rival
-          { texto: t("log.colocarEventoZona") },
-          { texto: t("log.noColocar") }
+          { texto: "Colocar 1 carta de evento en tu zona de eventos." },
+          { texto: "No colocar" }
         ]);
 
         if (eleccion === 0) {                                            // si quiere colocar
           let eventoElegido = await mostrarSelectorCartas(               // abrir selector
-            t("log.elegirCarta"),
-            eventosEnMano                                                // solo eventos
+            "Elige un evento de tu mano para colocar en tu zona de eventos:",
+            eventosEnMano
           );
-          if (!eventoElegido) {                                          // si cancela
-            robarCuandoRival();                                          // activar robar cuando rival
-            return;
-          }
+          if (!eventoElegido) return;                                    // si cancela, ignorar
           let index = rival.mano.indexOf(eventoElegido);                 // buscar en la mano
           rival.mano.splice(index, 1);                                   // sacar de la mano
           rival.zonas.eventos.push(eventoElegido);                       // colocar en zona de eventos
           eventoElegido.zonaActual = "eventos";                          // actualizar zona
-          log(t("log.eventoColocadoEnZona", { carta: eventoElegido.nombre }));
-        } else {                                                         // si no quiere colocar
+          log(rival.nombre + " coloca " + eventoElegido.nombre + " en su zona de eventos.");
+        } else {
+          log("El rival no coloca evento.");
           robarCuandoRival();
-          log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
         }
 
-    } else { // ============================================================ MODO ONLINE
-      bloquearUI();                                                    // bloquear mientras espera
-      enviarJugada("pedirEventoVoluntario", {});                       // avisar al rival
+      } else { // ============================================================ MODO ONLINE
+        bloquearUI();                                                    // bloquear mientras espera
+        enviarJugada("pedirEventoVoluntario", {});                       // avisar al rival
 
-      await new Promise(resolve => {                                   // esperar respuesta del rival
-        let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");  // escuchar Firebase
-        ref.on("value", function(snap) {                               // cuando cambie
-          let jugada = snap.val();                                     // leer datos
-          if (!jugada) return;                                         // ignorar si vacío
-          if (jugada.jugador === miNumero) return;                     // ignorar si es mío
+        await new Promise(resolve => {                                   // esperar respuesta del rival
+          let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");  // escuchar Firebase
+          ref.on("value", function(snap) {                               // cuando cambie
+            let jugada = snap.val();                                     // leer datos
+            if (!jugada) return;                                         // ignorar si vacío
+            if (jugada.jugador === miNumero) return;                     // ignorar si es mío
+            if (jugada.tipo !== "eventoColocadoVoluntario" &&            // ignorar si no es respuesta
+                jugada.tipo !== "eventoRechazado") return;
 
-          if (jugada.tipo === "eventoColocadoVoluntario") {            // si el rival colocó evento
-            ref.off();                                                 // desactivar listener
-            desbloquearUI();                                           // desbloquear UI
-            resolve();                                                 // resolver Promise
-          } else if (jugada.tipo === "eventoRechazado") {              // si el rival rechazó
-            ref.off();                                                 // desactivar listener
-            robarCuandoRival();                                        // activar tendoSatori
-            log(t("log.habilidadActivada", { carta: "Yamaguchi Tadashi"}));
-            desbloquearUI();                                           // desbloquear UI
-            resolve();                                                 // resolver Promise
-          }
+            ref.off();                                                   // desactivar listener
+            desbloquearUI();                                             // desbloquear UI
+
+            if (jugada.tipo === "eventoColocadoVoluntario") {            // si el rival colocó evento
+              log("El rival coloca un evento en su zona de eventos.");
+            } else {                                                     // si el rival rechazó
+              log("El rival no coloca evento.");
+              robarCuandoRival();
+            }
+            resolve();                                                   // resolver Promise
+          });
         });
-      });
-    }
+      }
 
-    renderMano();                                                      // actualizar mano
-    renderManoRival();                                                 // actualizar mano rival
-    renderCampo();                                                     // actualizar campo
-  },
+      renderMano();                                                      // actualizar mano
+      renderManoRival();                                                 // actualizar mano rival
+      renderCampo();                                                     // actualizar campo
+    },
     {
       tipo: "personaje",
       id: "HV-P02-004",
       escuela: "Karasuno",
       posicion: "MB",
       anyo: 1,
-      rareza: "I",
-      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta está encima de un personaje de <strong>Karasuno</strong> en el GUTS de saque, el rival puede descartar 1 evento de su mano. Si no lo hace, durante el siguiente turno rival, cada vez que el rival añada una carta a su mano, tú robas 1 carta.`
+      rareza: "TP",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta está encima de otra carta de <strong>Karasuno</strong> en saque, activa el efecto: cada vez que el rival añada una carta a su mano, tú robas 1 carta.`
     }
   ),
   crearCarta("Nishinoya Yu", // ============================================================== P02-006

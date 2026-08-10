@@ -1073,7 +1073,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
       return;
     }
 
-        // comprobar efecto negarRobar
+  // comprobar efecto negarRobar
     if (esHabilidad && tieneEfecto("negarRobar")) {                    // si es robo por habilidad
       let efecto = game.efectosActivos.find(e => e.tipo === "negarRobar"); // buscar efecto
       let jugadorIndex = game.jugadores.indexOf(jugador);             // índice del jugador que roba
@@ -1087,11 +1087,21 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
     jugador.mano.push(carta);
 
     // ================================================================ // Efectos
-    if (esHabilidad && tieneEfecto("robarCuandoRival")) {                    // si es por habilidad, activar Tendo si está activo
-      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
-      robarCarta(game.jugadores[rivalIndex], 1);                        // el rival roba una carta como reacción
-      log(t("log.robarCuandoRival"));
-      enviarJugada("robarCarta", { cantidad: 1 }); // ← avisar al rival para que robe en su lado
+    if (esHabilidad && tieneEfecto("robarCuandoRival")) {
+
+      let efecto = game.efectosActivos.find(e => e.tipo === "robarCuandoRival");
+      let jugadorIndex = game.jugadores.indexOf(jugador);                  // índice del que roba
+
+      if (efecto.activadoPor !== jugadorIndex) {                           // si lo activó el rival
+        if (modoOnline) {
+          enviarJugada("robarCarta", { cantidad: 1 });                     // avisar al rival que robe
+          log(t("log.robarCuandoRival"));
+        } else {
+          let rivalIndex = jugadorIndex === 0 ? 1 : 0;                     // índice del rival
+          robarCarta(game.jugadores[rivalIndex], 1);                       // robar en local
+          log(t("log.robarCuandoRival"));
+        }
+      }
     }
 
     if (esHabilidad && tieneEfecto("descartePorRobo")) {
@@ -2569,12 +2579,21 @@ async function pagarConEvento(jugador) {
 function añadirCartaAMano(jugador, carta) {
   jugador.mano.push(carta);
   
+  let jugadorIndex = game.jugadores.indexOf(jugador);
   let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
   let rival = game.jugadores[rivalIndex];
   
-  if (tieneEfecto("robarCuandoRival")) {
-    robarCarta(rival, 1);
-    log(t("log.robarCuandoRival"));
+  if (tieneEfecto("robarCuandoRival")) {                               // si efecto activo
+    let efecto = game.efectosActivos.find(e => e.tipo === "robarCuandoRival"); // buscar efecto
+    if (efecto.activadoPor !== jugadorIndex) {                         // si lo activó el rival
+      if (modoOnline) {
+        enviarJugada("robarCarta", { cantidad: 1 });                   // avisar al rival que robe
+        log(t("log.robarCuandoRival"));
+      } else {
+        robarCarta(game.jugadores[rivalIndex], 1);                     // robar en local
+        log(t("log.robarCuandoRival"));
+      }
+    }
   }
 
   if (tieneEfecto("descartePorRobo")) {                                  // si efecto descartePorRobo activo
@@ -2609,6 +2628,7 @@ function añadirCartaAMano(jugador, carta) {
 function robarCuandoRival() { // robar cuando el rival roba
   game.efectosActivos.push({ 
     tipo: "robarCuandoRival",
+    activadoPor: game.jugadorActivo,
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
@@ -3620,7 +3640,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P02-073", "HV-P02-074", "HV-P02-075"].forEach(id => {
+["HV-P02-073", "HV-P02-074", "HV-P02-075", "HV-P02-099", "HV-D01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));

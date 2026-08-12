@@ -728,6 +728,7 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
       if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
         aplicarBokuto064(jugador, carta);
       }
+      comprobarKinoshita010(jugador, carta);                        // comprobar Kinoshita P02-010
 
       actualizarFaseUI();
       renderMano();
@@ -3367,6 +3368,46 @@ function aplicarGoshiki051(jugador, carta) { // ================================
   log(t("log.ataqueAumentado", { valor: 2 }))
 }
 
+async function aplicarKinoshita010(jugador, carta) { // ====================================== KINOSHITA P02-010
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidadNombre", { carta: "Kinoshita Hisashi" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
+
+  // descartar Kinoshita de la zona de saque
+  let kinoshita = jugador.zonas.saque.at(-1);                     // buscar Kinoshita en saque
+  let index = jugador.zonas.saque.indexOf(kinoshita);             // buscar en la zona
+  jugador.zonas.saque.splice(index, 1);                           // sacar de la zona
+  jugador.trash.push(kinoshita);                                  // enviar al trash
+  log(t("log.eventoPagar"));
+
+  game.valorDefensa += 1;                                         // +1 a la recepción
+  log(t("log.habilidadActivada", { carta: "Kinoshita Hisashi" }));
+  log(t("log.defensaAumentada", { valor: 1 }));
+
+  actualizarContadoresVisual();
+
+  if (modoOnline) {
+    enviarJugada("quitarCartaZona", {                             // avisar al rival
+      zona: "saque",                                              // zona de origen
+      cartaId: kinoshita.info?.id                                 // id de Kinoshita
+    });
+    enviarTrash(jugador);                                         // sincronizar trash
+  }
+
+  renderMano();                                                   // actualizar mano
+  renderManoRival();                                              // actualizar mano rival
+  renderCampo();                                                  // actualizar campo
+}
+
+function comprobarKinoshita010(jugador, carta) {                    // comprobación reutilizable
+  if (jugador.zonas.saque.at(-1)?.info?.id === "HV-P02-010" &&      // si Kinoshita está en saque
+      carta.nombre === "Nishinoya Yu") {                            // y la carta es Nishinoya
+    aplicarKinoshita010(jugador, carta);                            // lanzar habilidad
+  }
+}
+
 async function aplicarPersonajeDoble(jugador, carta) { // ======================== PERSONAJE DOBLE
   let eleccion = await mostrarEleccion(                                    // mostrar opciones de la carta
     carta.info.opcionesDoble.map(op => ({ texto: op.nombre + " (" + op.escuela + " · " + op.posicion + ")" }))
@@ -3421,7 +3462,7 @@ const todasLasCartas = inicializarCartas();
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-
+/*
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018", "HV-P01-084", "HV-P02-061", "HV-P02-060"].forEach(id => {
@@ -3469,7 +3510,7 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-004"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-005", "HV-P02-083", "HV-P02-010"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -3477,10 +3518,16 @@ mazoPruebaNekoma.forEach(id => {
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-009"); 
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
+});
+// TRASH KARASUNO
+["HV-P01-054"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -3716,7 +3763,7 @@ for (let i = 0; i < 7; i++) {
   // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
-
+*/
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

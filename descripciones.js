@@ -562,6 +562,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> If the opponent has 2 or more cards in their event zone, you may place 1 event card from your hand into your event zone as a cost to draw 1 card and add +6 to the block.",
     "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Si l'adversaire a 2 cartes ou plus dans sa zone d'événements, vous pouvez placer 1 carte événement de votre main dans votre zone d'événements comme coût pour piocher 1 carte et ajouter +6 au contre."
   },
+  "HV-P02-005": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "HV-P02-005",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Solo si fue traído por <strong>¡Que me ayuden!!!</strong>, +2 a la recepción y añade 1 <strong>Kinoshita Hisashi</strong> del trash a tu mano.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Only if brought in by <strong>Somebody help me!!!</strong>, +2 to the reception and add 1 <strong>Kinoshita Hisashi</strong> from the trash to your hand.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Seulement si amenée par <strong>À l'aide !!!</strong>, +2 à la réception et ajoutez 1 <strong>Kinoshita Hisashi</strong> depuis la défausse à votre main."
+  },
   "HV-P02-006": {
     "nombre_es": "",
     "nombre_en": "",
@@ -577,6 +585,14 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Cuando se juega <strong>¡Super Inner Cross!!!</strong>, si esta carta está en remate, <strong>GUTS 3</strong>: +4 al remate y -2 al receptor rival el próximo turno.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> When <strong>Super Cross Attack!!!</strong> is played, if this card is in the spike zone, <strong>GUTS 3</strong>: +4 to the spike and -2 to the opponent's receiver on the next turn.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Lorsque <strong>Super Attaque croisée !!!</strong> est jouée, si cette carte est en zone d'attaque, <strong>GUTS 3</strong> : +4 à l'attaque et -2 au réceptionneur adverse au prochain tour."
+  },
+  "HV-P02-010": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "HV-P02-010",
+    "es": "Cuando coloques a <strong>Nishinoya Yu</strong> en <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong>, si esta carta está en saque, puedes descartarla para añadir +1 a la recepción de ese Nishinoya.",
+    "en": "When you place <strong>Nishinoya Yu</strong> in <strong><span style=&quot;color:#1565c0&quot;>reception</span></strong>, if this card is in the serve zone, you may discard it to add +1 to that Nishinoya's reception.",
+    "fr": "Lorsque vous placez <strong>Nishinoya Yu</strong> en <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong>, si cette carte est en zone de service, vous pouvez la défausser pour ajouter +1 à la réception de ce Nishinoya."
   },
   "HV-P02-011": {
     "nombre_es": "",
@@ -913,6 +929,14 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y +1 al remate de <strong>Tanaka Ryunosuke</strong>. </br>Si el rematador es <strong>Tanaka Ryunosuke</strong>, durante el siguiente turno rival, el primer bloqueador de apoyo que coloque irá directamente al trash.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and +1 to Tanaka Ryunosuke's spike. </br>If the spiker is <strong>Tanaka Ryunosuke</strong>, during the opponent's next turn, the first support blocker they place will go directly to the trash.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et +1 à l'attaque de <strong>Tanaka Ryunosuke</strong>. </br>Si l'attaquant est <strong>Tanaka Ryunosuke</strong>, pendant le prochain tour adverse, le premier contreur de soutien qu'il place ira directement à la défausse."
+  },
+  "HV-P02-083": {
+    "nombre_es": "¡Que me ayuden!!!",
+    "nombre_en": "Somebody help me!!!",
+    "nombre_fr": "Aidez-moi !!!",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta y saca 1 libero <strong>(Li)</strong> del GUTS de recepción para colocarlo como receptor activo.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card and take 1 libero <strong>(Li)</strong> from the reception GUTS to place as the active receiver.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte et sortez 1 libéro <strong>(Li)</strong> du GUTS de réception pour le placer en tant que réceptionneur actif."
   },
   "HV-P02-084": {
     "nombre_es": "",

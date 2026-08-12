@@ -3807,7 +3807,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el rival tiene 2 o más cartas en su zona de eventos, puedes jugar 1 carta de evento de tu mano a tu zona de eventos como coste para robar 1 carta y añadir +6 al bloqueo.`
     }
   ),
-  crearCarta("Yamaguchi Tadashi", // =========================================================== P02-004
+  crearCarta("Yamaguchi Tadashi", // =========================================================== P02-004   !!!!! A REVISAR !!!!!
     {
       saque: 2,
       recepcion: 0,
@@ -3898,7 +3898,63 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta está encima de otra carta de <strong>Karasuno</strong> en saque, activa el efecto: cada vez que el rival añada una carta a su mano, tú robas 1 carta.`
     }
   ),
-  crearCarta("Nishinoya Yu", // ============================================================== P02-006
+  crearCarta("Nishinoya Yu", // ================================================================ P02-005
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                       // comprobar que está en recepción
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (!tieneEfecto("nishiRescatado")) {                         // comprobar que fue traído por el evento
+        log(t("log.condicionNoCumplida"));
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      if (!await usarGuts(jugador, "recepcion", 2)) {              // pagar 2 GUTS de recepción
+        return false;                                               // return false: habilidad no ejecutada
+      }
+      game.valorDefensa += 2;                                       // +2 a la recepción
+      log(t("log.defensaAumentada", { valor: 2}));
+
+      let kinoshitas = jugador.trash.filter(c =>                        // filtrar trash
+        c.nombre === "Kinoshita Hisashi"                                // solo Kinoshita
+      );
+      if (kinoshitas.length === 0) {                                    // si no hay ninguno
+        log(t("log.sinCartasValidas"));
+        return;                                                         // terminar sin error
+      }
+      let kinoshitaElegido = await mostrarSelectorCartas(               // abrir selector
+        t("log.elegirCarta"),                                           // título
+        kinoshitas                                                      // solo Kinoshita
+      );
+      if (!kinoshitaElegido) return false;                              // si cancela
+
+      let indexTrash = jugador.trash.indexOf(kinoshitaElegido);         // buscar en el trash
+      jugador.trash.splice(indexTrash, 1);                              // sacar del trash
+      añadirCartaAMano(jugador, kinoshitaElegido);                      // añadir a la mano
+      log(t("log.cartaAMano", { carta: kinoshitaElegido.nombre }));
+      if (modoOnline) enviarTrash(jugador);
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P02-005",
+      escuela: "Karasuno",
+      posicion: "Li",
+      anyo: 2,
+      rareza: "S",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: Solo si fue traído por <strong>¡Que me ayuden!!!</strong>, +2 a la recepción y añade 1 <strong>Kinoshita Hisashi</strong> del trash a tu mano.`
+    }
+  ),
+  crearCarta("Nishinoya Yu", // ================================================================ P02-006
     {
       saque: 0,
       recepcion: 4,
@@ -3942,7 +3998,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si el rival tiene 3 o más cartas de eventos de <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> en su zona de eventos, roba 1 carta y +3 a la recepción.`
     }
   ),
-  crearCarta("Tanaka Ryunosuke", // ============================================================== P02-007
+  crearCarta("Tanaka Ryunosuke", // ============================================================ P02-007
     {
       saque: 3,
       recepcion: 2,
@@ -3997,8 +4053,26 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-
-  crearCarta("Narita Kazuhito", // ============================================================== P02-011
+  crearCarta("Kinoshita Hisashi", // =========================================================== P02-010
+    {
+      saque: 4,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // habilidad gestionada automáticamente en colocarCarta()
+    {
+      tipo: "personaje",
+      id: "HV-P02-010",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N",
+      descripcion: `Cuando coloques a <strong>Nishinoya Yu</strong> en <strong><span style="color:#1565c0">recepción</span></strong>, si esta carta está en saque, puedes descartarla para añadir +1 a la recepción de ese Nishinoya.`
+    }
+  ),
+  crearCarta("Narita Kazuhito", // ============================================================= P02-011
     {
       saque: 0,
       recepcion: 0,
@@ -4038,7 +4112,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta para +1 al parámetro de un personaje de <strong>Karasuno</strong> en juego según la fase.`
     }
   ),
-  crearCarta("Sawamura Daichi", // ============================================================== P02-012
+  crearCarta("Sawamura Daichi", // ============================================================= P02-012
     {
       saque: 1,
       recepcion: 5,
@@ -4092,7 +4166,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Azumane Asahi", // ============================================================== P02-014
+  crearCarta("Azumane Asahi", // =============================================================== P02-014
     {
       saque: 4,
       recepcion: 0,
@@ -6390,7 +6464,68 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate de <strong>Tanaka Ryunosuke</strong>. Si el rematador es <strong>Tanaka Ryunosuke</strong>, durante el siguiente turno rival, el primer bloqueador de apoyo que coloque irá directamente al trash.`
     }
   ),
+  crearCarta("¡Que me ayuden!!!", // ============================================================== P02-083
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    async function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                  // roba 1 carta
 
+      // buscar liberos en el GUTS de recepción (todas menos la última)
+      let liberosEnGuts = jugador.zonas.recepcion.slice(0, -1).filter(c =>  // filtrar GUTS
+        c.info?.posicion === "Li"                                    // solo liberos
+      );
+
+      if (liberosEnGuts.length === 0) {                              // si no hay ninguno
+        log(t("log.condicionNoCumplida"));
+        return false;                                                // return false: habilidad no ejecutada
+      }
+
+      let liberoElegido = await mostrarSelectorCartas(               // abrir selector
+        t("log.elegirCarta"),                    // título
+        liberosEnGuts                                                // solo liberos
+      );
+      if (!liberoElegido) return false; 
+
+      let receptorActual = jugador.zonas.recepcion.at(-1);           // buscar receptor actual
+      if (receptorActual) {                                          // si hay receptor
+        let indexActual = jugador.zonas.recepcion.indexOf(receptorActual); // buscar en la zona
+        jugador.zonas.recepcion.splice(indexActual, 1);              // sacar de la zona
+        jugador.zonas.recepcion.unshift(receptorActual);             // enviar al GUTS
+        receptorActual.recienJugada = false;                         // ya no es recién jugado
+      }
+
+      let indexElegido = jugador.zonas.recepcion.indexOf(liberoElegido); // buscar en la zona
+      jugador.zonas.recepcion.splice(indexElegido, 1);               // sacar del GUTS
+      jugador.zonas.recepcion.push(liberoElegido);                   // colocar como último
+      liberoElegido.zonaActual = "recepcion";                        // actualizar zona
+      liberoElegido.recienJugada = true;                             // marcar como recién jugado
+      liberoElegido.habilidadUsada = false;                          // habilidad no usada
+      game.ultimaCarta = liberoElegido;                              // actualizar última carta
+      game.ultimoJugador = jugador;                                  // actualizar último jugador
+
+      log(t("log.cartaJugadaEnZona", { carta: liberoElegido.nombre, zona: t("ui.zonaRecepcion") }));
+
+      comprobarKinoshita010(jugador, liberoElegido);                 // comprobar Kinoshita P02-010
+
+      // activar efecto nishiRescatado para que Nishinoya P02-005 pueda usar su habilidad
+      game.efectosActivos.push({                                     // añadir efecto
+        tipo: "nishiRescatado",                                      // tipo del efecto
+        expira: game.turno + 1                                       // expira al final del turno
+      });
+      if (modoOnline) enviarEfectos();                               // sincronizar efectos con el rival
+
+      renderMano();                                                  // actualizar mano
+      renderManoRival();                                             // actualizar mano rival
+      renderCampo();                                                 // actualizar campo
+    },
+    {
+      tipo: "evento",
+      id: "HV-P02-083",
+      fases: ["recepcion"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y saca 1 libero <strong>(Li)</strong> del GUTS de recepción para colocarlo como receptor activo.`
+    }
+  ),
   crearCarta("Kurosu Norimune", // ============================================================ P02-084
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {

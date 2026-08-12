@@ -120,7 +120,7 @@ log.noHabilidadMano;Esta carta no tiene habilidad de mano;This card has no hand 
 log.noHabilidadEnFase;No puedes usar esta habilidad en fase de {zona};You cannot use this ability in {zona} phase;Tu ne peux pas utiliser cette capacité en phase {zona};
 log.finta;Finta: el ataque queda fijado en {valor}. Se salta la fase de bloqueo;Feint: attack is set to {valor}. Block phase is skipped;Feinte : l'attaque est fixée à {valor}. La phase de bloc est ignorée;
 log.robarCuandoRival;El rival roba 1 carta por efecto;Rival draws 1 card by effect;Le rival pioche 1 carte par effet;
-log.robarCuandoRivalActivo;Efecto activo: el rival robará 1 carta cada vez que añadas una carta a tu mano;Active effect: rival draws 1 card each time you add a card to your hand;Effet actif : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main;
+log.robarCuandoRivalActivo;Efecto activo: robarás 1 carta cada vez que el rival robe una carta por efectos;Active effect: you will draw 1 card each time the rival draws a card by effects ;tu pioches 1 carte chaque fois que le rival pioche une carte par effets ;
 log.negarRobarActivo;Efecto activo: el rival no podrá robar cartas mediante habilidades el próximo turno;Active effect: rival cannot draw cards through abilities next turn;Effet actif : le rival ne pourra pas piocher de cartes via des capacités au prochain tour;
 log.sinCartasValidas;No hay cartas válidas en la búsqueda;No valid cards found;Aucune carte valide trouvée;
 log.esperandoDescarte;Esperando que el rival descarte una carta;Waiting for rival to discard a card;En attente que le rival se défausse d'une carte;
@@ -152,6 +152,7 @@ log.cara;cara;heads;face;
 log.cruz;cruz;tails;pile;
 log.cartaMovidaEntreGuts;{carta} movida del GUTS de {origen} al GUTS de {destino};{carta} moved from {origen} GUTS to {destino} GUTS;{carta} déplacée du GUTS de {origen} au GUTS de {destino};
 log.activarHabilidad;Activar habilidad;Activate ability;Activer la capacité;
+log.activarHabilidadNombre;Activar habilidad {carta};Activate ability {carta};Activer la capacité {carta};
 log.noActivar;No activar;Don't activate;Ne pas activer;
 log.colocarArribaMazo;Colocar arriba del mazo;Place on top of the deck;Placer au-dessus du deck;
 log.colocarFondoMazo;Colocar al fondo del mazo;Place at the bottom of the deck;Placer au fond du deck;

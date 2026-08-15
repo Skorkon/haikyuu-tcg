@@ -161,3 +161,11 @@ log.cartaAlFondoMazo;{carta} colocada al fondo del mazo;{carta} placed at the bo
 log.colocarEventoZona;Colocar 1 carta de evento de tu mano en tu zona de eventos;Place 1 event card from your hand in your event zone;Placer 1 carte événement de votre main dans votre zone d'événements;
 log.noColocar;No colocar;Don't place;Ne pas placer;
 log.eventoColocadoEnZona;{carta} colocado en la zona de eventos;{carta} placed in the event zone;{carta} placé dans la zone d'événements;
+log.rivalColocaEvento;El rival coloca un evento en su zona de eventos;The rival places an event in their event zone;Le rival place un événement dans sa zone d'événements;
+log.rivalNoColocaEvento;El rival no coloca evento;The rival does not place an event;Le rival ne place pas d'événement;
+log.efectoPersonaje;Efecto {carta}:;Effect {carta}:;Effet {carta} :;
+log.d02011a;+1 al bloqueo de Kuroo Tetsuro. ;+1 to Kuroo Tetsuro's block ;+1 au bloc de Kuroo Tetsuro ;
+log.d02011b;+1 a la recepción de tu receptor. ;+1 to your receiver's reception ;+1 à la réception de ton receveur ;
+log.colocarEnGuts;Colocar en el GUTS de {zona};Place in {zona} GUTS;Placer dans le GUTS de {zona};
+log.cartaAlGuts;{carta} colocada en el GUTS de {zona} desde la mano;{carta} placed in {zona} GUTS from hand;{carta} placée dans le GUTS de {zona} depuis la main;
+log.colocarCartaGutsSiPunto;Efecto activo: si el rival pierde el punto en su siguiente turno, podrás colocar 1 carta de {escuela} de tu mano en una zona de GUTS al inicio del siguiente turno;Active effect: if the rival loses the point on their next turn, you can place 1 {escuela} card from your hand in a GUTS zone at the start of the next turn;Effet actif : si le rival perd le point à son prochain tour, tu pourras placer 1 carte {escuela} de ta main dans une zone GUTS au début du prochain tour;

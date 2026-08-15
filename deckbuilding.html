@@ -919,7 +919,7 @@
 
       info.innerHTML = `
         <h3 style="color:${colorEscuela}">${nombre}</h3>
-        <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''}</div>
+        <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''} · ${c.id}</div>
         ${c.tipo === 'personaje' ? `
           <div class="preview-stats">
             <div class="pstat pstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${c.stats.saque}</strong></div>

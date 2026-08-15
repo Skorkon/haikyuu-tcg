@@ -86,6 +86,16 @@ function enviarJugada(tipo, datos) { // ejemplo: enviarJugada("cartaJugada", { z
   });
 }
 
+function enviarJugadaReactiva(tipo, datos) {                           // mensajes reactivos independientes
+  if (!modoOnline) return;                                             // solo en modo online
+  db.ref("partidas/" + salaActual + "/ultimaJugadaReactiva").set({     // nodo separado en Firebase
+    tipo: tipo,                                                        // tipo de jugada
+    jugador: miNumero,                                                 // quién envía
+    timestamp: Date.now(),                                             // marca de tiempo
+    ...datos                                                           // datos adicionales
+  });
+}
+
 // ── ESCUCHAR JUGADAS DEL RIVAL ────────────────────────────
 function escucharPartida() {
   console.log("escucharPartida iniciado, miNumero:", miNumero);
@@ -96,6 +106,16 @@ function escucharPartida() {
     if (jugada.jugador === miNumero) return;
 
     aplicarJugadaRival(jugada); // aplica la jugada del rival en el tu tablero
+  });
+}
+
+function escucharJugadasReactivas() {                                  // listener para jugadas reactivas
+  db.ref("partidas/" + salaActual + "/ultimaJugadaReactiva").on("value", function(snap) {
+    const jugada = snap.val();                                         // leer datos
+    if (!jugada) return;                                               // ignorar si vacío
+    if (jugada.jugador === miNumero) return;                           // ignorar si es mío
+    console.log("jugadaReactiva recibida:", jugada.tipo);              // debug
+    aplicarJugadaReactivaRival(jugada);                                // aplicar jugada reactiva
   });
 }
 
@@ -378,22 +398,26 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                                     // actualizar campo
       break;
 
-    case "pedirTrashearGuts": // ========================================= PEDIR TRASHEAR GUTS (ej. USHIJIMA)
-      const miJugadorTrashear = game.jugadores[miNumero - 1];                  // jugador local (afectado)
-      const zonaTrashear = jugada.zona;                                       // zona indicada por el rival
-      jugada.cartasIds.forEach(id => {                                        // para cada carta pedida
-        let index = miJugadorTrashear.zonas[zonaTrashear].findIndex(c => c.info?.id === id); // buscar en la zona
-        if (index !== -1) {                                                   // si existe
-          let carta = miJugadorTrashear.zonas[zonaTrashear].splice(index, 1)[0]; // sacar de la zona
-          miJugadorTrashear.trash.push(carta);                                 // enviar al trash
-          log(t("log.cartaTrasheadaDeZona", { carta: carta.nombre, zona: zonaTrashear, jugador: jugador.nombre }));
+    case "pedirTrashearGuts": // ========================================= PEDIR TRASHEAR GUTS
+      const miJugadorTrashear = game.jugadores[miNumero - 1];
+      const zonaTrashear = jugada.zona;
+      jugada.cartasIds.forEach(id => {
+        let index = miJugadorTrashear.zonas[zonaTrashear].findIndex(c => c.info?.id === id);
+        if (index !== -1) {
+          let carta = miJugadorTrashear.zonas[zonaTrashear].splice(index, 1)[0];
+          miJugadorTrashear.trash.push(carta);
+          log("Trasheada " + carta.nombre + " de tu zona de " + zonaTrashear + " por efecto rival.");
         }
       });
 
-      enviarJugada("gutsRivalTrasheado", { zona: zonaTrashear, cartasIds: jugada.cartasIds }); // avisar al rival que ya se aplicó
-      if (modoOnline) enviarTrash(miJugadorTrashear);                        // sincronizar trash
+      enviarJugada("gutsRivalTrasheado", { zona: zonaTrashear, cartasIds: jugada.cartasIds });
+      if (modoOnline) enviarTrash(miJugadorTrashear);
 
-      renderCampo();                                                          // actualizar campo
+      if (zonaTrashear === "eventos") {           // mismo fix preventivo
+        enviarEventos(miJugadorTrashear);
+      }
+
+      renderCampo();
       break;
 
     case "gutsRivalTrasheado": // ============================================ CONFIRMACIÓN TRASHEO
@@ -414,6 +438,54 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                                           // actualizar campo
       break;
 
+    case "cartaDesdeManoAGuts": // ========================================= CARTA DE MANO A GUTS
+      const todasLasCartasManoGuts = inicializarCartas();                     // cargar catálogo
+      const cartaManoGuts = todasLasCartasManoGuts.find(c => c.info?.id === jugada.cartaId); // buscar carta
+      if (!cartaManoGuts) return;                                            // si no existe, ignorar
+
+      const rivalIndiceManoGuts = miNumero === 1 ? 1 : 0;                    // índice del rival
+      const rivalManoGuts = game.jugadores[rivalIndiceManoGuts];             // jugador rival
+
+      cartaManoGuts.zonaActual = jugada.zona;                                // zona destino
+      cartaManoGuts.recienJugada = false;                                    // entra como GUTS
+      rivalManoGuts.zonas[jugada.zona].push(cartaManoGuts);              // añadir al GUTS
+
+      log(t("log.cartaAlGuts", { carta: cartaManoGuts.nombre, zona: jugada.zona }));
+      renderCampo();                                                         // actualizar campo
+      break;
+
+    case "pedirMoverAFondoMazo": // ========================================= PEDIR MOVER AL FONDO DEL MAZO (ej. TAKEDA)
+      const miJugadorFondoMazo = game.jugadores[miNumero - 1];
+      const zonaFondoMazo = jugada.zona;
+      const indexFondoMazo = miJugadorFondoMazo.zonas[zonaFondoMazo]
+        .findIndex(c => c.info?.id === jugada.cartaId);
+      if (indexFondoMazo !== -1) {
+        let carta = miJugadorFondoMazo.zonas[zonaFondoMazo].splice(indexFondoMazo, 1)[0];
+        miJugadorFondoMazo.mazo.push(carta);
+        log("Colocada " + carta.nombre + " al fondo de tu mazo por efecto rival.");
+      }
+
+      enviarJugada("cartaMovidaAFondoMazo", { zona: zonaFondoMazo, cartaId: jugada.cartaId }); // ahora con payload
+      if (modoOnline) enviarMazo();
+
+      // si la zona afectada es la de eventos, hay que re-sincronizarla explícitamente,
+      // porque tiene su propio listener continuo (escucharEventosRival) que si no, sobreescribiría este cambio
+      if (zonaFondoMazo === "eventos") {
+        enviarEventos(miJugadorFondoMazo);
+      }
+
+      renderCampo();
+      break;
+
+      enviarJugada("cartaMovidaAFondoMazo", {});                              // avisar al rival que ya se aplicó
+      if (modoOnline) enviarMazo();                                           // sincronizar conteo de mazo
+
+      renderCampo();                                                          // actualizar campo
+      break;
+
+    case "cartaMovidaAFondoMazo": // ============================================ CONFIRMACIÓN
+      break; // gestionado por el Promise en moverCartaZonaAFondoMazoRival
+
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste
       break;
@@ -426,6 +498,21 @@ function aplicarJugadaRival(jugada) {
 
     default:
       console.log("Jugada desconocida: " + jugada.tipo);
+  }
+}
+
+function aplicarJugadaReactivaRival(jugada) {                          // aplicar jugada reactiva del rival
+  switch (jugada.tipo) {
+    case "robarCartaReactivo":                                         // robar carta reactivo
+      const miJugadorReactivo = game.jugadores[miNumero - 1];          // jugador local
+      robarCarta(miJugadorReactivo, jugada.cantidad);                  // robar en local
+      log("Robas " + jugada.cantidad + " carta(s) por efecto reactivo.");
+      renderMano();                                                    // actualizar mano
+      renderManoRival();                                               // actualizar mano rival
+      renderCampo();                                                   // actualizar campo
+      break;
+    default:
+      console.log("Jugada reactiva desconocida:", jugada.tipo);
   }
 }
 
@@ -541,6 +628,7 @@ function confirmarMulliganOnline() {
         escucharEventosRival();
         escucharMazoPuntosRival()   // escuchar los cambios de el mazo de puntos
         escucharMazoRival()         // escuchar los cambios de el mazo del rival
+        escucharJugadasReactivas(); // escuchar jugadas reactivas
         actualizarFaseUI();         // actualizar el letrero
         renderMano();               // redibujar mano
         renderManoRival()
@@ -619,16 +707,18 @@ function escucharManoRival() {
 function enviarEfectos() {
   if (!modoOnline) return;                                    // solo en modo online
   db.ref("partidas/" + salaActual + "/efectos").set(         // escribir efectos en Firebase
-    JSON.stringify(game.efectosActivos)                       // convertir array a string
+    JSON.stringify({ efectos: game.efectosActivos, turno: game.turno }) // convertir array a string
   );
 }
 
 function escucharEfectos() {
   db.ref("partidas/" + salaActual + "/efectos").on("value", function(snap) {
-    const data = snap.val();                                  // datos recibidos
-    if (!data) return;                                        // ignorar si no hay dato
-    game.efectosActivos = JSON.parse(data);                   // convertir string a array
-    log("Efectos actualizados: " + game.efectosActivos.map(e => e.tipo).join(", ")); // log
+    const data = snap.val();
+    if (!data) return;
+    const parsed = JSON.parse(data);
+    game.efectosActivos = parsed.efectos;                              // actualizar efectos
+    game.turno = parsed.turno;                                         // sincronizar turno
+    log("Efectos actualizados: " + game.efectosActivos.map(e => e.tipo).join(", "));
   });
 }
 

@@ -37,6 +37,7 @@ const I18N = {
             elegirOpcion:     "Elige una opción:",
             cancelar:         "Cancelar",
             volverLobby:      "Volver al lobby",
+            contadorTurno: "Turno {turno}",
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -152,6 +153,7 @@ const I18N = {
             elegirOpcion:     "Choose an option:",
             cancelar:         "Cancel",
             volverLobby:      "Back to lobby",
+            contadorTurno:    "Turn {turno}",
         },
         menu: {
           labelNombre:      "Your name",
@@ -267,6 +269,7 @@ const I18N = {
             elegirOpcion:     "Choisissez une option :",
             cancelar:         "Annuler",
             volverLobby:      "Retour au lobby",
+            contadorTurno:    "Tour {turno}",
         },
         menu: {
           labelNombre:      "Ton nom",

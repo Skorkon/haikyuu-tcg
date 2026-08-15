@@ -138,6 +138,7 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
       zonasProhibidas: info.zonasProhibidas || [],
       activacionMano: info.activacionMano || false,         // cartas jugables desde la mano
       unica: info.unica || false,                           // si la carta tiene la restricción 1 Única
+      faseRobo: info.faseRobo || false,
       personajeDoble: info.personajeDoble || false,         // si es personaje doble
       opcionesDoble: info.opcionesDoble || [],              // opciones de elección para personaje doble
       escuelasDoble: info.escuelasDoble || [],    // escuelas adicionales para el deckbuilder
@@ -163,6 +164,7 @@ function seleccionarCarta(carta) {
 function cambiarJugador(indice = null) {
   game.turno++; // cambiamos de turno
   game.efectosActivos = game.efectosActivos.filter(e => !e.expira || e.expira > game.turno);
+  if (modoOnline) enviarEfectos();
   game.jugadaActual = {saque: null, recepcion: null, pase: null, remate: null, bloqueo: null}; // limpiar jugada
 
   let jugadorAnterior = game.jugadores[game.jugadorActivo];
@@ -184,6 +186,7 @@ function cambiarJugador(indice = null) {
         }
       }
   }
+  console.log("turno actual tras cambiar:", game.turno);
   renderCampo();
   renderMano();
   renderManoRival()
@@ -258,8 +261,8 @@ function limpiarJugada() { // limpiar jugada actual
     limpiarHabilidades(jugador);                           // limpiar habilidades usadas
   });
 
-  // limpiar efectos activos expirados
-  game.efectosActivos = [];                                // limpiar todos los efectos
+  // limpiar efectos activos expirados y conservar solo los efectos marcados explícitamente para sobrevivir al cambio de punto
+  game.efectosActivos = game.efectosActivos.filter(e => e.persisteEntrePuntos === true); 
   if (modoOnline) enviarEfectos();                        // sincronizar efectos con el rival
 }
 // ============================================================================= PERDER UN PUNTO 
@@ -1089,13 +1092,12 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
 
     // ================================================================ // Efectos
     if (esHabilidad && tieneEfecto("robarCuandoRival")) {
-
       let efecto = game.efectosActivos.find(e => e.tipo === "robarCuandoRival");
       let jugadorIndex = game.jugadores.indexOf(jugador);                  // índice del que roba
 
       if (efecto.activadoPor !== jugadorIndex) {                           // si lo activó el rival
         if (modoOnline) {
-          enviarJugada("robarCarta", { cantidad: 1 });                     // avisar al rival que robe
+          enviarJugadaReactiva("robarCartaReactivo", { cantidad: 1 });     // canal reactivo independiente 
           log(t("log.robarCuandoRival"));
         } else {
           let rivalIndex = jugadorIndex === 0 ? 1 : 0;                     // índice del rival
@@ -1691,6 +1693,17 @@ async function jugarEvento() {
     log(t("log.eventoFaseIncorrecta", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;
   }
+  // comprobar que hay un personaje recién colocado en la zona de la fase actual,
+  // salvo eventos de tipo Robo (faseRobo) jugables antes de colocar
+  if (!carta.info?.faseRobo) {
+    let cartaEnFase = jugador.zonas[game.fase]?.at(-1);                    // última carta en la zona de la fase actual
+    if (!cartaEnFase || !cartaEnFase.recienJugada) {                       // si no hay ninguna recién jugada
+      log("Debes colocar antes un personaje en " + t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) + " para jugar este evento.");
+      renderMano();
+      renderManoRival();
+      return;
+    }
+  }
 
   // ==================================================================================================== Efectos
   if (tieneEfecto("negarEventos")) {                                                // si hay algún efecto negarEventos activo
@@ -1853,11 +1866,23 @@ function deseleccionarCarta() {
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
 function actualizarFaseUI() {
+  // comprobar efecto colocarCartaGutsSiPunto: se autoconsume, solo se dispara 1 vez al llegar el saque propio
+  if (game.fase === "saque") {
+    let efecto = game.efectosActivos.find(e =>
+      e.tipo === "colocarCartaGutsSiPunto" && e.activadoPor === game.jugadorActivo
+      );
+    if (efecto) {
+      game.efectosActivos = game.efectosActivos.filter(e => e !== efecto);  // quitarlo para que no se repita
+      let jugadorEfecto = game.jugadores[efecto.activadoPor];               // jugador dueño del efecto
+      colocarCartaEnGutsDesdeMano(jugadorEfecto, efecto.escuela); 
+    }
+  }
+  
   let btnMulligan = document.getElementById("btn-confirmar-mulligan");
   btnMulligan.style.display = game.fase === "mulligan" ? "block" : "none";
   
+  document.getElementById("contador-turno").textContent = t("ui.contadorTurno", { turno: game.turno });
   actualizarContadoresVisual();  
-  
   moverPelota();
   actualizarBotonesAccion();
   actualizarFaseTracker();
@@ -2439,7 +2464,7 @@ function mostrarTooltip(carta, e) {
     <div class="tooltip-imagen" style="background-image:url('img/cartas/${carta.info?.id}.png'); border-bottom: 3px solid ${colorEscuela};"></div>
     <div class="tooltip-info">
       <h3 style="color:${colorEscuela}">${nombre}</h3>
-      <div class="tooltip-meta">${carta.info?.escuela || (carta.info?.tipo === 'evento' ? 'Evento' : '')} ${carta.info?.posicion ? '· ' + carta.info.posicion : ''}</div>
+      <div class="tooltip-meta">${carta.info?.escuela || (carta.info?.tipo === 'evento' ? 'Evento' : '')} ${carta.info?.posicion ? '· ' + carta.info.posicion : ''} · ${carta.info?.id}</div>
       ${infoStats}
       <div class="tooltip-desc">${descripcion ? descripcion.replace(/&quot;/g, '"') : ''}</div>
     </div>
@@ -2583,15 +2608,17 @@ function añadirCartaAMano(jugador, carta) {
   let jugadorIndex = game.jugadores.indexOf(jugador);
   let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
   let rival = game.jugadores[rivalIndex];
-  
-  if (tieneEfecto("robarCuandoRival")) {                               // si efecto activo
-    let efecto = game.efectosActivos.find(e => e.tipo === "robarCuandoRival"); // buscar efecto
-    if (efecto.activadoPor !== jugadorIndex) {                         // si lo activó el rival
+
+  if (tieneEfecto("robarCuandoRival")) {
+    let efecto = game.efectosActivos.find(e => e.tipo === "robarCuandoRival");
+    let jugadorIndex = game.jugadores.indexOf(jugador);
+    if (efecto.activadoPor !== jugadorIndex) {
       if (modoOnline) {
-        enviarJugada("robarCarta", { cantidad: 1 });                   // avisar al rival que robe
+        enviarJugadaReactiva("robarCartaReactivo", { cantidad: 1 });      // canal reactivo independiente (creado para Yamaguchi P02-004)
         log(t("log.robarCuandoRival"));
       } else {
-        robarCarta(game.jugadores[rivalIndex], 1);                     // robar en local
+        let rivalIndex = jugadorIndex === 0 ? 1 : 0;
+        robarCarta(game.jugadores[rivalIndex], 1);
         log(t("log.robarCuandoRival"));
       }
     }
@@ -2606,7 +2633,7 @@ function añadirCartaAMano(jugador, carta) {
         });
       } else {
         mostrarSelectorCartas(                                           // abrir selector sin await
-          "Efecto Oikawa: " + jugador.nombre + " debe descartar 1 carta:",
+          t("log.efectoCarta", { carta: "Oikawa Toru"}),
           jugador.mano
         ).then(cartaElegida => {                                         // cuando elige
           if (!cartaElegida) return;                                     // no debería cancelarse
@@ -2650,10 +2677,10 @@ function potenciarPersonaje(nombrePersonaje, zona, valor) {
 function blockout(nivelBloqueo) {
   game.efectosActivos.push({
     tipo: "blockout",
-    valor: nivelBloqueo, // bloqueo máximo afectado
+    valor: nivelBloqueo,            // bloqueo máximo afectado
     expira: game.turno + 2
   });
-  if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
+  if (modoOnline) enviarEfectos();  // sincronizar efectos con el rival
   log(t("log.blockoutActivo", { valor: nivelBloqueo }));
 }
 function blockoutApoyo() {
@@ -2927,6 +2954,50 @@ function moverCartaAGutsZona(jugador, carta, zonaDestino) {
 
   return true;                                                             // return true: movimiento exitoso
 }
+// ======================================== COLOCAR CARTA DE MANO EN GUTS AL SAQUE
+async function colocarCartaEnGutsDesdeMano(jugador, escuela) { 
+  let elegibles = jugador.mano.filter(c =>                                 // filtrar mano
+    c.info?.tipo === "personaje" && c.info?.escuela === escuela            // solo personajes de la escuela indicada
+  );
+
+  if (elegibles.length === 0) {                                           // si no hay ninguna elegible
+    log(t("log.condicionNoCumplida"));
+    return;
+  }
+
+  let cartaElegida = await mostrarSelectorCartas(                         // abrir selector cancelable
+    t("log.elegirCartaOpcional"),
+    elegibles,
+    true                                                                  // permite cancelar (hasta 1, no obligatorio)
+  );
+  if (!cartaElegida) return;                                              // si cancela, no hacer nada
+
+  let zonas = ["saque", "recepcion", "pase", "remate", "bloqueo"];        // zonas disponibles
+  let eleccionZona = await mostrarEleccion(                               // elegir zona destino
+    zonas.map(z => ({ texto: t("log.colocarEnGuts", { zona: t("ui.zona" + z.charAt(0).toUpperCase() + z.slice(1)) }) }))
+  );
+  let zonaElegida = zonas[eleccionZona];
+
+  let index = jugador.mano.indexOf(cartaElegida);                        // buscar en la mano
+  jugador.mano.splice(index, 1);                                         // sacar de la mano
+  cartaElegida.zonaActual = zonaElegida;                                 // actualizar zona
+  cartaElegida.recienJugada = false;                                     // entra directamente como GUTS
+  cartaElegida.habilidadUsada = false;                                   // habilidad no usada
+  jugador.zonas[zonaElegida].push(cartaElegida);                         // añadir al GUTS de la zona
+
+  log(t("log.cartaAlGuts", { carta: cartaElegida.nombre, zona: zonaElegida }));
+
+  if (modoOnline) {
+    enviarJugada("cartaDesdeManoAGuts", {                                 // avisar al rival
+      zona: zonaElegida,
+      cartaId: cartaElegida.info?.id
+    });
+  }
+
+  renderMano();                                                           // actualizar mano
+  renderManoRival();                                                      // actualizar mano rival
+  renderCampo();                                                          // actualizar campo
+}
 // ======================================== FORZAR DESCARTE RIVAL
 async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
   if (!modoOnline) {                                                   // modo local: selector directo
@@ -2989,6 +3060,18 @@ function motivacionRobar() {                                            // robar
   log(t("log.motivarActivo"));
 }
 
+function colocarCartaGutsSiPunto(escuela) { // activa el efecto autoconsumible para el próximo saque propio
+  game.efectosActivos.push({
+    tipo: "colocarCartaGutsSiPunto",
+    escuela: escuela,
+    activadoPor: game.jugadorActivo,
+    persisteEntrePuntos: true,
+    expira: game.turno + 3
+  });
+  if (modoOnline) enviarEfectos();                                       // sincronizar efectos con el rival
+  log(t("log.colocarCartaGutsSiPunto", { escuela: escuela }));
+}
+
 // ============================================================================
 // ======================================== TRASHEAR GUTS DE UNA ZONA DEL RIVAL
 async function trashearGutsZonaRival(rival, rivalIndex, zona, cartasIds) { 
@@ -3032,6 +3115,47 @@ async function trashearGutsZonaRival(rival, rivalIndex, zona, cartasIds) {
       desbloquearUI();                                                    
       renderCampo();                                                      
       resolve();                                                          
+    });
+  });
+}
+// ======================================== MOVER CARTA DE ZONA DEL RIVAL AL FONDO DE SU MAZO
+async function moverCartaZonaAFondoMazoRival(rival, rivalIndex, zona, cartaId) {
+  if (!modoOnline) {                                                      
+    let index = rival.zonas[zona].findIndex(c => c.info?.id === cartaId); // buscar en la zona
+    if (index !== -1) {                                                   // si existe
+      let cartaMovida = rival.zonas[zona].splice(index, 1)[0];            // sacar de la zona
+      rival.mazo.push(cartaMovida);                                       // colocar al fondo del mazo
+      log(cartaMovida.nombre + " colocada al fondo del mazo de " + rival.nombre + ".");
+    }
+    renderCampo();                                                        // actualizar campo
+    return;
+  }
+
+  // modo online: enviar petición al rival y esperar confirmación
+  log(t("log.esperandoDescarte"));
+  bloquearUI();                                                           // bloquear mientras espera
+  enviarJugada("pedirMoverAFondoMazo", { rivalIndex: rivalIndex, zona: zona, cartaId: cartaId }); // avisar al rival
+
+  await new Promise(resolve => {                                         // esperar respuesta del rival
+    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");       // escuchar Firebase
+    ref.on("value", function(snap) {                                     // cuando cambie
+      let jugada = snap.val();                                           // leer datos
+      if (!jugada) return;                                               // ignorar si vacío
+      if (jugada.tipo !== "cartaMovidaAFondoMazo") return;               // ignorar si no es la respuesta
+      if (jugada.jugador === miNumero) return;                           // ignorar si es mío
+
+      ref.off();                                                         // desactivar listener
+
+      // aplicar en MI vista local del rival la misma carta que él quitó de verdad en su cliente
+      let index = rival.zonas[jugada.zona].findIndex(c => c.info?.id === jugada.cartaId);
+      if (index !== -1) {
+        rival.zonas[jugada.zona].splice(index, 1);                       // sacar de la zona (localmente)
+      }
+
+      log(t("log.rivalDescartaCarta", { jugador: rival.nombre }));
+      desbloquearUI();                                                   // desbloquear tras recibir respuesta
+      renderCampo();                                                     // actualizar campo
+      resolve();                                                         // resolver el Promise
     });
   });
 }
@@ -3462,7 +3586,7 @@ const todasLasCartas = inicializarCartas();
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-/*
+
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-003", "HV-P01-018", "HV-P01-084", "HV-P02-061", "HV-P02-060"].forEach(id => {
@@ -3510,7 +3634,7 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-005", "HV-P02-083", "HV-P02-010"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-005", "HV-P02-083", "HV-P02-080"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -3701,14 +3825,14 @@ mazoPruebaShiratorizawa.forEach(id => {
   }
 });
 // TRASH MULTI ESCUELA 
-["HV-P02-073", "HV-P02-047"].forEach(id => {
+["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
-// MAZO EVENTOS PRUEBAS
+// MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
-  let evento = todasLasCartas.find(c => c.info?.id === "HV-P02-099");
+  let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
   game.jugadores[0].zonas.eventos.push(evento);
   // game.jugadores[1].zonas.eventos.push(evento);
 }
@@ -3763,7 +3887,7 @@ for (let i = 0; i < 7; i++) {
   // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

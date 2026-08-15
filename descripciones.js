@@ -8,7 +8,7 @@ const DESCRIPCIONES = {
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 2</strong>: +2 al remate.",
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 2</strong>: +2 to spike.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS - 2</strong>: +2 à l'attaque."
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 2</strong>: +2 à l'attaque."
   },
   "HV-D01-002": {
     "nombre_es": "",
@@ -16,23 +16,23 @@ const DESCRIPCIONES = {
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: +2 al pase.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : +2 à la passe.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : +2 à la passe."
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : +2 à la passe."
   },
   "HV-D01-003": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> GUTS 1</strong>: Sólo puedes usar esta habilidad si el ataque del rival es igual o inferior a 4. Roba una carta.",
-    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS - 1</strong>: You can only use this ability if the rival's attack is 4 or lower. Draw a card.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloc</span> GUTS - 1</strong> : Tu ne peux utiliser cette capacité que si l'attaque adverse est inférieure ou égale à 4. Pioche une carte."
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS 1</strong>: You can only use this ability if the rival's attack is 4 or lower. Draw a card.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloc</span> GUTS 1</strong> : Tu ne peux utiliser cette capacité que si l'attaque adverse est inférieure ou égale à 4. Pioche une carte."
   },
   "HV-D01-005": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: roba 1 carta y +2 a la recepción.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS - 3</strong>: draw 1 card and +2 to reception.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS - 3</strong> : pioche 1 carte et +2 à la réception."
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: draw 1 card and +2 to reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : pioche 1 carte et +2 à la réception."
   },
   "HV-D01-007": {
     "nombre_es": "",
@@ -63,16 +63,16 @@ const DESCRIPCIONES = {
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong> : +1 al pase. Durante el próximo turno, el rematador rival tendrá -2 al remate.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 2</strong> : +1 to set. During the next turn, the rival spiker will have -2 to spike.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : +1 à la passe. Pendant le prochain tour, l'attaquant adverse aura -2 à l'attaque."
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong> : +1 to set. During the next turn, the rival spiker will have -2 to spike.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : +1 à la passe. Pendant le prochain tour, l'attaquant adverse aura -2 à l'attaque."
   },
   "HV-D02-002": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> GUTS 1</strong>: Si el bloqueo es exitoso : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo Ofensivo (5)</strong></span> : Devuelve un contraataque con potencia de 5.",
-    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS - 1</strong>: If the block is successful: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive Block (5)</strong></span>: Returns a counterattack with power 5.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloc</span> GUTS - 1</strong> : Si le bloc est réussi : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloc Offensif (5)</strong></span> : Renvoie une contre-attaque avec une puissance de 5."
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS 1</strong>: If the block is successful: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive Block (5)</strong></span>: Returns a counterattack with power 5.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloc</span> GUTS 1</strong> : Si le bloc est réussi : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloc Offensif (5)</strong></span> : Renvoie une contre-attaque avec une puissance de 5."
   },
   "HV-D02-003": {
     "nombre_es": "",
@@ -87,16 +87,16 @@ const DESCRIPCIONES = {
     "nombre_en": "",
     "nombre_fr": "",
     "es": "Durante un bloqueo, una vez que jueges un bloqueador central, si esta carta está en tu zona de <strong><span style= color:#c62828>remate</span></strong>, puedes <strong>GUTS 2</strong> de tu zona de remate para desplazar esta carta como bloqueador de apoyo.",
-    "en": "During a block, once you play a middle blocker, if this card is in your <strong><span style= color:#c62828>spike zone</span></strong>, you can <strong>GUTS - 2</strong> from your spike zone to move this card as a support blocker.",
-    "fr": "Pendant un contre, une fois que vous jouez un contreur central, si cette carte est dans votre <strong><span style= color:#c62828>zone d'attaque</span></strong>, vous pouvez <strong>GUTS - 2</strong> depuis votre zone d'attaque pour déplacer cette carte en tant que contreur de soutien."
+    "en": "During a block, once you play a middle blocker, if this card is in your <strong><span style= color:#c62828>spike zone</span></strong>, you can <strong>GUTS 2</strong> from your spike zone to move this card as a support blocker.",
+    "fr": "Pendant un contre, une fois que vous jouez un contreur central, si cette carte est dans votre <strong><span style= color:#c62828>zone d'attaque</span></strong>, vous pouvez <strong>GUTS 2</strong> depuis votre zone d'attaque pour déplacer cette carte en tant que contreur de soutien."
   },
   "HV-D02-009": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Roba 1 carta.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS - 2</strong>: Draw 1 card.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS - 2</strong> : Piochez 1 carte."
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Draw 1 card.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Piochez 1 carte."
   },
   "HV-D02-011": {
     "nombre_es": "¡Las manos al frente, Lev!",
@@ -119,8 +119,8 @@ const DESCRIPCIONES = {
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: +4 al remate. El rival no podrá recibir con un jugador que tenga una recepción de base igual o superior a 6.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS - 3</strong>: +4 to the spike. The opponent cannot receive with a player whose base reception is 6 or higher.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS - 3</strong> : +4 à l'attaque. L'adversaire ne pourra pas recevoir avec un joueur dont la réception de base est égale ou supérieure à 6."
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: +4 to the spike. The opponent cannot receive with a player whose base reception is 6 or higher.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : +4 à l'attaque. L'adversaire ne pourra pas recevoir avec un joueur dont la réception de base est égale ou supérieure à 6."
   },
   "HV-P01-003": {
     "nombre_es": "",
@@ -135,8 +135,8 @@ const DESCRIPCIONES = {
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Revela la primera carta del mazo. Si es <strong><span style= color:#c62828>Hinata Shoyo</span></strong> o <strong><span style= color:#c62828>Ataque amplio</span></strong>, añádela a tu mano. Si no es el caso, envía la carta al fondo de tu mazo. Añade +2 al remate de esta jugada, si el rematador es <strong><span style= color:#c62828>Hinata Shoyo</span></strong>.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 2</strong>: Reveal the top card of the deck. If it is <strong><span style= color:#c62828>Hinata Shoyo</span></strong> or <strong><span style= color:#c62828>Wide attack</span></strong>, add it to your hand. If not, send the card to the bottom of your deck. Add +2 to the spike of this play, if the spiker is <strong><span style= color:#c62828>Hinata Shoyo</span></strong>.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : Révélez la première carte du deck. S'il s'agit de <strong><span style= color:#c62828>Hinata Shoyo</span></strong> ou d'<strong><span style= color:#c62828>Attaque large</span></strong>, ajoutez-la à votre main. Sinon, envoyez la carte au fond de votre deck. Ajoutez +2 à l'attaque de cette action, si l'attaquant est <strong><span style= color:#c62828>Hinata Shoyo</span></strong>."
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Reveal the top card of the deck. If it is <strong><span style= color:#c62828>Hinata Shoyo</span></strong> or <strong><span style= color:#c62828>Wide attack</span></strong>, add it to your hand. If not, send the card to the bottom of your deck. Add +2 to the spike of this play, if the spiker is <strong><span style= color:#c62828>Hinata Shoyo</span></strong>.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Révélez la première carte du deck. S'il s'agit de <strong><span style= color:#c62828>Hinata Shoyo</span></strong> ou d'<strong><span style= color:#c62828>Attaque large</span></strong>, ajoutez-la à votre main. Sinon, envoyez la carte au fond de votre deck. Ajoutez +2 à l'attaque de cette action, si l'attaquant est <strong><span style= color:#c62828>Hinata Shoyo</span></strong>."
   },
   "HV-P01-008": {
     "nombre_es": "",
@@ -144,7 +144,7 @@ const DESCRIPCIONES = {
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> GUTS 2</strong>: Si hay un <strong>Yamaguchi Tadashi</strong> en tu campo, añade +2 al bloqueo. </br>Si el bloqueo es exitoso : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo ofensivo (6)</strong></span> : Devuelve un contraataque con potencia de 6.",
     "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS - 2</strong>: If there is a <strong>Yamaguchi Tadashi</strong> on your field, add +2 to the block. </br>If the block is successful: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive block (6)</strong></span>: Return a counterattack with power 6.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> GUTS - 2</strong> : S'il y a un <strong>Yamaguchi Tadashi</strong> sur votre terrain, ajoutez +2 au contre. </br>Si le contre réussit : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre offensif (6)</strong></span> : Renvoyez une contre-attaque avec une puissance de 6."
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> GUTS 2</strong> : S'il y a un <strong>Yamaguchi Tadashi</strong> sur votre terrain, ajoutez +2 au contre. </br>Si le contre réussit : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre offensif (6)</strong></span> : Renvoyez une contre-attaque avec une puissance de 6."
   },
   "HV-P01-010": {
     "nombre_es": "",
@@ -167,40 +167,40 @@ const DESCRIPCIONES = {
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Roba 1 carta y +1 al pase.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 2</strong>: Draw 1 card and +1 to the set.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : Piochez 1 carte et +1 à la passe."
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Draw 1 card and +1 to the set.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Piochez 1 carte et +1 à la passe."
   },
   "HV-P01-016": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 4</strong>: Si tu colocador es un <strong>colocador (S) de Karasuno</strong>, +2 al remate.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS - 4</strong>: If your setter is a <strong>Karasuno setter (S)</strong>, +2 to the spike.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS - 4</strong> : Si votre passeur est un <strong>passeur (S) de Karasuno</strong>, +2 à l'attaque."
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 4</strong>: If your setter is a <strong>Karasuno setter (S)</strong>, +2 to the spike.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 4</strong> : Si votre passeur est un <strong>passeur (S) de Karasuno</strong>, +2 à l'attaque."
   },
   "HV-P01-018": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 3</strong>: +1 al pase. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes añadir 1 carta de tu zona de eventos a tu mano.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 3</strong>: +1 to the set. If all your characters in play are from <strong>Nekoma</strong>, you may add 1 card from your event zone to your hand.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 3</strong> : +1 à la passe. Si tous vos personnages en jeu sont de <strong>Nekoma</strong>, vous pouvez ajouter 1 carte de votre zone d'événements à votre main."
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 3</strong>: +1 to the set. If all your characters in play are from <strong>Nekoma</strong>, you may add 1 card from your event zone to your hand.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 3</strong> : +1 à la passe. Si tous vos personnages en jeu sont de <strong>Nekoma</strong>, vous pouvez ajouter 1 carte de votre zone d'événements à votre main."
   },
   "HV-P01-019": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "Si tu rematador esta jugada tiene un remate base de 3, puedes gastar <strong>GUTS 2</strong> de <strong><span style=&quot;color:#2e7d32&quot;>pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.",
-    "en": "If your spiker this play has a base spike of 3, you can spend <strong>GUTS - 2</strong> from <strong><span style=&quot;color:#2e7d32&quot;>set</span></strong> to bring a <strong>Nekoma</strong> character from the spike GUTS and add <strong>+2</strong> to its spike.",
-    "fr": "Si votre attaquant sur cette action a une attaque de base de 3, vous pouvez dépenser <strong>GUTS - 2</strong> de <strong><span style=&quot;color:#2e7d32&quot;>passe</span></strong> pour amener un personnage de <strong>Nekoma</strong> depuis le GUTS d'attaque et ajouter <strong>+2</strong> à son attaque."
+    "en": "If your spiker this play has a base spike of 3, you can spend <strong>GUTS 2</strong> from <strong><span style=&quot;color:#2e7d32&quot;>set</span></strong> to bring a <strong>Nekoma</strong> character from the spike GUTS and add <strong>+2</strong> to its spike.",
+    "fr": "Si votre attaquant sur cette action a une attaque de base de 3, vous pouvez dépenser <strong>GUTS 2</strong> de <strong><span style=&quot;color:#2e7d32&quot;>passe</span></strong> pour amener un personnage de <strong>Nekoma</strong> depuis le GUTS d'attaque et ajouter <strong>+2</strong> à son attaque."
   },
   "HV-P01-021": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: +3 al remate. Después, elige una zona de tu campo y añade a tu mano hasta 2 cartas de <strong>Nekoma</strong> del GUTS de esa zona con nombres distintos entre sí.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS - 3</strong>: +3 to the spike. Then, choose a zone on your field and add up to 2 <strong>Nekoma</strong> cards with different names from that zone's GUTS to your hand.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS - 3</strong> : +3 à l'attaque. Ensuite, choisissez une zone de votre terrain et ajoutez à votre main jusqu'à 2 cartes de <strong>Nekoma</strong> du GUTS de cette zone ayant des noms différents entre elles."
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: +3 to the spike. Then, choose a zone on your field and add up to 2 <strong>Nekoma</strong> cards with different names from that zone's GUTS to your hand.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : +3 à l'attaque. Ensuite, choisissez une zone de votre terrain et ajoutez à votre main jusqu'à 2 cartes de <strong>Nekoma</strong> du GUTS de cette zone ayant des noms différents entre elles."
   },
   "HV-P01-023": {
     "nombre_es": "",
@@ -562,10 +562,18 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> If the opponent has 2 or more cards in their event zone, you may place 1 event card from your hand into your event zone as a cost to draw 1 card and add +6 to the block.",
     "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Si l'adversaire a 2 cartes ou plus dans sa zone d'événements, vous pouvez placer 1 carte événement de votre main dans votre zone d'événements comme coût pour piocher 1 carte et ajouter +6 au contre."
   },
+  "HV-P02-004": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Si esta carta está encima de otra carta de <strong>Karasuno</strong> en saque, puedes activar su habilidad. </br>El rival deberá colocar 1 carta de evento de su mano en su zona de eventos. Si no lo hace, durante su siguiente turno, cada vez que el rival añada una carta a su mano por un efecto o habilidad, tú robas 1 carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> If this card is on top of another <strong>Karasuno</strong> card in the serve zone, you may activate its ability. </br>The opponent must place 1 event card from their hand into their event zone. If they do not, during their next turn, whenever the opponent adds a card to their hand through an effect or ability, you draw 1 card.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Si cette carte est par-dessus une autre carte de <strong>Karasuno</strong> en service, vous pouvez activer sa capacité. </br>L'adversaire devra placer 1 carte événement de sa main dans sa zone d'événements. S'il ne le fait pas, pendant son prochain tour, chaque fois que l'adversaire ajoute une carte à sa main grâce à un effet ou une capacité, vous piochez 1 carte."
+  },
   "HV-P02-005": {
     "nombre_es": "",
     "nombre_en": "",
-    "nombre_fr": "HV-P02-005",
+    "nombre_fr": "",
     "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Solo si fue traído por <strong>¡Que me ayuden!!!</strong>, +2 a la recepción y añade 1 <strong>Kinoshita Hisashi</strong> del trash a tu mano.",
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Only if brought in by <strong>Somebody help me!!!</strong>, +2 to the reception and add 1 <strong>Kinoshita Hisashi</strong> from the trash to your hand.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Seulement si amenée par <strong>À l'aide !!!</strong>, +2 à la réception et ajoutez 1 <strong>Kinoshita Hisashi</strong> depuis la défausse à votre main."
@@ -589,7 +597,7 @@ const DESCRIPCIONES = {
   "HV-P02-010": {
     "nombre_es": "",
     "nombre_en": "",
-    "nombre_fr": "HV-P02-010",
+    "nombre_fr": "",
     "es": "Cuando coloques a <strong>Nishinoya Yu</strong> en <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong>, si esta carta está en saque, puedes descartarla para añadir +1 a la recepción de ese Nishinoya.",
     "en": "When you place <strong>Nishinoya Yu</strong> in <strong><span style=&quot;color:#1565c0&quot;>reception</span></strong>, if this card is in the serve zone, you may discard it to add +1 to that Nishinoya's reception.",
     "fr": "Lorsque vous placez <strong>Nishinoya Yu</strong> en <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong>, si cette carte est en zone de service, vous pouvez la défausser pour ajouter +1 à la réception de ce Nishinoya."
@@ -914,6 +922,22 @@ const DESCRIPCIONES = {
     "en": "When placing this card, choose whether its name is <strong>Miya Atsumu</strong> or <strong>Miya Osamu</strong>. The chosen name and position apply permanently.",
     "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Miya Atsumu</strong> ou <strong>Miya Osamu</strong>. Le nom et le poste choisis s'appliquent de façon définitive."
   },
+  "HV-P02-079": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> +1 al parámetro de Ataque de un personaje de <strong>Karasuno</strong> en juego. Durante el próximo turno rival, cuando el rival pierda un punto, puedes colocar hasta 1 carta de personaje de <strong>Karasuno</strong> de tu mano en el GUTS de una zona de tu campo.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> +1 to the Attack parameter of a <strong>Karasuno</strong> character in play. During the opponent's next turn, when the opponent loses a point, you may place up to 1 <strong>Karasuno</strong> character card from your hand into the GUTS of a zone on your field.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> +1 au paramètre d'Attaque d'un personnage de <strong>Karasuno</strong> en jeu. Pendant le prochain tour adverse, lorsque l'adversaire perd un point, vous pouvez placer jusqu'à 1 carte personnage de <strong>Karasuno</strong> de votre main dans le GUTS d'une zone de votre terrain."
+  },
+  "HV-P02-080": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Roba 1 carta. Puedes colocar 1 carta de entrenador de la zona de eventos del rival al fondo del mazo del rival: mira las 3 primeras cartas de tu mazo, revela hasta 1 personaje de <strong>Karasuno</strong> entre ellas y añádela a tu mano. Las cartas no añadidas van al fondo de tu mazo en el orden que elijas.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Draw 1 card. You may place 1 coach card from the opponent's event zone to the bottom of the opponent's deck: look at the top 3 cards of your deck, reveal up to 1 <strong>Karasuno</strong> character among them and add it to your hand. The cards not added go to the bottom of your deck in the order of your choice.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Piochez 1 carte. Vous pouvez placer 1 carte entraîneur de la zone d'événements adverse au fond du deck adverse : regardez les 3 premières cartes de votre deck, révélez jusqu'à 1 personnage de <strong>Karasuno</strong> parmi elles et ajoutez-la à votre main. Les cartes non ajoutées vont au fond de votre deck dans l'ordre de votre choix."
+  },
   "HV-P02-081": {
     "nombre_es": "",
     "nombre_en": "",
@@ -1065,6 +1089,14 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade 1 <strong>Daishou Suguru</strong> de tu descarte a tu mano. Si lo añades, añade hasta 1 carta del GUTS de <strong>Nohebi</strong> de tu campo a tu mano.",
     "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> If you have 4 or fewer cards in hand, add 1 <strong>Daishou Suguru</strong> from your discard pile to your hand. If you add it, add up to 1 <strong>Nohebi</strong> card from your field's GUTS to your hand.",
     "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Si vous avez 4 cartes ou moins en main, ajoutez 1 <strong>Daishou Suguru</strong> depuis votre défausse à votre main. Si vous l'ajoutez, ajoutez jusqu'à 1 carte du GUTS de <strong>Nohebi</strong> de votre terrain à votre main."
+  },
+  "HV-P02-100": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Roba 1 carta y +1 al parámetro activo de tu personaje <strong>Haiba Lev</strong> según la fase.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong><span style=&quot;font-size:0.85em&quot;> : Solo puedes jugar 1 carta con este nombre por turno.</span>",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Draw 1 card and +1 to your <strong>Haiba Lev</strong> character's active parameter according to the phase.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;>: You may only play 1 card with this name per turn.</span>",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Piochez 1 carte et +1 au paramètre actif de votre personnage <strong>Haiba Lev</strong> selon la phase.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour.</span>"
   },
   "HV-PR-003": {
     "nombre_es": "",

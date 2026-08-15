@@ -165,7 +165,15 @@ const TRADUCCIONES = {
       "cartaAlFondoMazo": "{carta} colocada al fondo del mazo",
       "colocarEventoZona": "Colocar 1 carta de evento de tu mano en tu zona de eventos",
       "noColocar": "No colocar",
-      "eventoColocadoEnZona": "{carta} colocado en la zona de eventos"
+      "eventoColocadoEnZona": "{carta} colocado en la zona de eventos",
+      "rivalColocaEvento": "El rival coloca un evento en su zona de eventos",
+      "rivalNoColocaEvento": "El rival no coloca evento",
+      "efectoPersonaje": "Efecto {carta}:",
+      "d02011a": "+1 al bloqueo de Kuroo Tetsuro.",
+      "d02011b": "+1 a la recepción de tu receptor.",
+      "colocarEnGuts": "Colocar en el GUTS de {zona}",
+      "cartaAlGuts": "{carta} colocada en el GUTS de {zona} desde la mano",
+      "colocarCartaGutsSiPunto": "Efecto activo: si el rival pierde el punto en su siguiente turno, podrás colocar 1 carta de {escuela} de tu mano en una zona de GUTS al inicio del siguiente turno"
     }
   },
   "en": {
@@ -331,7 +339,15 @@ const TRADUCCIONES = {
       "cartaAlFondoMazo": "{carta} placed at the bottom of the deck",
       "colocarEventoZona": "Place 1 event card from your hand in your event zone",
       "noColocar": "Don't place",
-      "eventoColocadoEnZona": "{carta} placed in the event zone"
+      "eventoColocadoEnZona": "{carta} placed in the event zone",
+      "rivalColocaEvento": "The rival places an event in their event zone",
+      "rivalNoColocaEvento": "The rival does not place an event",
+      "efectoPersonaje": "Effect {carta}:",
+      "d02011a": "+1 to Kuroo Tetsuro's block",
+      "d02011b": "+1 to your receiver's reception",
+      "colocarEnGuts": "Place in {zona} GUTS",
+      "cartaAlGuts": "{carta} placed in {zona} GUTS from hand",
+      "colocarCartaGutsSiPunto": "Active effect: if the rival loses the point on their next turn, you can place 1 {escuela} card from your hand in a GUTS zone at the start of the next turn"
     }
   },
   "fr": {
@@ -497,7 +513,15 @@ const TRADUCCIONES = {
       "cartaAlFondoMazo": "{carta} placée au fond du deck",
       "colocarEventoZona": "Placer 1 carte événement de votre main dans votre zone d'événements",
       "noColocar": "Ne pas placer",
-      "eventoColocadoEnZona": "{carta} placé dans la zone d'événements"
+      "eventoColocadoEnZona": "{carta} placé dans la zone d'événements",
+      "rivalColocaEvento": "Le rival place un événement dans sa zone d'événements",
+      "rivalNoColocaEvento": "Le rival ne place pas d'événement",
+      "efectoPersonaje": "Effet {carta} :",
+      "d02011a": "+1 au bloc de Kuroo Tetsuro",
+      "d02011b": "+1 à la réception de ton receveur",
+      "colocarEnGuts": "Placer dans le GUTS de {zona}",
+      "cartaAlGuts": "{carta} placée dans le GUTS de {zona} depuis la main",
+      "colocarCartaGutsSiPunto": "Effet actif : si le rival perd le point à son prochain tour, tu pourras placer 1 carte {escuela} de ta main dans une zone GUTS au début du prochain tour"
     }
   },
   "": {
@@ -663,7 +687,15 @@ const TRADUCCIONES = {
       "cartaAlFondoMazo": "",
       "colocarEventoZona": "",
       "noColocar": "",
-      "eventoColocadoEnZona": ""
+      "eventoColocadoEnZona": "",
+      "rivalColocaEvento": "",
+      "rivalNoColocaEvento": "",
+      "efectoPersonaje": "",
+      "d02011a": "",
+      "d02011b": "",
+      "colocarEnGuts": "",
+      "cartaAlGuts": "",
+      "colocarCartaGutsSiPunto": ""
     }
   }
 };

@@ -791,6 +791,21 @@ button {
     animation: flipPapel 0.22s ease-in-out;
   }
 
+  /* --------------------------------------------------------------------------------- CONTADOR TURNO */
+  .contador-turno {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #000000;
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: bold;
+    z-index: 10;
+  }
+
 </style>
 <!----------------------------------------------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------------------------------------- HTML -->
@@ -834,6 +849,7 @@ button {
   </div> <!-- fin panel izquierda -->
 
 <div class="campo-central">
+  <div id="contador-turno" class="contador-turno">Turno 1</div>
   <div id="pelota" style="position:absolute; width:32px; height:32px; z-index:50; transition: all 0.3s ease;">
     <img src="img/pelota.png" alt="pelota" style="width:100%; height:100%; object-fit:contain; filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));">
   </div>

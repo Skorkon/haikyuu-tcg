@@ -648,6 +648,94 @@
       color: #000000;
     }
 
+    /* -------------------- MAZOS PREDEFINIDOS ------------------------- */
+    .predefined-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .pre-deck-card {
+      background: #000000;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.12s, border-color 0.12s;
+    }
+
+    .pre-deck-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .pre-deck-banner {
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pre-deck-body {
+      padding: 14px 16px 16px;
+    }
+
+    .pre-deck-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .pre-deck-desc {
+      font-size: 12px;
+      color: var(--text2);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .pre-deck-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .pre-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .pre-deck-load {
+      width: 100%;
+      padding: 9px;
+      border-radius: 6px;
+      border: 2px solid var(--accent);
+      background: #000000;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pre-deck-load:hover {
+      background: var(--accent);
+      color: #000000;
+    }
+
+
+    #vista-constructor {
+      display: flex;
+      flex-direction: column;
+      flex: 1;              /* ocupa el espacio disponible dentro de .columna-central */
+      overflow: hidden;      /* el scroll real sigue siendo cosa de .catalogue-grid */
+    }
+
   </style>
 </head>
 <body>
@@ -672,63 +760,72 @@
           <button class="tab-btn" id="tab-predefined" onclick="setTab('predefined')" data-i18n="deckbuilder.tabPredefinidos">Decks predefinidos</button>
         </nav>
       </header> <!-- fin cabecera -->
-      <!------------------------ FILTROS ------------------------------------>
-      <div class="filters">
-        <div class="filters-fila1">
-          <div class="search-wrap">
-            <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
-          </div>
-          <select id="filterEscuela">
-            <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
-          </select>
-          <select id="filterPosicion">
-            <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
-            <option value="MB">MB — Middle Blocker</option>
-            <option value="S">S — Setter</option>
-            <option value="WS">WS — Wing Spiker</option>
-            <option value="L">L — Libero</option>
-          </select>
-          <select id="filterRareza">
-            <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
-            <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
-            <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
-            <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
-          </select>
-        </div>
 
-        <div class="filters-fila2">
-          <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
-          <div class="filter-pills">
-            <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
-            <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
-          </div>
-          <span class="separador"></span>
-          <div class="filter-pills">
-            <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
-            <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
-          </div>
-          <span class="separador"></span>
-          <select id="filterStat" class="select-oscuro">
-            <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
-            <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
-            <option value="recepcion" data-i18n="deckbuilder.statRecepcion">Recepción</option>
-            <option value="pase" data-i18n="deckbuilder.statPase">Pase</option>
-            <option value="remate" data-i18n="deckbuilder.statRemate">Remate</option>
-            <option value="bloqueo" data-i18n="deckbuilder.statBloqueo">Bloqueo</option>
-          </select>
-
-            <div class="filter-pills" id="statValuePills">
-              <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
+      <!----------- VISTA CONSTRUCTOR (filtros + catálogo) ------------------>
+      <div id="vista-constructor">
+        <!------------------------ FILTROS ------------------------------------>
+        <div class="filters">
+          <div class="filters-fila1">
+            <div class="search-wrap">
+              <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
             </div>
-        </div>
-      </div> <!-- fin filtros -->
+            <select id="filterEscuela">
+              <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
+            </select>
+            <select id="filterPosicion">
+              <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
+              <option value="MB">MB — Middle Blocker</option>
+              <option value="S">S — Setter</option>
+              <option value="WS">WS — Wing Spiker</option>
+              <option value="L">L — Libero</option>
+            </select>
+            <select id="filterRareza">
+              <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
+              <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
+              <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
+              <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
+            </select>
+          </div>
 
-      <!------------------------ CONTADOR DE RESULTADOS ------------------------------------>
-      <div class="card-count" id="cardCount">Cargando catálogo...</div>
+          <div class="filters-fila2">
+            <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
+            <div class="filter-pills">
+              <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
+              <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
+            </div>
+            <span class="separador"></span>
+            <div class="filter-pills">
+              <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
+              <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
+            </div>
+            <span class="separador"></span>
+            <select id="filterStat" class="select-oscuro">
+              <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
+              <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
+              <option value="recepcion" data-i18n="deckbuilder.statRecepcion">Recepción</option>
+              <option value="pase" data-i18n="deckbuilder.statPase">Pase</option>
+              <option value="remate" data-i18n="deckbuilder.statRemate">Remate</option>
+              <option value="bloqueo" data-i18n="deckbuilder.statBloqueo">Bloqueo</option>
+            </select>
 
-      <!------------------------ GRID DE CARTAS ------------------------------------>
-      <div class="catalogue-grid" id="catalogueGrid"></div>
+              <div class="filter-pills" id="statValuePills">
+                <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
+              </div>
+          </div>
+        </div> <!-- fin filtros -->
 
+        <!------------------------ CONTADOR DE RESULTADOS ------------------------------------>
+        <div class="card-count" id="cardCount">Cargando catálogo...</div>
+
+        <!------------------------ GRID DE CARTAS ------------------------------------>
+        <div class="catalogue-grid" id="catalogueGrid"></div>
+
+      </div> <!-- fin vista constructor -->
+
+        <!------------- VISTA PREDEFINIDOS (nueva, oculta por defecto) --------------->
+      <div id="vista-predefinidos" style="display:none; padding:20px; overflow-y:auto;">
+        <div class="predefined-grid" id="predefinedGrid"></div>
+      </div>
     </div> <!-- fin columna central -->
 
     <!-- COLUMNA DERECHA:  nombre del mazo, estadísticas, lista de cartas del mazo -->
@@ -830,7 +927,9 @@
     function setTab(tab) {
       document.getElementById("tab-builder").classList.toggle("active", tab === "builder");
       document.getElementById("tab-predefined").classList.toggle("active", tab === "predefined");
-      // de momento no cambiamos contenido, solo el estado visual del botón
+      document.getElementById("vista-constructor").style.display = tab === "builder" ? "flex" : "none";
+      document.getElementById("vista-predefinidos").style.display = tab === "predefined" ? "flex" : "none";
+      if (tab === "predefined") renderPredefined();
     }
 
     // ---------------------------------------------- CARTAS ------------------------------------------- 
@@ -1311,6 +1410,94 @@
       };
       reader.readAsText(file);                                // dispara la lectura del archivo como texto (esto activa el onload de arriba)
       event.target.value = '';
+    }
+
+    // =======================================================================================
+    // ==================================================================== MAZOS PREDEFINIDOS
+    const PREDEFINED_DECKS = [
+      { nombre:'Karasuno (D01)', 
+        desc:'El combo de velocidad de Kageyama y Hinata, apoyado por la versatilidad de Karasuno.', 
+        tags:['Karasuno','Combo','Remate'],
+        banner: 'img/predefinidos/karasuno.png',
+        entries:[
+          {id:'HV-D01-001',qty:4},
+          {id:'HV-D01-002',qty:4},
+          {id:'HV-D01-003',qty:3},
+          {id:'HV-D01-004',qty:3},
+          {id:'HV-D01-005',qty:4},
+          {id:'HV-D01-006',qty:3},
+          {id:'HV-D01-007',qty:2},
+          {id:'HV-D01-008',qty:3},
+          {id:'HV-D01-009',qty:3},
+          {id:'HV-D01-010',qty:3},
+          {id:'HV-D01-011',qty:4},
+          {id:'HV-D01-012',qty:4}
+        ]
+      },
+      { nombre:'Nekoma (D02)', 
+        desc:'La defensa de Nekoma en estado puro. Equipo de desgaste con buenas recepciones.', 
+        tags:['Nekoma','Defensa','Bloqueo'],
+        banner: 'img/predefinidos/nekoma.png',
+        entries:[
+          {id:'HV-D02-001',qty:4},
+          {id:'HV-D02-002',qty:4},
+          {id:'HV-D02-003',qty:3},
+          {id:'HV-D02-004',qty:4},
+          {id:'HV-D02-005',qty:3},
+          {id:'HV-D02-006',qty:3},
+          {id:'HV-D02-007',qty:3},
+          {id:'HV-D02-008',qty:3},
+          {id:'HV-D02-009',qty:3},
+          {id:'HV-D02-010',qty:2},
+          {id:'HV-D02-011',qty:4},
+          {id:'HV-D02-012',qty:4}
+        ]
+      },
+      { nombre:'Karasuno (-)', 
+        desc:'Combos versátiles y jugadas diversas.', 
+        tags:['Karasuno','Combo'],
+        banner: 'img/predefinidos/karasuno.png',
+        entries:[
+          {id:'HV-P01-007',qty:2},
+          {id:'HV-D01-002',qty:2},
+          {id:'HV-P01-004',qty:2},
+          {id:'HV-P01-007',qty:2},
+          {id:'HV-P01-002',qty:1},
+          {id:'HV-P01-003',qty:1},
+          {id:'HV-D01-010',qty:2},
+          {id:'HV-P01-016',qty:1},
+          {id:'HV-D01-006',qty:1},
+          {id:'HV-P01-012',qty:2},
+          {id:'HV-D01-005',qty:2},
+          {id:'HV-P01-011',qty:2},
+        ]
+      },
+    ];
+
+    function renderPredefined() {
+      document.getElementById("predefinedGrid").innerHTML = PREDEFINED_DECKS.map((d,i) => `
+        <div class="pre-deck-card">
+          <div class="pre-deck-banner" style="background-image:url('${d.banner}')"></div>
+          <div class="pre-deck-body">
+            <div class="pre-deck-name">${d.nombre}</div>
+            <div class="pre-deck-desc">${d.desc}</div>
+            <div class="pre-deck-tags">${d.tags.map(t=>`<span class="pre-tag">${t}</span>`).join('')}</div>
+            <button class="pre-deck-load" onclick="loadPredefined(${i})">${t("deckbuilder.cargarPredefinido")}</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function loadPredefined(idx) {
+      const pd = PREDEFINED_DECKS[idx];
+      deck = [];
+      pd.entries.forEach(e => { const c = CATALOGUE.find(x => x.id === e.id); if (c) deck.push({carta:c,qty:e.qty}); });
+      currentDeckId = null;
+      document.getElementById('deckNameInput').value = pd.nombre;
+      document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
+      document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
+      deck.forEach(e => refreshThumbBadge(e.carta.id));
+      renderDeckList();
+      setTab('builder');   // ← vuelve a la vista constructor para ver el mazo cargado
     }
 
     // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR

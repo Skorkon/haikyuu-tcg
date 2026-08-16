@@ -52,6 +52,44 @@ document.getElementById("btn-unirse").addEventListener("click", function() {
   document.getElementById("estado-sala").textContent = t("lobby.uniendoPartida") + codigo + "...";
 });
 
+// =============================================================== LISTA DE PARTIDAS ABIERTAS
+function escucharPartidasAbiertas() {
+  db.ref("partidas").on("value", function(snap) {
+    const partidas = snap.val();                             // todas las partidas
+    const lista = document.getElementById("lista-partidas"); // contenedor de la lista
+    lista.innerHTML = "";                                    // limpiar lista
+
+    if (!partidas) {
+      lista.innerHTML = `<p class="sin-partidas">${t("lobby.sinPartidas")}</p>`;
+      return;
+    }
+
+    Object.keys(partidas).forEach(codigo => {
+      const partida = partidas[codigo];
+      if (partida.estado !== "esperando") return;
+
+      const div = document.createElement("div");
+      div.className = "partida-item";
+      div.innerHTML = `
+        <span class="partida-nombre">${partida.jugador1nombre || "Jugador"} (${codigo})</span>
+        <button class="btn-mini" onclick="unirseDesdeLista('${codigo}')">${t("lobby.btnUnirse")}</button>
+      `;
+      lista.appendChild(div);
+    });
+
+    if (lista.innerHTML === "") {
+      lista.innerHTML = `<p class="sin-partidas">${t("lobby.sinPartidas")}</p>`;
+    }
+  });
+}
+
+function unirseDesdeLista(codigo) {
+  if (!miMazo) { alert(t("lobby.alertMazo")); return; }
+  if (!miNombre) { alert(t("lobby.alertMazo")); return; }   
+  inicializarFirebase();                                     // conectar Firebase
+  unirseAPartida(codigo, miMazo);                            // unirse a la partida
+}
+
 // ================================================================ DECKS GUARDADOS (leídos de localStorage, compartidos con el deckbuilder)
 // por comentar
 function llenarListaMazosGuardados() {
@@ -87,3 +125,6 @@ function cargarMazoGuardado(id) {
     "✅ " + miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + " cartas)";
 }
 llenarListaMazosGuardados(); // rellenar el desplegable al cargar la página
+
+inicializarFirebase();                                       // conectar Firebase para escuchar
+escucharPartidasAbiertas();                                  // escuchar partidas abiertas

@@ -52,6 +52,7 @@ function crearPartida(mazo) {
     jugador1nombre: miNombre, // nombre del jugador 1
   });
   console.log("Partida creada: " + codigo);
+  db.ref("partidas/" + codigo).onDisconnect().remove(); // borrar sala si J1 se desconecta
   return codigo;
 }
 
@@ -71,6 +72,8 @@ function unirseAPartida(codigo, mazo) {
     setTimeout(function() {
       window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
     }, 1000);
+  
+  db.ref("partidas/" + codigo).onDisconnect().remove(); // borrar sala si J2 se desconecta
 }
 
 // ============================================================================================================ FLUJO DE JUEGO

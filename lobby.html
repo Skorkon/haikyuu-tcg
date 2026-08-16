@@ -162,6 +162,56 @@
       cursor: pointer;
       outline: none;
     }
+
+    /* ------------------------------- LISTA DE PARTIDAS ------------------------------------- */
+    .partida-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      background: #000000;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+    }
+
+    .partida-nombre {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .partida-item .btn-mini {
+      flex: none;
+      padding: 5px 12px;
+      width: auto;
+    }
+
+    .sin-partidas {
+      font-size: 12px;
+      color: var(--text2);
+      text-align: center;
+      padding: 12px 0;
+    }
+
+    .btn-mini {
+      padding: 7px 4px;
+      border-radius: 6px;
+      border: 2px solid var(--accent);
+      background: #000000;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .btn-mini:hover {
+      background: var(--accent);
+      color: #000000;
+    }
   </style>
 </head>
 

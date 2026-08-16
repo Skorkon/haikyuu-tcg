@@ -70,6 +70,7 @@ const I18N = {
           uniendoPartida:   "Uniéndose a la partida ",
           elegirMazoGuardado: "Elige un mazo guardado...",
           oImportarArchivo:   "...o importa un archivo",
+          sinPartidas:      "No hay partidas abiertas.",
         },
         deckbuilder: {                                    // ← para deckbuilder.html
           tabConstructor:     "Constructor",
@@ -114,6 +115,7 @@ const I18N = {
           errorTotalCartas: "El mazo debe tener exactamente 40 cartas (tienes {total}).",
           errorMaxEventos:  "El mazo no puede tener más de 8 eventos (tienes {eventos}).",
           confirmarEliminar: "¿Seguro que quieres eliminar el mazo \"{nombre}\"?",
+          cargarPredefinido: "Cargar en constructor →",
         }
     },    
     en: {
@@ -186,6 +188,7 @@ const I18N = {
           uniendoPartida:   "Joining match ",
           elegirMazoGuardado: "Choose a saved deck...",
           oImportarArchivo:   "...or import a file",
+          sinPartidas: "No open matches.",
         },
         deckbuilder: {
           tabConstructor:     "Builder",
@@ -230,6 +233,7 @@ const I18N = {
           errorTotalCartas: "The deck must have exactly 40 cards (you have {total}).",
           errorMaxEventos:  "The deck can't have more than 8 events (you have {eventos}).",
           confirmarEliminar: "Are you sure you want to delete the deck \"{nombre}\"?",
+          cargarPredefinido: "Load into builder →",
         }
     },
     fr: {
@@ -302,6 +306,7 @@ const I18N = {
           uniendoPartida:   "Connexion à la partie ",
           elegirMazoGuardado: "Choisis un deck enregistré...",
           oImportarArchivo:   "...ou importe un fichier",
+          sinPartidas: "Aucune partie ouverte.",
         },
         deckbuilder: {
           tabConstructor:     "Constructeur",
@@ -346,6 +351,7 @@ const I18N = {
           errorTotalCartas: "Le deck doit contenir exactement 40 cartes (tu en as {total}).",
           errorMaxEventos:  "Le deck ne peut pas contenir plus de 8 événements (tu en as {eventos}).",
           confirmarEliminar: "Es-tu sûr de vouloir supprimer le deck « {nombre} » ?",
+          cargarPredefinido: "Charger dans le constructeur →",
         }
     }
 };

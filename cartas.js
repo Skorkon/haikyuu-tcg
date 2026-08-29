@@ -7698,6 +7698,862 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al parámetro activo de tu personaje <strong>Haiba Lev</strong> según la fase.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
+  // ===================================================================================================================== P03
+  crearCarta("Hinata Shoyo", // ============================================================== P03-001
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-001",
+      escuela: "Karasuno",
+      posicion: "Recogepelotas",
+      anyo: 1,
+      rareza: "T",
+      zonasProhibidas: ["saque", "recepcion", "pase", "remate", "bloqueo"],
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos. Luego elige:</br> · Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, roba 1 carta.</br> · Si tu zona de eventos tiene 6 cartas o más, añade a tu mano hasta 1 carta de personaje desde tu descarte.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Kindaichi Yutaro", // ============================================================== P03-006
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-006",
+      escuela: "Aoba Jôsai",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
+    }
+  ),
+  crearCarta("Kunimi Akira", // ============================================================== P03-007
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-007",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 3</strong>: Si todos tus personajes son de <strong>Aoba Jôsai</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 o más cartas en tu zona de eventos, roba 1 carta. Si tienes 6 o más, añade +3 a la recepción de esta carta.`
+    }
+  ),
+  crearCarta("Koganegawa Kanji", // ============================================================== P03-009
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 1,
+      bloqueo: 2
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-009",
+      escuela: "Date Kôgyô",
+      posicion: "S",
+      anyo: 1,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Si tu zona de eventos tiene 4 cartas o más, añade +2 al pase de esta carta. Si tiene 6 o más, durante el próximo turno se anula <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch</strong></span> del rival.`
+    }
+  ),
+  crearCarta("Goshiki Tsutomu", // ============================================================== P03-011
+    {
+      saque: 2,
+      recepcion: 3,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-011",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta desde tu mano para hacerla entrar en juego en tu zona de recepción. Si todos tus personajes en juego son de <strong>Shiratorizawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 cartas o más en tu zona de eventos, añade +4 a la recepción de esta carta.`
+    }
+  ),
+
+  crearCarta("Sagae Yuushou", // ============================================================== P03-013
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-013",
+      escuela: "Shiratorizawa",
+      posicion: "Recogepelotas",
+      anyo: 1,
+      rareza: "N",
+      zonasProhibidas: ["saque", "recepcion", "pase", "remate", "bloqueo"],
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 2 cartas superiores de tu mazo y añade hasta 1 carta de personaje a tu mano. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Akakura Kai", // ============================================================== P03-014
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-014",
+      escuela: "Shiratorizawa",
+      posicion: "Recogepelotas",
+      anyo: 1,
+      rareza: "N",
+      zonasProhibidas: ["saque", "recepcion", "pase", "remate", "bloqueo"],
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 3 cartas superiores de tu mazo y añade a tu mano todas las cartas de evento que haya entre ellas. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+
+  crearCarta("Hyakuzawa Yudai", // ============================================================== P03-016
+    {
+      saque: 0,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-016",
+      escuela: "Kakugawa",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "S",
+      descripcion: `Cuando tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> entre en juego, si todos tus personajes en juego son de <strong>Kakugawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y esta carta es tu receptora, puedes pagar 1 GUTS de <strong><span style="color:#1565c0">recepción</span></strong> para usar esta habilidad: añade esta carta a tu mano. </br>Durante este turno, cada vez que entre en juego tu <strong><span style="color:#c62828">Hyakuzawa Yudai</span></strong>, añade +2 al ataque de esa carta.`
+    }
+  ),
+
+  crearCarta("Hoshiumi Kourai", // ============================================================== P03-023
+    {
+      saque: 4,
+      recepcion: 3,
+      pase: 0,
+      remate: 1,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-023",
+      escuela: "Kamomedai",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "T",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong></br>Si todos tus personajes en juego son de <strong>Sub 19</strong>, puedes usar esta habilidad descartando 1 carta de <strong>Sub 19</strong> de tu zona de eventos: añade +3 a uno de los parámetros de esta carta.`
+    }
+  ),
+
+  crearCarta("Komori Motoya", // ============================================================== P03-028
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-028",
+      escuela: "Itachiyama",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "S",
+      descripcion: `Cuando entre en juego tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> de <strong>Sub 19</strong>, si esta carta es tu receptora, puedes usar esta habilidad colocando 1 carta de <strong>Kageyama Tobio</strong> del GUTS de tu zona de <strong><span style="color:#1565c0">recepción</span></strong> encima de esta carta: durante este turno, cada vez que uno de tus personajes entre en juego con <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Ataque de 3 metros (N)</strong></span>, añade +1 al ataque de ese personaje.`
+    }
+  ),
+
+  crearCarta("Chigaya Eikichi", // ============================================================== P03-030
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-030",
+      escuela: "Shinzen",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si todos tus personajes en juego son de <strong>Sub 19</strong> y el ataque del rival es 8 o más.</br>Termina inmediatamente la fase de bloqueo y pasa a tu fase de robo. Además, durante este turno, cada vez que entre en juego tu receptor, añade +2 a la recepción de esa carta.`
+    }
+  ),
+
+  crearCarta("Haiba Lev", // ============================================================== P03-036
+    {
+      saque: 0,
+      recepcion: 2,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-036",
+      escuela: "Nekoma",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
+    }
+  ),
+
+  crearCarta("Inuoka So", // ============================================================== P03-038
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-038",
+      escuela: "Nekoma",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Descarta 1 carta de <strong>Nekoma</strong> de tu mano para +3 al bloqueo de esta carta. Si el rival tiene 2 o menos cartas en la mano, +2 adicional al bloqueo.`
+    }
+  ),
+
+  crearCarta("Miya Osamu", // ============================================================== P03-041
+    {
+      saque: 3,
+      recepcion: 3,
+      pase: 0,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-041",
+      escuela: "Inarizaki",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "S",
+      descripcion: `<strong><span style="color:#c62828">Remate</span></strong> Si esta carta entró en juego mediante una habilidad y tienes 3 cartas o menos en la mano, añade +2 al ataque de esta carta y, durante este turno, sus parámetros no podrán ser reducidos.`
+    }
+  ),
+
+  crearCarta("Suna Rintaro", // ============================================================== P03-044
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-044",
+      escuela: "Inarizaki",
+      posicion: "MB",
+      anyo: 2,
+      rareza: "R",
+      descripcion: `Cuando entre en juego tu personaje de <strong><span style="color:#424242">Bloqueo</span></strong> de <strong>Inarizaki</strong>, si esta carta está en tu zona de remate, puedes usar esta habilidad descartando 1 carta de tu mano: haz que esta carta entre en juego en tu zona de bloqueo como bloqueador de apoyo.`
+    }
+  ),
+  crearCarta("Ojiro Aran", // ============================================================== P03-045
+    {
+      saque: 0,
+      recepcion: 4,
+      pase: 0,
+      remate: 2,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-045",
+      escuela: "Inarizaki",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Descarta 1 carta de <strong>Inarizaki</strong> de tu mano para usar esta habilidad: añade +2 a uno de los parámetros de esta carta.`
+    }
+  ),
+
+  crearCarta("Akagi Michinari", // ============================================================== P03-046
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-046",
+      escuela: "Inarizaki",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si el saque del rival tiene 2 o menos de ataque, roba 1 carta. Si el saque del rival tiene 6 o más de ataque, añade +2 a la recepción de esta carta.`
+    }
+  ),
+
+  crearCarta("Nishinoya Yu", // ============================================================== P03-051
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-051",
+      escuela: "Karasuno",
+      posicion: "Li",
+      anyo: 2,
+      rareza: "N",
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: Si todas las cartas descartadas son de <strong>Karasuno</strong>, añade +2 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 0, resta -3 al ataque del rival.`
+    }
+  ),
+  crearCarta("Tanaka Ryunosuke", // ============================================================== P03-052
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-052",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Coloca 1 carta de tu mano en el fondo de tu mazo para usar esta habilidad: roba 1 carta y añade +5 al saque de esta carta.`
+    }
+  ),
+  crearCarta("Azumane Asahi", // ============================================================== P03-053
+    {
+      saque: 4,
+      recepcion: 2,
+      pase: 0,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-053",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu colocador es <strong><span style="color:#2e7d32">Kageyama Tobio</span></strong>, puedes pagar 3 GUTS para usar esta habilidad: añade +3 al ataque de esta carta. </br>Durante el próximo turno rival, se anula <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo</strong></span>, y cuando entre en juego su bloqueador central, resta -4 al bloqueo de esa carta.`
+    }
+  ),
+  crearCarta("Shimada Makoto", // ============================================================== P03-054
+    {
+      saque: 3,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-054",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: "Adult",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Durante el próximo turno rival, cuando juege un personaje <strong><span style="color:#2e7d32">colocador (S)</span></strong> en <strong><span style="color:#2e7d32">Pase</span></strong> desde su mano, fija el pase de esa carta en 1.`
+    }
+  ),
+
+  crearCarta("Tashiro Hidemi", // ============================================================== P03-056
+    {
+      saque: 0,
+      recepcion: 3,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-056",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: añade a tu mano 1 carta de personaje de <strong>Karasuno</strong> de 3er año desde tu descarte.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Kurokawa Hiroki", // ============================================================== P03-057
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-057",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: null,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: durante este turno, cada vez que entre en juego tu personaje de <strong>Karasuno</strong> de 2º o 3er año, añade +2 a la recepción de esa carta y sus parámetros no podrán ser reducidos.`
+    }
+  ),
+
+  crearCarta("Kotaro Bokuto", // ============================================================== P03-061
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-061",
+      escuela: "Fukurodani",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Descarta 1 <strong>Kotaro Bokuto</strong> de tu mano para usar esta habilidad: roba 1 carta y añade +3 a uno de los parámetros de esta carta.`
+    }
+  ),
+
+  crearCarta("Ushijima Wakatoshi", // ============================================================== P03-067
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-067",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: Añade +4 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 1 o menos, puedes descartar 1 bloqueador de <strong>Shiratorizawa</strong> de tu mano para usar esta habilidad: resta -2 al ataque del rival.`
+    }
+  ),
+
+  crearCarta("Shirabu Kenjiro", // ============================================================== P03-069
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 1,
+      remate: 2,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-069",
+      escuela: "Shiratorizawa",
+      posicion: "S",
+      anyo: 2,
+      rareza: "S",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Roba 1 carta y añade +1 al pase.`
+    }
+  ),
+  crearCarta("Semi Eita", // ============================================================== P03-072
+    {
+      saque: 3,
+      recepcion: 0,
+      pase: 1,
+      remate: 1,
+      bloqueo: 1
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-072",
+      escuela: "Shiratorizawa",
+      posicion: "S",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta entró en juego encima de un personaje de <strong>Shiratorizawa</strong>, añade +3 al saque de esta carta. Durante el próximo turno rival, cada vez que entre en juego un personaje Líbero (Li) receptor rival, resta -1 a la recepción de esa carta.`
+    }
+  ),
+  crearCarta("Ogano Daiki", // ============================================================== P03-073
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-073",
+      escuela: "Shinzen",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Paga 2 GUTS de tu zona de recepción, 2 GUTS de tu zona de pase y 2 GUTS de tu zona de remate para usar esta habilidad: añade +5 al ataque de esta carta. Durante el próximo turno del rival, se anula la habilidad de su bloqueador central.`
+    }
+  ),
+
+  crearCarta("Teradomari Motoki", // ============================================================== P03-075
+    {
+      saque: 2,
+      recepcion: 4,
+      pase: 0,
+      remate: 2,
+      bloqueo: 0
+    },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "personaje",
+      id: "HV-P03-075",
+      escuela: "Tsubakihara",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu colocador es <strong>Echigo Sakae</strong>, paga 3 GUTS para usar esta habilidad: añade +3 a uno de los parámetros de esta carta.`
+    }
+  ),
+
+  crearCarta("Hinata Shoyo · Hyakuzawa Yudai", // ============================================================== P03-077
+    {
+      saque: 0,
+      recepcion: 0,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null, // habilidad gestionada por aplicarPersonajeDoble
+    {
+      tipo: "personaje",
+      id: "HV-P03-077",
+      escuela: "Karasuno",
+      posicion: "Recogepelotas",
+      anyo: 1,
+      rareza: "N",
+      personajeDoble: true,
+      opcionesDoble: [
+        { nombre: "Hinata Shoyo", escuela: "Karasuno", posicion: "Recogepelotas" },
+        { nombre: "Hyakuzawa Yudai", escuela: "Kakugawa", posicion: "WS" }
+      ],
+      escuelasDoble: ["Karasuno", "Kakugawa"],
+      descripcion: `Al colocar esta carta, elige si su nombre es <strong>Hinata Shoyo</strong> o <strong>Hyakuzawa Yudai</strong>. El nombre elegido es válido hasta el final del turno. Esta carta se cuenta como 1 personaje al contar el número de personajes en el campo.`
+    }
+  ),
+  crearCarta("Anahara Takaaki", // ============================================================== P03-078
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P03-078",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Jôzenji",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Mira las 3 primeras cartas de tu mazo y revela hasta 1 carta de personaje de <strong>Jôzenji</strong> o de <strong>Sub 19</strong> de entre ellas para añadirla a tu mano. Las cartas no añadidas van, en el orden que elijas, arriba o al fondo de tu mazo.`
+    }
+  ),
+  crearCarta("Sin un colocador como Kageyama, no encuentro valor en ti", // ============================================================== P03-079
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-079",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Shiratorizawa",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Mira las 5 primeras cartas de tu mazo y añade a tu mano hasta 1 carta de personaje de <strong>Sub 19</strong> con posición <strong>WS</strong>, <strong>MB</strong>, <strong>S</strong> o <strong>Li</strong> de entre ellas. Si la añades, además añade a tu mano hasta 1 carta de personaje <strong>Recogepelotas</strong> de entre las que no añadiste. Las cartas no añadidas van al fondo del mazo en el orden que elijas.`
+    }
+  ),
+  crearCarta("Búscalo", // ============================================================== P03-080
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-080",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Paga 2 GUTS de tu zona de recepción, 2 GUTS de tu zona de pase y 2 GUTS de tu zona de remate para usar esta habilidad: añade a tu mano hasta 2 cartas de tu zona de eventos que no sean <strong>Búscalo</strong>.`
+    }
+  ),
+  crearCarta("La cancha está llena de información", // ============================================================== P03-081
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-081",
+      fases: ["bloqueo", "recepcion", "remate"],
+      escuela: "Karasuno",
+      rareza: "R",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, añade +1 a uno de los parámetros de uno de tus personajes; si tu zona de eventos tiene 8 cartas o más, roba 1 carta adicional.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("¡Vamos a tomárnoslo con calma, Hyakuzawaaa!!", // ============================================================== P03-082
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-082",
+      fases: ["recepcion"],
+      escuela: null, // a ver durante la programación (carta cruzada Karasuno / Kakugawa / Jóvenes de Miyagi)
+      rareza: "R",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. </br>Si tu zona de eventos tiene 4 cartas o más, durante este turno, cada vez que entre en juego tu <strong>Hyakuzawa Yudai</strong> de <strong>Jóvenes de Miyagi</strong>, añade +1 al ataque de esa carta.`
+    }
+  ),
+  crearCarta("Hiyaki Kotaro", // ============================================================== P03-083
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P03-083",
+      fases: ["recepcion"],
+      escuela: null, // categoría "Sub 19" pura, sin escuela fija asociada
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si todos tus personajes en juego son de <strong>Sub 19</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. </br>Además, puedes intercambiar hasta 1 carta de <strong>Sub 19</strong> del GUTS de tu zona de recepción con hasta 1 carta de <strong>Sub 19</strong> del GUTS de tu zona de remate.`
+    }
+  ),
+  crearCarta("Hibarida Fuki", // ============================================================== P03-084
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P03-084",
+      fases: ["recepcion"],
+      escuela: "Selección Nacional de Japón",  // a revisar las traducciones
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si todos tus personajes en juego son de <strong>Sub 19</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. Si tu zona de eventos tiene 2 cartas o menos, añade +1 adicional a la recepción.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("¡Pum!", // ============================================================== P03-085
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-085",
+      fases: ["remate"],
+      escuela: "Kamomedai",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y añade +1 al ataque de un personaje de <strong>Sub 19</strong> en juego. Si ese personaje es <strong>Hoshiumi Kourai</strong>, paga 3 GUTS de tu zona de remate para usar esta habilidad: añade +2 adicional al ataque.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Su juego es bastante inteligente, ¿verdad?", // ============================================================== P03-086
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 }, // A REVISAR EL NOMBRE DE LA CARTA
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-086",
+      fases: ["pase"],
+      escuela: "Inarizaki",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Fija el pase de uno de tus personajes de Pase (S) en 2. Coloca esta carta en el fondo de tu mazo para usar esta habilidad: añade a tu mano hasta 1 carta de tu zona de eventos jugable únicamente en <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong>.`
+    }
+  ),
+  crearCarta("Arrastrado por la destreza de los que le rodean", // ============================================================== P03-087
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-087",
+      fases: ["recepcion", "remate"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si todos tus personajes en juego son de <strong>Karasuno</strong> o todos son de <strong>Sub 19</strong>, roba 1 carta y añade +1 al ataque de uno de tus personajes. Si ese personaje es <strong>Kageyama Tobio</strong>, paga un total de 6 GUTS de tu campo para usar esta habilidad: añade +2 adicional a uno de sus parámetros.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Yamamoto Akane · Haiba Arisa", // ============================================================== P03-088
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "animadora",
+      id: "HV-P03-088",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Nekoma",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade a tu mano 2 cartas de GUTS de <strong>Nekoma</strong> con nombres distintos entre sí, de una de tus zonas. Si las añades, coloca en el fondo de tu mazo hasta 1 carta de personaje de <strong>Nekoma</strong> desde tu descarte.`
+    }
+  ),
+  crearCarta("Nosotros somos la sangre", // ============================================================== P03-089
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-089",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Nekoma",
+      rareza: "R",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Añade a tu mano 1 carta de personaje de <strong>Nekoma</strong> desde tu descarte.`
+    }
+  ),
+  crearCarta("Gracias por enseñarme el voleibol", // ============================================================== P03-090
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-090",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Nekoma",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Añade a tu mano 1 carta de evento de tu zona de eventos que no sea <strong>Gracias por enseñarme el voleibol</strong>.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("No molestes mi saque, niñata escandalosa", // ============================================================== P03-091
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-091",
+      fases: ["saque"],
+      faseRobo: true,
+      escuela: "Inarizaki",
+      rareza: "S",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Roba 1 carta. Si estás en fase de saque y tu sacador es <strong>Miya Atsumu</strong>, fija su saque en 6, y durante este turno, cuando esta carta sea descartada desde tu zona de eventos, roba 1 carta.`
+    }
+  ),
+  crearCarta("La continuación de la desesperación", // ============================================================== P03-093
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-093",
+      fases: ["recepcion"],
+      escuela: "Inarizaki",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 a la recepción</strong> de un personaje de <strong>Inarizaki</strong> en juego. </br>· Haz que hasta 1 carta de <strong>Kita Shinsuke</strong> del GUTS de tu zona de recepción entre en juego en tu zona de recepción.`
+    }
+  ),
+  crearCarta("Shimizu Kiyoko", // ============================================================== P03-094
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "manager",
+      id: "HV-P03-094",
+      fases: ["recepcion"],
+      faseRobo: true,
+      escuela: "Karasuno",
+      rareza: "NP",
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Revela las 3 primeras cartas de tu mazo y añade a tu mano hasta 1 carta de evento de <strong>Karasuno</strong> de entre ellas. Las cartas no añadidas van al fondo del mazo en el orden que elijas. Si añades una carta, además añade esta carta a tu mano.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Ukai Keishin", // ============================================================== P03-095
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "entrenador",
+      id: "HV-P03-095",
+      fases: ["remate"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Añade +1 al ataque de un personaje de <strong>Karasuno</strong> en juego. Si todos tus personajes en juego son de <strong>Karasuno</strong>, paga un total de 6 GUTS de tu campo para usar esta habilidad: roba 2 cartas.`
+    }
+  ),
+  crearCarta("Hinata Natsu", // ============================================================== P03-096
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-096",
+      fases: ["bloqueo", "recepcion", "remate"],
+      escuela: "Karasuno",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y añade +1 a uno de los parámetros de tu <strong>Hinata Shoyo</strong>.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+    }
+  ),
+  crearCarta("Namezu Mai", // ============================================================== P03-097
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      subtipo: "manager",
+      id: "HV-P03-097",
+      fases: ["bloqueo"],
+      escuela: "Date Kôgyô",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Añade a tu mano 2 cartas de personaje de <strong>Date Kôgyô</strong> con nombres distintos entre sí desde tu descarte. Descarta 1 carta de tu mano para usar esta habilidad.`
+    }
+  ),
+  crearCarta("¡¡¡Aplastadlos!!!", // ============================================================== P03-098
+    { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
+    null, // habilidad pendiente de implementar
+    {
+      tipo: "evento",
+      id: "HV-P03-098",
+      fases: ["saque", "bloqueo"],
+      escuela: "Date Kôgyô",
+      rareza: "N",
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si todos tus personajes en juego son de <strong>Date Kôgyô</strong>, roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 al bloqueo</strong> de uno de tus personajes. </br>· Si estás en fase de saque, durante el próximo turno del rival, cada vez que entre en juego su personaje de <strong>Pase (S)</strong> desde su mano, resta <strong>-1 al pase</strong> de esa carta.`
+    }
+  ),
+
+
   // ===================================================================================================================== PROMOS
   crearCarta("Hinata Shoyo", // =============================================================== PR-003
     {

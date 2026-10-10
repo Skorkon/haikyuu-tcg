@@ -7698,6 +7698,8 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al parámetro activo de tu personaje <strong>Haiba Lev</strong> según la fase.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
+
+  /*
   // ===================================================================================================================== P03
   crearCarta("Hinata Shoyo", // ============================================================== P03-001
     {
@@ -8552,7 +8554,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si todos tus personajes en juego son de <strong>Date Kôgyô</strong>, roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 al bloqueo</strong> de uno de tus personajes. </br>· Si estás en fase de saque, durante el próximo turno del rival, cada vez que entre en juego su personaje de <strong>Pase (S)</strong> desde su mano, resta <strong>-1 al pase</strong> de esa carta.`
     }
   ),
-
+*/
 
   // ===================================================================================================================== PROMOS
   crearCarta("Hinata Shoyo", // =============================================================== PR-003

@@ -849,10 +849,10 @@ function iniciarSorteo() {
     const yoGano = sorteo["jugador" + miNumero] > sorteo["jugador" + (miNumero === 1 ? 2 : 1)]; // comparar números
 
     if (yoGano) {                                            // si gano el sorteo
-      log("¡Has ganado el sorteo!");
+      log("You won the toss! Choose who starts!");
       let eleccion = await mostrarEleccion([                 // mostrar opciones
-        { texto: "Saco yo primero" },
-        { texto: "Saca el rival primero" }
+        { texto: "I’ll serve first" },
+        { texto: "Opponent serves first" }
       ]);
 
       const miIndice = miNumero - 1;                               // mi índice

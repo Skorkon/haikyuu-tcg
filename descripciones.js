@@ -306,6 +306,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Add +2 to the set. Then, search for a <strong>Kotaro Bokuto</strong> in your discard pile and add it to your hand.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Ajoutez +2 à la passe. Ensuite, cherchez un <strong>Kotaro Bokuto</strong> dans votre pile de défausse et ajoutez-le à votre main."
   },
+  "HV-P01-047": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Cuando coloques un personaje de <strong>Fukurodani</strong> encima de esta carta en <strong><span style=&quot;color:#c62828&quot;>remate</span></strong>, puedes descartar 1 carta de tu mano para añadir +1 a su remate.",
+    "en": "When you place a <strong>Fukurodani</strong> character on top of this card in <strong><span style=&quot;color:#c62828&quot;>spike</span></strong>, you may discard 1 card from your hand to add +1 to its spike.",
+    "fr": "Lorsque vous placez un personnage de <strong>Fukurodani</strong> par-dessus cette carte en <strong><span style=&quot;color:#c62828&quot;>attaque</span></strong>, vous pouvez défausser 1 carte de votre main pour ajouter +1 à son attaque."
+  },
   "HV-P01-051": {
     "nombre_es": "",
     "nombre_en": "",

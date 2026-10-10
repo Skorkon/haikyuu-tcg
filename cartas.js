@@ -2046,7 +2046,6 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si todos tus personajes en juego son de <strong>Fukurodani</strong> y el número de cartas en el GUTS de remate es impar, +5 al remate.`
     }
   ),
-
   crearCarta("Kotaro Bokuto", // =============================================================== P01-044
     {
       saque: 5,
@@ -2120,6 +2119,25 @@ function inicializarCartas() {
         posicion: "S",
         anyo: 2,
         rareza: "R"
+    }
+  ),
+  crearCarta("Konoha Akinori", // ============================================================== P01-047
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    null, // habilidad gestionada automáticamente en colocarCarta()
+    {
+      tipo: "personaje",
+      id: "HV-P01-047",
+      escuela: "Fukurodani",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "R",
+      descripcion: `Cuando coloques un personaje de <strong>Fukurodani</strong> encima de esta carta en <strong><span style="color:#c62828">remate</span></strong>, puedes descartar 1 carta de tu mano para añadir +1 a su remate.`
     }
   ),
   crearCarta("Konoha Akinori", // ================================================================== P01-048

@@ -866,6 +866,11 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
         jugador.mano.length <= 3) {                                        // y tiene 3 cartas o menos en mano
       aplicarGoshiki051(jugador, carta);
     }
+    // ------------------------------------------------------------------------- Konoha P01-047
+    if (jugador.zonas.remate.at(-2)?.info?.id === "HV-P01-047" &&         // si debajo hay un Konoha P01-047
+        carta.info?.escuela === "Fukurodani") {                           // y el personaje que entra es de Fukurodani
+      aplicarKonoha047(jugador, carta);                                   // lanzar habilidad de Konoha
+    }
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS GENÉRICOS
     // ------------------------------------------------------------------------- EFECTO : DEBILITAR REMATADOR
     if (tieneEfecto("debilitarRematador")) {
@@ -3484,6 +3489,42 @@ async function aplicarBokuto064(jugador, carta) { // ===========================
   renderMano();                                               // actualizar mano
   renderManoRival();                                          // actualizar mano rival
   renderCampo();                                              // actualizar campo
+}
+
+async function aplicarKonoha047(jugador, carta) { // ========================================= KONOHA P01-047
+  // preguntar si quiere activar la habilidad
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidad", { carta: "Konoha Akinori" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
+
+  if (jugador.mano.length === 0) {                                // comprobar que hay cartas en mano
+    log(t("log.sinCartasParaDescartar"));
+    return;                                                       // coste no pagable
+  }
+
+  let cartaDescarte = await mostrarSelectorCartas(                // abrir selector obligatorio
+    t("log.elegirCarta"),
+    jugador.mano                                                  // toda la mano
+  );
+  let index = jugador.mano.indexOf(cartaDescarte);                // buscar en la mano
+  jugador.mano.splice(index, 1);                                  // sacar de la mano
+  jugador.trash.push(cartaDescarte);                              // enviar al trash
+  log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+  game.valorAtaque += 1;                                          // +1 al remate del personaje que entró
+  log(t("log.ataqueAumentado", { valor: 1 }));
+  log(t("log.habilidadActivada", { carta: "Konoha Akinori" }));
+
+  let konoha = jugador.zonas.remate.at(-2);                       // buscar Konoha debajo
+  if (konoha) konoha.habilidadUsada = true;                       // marcar habilidad como usada
+
+  if (modoOnline) enviarTrash(jugador);                           // sincronizar trash
+
+  renderMano();                                                   // actualizar mano
+  renderManoRival();                                              // actualizar mano rival
+  renderCampo();                                                  // actualizar campo
 }
 
 function aplicarGoshiki051(jugador, carta) { // ========================================= GOSHIKI P02-051

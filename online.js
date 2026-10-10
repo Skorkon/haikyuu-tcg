@@ -52,7 +52,6 @@ function crearPartida(mazo) {
     jugador1nombre: miNombre, // nombre del jugador 1
   });
   console.log("Partida creada: " + codigo);
-  db.ref("partidas/" + codigo).onDisconnect().remove(); // borrar sala si J1 se desconecta
   return codigo;
 }
 
@@ -72,8 +71,7 @@ function unirseAPartida(codigo, mazo) {
     setTimeout(function() {
       window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
     }, 1000);
-  
-  db.ref("partidas/" + codigo).onDisconnect().remove(); // borrar sala si J2 se desconecta
+
 }
 
 // ============================================================================================================ FLUJO DE JUEGO
@@ -338,12 +336,12 @@ function aplicarJugadaRival(jugada) {
     }
 
     mostrarEleccion([                                                    // preguntar al jugador local
-      { texto: "Colocar 1 carta de evento en tu zona de eventos." },
-      { texto: "No colocar" }
+      { texto: "Place 1 Event card in your Event Zone" },
+      { texto: "Not place" }
     ]).then(async eleccion => {                                          // cuando elige
       if (eleccion === 0) {                                              // si quiere colocar
         let eventoElegido = await mostrarSelectorCartas(                 // abrir selector
-          "Elige un evento de tu mano para colocar en tu zona de eventos:",
+          "Choose an Event from your hand to place in your Event Zone:",
           eventosEnMano
         );
         if (!eventoElegido) {                                            // si cancela
@@ -605,6 +603,11 @@ function leerParametrosURL() {
   // leer los mazos de Firebase y arrancar
   db.ref("partidas/" + salaActual).once("value", function(snap) {
     const sala = snap.val();
+    if (!sala) {                                               // si la sala no existe
+      alert("This match no longer exists. Return to the lobby.");      // avisar al jugador
+      window.location.href = "lobby.html";                     // volver al lobby
+      return;
+    }
     arrancarPartidaOnline(sala.jugador1mazo, sala.jugador2mazo, sala.jugador1nombre, sala.jugador2nombre);
   });
 }
@@ -612,14 +615,14 @@ function leerParametrosURL() {
 // ── CONFIRMAR MULLIGAN ONLINE ─────────────────────────────
 function confirmarMulliganOnline() {
   db.ref("partidas/" + salaActual + "/mulligan/jugador" + miNumero).set(true);
-  log("Esperando a que el rival confirme su mulligan...");
+  log("Waiting for opponent to confirm their mulligan...");
 
   db.ref("partidas/" + salaActual + "/mulligan").on("value", function(snap) {
     const mulligan = snap.val();
     if (!mulligan) return;
 
     if (mulligan.jugador1 && mulligan.jugador2) {
-      log("¡Ambos jugadores listos! Arrancando partida...");
+      log("Both players ready. Starting match...");
         game.fase = "saque";        // fase inicial
         // game.jugadorActivo = 0;     // el jugador activo ya se decide por sorteo
         document.getElementById("btn-confirmar-mulligan").disabled = false; // desbloquear boton mulligan por si acaso

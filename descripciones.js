@@ -290,6 +290,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 1</strong>: You may only use this ability if all your characters in play are from <strong>Aoba Jôsai</strong> and the opponent has 3 or fewer cards in hand: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Feint (4)</strong></span>: the attack is fixed at 4 and the opponent cannot place blockers this turn.",
     "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 1</strong> : Vous ne pouvez utiliser cette capacité que si tous vos personnages en jeu sont de l'<strong>Aoba Jôsai</strong> et que l'adversaire a 3 cartes ou moins en main : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Feinte (4)</strong></span> : l'attaque est fixée à 4 et l'adversaire ne peut pas placer de contreurs ce tour-ci."
   },
+  "HV-P01-043": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si todos tus personajes en juego son de <strong>Fukurodani</strong> y el número de cartas en el GUTS de remate es impar, +5 al remate.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If all your characters in play are from <strong>Fukurodani</strong> and the number of cards in the spike GUTS is odd, +5 to the spike.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si tous vos personnages en jeu sont de <strong>Fukurodani</strong> et que le nombre de cartes dans le GUTS d'attaque est impair, +5 à l'attaque."
+  },
   "HV-P01-045": {
     "nombre_es": "",
     "nombre_en": "",

@@ -1990,7 +1990,62 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
+  crearCarta("Kotaro Bokuto", // ============================================================== P01-043
+    {
+      saque: 4,
+      recepcion: 2,
+      pase: 0,
+      remate: 0,
+      bloqueo: 1
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {                                  // comprobar que está en remate
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        carta.habilidadUsada = false;                                       // resetear habilidad
+        return false;
+      }
 
+      // comprobar que todos los personajes en juego son de Fukurodani
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),                                         // último sacador
+        jugador.zonas.recepcion.at(-1),                                     // último receptor
+        jugador.zonas.pase.at(-1),                                          // último colocador
+        jugador.zonas.remate.at(-1),                                        // último rematador
+        jugador.zonas.bloqueo.at(-1)                                        // último bloqueador
+      ].filter(c => c !== null && c !== undefined);                         // filtrar zonas vacías
+
+      let todasFukurodani = cartasEnJuego.every(c =>                        // comprobar que todas son Fukurodani
+        c.info?.escuela === "Fukurodani"
+      );
+      if (!todasFukurodani) {                                               // si no todas son Fukurodani
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                                       // resetear habilidad
+        return false;
+      }
+
+      // contar cartas en el GUTS de remate sin contar a Bokuto (todas menos la última)
+      let gutsRemate = jugador.zonas.remate.length - 1;                     // cartas en el GUTS
+      if (gutsRemate % 2 === 0) {                                           // si el número es par
+        log(t("log.condicionNoCumplida"));
+        carta.habilidadUsada = false;                                       // resetear habilidad
+        log(t("log.ataqueAumentado", { valor: 0 }));
+        return false;                                                       // return false: habilidad no ejecutada
+      }
+
+      game.valorAtaque += 5;                                                // +5 al remate
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 5 }));
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-043",
+      escuela: "Fukurodani",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "I",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si todos tus personajes en juego son de <strong>Fukurodani</strong> y el número de cartas en el GUTS de remate es impar, +5 al remate.`
+    }
+  ),
 
   crearCarta("Kotaro Bokuto", // =============================================================== P01-044
     {

@@ -736,6 +736,15 @@
       overflow: hidden;      /* el scroll real sigue siendo cosa de .catalogue-grid */
     }
 
+    .aviso-p03 {
+      background: #000000;
+      border-bottom: 2px solid var(--accent);
+      color: var(--text);
+      font-size: 12px;
+      padding: 6px 20px;
+      flex-shrink: 0;
+    }
+  
   </style>
 </head>
 <body>
@@ -813,6 +822,9 @@
               </div>
           </div>
         </div> <!-- fin filtros -->
+
+        <!------------------------ CARTAS NO PROGRAMADAS P03 ------------------------------------>
+        <div class="aviso-p03" data-i18n="deckbuilder.avisoP03">Cards from the P03 expansion are not programmed yet and don't work in matches.</div>
 
         <!------------------------ CONTADOR DE RESULTADOS ------------------------------------>
         <div class="card-count" id="cardCount">Cargando catálogo...</div>
@@ -935,6 +947,7 @@
     // ---------------------------------------------- CARTAS ------------------------------------------- 
     const CATALOGUE = inicializarCartas();          // carga todas las cartas desde cartas.js
     const imgPath = id => `img/cartas/${id}.png`;   // ruta de la imagen de cada carta
+    const esNoProgramada = c => c.id.startsWith("HV-P03-"); // cartas no programadas por el momento
     function getCardName(c) {                       // nombre de la carta en el idioma activo
       return DESCRIPCIONES?.[c.id]?.["nombre_" + idiomaActivo] || c.nombre;
     }
@@ -1290,6 +1303,12 @@
     function saveDeck() {
       const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
       if (!deck.length) return;
+
+      // Cartas bloqueadas P03
+      if (deck.some(e => esNoProgramada(e.carta))) {
+        alert(t("deckbuilder.errorP03"));
+        return;
+      }
 
       //                                                                  // validaciones antes de guardar
       const total   = deck.reduce((s,e) => s+e.qty, 0);

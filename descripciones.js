@@ -1129,5 +1129,397 @@ const DESCRIPCIONES = {
     "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS - 2</strong>: Roba 1 carta.",
     "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS - 2</strong>: Draw 1 card.",
     "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS - 2</strong> : Piochez 1 carte."
+  },
+  "HV-P03-001": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos. Luego elige:</br> · Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, roba 1 carta.</br> · Si tu zona de eventos tiene 6 cartas o más, añade a tu mano hasta 1 carta de personaje desde tu descarte.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Place this card from your hand into your event zone. Then choose:</br> · If all your characters in play are <strong>Miyagi Youths</strong>, draw 1 card.</br> · If your event zone has 6 or more cards, add up to 1 character card from your discard pile to your hand.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Placez cette carte depuis votre main dans votre zone d'événements. Ensuite, choisissez :</br> · Si tous vos personnages en jeu sont des <strong>Jeunes de Miyagi</strong>, piochez 1 carte.</br> · Si votre zone d'événements contient 6 cartes ou plus, ajoutez à votre main jusqu'à 1 carte personnage depuis votre défausse.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-006": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span>: subtract 2 from the opponent's attack and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est égale ou supérieure à 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : réduisez l'attaque adverse de 2 et passez directement à la phase de réception."
+  },
+  "HV-P03-007": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 3</strong>: Si todos tus personajes son de <strong>Aoba Jôsai</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 o más cartas en tu zona de eventos, roba 1 carta. Si tienes 6 o más, añade +3 a la recepción de esta carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 3</strong>: If all your characters are from <strong>Aoba Jôsai</strong> or all are <strong>Miyagi Youths</strong>, and you have 4 or more cards in your event zone, draw 1 card. If you have 6 or more, add +3 to this card's reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 3</strong> : Si tous vos personnages sont d'<strong>Aoba Jôsai</strong> ou tous sont des <strong>Jeunes de Miyagi</strong>, et que vous avez 4 cartes ou plus dans votre zone d'événements, piochez 1 carte. Si vous en avez 6 ou plus, ajoutez +3 à la réception de cette carte."
+  },
+  "HV-P03-009": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Si tu zona de eventos tiene 4 cartas o más, añade +2 al pase de esta carta. Si tiene 6 o más, durante el próximo turno se anula <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch</strong></span> del rival.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: If your event zone has 4 or more cards, add +2 to this card's set. If it has 6 or more, during the next turn the opponent's <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch</strong></span> is nullified.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Si votre zone d'événements contient 4 cartes ou plus, ajoutez +2 à la passe de cette carte. Si elle en contient 6 ou plus, pendant le prochain tour, le <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch</strong></span> de l'adversaire est annulé."
+  },
+  "HV-P03-011": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Descarta esta carta desde tu mano para hacerla entrar en juego en tu zona de recepción. Si todos tus personajes en juego son de <strong>Shiratorizawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 cartas o más en tu zona de eventos, añade +4 a la recepción de esta carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Discard this card from your hand to make it enter play in your reception zone. If all your characters in play are from <strong>Shiratorizawa</strong> or all are <strong>Miyagi Youths</strong>, and you have 4 or more cards in your event zone, add +4 to this card's reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Défaussez cette carte depuis votre main pour la faire entrer en jeu dans votre zone de réception. Si tous vos personnages en jeu sont du <strong>Shiratorizawa</strong> ou tous sont des <strong>Jeunes de Miyagi</strong>, et que vous avez 4 cartes ou plus dans votre zone d'événements, ajoutez +4 à la réception de cette carte."
+  },
+  "HV-P03-013": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 2 cartas superiores de tu mazo y añade hasta 1 carta de personaje a tu mano. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Place this card from your hand into your event zone: If all your characters in play are <strong>Miyagi Youths</strong>, reveal the top 2 cards of your deck and add up to 1 character card to your hand. The cards not added go to the bottom of the deck in the order of your choice.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Placez cette carte depuis votre main dans votre zone d'événements : Si tous vos personnages en jeu sont des <strong>Jeunes de Miyagi</strong>, révélez les 2 cartes du dessus de votre deck et ajoutez jusqu'à 1 carte personnage à votre main. Les cartes non ajoutées vont au fond du deck dans l'ordre de votre choix.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-014": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 3 cartas superiores de tu mazo y añade a tu mano todas las cartas de evento que haya entre ellas. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Place this card from your hand into your event zone: If all your characters in play are <strong>Miyagi Youths</strong>, reveal the top 3 cards of your deck and add to your hand all event cards among them. The cards not added go to the bottom of the deck in the order of your choice.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Placez cette carte depuis votre main dans votre zone d'événements : Si tous vos personnages en jeu sont des <strong>Jeunes de Miyagi</strong>, révélez les 3 cartes du dessus de votre deck et ajoutez à votre main toutes les cartes événement parmi elles. Les cartes non ajoutées vont au fond du deck dans l'ordre de votre choix.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-016": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Cuando tu personaje de <strong><span style=&quot;color:#2e7d32&quot;>Pase</span></strong> entre en juego, si todos tus personajes en juego son de <strong>Kakugawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y esta carta es tu receptora, puedes pagar 1 GUTS de <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong> para usar esta habilidad: añade esta carta a tu mano. </br>Durante este turno, cada vez que entre en juego tu <strong><span style=&quot;color:#c62828&quot;>Hyakuzawa Yudai</span></strong>, añade +2 al ataque de esa carta.",
+    "en": "When your <strong><span style=&quot;color:#2e7d32&quot;>Set</span></strong> character enters play, if all your characters in play are from <strong>Kakugawa</strong> or all are <strong>Miyagi Youths</strong>, and this card is your receiver, you may pay 1 GUTS from <strong><span style=&quot;color:#1565c0&quot;>reception</span></strong> to use this ability: add this card to your hand. </br>During this turn, whenever your <strong><span style=&quot;color:#c62828&quot;>Hyakuzawa Yudai</span></strong> enters play, add +2 to that card's attack.",
+    "fr": "Lorsque votre personnage de <strong><span style=&quot;color:#2e7d32&quot;>Passe</span></strong> entre en jeu, si tous vos personnages en jeu sont de <strong>Kakugawa</strong> ou tous sont des <strong>Jeunes de Miyagi</strong>, et que cette carte est votre réceptionneur, vous pouvez payer 1 GUTS de <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong> pour utiliser cette capacité : ajoutez cette carte à votre main. </br>Pendant ce tour, chaque fois que votre <strong><span style=&quot;color:#c62828&quot;>Hyakuzawa Yudai</span></strong> entre en jeu, ajoutez +2 à l'attaque de cette carte."
+  },
+  "HV-P03-023": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong></br>Si todos tus personajes en juego son de <strong>Sub 19</strong>, puedes usar esta habilidad descartando 1 carta de <strong>Sub 19</strong> de tu zona de eventos: añade +3 a uno de los parámetros de esta carta.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong></br>If all your characters in play are <strong>Under-19</strong>, you may use this ability by discarding 1 <strong>Under-19</strong> card from your event zone: add +3 to one of this card's parameters.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong></br>Si tous vos personnages en jeu sont des <strong>U19</strong>, vous pouvez utiliser cette capacité en défaussant 1 carte <strong>U19</strong> de votre zone d'événements : ajoutez +3 à l'un des paramètres de cette carte."
+  },
+  "HV-P03-028": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Cuando entre en juego tu personaje de <strong><span style=&quot;color:#2e7d32&quot;>Pase</span></strong> de <strong>Sub 19</strong>, si esta carta es tu receptora, puedes usar esta habilidad colocando 1 carta de <strong>Kageyama Tobio</strong> del GUTS de tu zona de <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong> encima de esta carta: durante este turno, cada vez que uno de tus personajes entre en juego con <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Ataque de 3 metros (N)</strong></span>, añade +1 al ataque de ese personaje.",
+    "en": "When your <strong>Under-19</strong> <strong><span style=&quot;color:#2e7d32&quot;>Set</span></strong> character enters play, if this card is your receiver, you may use this ability by placing 1 <strong>Kageyama Tobio</strong> card from the GUTS of your <strong><span style=&quot;color:#1565c0&quot;>reception</span></strong> zone on top of this card: during this turn, whenever one of your characters enters play with <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>3-Meter Attack (N)</strong></span>, add +1 to that character's attack.",
+    "fr": "Lorsque votre personnage de <strong><span style=&quot;color:#2e7d32&quot;>Passe</span></strong> des <strong>U19</strong> entre en jeu, si cette carte est votre réceptionneur, vous pouvez utiliser cette capacité en plaçant 1 carte <strong>Kageyama Tobio</strong> du GUTS de votre zone de <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong> par-dessus cette carte : pendant ce tour, chaque fois que l'un de vos personnages entre en jeu avec <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Attaque à 3 mètres (N)</strong></span>, ajoutez +1 à l'attaque de ce personnage."
+  },
+  "HV-P03-030": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si todos tus personajes en juego son de <strong>Sub 19</strong> y el ataque del rival es 8 o más.</br>Termina inmediatamente la fase de bloqueo y pasa a tu fase de robo. Además, durante este turno, cada vez que entre en juego tu receptor, añade +2 a la recepción de esa carta.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if all your characters in play are <strong>Under-19</strong> and the opponent's attack is 8 or higher.</br>Immediately end the block phase and move to your draw phase. Also, during this turn, whenever your receiver enters play, add +2 to that card's reception.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si tous vos personnages en jeu sont des <strong>U19</strong> et que l'attaque adverse est de 8 ou plus.</br>Terminez immédiatement la phase de contre et passez à votre phase de pioche. De plus, pendant ce tour, chaque fois que votre réceptionneur entre en jeu, ajoutez +2 à la réception de cette carte."
+  },
+  "HV-P03-036": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may only use this ability if the opponent's attack is 4 or higher. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span>: subtract 2 from the opponent's attack and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous ne pouvez utiliser cette capacité que si l'attaque adverse est égale ou supérieure à 4. </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>One Touch (2)</strong></span> : réduisez l'attaque adverse de 2 et passez directement à la phase de réception."
+  },
+  "HV-P03-038": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Descarta 1 carta de <strong>Nekoma</strong> de tu mano para +3 al bloqueo de esta carta. Si el rival tiene 2 o menos cartas en la mano, +2 adicional al bloqueo.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> Discard 1 <strong>Nekoma</strong> card from your hand for +3 to this card's block. If the opponent has 2 or fewer cards in hand, an additional +2 to the block.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Défaussez 1 carte de <strong>Nekoma</strong> de votre main pour +3 au contre de cette carte. Si l'adversaire a 2 cartes ou moins en main, +2 supplémentaire au contre."
+  },
+  "HV-P03-041": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;color:#c62828&quot;>Remate</span></strong> Si esta carta entró en juego mediante una habilidad y tienes 3 cartas o menos en la mano, añade +2 al ataque de esta carta y, durante este turno, sus parámetros no podrán ser reducidos.",
+    "en": "<strong><span style=&quot;color:#c62828&quot;>Spike</span></strong> If this card entered play through an ability and you have 3 or fewer cards in hand, add +2 to this card's attack and, during this turn, its parameters cannot be reduced.",
+    "fr": "<strong><span style=&quot;color:#c62828&quot;>Attaque</span></strong> Si cette carte est entrée en jeu grâce à une capacité et que vous avez 3 cartes ou moins en main, ajoutez +2 à l'attaque de cette carte et, pendant ce tour, ses paramètres ne peuvent pas être réduits."
+  },
+  "HV-P03-044": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Cuando entre en juego tu personaje de <strong><span style=&quot;color:#424242&quot;>Bloqueo</span></strong> de <strong>Inarizaki</strong>, si esta carta está en tu zona de remate, puedes usar esta habilidad descartando 1 carta de tu mano: haz que esta carta entre en juego en tu zona de bloqueo como bloqueador de apoyo.",
+    "en": "When your <strong>Inarizaki</strong> <strong><span style=&quot;color:#424242&quot;>Block</span></strong> character enters play, if this card is in your spike zone, you may use this ability by discarding 1 card from your hand: make this card enter play in your block zone as a support blocker.",
+    "fr": "Lorsque votre personnage de <strong><span style=&quot;color:#424242&quot;>Contre</span></strong> d'<strong>Inarizaki</strong> entre en jeu, si cette carte est dans votre zone d'attaque, vous pouvez utiliser cette capacité en défaussant 1 carte de votre main : faites entrer cette carte en jeu dans votre zone de contre en tant que contreur de soutien."
+  },
+  "HV-P03-045": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Descarta 1 carta de <strong>Inarizaki</strong> de tu mano para usar esta habilidad: añade +2 a uno de los parámetros de esta carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Discard 1 <strong>Inarizaki</strong> card from your hand to use this ability: add +2 to one of this card's parameters.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Défaussez 1 carte d'<strong>Inarizaki</strong> de votre main pour utiliser cette capacité : ajoutez +2 à l'un des paramètres de cette carte."
+  },
+  "HV-P03-046": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si el saque del rival tiene 2 o menos de ataque, roba 1 carta. Si el saque del rival tiene 6 o más de ataque, añade +2 a la recepción de esta carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If the opponent's serve has an attack of 2 or less, draw 1 card. If the opponent's serve has an attack of 6 or more, add +2 to this card's reception.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si le service adverse a une attaque de 2 ou moins, piochez 1 carte. Si le service adverse a une attaque de 6 ou plus, ajoutez +2 à la réception de cette carte."
+  },
+  "HV-P03-051": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Si todas las cartas descartadas son de <strong>Karasuno</strong>, añade +2 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 0, resta -3 al ataque del rival.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: If all discarded cards are from <strong>Karasuno</strong>, add +2 to this card's reception. If the opponent's attacker has an original attack of 0, subtract -3 from the opponent's attack.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Si toutes les cartes défaussées sont de <strong>Karasuno</strong>, ajoutez +2 à la réception de cette carte. Si l'attaquant adverse a une attaque d'origine de 0, soustrayez -3 à l'attaque adverse."
+  },
+  "HV-P03-052": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Coloca 1 carta de tu mano en el fondo de tu mazo para usar esta habilidad: roba 1 carta y añade +5 al saque de esta carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> Place 1 card from your hand at the bottom of your deck to use this ability: draw 1 card and add +5 to this card's serve.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Placez 1 carte de votre main au fond de votre deck pour utiliser cette capacité : piochez 1 carte et ajoutez +5 au service de cette carte."
+  },
+  "HV-P03-053": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si tu colocador es <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, puedes pagar 3 GUTS para usar esta habilidad: añade +3 al ataque de esta carta. </br>Durante el próximo turno rival, se anula <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo Ofensivo</strong></span>, y cuando entre en juego su bloqueador central, resta -4 al bloqueo de esa carta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If your setter is <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, you may pay 3 GUTS to use this ability: add +3 to this card's attack. </br>During the opponent's next turn, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive Block</strong></span> is nullified, and when their middle blocker enters play, subtract -4 from that card's block.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si votre passeur est <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, vous pouvez payer 3 GUTS pour utiliser cette capacité : ajoutez +3 à l'attaque de cette carte. </br>Pendant le prochain tour adverse, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre Offensif</strong></span> est annulé, et lorsque son contreur central entre en jeu, soustrayez -4 au contre de cette carte."
+  },
+  "HV-P03-054": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Durante el próximo turno rival, cuando juegue un personaje <strong><span style=&quot;color:#2e7d32&quot;>colocador (S)</span></strong> en <strong><span style=&quot;color:#2e7d32&quot;>Pase</span></strong> desde su mano, fija el pase de esa carta en 1.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> During the opponent's next turn, when they play a <strong><span style=&quot;color:#2e7d32&quot;>setter (S)</span></strong> character in <strong><span style=&quot;color:#2e7d32&quot;>Set</span></strong> from their hand, fix that card's set at 1.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Pendant le prochain tour adverse, lorsqu'il joue un personnage <strong><span style=&quot;color:#2e7d32&quot;>passeur (S)</span></strong> en <strong><span style=&quot;color:#2e7d32&quot;>Passe</span></strong> depuis sa main, fixez la passe de cette carte à 1."
+  },
+  "HV-P03-056": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: añade a tu mano 1 carta de personaje de <strong>Karasuno</strong> de 3er año desde tu descarte.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Place this card from your hand into your event zone: add 1 third-year <strong>Karasuno</strong> character card from your discard pile to your hand.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Placez cette carte depuis votre main dans votre zone d'événements : ajoutez à votre main 1 carte personnage de <strong>Karasuno</strong> de 3e année depuis votre défausse.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-057": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: durante este turno, cada vez que entre en juego tu personaje de <strong>Karasuno</strong> de 2º o 3er año, añade +2 a la recepción de esa carta y sus parámetros no podrán ser reducidos.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Place this card from your hand into your event zone: during this turn, whenever your second- or third-year <strong>Karasuno</strong> character enters play, add +2 to that card's reception and its parameters cannot be reduced.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Placez cette carte depuis votre main dans votre zone d'événements : pendant ce tour, chaque fois que votre personnage de <strong>Karasuno</strong> de 2e ou 3e année entre en jeu, ajoutez +2 à la réception de cette carte et ses paramètres ne peuvent pas être réduits."
+  },
+  "HV-P03-061": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Descarta 1 <strong>Kotaro Bokuto</strong> de tu mano para usar esta habilidad: roba 1 carta y añade +3 a uno de los parámetros de esta carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Discard 1 <strong>Kotaro Bokuto</strong> from your hand to use this ability: draw 1 card and add +3 to one of this card's parameters.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Défaussez 1 <strong>Kotaro Bokuto</strong> de votre main pour utiliser cette capacité : piochez 1 carte et ajoutez +3 à l'un des paramètres de cette carte."
+  },
+  "HV-P03-067": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Añade +4 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 1 o menos, puedes descartar 1 bloqueador de <strong>Shiratorizawa</strong> de tu mano para usar esta habilidad: resta -2 al ataque del rival.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: Add +4 to this card's reception. If the opponent's attacker has an original attack of 1 or less, you may discard 1 <strong>Shiratorizawa</strong> blocker from your hand to use this ability: subtract -2 from the opponent's attack.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Ajoutez +4 à la réception de cette carte. Si l'attaquant adverse a une attaque d'origine de 1 ou moins, vous pouvez défausser 1 contreur de <strong>Shiratorizawa</strong> de votre main pour utiliser cette capacité : soustrayez -2 à l'attaque adverse."
+  },
+  "HV-P03-069": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Roba 1 carta y añade +1 al pase.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Draw 1 card and add +1 to the set.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Piochez 1 carte et ajoutez +1 à la passe."
+  },
+  "HV-P03-072": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Si esta carta entró en juego encima de un personaje de <strong>Shiratorizawa</strong>, añade +3 al saque de esta carta. Durante el próximo turno rival, cada vez que entre en juego un personaje Líbero (Li) receptor rival, resta -1 a la recepción de esa carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> If this card entered play on top of a <strong>Shiratorizawa</strong> character, add +3 to this card's serve. During the opponent's next turn, whenever an opposing Libero (Li) receiver character enters play, subtract -1 from that card's reception.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Si cette carte est entrée en jeu par-dessus un personnage de <strong>Shiratorizawa</strong>, ajoutez +3 au service de cette carte. Pendant le prochain tour adverse, chaque fois qu'un personnage Libéro (Li) réceptionneur adverse entre en jeu, soustrayez -1 à la réception de cette carte."
+  },
+  "HV-P03-073": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Paga 2 GUTS de tu zona de recepción, 2 GUTS de tu zona de pase y 2 GUTS de tu zona de remate para usar esta habilidad: añade +5 al ataque de esta carta. Durante el próximo turno del rival, se anula la habilidad de su bloqueador central.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Pay 2 GUTS from your reception zone, 2 GUTS from your set zone, and 2 GUTS from your spike zone to use this ability: add +5 to this card's attack. During the opponent's next turn, the ability of their middle blocker is nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Payez 2 GUTS de votre zone de réception, 2 GUTS de votre zone de passe et 2 GUTS de votre zone d'attaque pour utiliser cette capacité : ajoutez +5 à l'attaque de cette carte. Pendant le prochain tour de l'adversaire, la capacité de son contreur central est annulée."
+  },
+  "HV-P03-075": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si tu colocador es <strong>Echigo Sakae</strong>, paga 3 GUTS para usar esta habilidad: añade +3 a uno de los parámetros de esta carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If your setter is <strong>Echigo Sakae</strong>, pay 3 GUTS to use this ability: add +3 to one of this card's parameters.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si votre passeur est <strong>Echigo Sakae</strong>, payez 3 GUTS pour utiliser cette capacité : ajoutez +3 à l'un des paramètres de cette carte."
+  },
+  "HV-P03-077": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Al colocar esta carta, elige si su nombre es <strong>Hinata Shoyo</strong> o <strong>Hyakuzawa Yudai</strong>. El nombre elegido es válido hasta el final del turno. Esta carta se cuenta como 1 personaje al contar el número de personajes en el campo.",
+    "en": "When placing this card, choose whether its name is <strong>Hinata Shoyo</strong> or <strong>Hyakuzawa Yudai</strong>. The chosen name is valid until the end of the turn. This card counts as 1 character when counting the number of characters on the field.",
+    "fr": "Lorsque vous placez cette carte, choisissez si son nom est <strong>Hinata Shoyo</strong> ou <strong>Hyakuzawa Yudai</strong>. Le nom choisi est valable jusqu'à la fin du tour. Cette carte compte comme 1 personnage lors du décompte des personnages sur le terrain."
+  },
+  "HV-P03-078": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Mira las 3 primeras cartas de tu mazo y revela hasta 1 carta de personaje de <strong>Jôzenji</strong> o de <strong>Sub 19</strong> de entre ellas para añadirla a tu mano. Las cartas no añadidas van, en el orden que elijas, arriba o al fondo de tu mazo.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Look at the top 3 cards of your deck and reveal up to 1 <strong>Jôzenji</strong> or <strong>Under-19</strong> character card among them to add it to your hand. The cards not added go, in the order of your choice, on top of or at the bottom of your deck.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Regardez les 3 premières cartes de votre deck et révélez jusqu'à 1 carte personnage de <strong>Jôzenji</strong> ou des <strong>U19</strong> parmi elles pour l'ajouter à votre main. Les cartes non ajoutées vont, dans l'ordre de votre choix, au-dessus ou au fond de votre deck."
+  },
+  "HV-P03-079": {
+    "nombre_es": "Sin un colocador como Kageyama, no encuentro valor en ti",
+    "nombre_en": "Without a setter like Kageyama, I find no value in you",
+    "nombre_fr": "Sans un passeur comme Kageyama, je ne trouve aucune valeur en toi",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Mira las 5 primeras cartas de tu mazo y añade a tu mano hasta 1 carta de personaje de <strong>Sub 19</strong> con posición <strong>WS</strong>, <strong>MB</strong>, <strong>S</strong> o <strong>Li</strong> de entre ellas. Si la añades, además añade a tu mano hasta 1 carta de personaje <strong>Recogepelotas</strong> de entre las que no añadiste. Las cartas no añadidas van al fondo del mazo en el orden que elijas.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Look at the top 5 cards of your deck and add to your hand up to 1 <strong>Under-19</strong> character card with position <strong>WS</strong>, <strong>MB</strong>, <strong>S</strong> or <strong>Li</strong> from among them. If you add it, also add to your hand up to 1 <strong>Ball Boy</strong> character card from among the ones you did not add. The cards not added go to the bottom of the deck in the order of your choice.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Regardez les 5 premières cartes de votre deck et ajoutez à votre main jusqu'à 1 carte personnage des <strong>U19</strong> avec la position <strong>WS</strong>, <strong>MB</strong>, <strong>S</strong> ou <strong>Li</strong> parmi elles. Si vous l'ajoutez, ajoutez aussi à votre main jusqu'à 1 carte personnage <strong>Ramasseur de balles</strong> parmi celles que vous n'avez pas ajoutées. Les cartes non ajoutées vont au fond du deck dans l'ordre de votre choix."
+  },
+  "HV-P03-080": {
+    "nombre_es": "Búscalo",
+    "nombre_en": "Find it",
+    "nombre_fr": "Trouve-le",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Paga 2 GUTS de tu zona de recepción, 2 GUTS de tu zona de pase y 2 GUTS de tu zona de remate para usar esta habilidad: añade a tu mano hasta 2 cartas de tu zona de eventos que no sean <strong>Búscalo</strong>.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Pay 2 GUTS from your reception zone, 2 GUTS from your set zone, and 2 GUTS from your spike zone to use this ability: add to your hand up to 2 cards from your event zone that are not <strong>Find it</strong>.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Payez 2 GUTS de votre zone de réception, 2 GUTS de votre zone de passe et 2 GUTS de votre zone d'attaque pour utiliser cette capacité : ajoutez à votre main jusqu'à 2 cartes de votre zone d'événements qui ne sont pas <strong>Trouve-le</strong>."
+  },
+  "HV-P03-081": {
+    "nombre_es": "La cancha está llena de información",
+    "nombre_en": "The court is full of information",
+    "nombre_fr": "Le terrain regorge d'informations",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta. Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, añade +1 a uno de los parámetros de uno de tus personajes; si tu zona de eventos tiene 8 cartas o más, roba 1 carta adicional.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card. If all your characters in play are <strong>Miyagi Youths</strong>, add +1 to one of the parameters of one of your characters; if your event zone has 8 or more cards, draw 1 additional card.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte. Si tous vos personnages en jeu sont des <strong>Jeunes de Miyagi</strong>, ajoutez +1 à l'un des paramètres de l'un de vos personnages ; si votre zone d'événements contient 8 cartes ou plus, piochez 1 carte supplémentaire.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-082": {
+    "nombre_es": "¡Vamos a tomárnoslo con calma, Hyakuzawaaa!!",
+    "nombre_en": "Let's take it easy, Hyakuzawaaa!!",
+    "nombre_fr": "Prenons ça tranquillement, Hyakuzawaaa !!",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. </br>Si tu zona de eventos tiene 4 cartas o más, durante este turno, cada vez que entre en juego tu <strong>Hyakuzawa Yudai</strong> de <strong>Jóvenes de Miyagi</strong>, añade +1 al ataque de esa carta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If all your characters in play are <strong>Miyagi Youths</strong>, draw 1 card and add +1 to the reception of one of your characters. </br>If your event zone has 4 or more cards, during this turn, whenever your <strong>Miyagi Youths</strong> <strong>Hyakuzawa Yudai</strong> enters play, add +1 to that card's attack.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si tous vos personnages en jeu sont des <strong>Jeunes de Miyagi</strong>, piochez 1 carte et ajoutez +1 à la réception de l'un de vos personnages. </br>Si votre zone d'événements contient 4 cartes ou plus, pendant ce tour, chaque fois que votre <strong>Hyakuzawa Yudai</strong> des <strong>Jeunes de Miyagi</strong> entre en jeu, ajoutez +1 à l'attaque de cette carte."
+  },
+  "HV-P03-083": {
+    "nombre_es": "Hiyaki Kotaro",
+    "nombre_en": "Hiyaki Kotaro",
+    "nombre_fr": "Hiyaki Kotaro",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si todos tus personajes en juego son de <strong>Sub 19</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. </br>Además, puedes intercambiar hasta 1 carta de <strong>Sub 19</strong> del GUTS de tu zona de recepción con hasta 1 carta de <strong>Sub 19</strong> del GUTS de tu zona de remate.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If all your characters in play are <strong>Under-19</strong>, draw 1 card and add +1 to the reception of one of your characters. </br>Also, you may swap up to 1 <strong>Under-19</strong> card from the GUTS of your reception zone with up to 1 <strong>Under-19</strong> card from the GUTS of your spike zone.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si tous vos personnages en jeu sont des <strong>U19</strong>, piochez 1 carte et ajoutez +1 à la réception de l'un de vos personnages. </br>De plus, vous pouvez échanger jusqu'à 1 carte <strong>U19</strong> du GUTS de votre zone de réception avec jusqu'à 1 carte <strong>U19</strong> du GUTS de votre zone d'attaque."
+  },
+  "HV-P03-084": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si todos tus personajes en juego son de <strong>Sub 19</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. Si tu zona de eventos tiene 2 cartas o menos, añade +1 adicional a la recepción.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If all your characters in play are <strong>Under-19</strong>, draw 1 card and add +1 to the reception of one of your characters. If your event zone has 2 or fewer cards, add an additional +1 to the reception.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si tous vos personnages en jeu sont des <strong>U19</strong>, piochez 1 carte et ajoutez +1 à la réception de l'un de vos personnages. Si votre zone d'événements contient 2 cartes ou moins, ajoutez +1 supplémentaire à la réception.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-085": {
+    "nombre_es": "¡Pum!",
+    "nombre_en": "Boom!",
+    "nombre_fr": "Boum !",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y añade +1 al ataque de un personaje de <strong>Sub 19</strong> en juego. Si ese personaje es <strong>Hoshiumi Kourai</strong>, paga 3 GUTS de tu zona de remate para usar esta habilidad: añade +2 adicional al ataque.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and add +1 to the attack of an <strong>Under-19</strong> character in play. If that character is <strong>Hoshiumi Kourai</strong>, pay 3 GUTS from your spike zone to use this ability: add an additional +2 to the attack.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et ajoutez +1 à l'attaque d'un personnage des <strong>U19</strong> en jeu. Si ce personnage est <strong>Hoshiumi Kourai</strong>, payez 3 GUTS de votre zone d'attaque pour utiliser cette capacité : ajoutez +2 supplémentaire à l'attaque.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-086": {
+    "nombre_es": "Su juego es bastante inteligente, ¿verdad?",
+    "nombre_en": "Their play is pretty smart, isn't it?",
+    "nombre_fr": "Leur jeu est plutôt malin, n'est-ce pas ?",
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Fija el pase de uno de tus personajes de Pase (S) en 2. Coloca esta carta en el fondo de tu mazo para usar esta habilidad: añade a tu mano hasta 1 carta de tu zona de eventos jugable únicamente en <strong><span style=&quot;color:#c62828&quot;>Remate</span></strong>.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> Fix the set of one of your Set (S) characters at 2. Place this card at the bottom of your deck to use this ability: add to your hand up to 1 card from your event zone that is playable only in <strong><span style=&quot;color:#c62828&quot;>Spike</span></strong>.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Fixez la passe de l'un de vos personnages de Passe (S) à 2. Placez cette carte au fond de votre deck pour utiliser cette capacité : ajoutez à votre main jusqu'à 1 carte de votre zone d'événements jouable uniquement en <strong><span style=&quot;color:#c62828&quot;>Attaque</span></strong>."
+  },
+  "HV-P03-087": {
+    "nombre_es": "Arrastrado por la destreza de los que le rodean",
+    "nombre_en": "Swept along by the skill of those around him",
+    "nombre_fr": "Porté par l'habileté de ceux qui l'entourent",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si todos tus personajes en juego son de <strong>Karasuno</strong> o todos son de <strong>Sub 19</strong>, roba 1 carta y añade +1 al ataque de uno de tus personajes. Si ese personaje es <strong>Kageyama Tobio</strong>, paga un total de 6 GUTS de tu campo para usar esta habilidad: añade +2 adicional a uno de sus parámetros.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If all your characters in play are from <strong>Karasuno</strong> or all are <strong>Under-19</strong>, draw 1 card and add +1 to the attack of one of your characters. If that character is <strong>Kageyama Tobio</strong>, pay a total of 6 GUTS from your field to use this ability: add an additional +2 to one of its parameters.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si tous vos personnages en jeu sont de <strong>Karasuno</strong> ou tous sont des <strong>U19</strong>, piochez 1 carte et ajoutez +1 à l'attaque de l'un de vos personnages. Si ce personnage est <strong>Kageyama Tobio</strong>, payez un total de 6 GUTS de votre terrain pour utiliser cette capacité : ajoutez +2 supplémentaire à l'un de ses paramètres.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-088": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade a tu mano 2 cartas de GUTS de <strong>Nekoma</strong> con nombres distintos entre sí, de una de tus zonas. Si las añades, coloca en el fondo de tu mazo hasta 1 carta de personaje de <strong>Nekoma</strong> desde tu descarte.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> If you have 4 or fewer cards in hand, add to your hand 2 <strong>Nekoma</strong> GUTS cards with different names from one of your zones. If you add them, place up to 1 <strong>Nekoma</strong> character card from your discard pile at the bottom of your deck.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Si vous avez 4 cartes ou moins en main, ajoutez à votre main 2 cartes du GUTS de <strong>Nekoma</strong> avec des noms différents entre elles, depuis l'une de vos zones. Si vous les ajoutez, placez au fond de votre deck jusqu'à 1 carte personnage de <strong>Nekoma</strong> depuis votre défausse."
+  },
+  "HV-P03-089": {
+    "nombre_es": "Nosotros somos la sangre",
+    "nombre_en": "We are the blood",
+    "nombre_fr": "Nous sommes le sang",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Añade a tu mano 1 carta de personaje de <strong>Nekoma</strong> desde tu descarte.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Add 1 <strong>Nekoma</strong> character card from your discard pile to your hand.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Ajoutez à votre main 1 carte personnage de <strong>Nekoma</strong> depuis votre défausse."
+  },
+  "HV-P03-090": {
+    "nombre_es": "Gracias por enseñarme el voleibol",
+    "nombre_en": "Thank you for teaching me volleyball",
+    "nombre_fr": "Merci de m'avoir appris le volley-ball",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Añade a tu mano 1 carta de evento de tu zona de eventos que no sea <strong>Gracias por enseñarme el voleibol</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Add 1 event card from your event zone that is not <strong>Thank you for teaching me volleyball</strong> to your hand.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Ajoutez à votre main 1 carte événement de votre zone d'événements qui n'est pas <strong>Merci de m'avoir appris le volley-ball</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-091": {
+    "nombre_es": "No molestes mi saque, niñata escandalosa",
+    "nombre_en": "Don't disturb my serve, you noisy brat",
+    "nombre_fr": "Ne dérange pas mon service, petite gamine bruyante",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Roba 1 carta. Si estás en fase de saque y tu sacador es <strong>Miya Atsumu</strong>, fija su saque en 6, y durante este turno, cuando esta carta sea descartada desde tu zona de eventos, roba 1 carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Draw 1 card. If you are in the serve phase and your server is <strong>Miya Atsumu</strong>, fix his serve at 6, and during this turn, when this card is discarded from your event zone, draw 1 card.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Piochez 1 carte. Si vous êtes en phase de service et que votre serveur est <strong>Miya Atsumu</strong>, fixez son service à 6, et pendant ce tour, lorsque cette carte est défaussée de votre zone d'événements, piochez 1 carte."
+  },
+  "HV-P03-093": {
+    "nombre_es": "La continuación de la desesperación",
+    "nombre_en": "The continuation of despair",
+    "nombre_fr": "La suite du désespoir",
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 a la recepción</strong> de un personaje de <strong>Inarizaki</strong> en juego. </br>· Haz que hasta 1 carta de <strong>Kita Shinsuke</strong> del GUTS de tu zona de recepción entre en juego en tu zona de recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> Draw 1 card. Choose one of the following options: </br><strong>· +1 to the reception</strong> of an <strong>Inarizaki</strong> character in play. </br>· Make up to 1 <strong>Kita Shinsuke</strong> card from the GUTS of your reception zone enter play in your reception zone.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Piochez 1 carte. Choisissez l'une des options suivantes : </br><strong>· +1 à la réception</strong> d'un personnage d'<strong>Inarizaki</strong> en jeu. </br>· Faites entrer en jeu dans votre zone de réception jusqu'à 1 carte <strong>Kita Shinsuke</strong> du GUTS de votre zone de réception."
+  },
+  "HV-P03-094": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Revela las 3 primeras cartas de tu mazo y añade a tu mano hasta 1 carta de evento de <strong>Karasuno</strong> de entre ellas. Las cartas no añadidas van al fondo del mazo en el orden que elijas. Si añades una carta, además añade esta carta a tu mano.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> Reveal the top 3 cards of your deck and add to your hand up to 1 <strong>Karasuno</strong> event card from among them. The cards not added go to the bottom of the deck in the order of your choice. If you add a card, also add this card to your hand.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Révélez les 3 premières cartes de votre deck et ajoutez à votre main jusqu'à 1 carte événement de <strong>Karasuno</strong> parmi elles. Les cartes non ajoutées vont au fond du deck dans l'ordre de votre choix. Si vous ajoutez une carte, ajoutez également cette carte à votre main.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-095": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Añade +1 al ataque de un personaje de <strong>Karasuno</strong> en juego. Si todos tus personajes en juego son de <strong>Karasuno</strong>, paga un total de 6 GUTS de tu campo para usar esta habilidad: roba 2 cartas.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Add +1 to the attack of a <strong>Karasuno</strong> character in play. If all your characters in play are from <strong>Karasuno</strong>, pay a total of 6 GUTS from your field to use this ability: draw 2 cards.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Ajoutez +1 à l'attaque d'un personnage de <strong>Karasuno</strong> en jeu. Si tous vos personnages en jeu sont de <strong>Karasuno</strong>, payez un total de 6 GUTS de votre terrain pour utiliser cette capacité : piochez 2 cartes."
+  },
+  "HV-P03-096": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 1 carta y añade +1 a uno de los parámetros de tu <strong>Hinata Shoyo</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 1 card and add +1 to one of the parameters of your <strong>Hinata Shoyo</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> <span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 1 carte et ajoutez +1 à l'un des paramètres de votre <strong>Hinata Shoyo</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
+  },
+  "HV-P03-098": {
+    "nombre_es": "¡¡¡Aplastadlos!!!",
+    "nombre_en": "Crush them!!!",
+    "nombre_fr": "Écrasez-les !!!",
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span> <span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Si todos tus personajes en juego son de <strong>Date Kôgyô</strong>, roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 al bloqueo</strong> de uno de tus personajes. </br>· Si estás en fase de saque, durante el próximo turno del rival, cada vez que entre en juego su personaje de <strong>Pase (S)</strong> desde su mano, resta <strong>-1 al pase</strong> de esa carta.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span> <span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> If all your characters in play are from <strong>Date Kôgyô</strong>, draw 1 card. Choose one of the following options: </br><strong>· +1 to the block</strong> of one of your characters. </br>· If you are in the serve phase, during the opponent's next turn, whenever their <strong>Set (S)</strong> character enters play from their hand, subtract <strong>-1 from the set</strong> of that card.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span> <span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Si tous vos personnages en jeu sont du <strong>Date Kôgyô</strong>, piochez 1 carte. Choisissez l'une des options suivantes : </br><strong>· +1 au contre</strong> de l'un de vos personnages. </br>· Si vous êtes en phase de service, pendant le prochain tour de l'adversaire, chaque fois que son personnage de <strong>Passe (S)</strong> entre en jeu depuis sa main, soustrayez <strong>-1 à la passe</strong> de cette carte."
   }
 };

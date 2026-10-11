@@ -23,6 +23,11 @@ function inicializarFirebase() { // cuando el jugador abre el lobby, se lanza es
   firebase.initializeApp(firebaseConfig); // lanzamos la función de conectarse al servidor
   db = firebase.database();  // data base: abre la conexión con la base de datos
   console.log("Firebase connected ✅"); 
+
+  // Detección de conexión WebSocket
+  firebase.database().ref(".info/connected").on("value", function(snap) {
+    console.log("Firebase connection status:", snap.val() ? "CONNECTED" : "DISCONNECTED");
+  });
 }
 
 // ============================================================================================================ CREAR Y UNIRSE A PARTIDAS
@@ -524,7 +529,7 @@ function escucharSala() {
     const estado = snap.val();
 
     if (estado === "completa") {
-      console.log("¡Rival encontrado! Arrancando partida...");
+      console.log("Opponent found! Launching game...");
       db.ref("partidas/" + salaActual).once("value", function(snap) {
         const sala = snap.val();
         const miIndice = miNumero - 1;
@@ -551,8 +556,7 @@ function arrancarPartidaOnline(mazoJ1, mazoJ2, nombreJ1, nombreJ2) {
   game.jugadores[0].nombre = nombreJ1 || "Jugador 1"; // nombre J1
   game.jugadores[1].nombre = nombreJ2 || "Jugador 2"; // nombre J2
 
-  console.log("Mi mazo cargado: "    + game.jugadores[miIndice].mazo.length    + " cartas");
-  console.log("Mazo rival cargado: " + game.jugadores[rivalIndice].mazo.length + " cartas");
+  console.log("Starting game — J1 deck:", mazoJ1?.entries?.length, "J2 deck:", mazoJ2?.entries?.length);
 
   escucharPartida();
   iniciarSorteo();                                             // iniciar sorteo antes del mulligan
@@ -833,23 +837,27 @@ function borrarPartida() {
   if (!modoOnline) return;                               // solo en modo online
   db.ref("partidas/" + salaActual).remove()             // borrar la sala de Firebase
     .then(() => console.log("Match deleted from Firebase ✅")) // confirmación
-    .catch(e => console.log("Error deleting match: " + e)); // error
+    .catch(e => console.log("Error deleting match " + e)); // error
 }
 
 // ── SORTEO INICIAL ────────────────────────────────────────
 function iniciarSorteo() {
+  console.log("Starting coin flip, myNumber:", miNumero, "room:", salaActual);
   document.getElementById("btn-confirmar-mulligan").style.display = "none"; // ocultar botón confirmar mulligan
   const miNumeroSorteo = Math.random();                      // número aleatorio para el sorteo
   db.ref("partidas/" + salaActual + "/sorteo/jugador" + miNumero).set(miNumeroSorteo); // subir a Firebase
 
   db.ref("partidas/" + salaActual + "/sorteo").on("value", async function(snap) {
     const sorteo = snap.val();                               // datos del sorteo
+    console.log("Coin flip received:", JSON.stringify(sorteo)); 
+
     if (!sorteo || !sorteo.jugador1 || !sorteo.jugador2) return; // esperar a los dos
 
     // desactivar listener
     db.ref("partidas/" + salaActual + "/sorteo").off();
 
     const yoGano = sorteo["jugador" + miNumero] > sorteo["jugador" + (miNumero === 1 ? 2 : 1)]; // comparar números
+    console.log("I win:", yoGano, "myScore:", miPuntuacion, "rivalScore:", rivalPuntuacion);
 
     if (yoGano) {                                            // si gano el sorteo
       log("You won the toss! Choose who starts!");
@@ -891,6 +899,7 @@ function arrancarMulligan(indicePrimerSacador) {
   iniciarMano(game.jugadores[0]);                            // repartir mano al jugador 0
   iniciarMano(game.jugadores[1]);                            // repartir mano al jugador 1
   log("Serving first:" + game.jugadores[indicePrimerSacador].nombre);
+  console.log("Starting mulligan — first server:", indicePrimerSacador);
   renderMano();
   renderCampo();
 }

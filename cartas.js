@@ -7772,7 +7772,7 @@ function inicializarCartas() {
     }
   ),
 
-  /*
+  
   // ===================================================================================================================== P03
   crearCarta("Hinata Shoyo", // ============================================================== P03-001
     {
@@ -8627,7 +8627,6 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si todos tus personajes en juego son de <strong>Date Kôgyô</strong>, roba 1 carta. Elige una de las siguientes opciones: </br><strong>· +1 al bloqueo</strong> de uno de tus personajes. </br>· Si estás en fase de saque, durante el próximo turno del rival, cada vez que entre en juego su personaje de <strong>Pase (S)</strong> desde su mano, resta <strong>-1 al pase</strong> de esa carta.`
     }
   ),
-*/
 
   // ===================================================================================================================== PROMOS
   crearCarta("Hinata Shoyo", // =============================================================== PR-003

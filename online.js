@@ -843,46 +843,46 @@ function borrarPartida() {
 // ── SORTEO INICIAL ────────────────────────────────────────
 function iniciarSorteo() {
   console.log("Starting coin flip, myNumber:", miNumero, "room:", salaActual);
-  document.getElementById("btn-confirmar-mulligan").style.display = "none"; // ocultar botón confirmar mulligan
-  const miNumeroSorteo = Math.random();                      // número aleatorio para el sorteo
-  db.ref("partidas/" + salaActual + "/sorteo/jugador" + miNumero).set(miNumeroSorteo); // subir a Firebase
+  document.getElementById("btn-confirmar-mulligan").style.display = "none";
+  const miNumeroSorteo = Math.random();
+  db.ref("partidas/" + salaActual + "/sorteo/jugador" + miNumero).set(miNumeroSorteo);
 
   db.ref("partidas/" + salaActual + "/sorteo").on("value", async function(snap) {
-    const sorteo = snap.val();                               // datos del sorteo
-    console.log("Coin flip received:", JSON.stringify(sorteo)); 
+    const sorteo = snap.val();
+    console.log("Coin flip received:", JSON.stringify(sorteo));
 
-    if (!sorteo || !sorteo.jugador1 || !sorteo.jugador2) return; // esperar a los dos
+    if (!sorteo || !sorteo.jugador1 || !sorteo.jugador2) return;
 
-    // desactivar listener
     db.ref("partidas/" + salaActual + "/sorteo").off();
 
-    const yoGano = sorteo["jugador" + miNumero] > sorteo["jugador" + (miNumero === 1 ? 2 : 1)]; // comparar números
+    const miPuntuacion = sorteo["jugador" + miNumero];                          // mi puntuación
+    const rivalPuntuacion = sorteo["jugador" + (miNumero === 1 ? 2 : 1)];       // puntuación rival
+    const yoGano = miPuntuacion > rivalPuntuacion ||                             // gano si tengo más
+      (miPuntuacion === rivalPuntuacion && miNumero === 1);                      // empate: gana J1
     console.log("I win:", yoGano, "myScore:", miPuntuacion, "rivalScore:", rivalPuntuacion);
 
-    if (yoGano) {                                            // si gano el sorteo
+    if (yoGano) {
       log("You won the toss! Choose who starts!");
-      let eleccion = await mostrarEleccion([                 // mostrar opciones
-        { texto: "I’ll serve first" },
+      let eleccion = await mostrarEleccion([
+        { texto: "I'll serve first" },
         { texto: "Opponent serves first" }
       ]);
 
-      const miIndice = miNumero - 1;                               // mi índice
-      const rivalIndice = miNumero === 1 ? 1 : 0;                  // índice del rival
-      const j1Saca = eleccion === 0 ? miIndice : rivalIndice;      // 0: saco yo, 1: saca el rival
-      db.ref("partidas/" + salaActual + "/sorteo/j1Saca").set(j1Saca); // subir decisión
-
-    } else {                                                 // si pierdo el sorteo
-      log("Your opponent won the toss. Waiting for their decision...");
+      const miIndice = miNumero - 1;
+      const rivalIndice = miNumero === 1 ? 1 : 0;
+      const j1Saca = eleccion === 0 ? miIndice : rivalIndice;
+      db.ref("partidas/" + salaActual + "/sorteo/j1Saca").set(j1Saca);
 
       db.ref("partidas/" + salaActual + "/sorteo/j1Saca").on("value", function(snap2) {
-        const j1Saca = snap2.val();                          // quién saca según el ganador
-        if (j1Saca === null) return;                         // esperar decisión
-        db.ref("partidas/" + salaActual + "/sorteo/j1Saca").off(); // desactivar listener
-        arrancarMulligan(j1Saca);                            // arrancar mulligan
+        const j1Saca = snap2.val();
+        if (j1Saca === null) return;
+        db.ref("partidas/" + salaActual + "/sorteo/j1Saca").off();
+        arrancarMulligan(j1Saca);
       });
-    }
 
-    if (yoGano) {                                            // el ganador también arranca
+    } else {
+      log("Your opponent won the toss. Waiting for their decision...");
+
       db.ref("partidas/" + salaActual + "/sorteo/j1Saca").on("value", function(snap2) {
         const j1Saca = snap2.val();
         if (j1Saca === null) return;

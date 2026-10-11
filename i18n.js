@@ -116,6 +116,8 @@ const I18N = {
           errorMaxEventos:  "El mazo no puede tener más de 8 eventos (tienes {eventos}).",
           confirmarEliminar: "¿Seguro que quieres eliminar el mazo \"{nombre}\"?",
           cargarPredefinido: "Cargar en constructor →",
+          avisoP03: "Las cartas de la expansión P03 aún no están programadas y no funcionan en partida.",
+          errorP03: "El mazo contiene cartas de la expansión P03, que aún no están programadas. Quítalas para poder guardarlo.",
         }
     },    
     en: {
@@ -234,6 +236,8 @@ const I18N = {
           errorMaxEventos:  "The deck can't have more than 8 events (you have {eventos}).",
           confirmarEliminar: "Are you sure you want to delete the deck \"{nombre}\"?",
           cargarPredefinido: "Load into builder →",
+          avisoP03: "Cards from the P03 expansion are not programmed yet and don't work in matches.",
+          errorP03: "The deck contains cards from the P03 expansion, which are not programmed yet. Remove them to save it.",
         }
     },
     fr: {
@@ -352,6 +356,8 @@ const I18N = {
           errorMaxEventos:  "Le deck ne peut pas contenir plus de 8 événements (tu en as {eventos}).",
           confirmarEliminar: "Es-tu sûr de vouloir supprimer le deck « {nombre} » ?",
           cargarPredefinido: "Charger dans le constructeur →",
+          avisoP03: "Les cartes de l'extension P03 ne sont pas encore programmées et ne fonctionnent pas en partie.",
+          errorP03: "Le deck contient des cartes de l'extension P03, qui ne sont pas encore programmées. Retire-les pour pouvoir l'enregistrer.",
         }
     }
 };

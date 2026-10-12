@@ -265,6 +265,22 @@ function limpiarJugada() { // limpiar jugada actual
   game.efectosActivos = game.efectosActivos.filter(e => e.persisteEntrePuntos === true); 
   if (modoOnline) enviarEfectos();                        // sincronizar efectos con el rival
 }
+// ================================================================== NOMBRE REPETIDO EN LA JUGADA
+// ===============================================================================================
+function nombreRepetido(jugador, nombre) {
+  if (game.fase === "bloqueo") {                                         // en bloqueo se compara con los bloqueadores ya colocados
+    return [...jugador.zonas.bloqueo, ...jugador.zonas.bloqueoApoyo]     // central + apoyos
+      .some(c => c.recienJugada && c.nombre === nombre);                 // recién jugado y con el mismo nombre
+  }
+
+  let zonaAnterior = game.fase === "pase" ? "recepcion"                  // en pase se compara con recepción
+                   : game.fase === "remate" ? "pase"                     // en remate se compara con pase
+                   : null;                                               // saque y recepción no tienen restricción
+  if (!zonaAnterior) return false;                                       // sin fase anterior relevante
+
+  let cartaAnterior = jugador.zonas[zonaAnterior].at(-1);                // última carta de esa zona
+  return !!(cartaAnterior?.recienJugada && cartaAnterior.nombre === nombre); // recién jugada y con el mismo nombre
+}
 // ============================================================================= PERDER UN PUNTO 
 // =============================================================================================
 function perderPunto(jugador) {
@@ -596,10 +612,7 @@ function colocarCarta(jugador, carta, zona) {
     return;
   }
   
-  let nombreDuplicado = Object.values(jugador.zonas).some(zona =>   // comprobar nombre duplicado en el campo este turno
-    zona.some(c => c.recienJugada && c.nombre === carta.nombre)
-  );
-  if (nombreDuplicado) {
+  if (nombreRepetido(jugador, carta.nombre)) {               // no se puede repetir nombre en fases consecutivas
     log(t("log.cartaDuplicada", { carta: carta.nombre }));
     renderMano();
     renderManoRival()
@@ -3581,9 +3594,7 @@ async function aplicarPersonajeDoble(jugador, carta) { // ======================
   let opcionElegida = carta.info.opcionesDoble[eleccion];                  // opción elegida
 
   // comprobar nombre duplicado
-  let nombreDuplicado = Object.values(jugador.zonas).some(zona =>          // para todas las zonas
-    zona.some(c => c.recienJugada && c.nombre === opcionElegida.nombre)    // si ya hay una recién jugada con ese nombre
-  );
+  let nombreDuplicado = nombreRepetido(jugador, opcionElegida.nombre); // mismo criterio con el nombre elegido
   if (nombreDuplicado) {                                                   // si hay duplicado
     log(t("log.cartaDuplicada", { carta: opcionElegida.nombre }));
     // volver a preguntar
@@ -3630,7 +3641,7 @@ const todasLasCartas = inicializarCartas();
 /*
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
-["HV-P01-021", "HV-D02-003", "HV-P01-018", "HV-P01-084", "HV-P02-061", "HV-P02-060"].forEach(id => {
+["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-084"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
@@ -3852,7 +3863,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P02-073", "HV-P02-074", "HV-P02-075", "HV-P02-099", "HV-D01-011"].forEach(id => {
+["HV-P02-073", "HV-D02-003", "HV-P01-066", "HV-P02-099", "HV-D01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
@@ -3875,7 +3886,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 for (let i = 0; i < 3; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
   game.jugadores[0].zonas.eventos.push(evento);
-  // game.jugadores[1].zonas.eventos.push(evento);
+  game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
 const mazoPruebaMultiEscuela = [

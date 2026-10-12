@@ -512,7 +512,7 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("Inouka So", // ================================================================= D02-008
+  crearCarta("Inuoka So", // ================================================================= D02-008
     {
       saque: 2,
       recepcion: 3,
@@ -668,6 +668,7 @@ function inicializarCartas() {
       tipo: "evento",
       id: "HV-D02-012",
       fases: ["recepcion"],
+      faseRobo: true,
       escuela: "Nekoma",
       rareza: "D",
       descripcion: `Roba 1 carta. Después, mira las 3 primeras de tu mazo: si hay un <strong>Haiba Lev</strong> o un <strong>Inuoka So</strong>, puedes añadir 1 de ellos a tu mano. </br>Devuelve las otras cartas al fondo del mazo.`
@@ -2567,53 +2568,74 @@ function inicializarCartas() {
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "remate") {
         log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
-        return;
+        return false;                                                          // return false: condición no cumplida
       }
 
-      // ver las cartas activas de la jugada
+      // ver las cartas activas del campo (última carta de cada zona)
       let cartasActivas = [
-        game.jugadaActual.recepcion,
-        game.jugadaActual.pase,
-        game.jugadaActual.remate,
-        game.jugadaActual.bloqueo
-      ].filter(c => c !== null); // filtrar las que no se han jugado
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);                            // filtrar zonas vacías
 
       // condición 1: todas son de Kamomedai
-      let todasKamomedai = cartasActivas.length > 0 && 
-      cartasActivas.every(c => c.info?.escuela === "Kamomedai");
+      let todasKamomedai = cartasActivas.length > 0 &&
+        cartasActivas.every(c => c.info?.escuela === "Kamomedai");
 
       // condición 2: 4 o más escuelas diferentes
       let escuelas = new Set(cartasActivas.map(c => c.info?.escuela));
       let escuelasDiferentes = escuelas.size >= 4;
 
       if (!todasKamomedai && !escuelasDiferentes) {
-        log("No cumples la condición de escuelas ❌");
-        return;
+        log(t("log.condicionNoCumplida"));
+        return false;                                                          // return false: condición no cumplida
       }
 
       if (!await usarGuts(jugador, "remate", 3)) {
-        log("Necesitas 3 GUTS en remate ❌");
-        return;
+        return false;                                                          // return false: GUTS insuficientes o cancelado
       }
 
       game.valorAtaque += 3;
       log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 3 }));
 
-      // descartar hasta 2 cartas del rival en zona de eventos
-      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
-      let rival = game.jugadores[rivalIndex];
+      // elegir hasta 2 eventos del rival para enviarlos a su descarte
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;          // índice del rival
+      let rival = game.jugadores[rivalIndex];                                  // jugador rival
 
-      let idsADescartar = rival.zonas.eventos.slice(0, 2).map(c => c.info?.id);   // ids de las 2 primeras (sin mutar aún)
-      if (idsADescartar.length > 0) {
-        await trashearGutsZonaRival(rival, rivalIndex, "eventos", idsADescartar);  // ahora sí, online-seguro
+      let restantes = rival.zonas.eventos.slice();                             // copia de los eventos del rival
+      let idsElegidos = [];                                                    // ids de los eventos elegidos
+
+      for (let i = 0; i < 2; i++) {                                            // hasta 2 elecciones
+        if (restantes.length === 0) break;                                     // si no quedan eventos, parar
+
+        let eventoElegido = await mostrarSelectorCartas(                       // abrir selector cancelable
+          t("log.elegirCarta"),
+          restantes,
+          true                                                                 // permite cancelar (dejar de elegir)
+        );
+        if (!eventoElegido) break;                                             // si cancela, parar de elegir
+
+        restantes.splice(restantes.indexOf(eventoElegido), 1);                 // quitar solo UNA copia, aunque haya referencias repetidas
+        idsElegidos.push(eventoElegido.info?.id);                              // guardar su id
       }
 
-      // si quedan 2 o menos cartas en zona de eventos del rival, +1 adicional
+      if (idsElegidos.length > 0) {                                            // si eligió al menos 1
+        await trashearGutsZonaRival(rival, rivalIndex, "eventos", idsElegidos); // trasheo online-seguro
+      }
+
+      // si tras esta acción le quedan 2 eventos o menos, +1 adicional
       if (rival.zonas.eventos.length <= 2) {
         game.valorAtaque += 1;
-        log("Hoshiumi: +1 adicional al remate.");
+        log(t("log.condicionCumplida"));
+        log(t("log.ataqueAumentado", { valor: 1 }));
       }
-      renderCampo();
+
+      renderMano();                                                            // actualizar mano
+      renderManoRival();                                                       // actualizar mano rival
+      renderCampo();                                                           // actualizar campo
     },
     {
       tipo: "personaje",

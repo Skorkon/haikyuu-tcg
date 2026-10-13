@@ -177,7 +177,9 @@ const TRADUCCIONES = {
       "cartaAManoDesdeGuts": "{carta} añadida a la mano desde el GUTS de {zona}",
       "rivalDevuelveMano": "{jugador} devuelve su mano al mazo y baraja",
       "condicionEscuelaNoCumplida": "No todos tus personajes en juego son de {escuela}",
-      "condicionCartasEnMano": "No tienes el número de cartas en mano requerido"
+      "condicionCartasEnMano": "No tienes el número de cartas en mano requerido",
+      "opcionPotenciarRecepcion": "+1 a la recepción de un personaje",
+      "opcionFijarRecepcion": "Fijar la recepción de un personaje con recepción 5 o más en 7"
     }
   },
   "en": {
@@ -355,7 +357,9 @@ const TRADUCCIONES = {
       "cartaAManoDesdeGuts": "{carta} added to hand from {zona} GUTS",
       "rivalDevuelveMano": "{jugador} returns their hand to the deck and shuffles",
       "condicionEscuelaNoCumplida": "Not all your characters in play are from {escuela}",
-      "condicionCartasEnMano": "You don’t have the required number of cards in hand"
+      "condicionCartasEnMano": "You don’t have the required number of cards in hand",
+      "opcionPotenciarRecepcion": "+1 to a character’s reception",
+      "opcionFijarRecepcion": "Set a character’s reception with 5 or more reception to 7"
     }
   },
   "fr": {
@@ -533,7 +537,9 @@ const TRADUCCIONES = {
       "cartaAManoDesdeGuts": "{carta} ajoutée à la main depuis le GUTS de {zona}",
       "rivalDevuelveMano": "{jugador} remet sa main dans le deck et mélange",
       "condicionEscuelaNoCumplida": "Tous tes personnages en jeu ne sont pas de {escuela}",
-      "condicionCartasEnMano": "Tu n’as pas le nombre de cartes en main requis"
+      "condicionCartasEnMano": "Tu n’as pas le nombre de cartes en main requis",
+      "opcionPotenciarRecepcion": "+1 à la réception d’un personnage",
+      "opcionFijarRecepcion": "Fixer la réception d’un personnage avec réception 5 ou plus à 7"
     }
   },
   "": {
@@ -711,7 +717,9 @@ const TRADUCCIONES = {
       "cartaAManoDesdeGuts": "",
       "rivalDevuelveMano": "",
       "condicionEscuelaNoCumplida": "",
-      "condicionCartasEnMano": ""
+      "condicionCartasEnMano": "",
+      "opcionPotenciarRecepcion": "",
+      "opcionFijarRecepcion": ""
     }
   }
 };

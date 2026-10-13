@@ -173,3 +173,5 @@ log.cartaAManoDesdeGuts;{carta} añadida a la mano desde el GUTS de {zona};{cart
 log.rivalDevuelveMano;{jugador} devuelve su mano al mazo y baraja;{jugador} returns their hand to the deck and shuffles;{jugador} remet sa main dans le deck et mélange;
 log.condicionEscuelaNoCumplida;No todos tus personajes en juego son de {escuela};Not all your characters in play are from {escuela};Tous tes personnages en jeu ne sont pas de {escuela};
 log.condicionCartasEnMano;No tienes el número de cartas en mano requerido;You don’t have the required number of cards in hand;Tu n’as pas le nombre de cartes en main requis;
+log.opcionPotenciarRecepcion;+1 a la recepción de un personaje;+1 to a character’s reception;+1 à la réception d’un personnage;
+log.opcionFijarRecepcion;Fijar la recepción de un personaje con recepción 5 o más en 7;Set a character’s reception with 5 or more reception to 7;Fixer la réception d’un personnage avec réception 5 ou plus à 7;

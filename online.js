@@ -314,8 +314,9 @@ function aplicarJugadaRival(jugada) {
         miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
         log("You discarded " + cartaElegida.nombre + " due to an opponent's effect.");
 
-        enviarJugada("cartaDescartadaRival", {                            // avisar al rival
-          cartaId: cartaElegida.info?.id                                   // id de la carta descartada
+        db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({
+          jugador: miNumero,
+          cartaId: cartaElegida.info?.id
         });
 
         if (modoOnline) enviarTrash(miJugadorDescarte);                   // sincronizar trash
@@ -336,7 +337,10 @@ function aplicarJugadaRival(jugada) {
     );
 
     if (eventosEnMano.length === 0) {                                    // si no tiene eventos
-      enviarJugada("eventoRechazado", {});                               // avisar que no puede colocar
+      db.ref("partidas/" + salaActual + "/confirmacionEvento").set({
+        jugador: miNumero,
+        tipo: "eventoRechazado"
+      });
       break;
     }
 
@@ -350,7 +354,10 @@ function aplicarJugadaRival(jugada) {
           eventosEnMano
         );
         if (!eventoElegido) {                                            // si cancela
-          enviarJugada("eventoRechazado", {});                           // avisar que rechazó
+          db.ref("partidas/" + salaActual + "/confirmacionEvento").set({
+            jugador: miNumero,
+            tipo: "eventoRechazado"
+          });
           return;
         }
         let index = miJugadorEvento.mano.indexOf(eventoElegido);        // buscar en la mano
@@ -358,15 +365,20 @@ function aplicarJugadaRival(jugada) {
         miJugadorEvento.zonas.eventos.push(eventoElegido);              // colocar en zona de eventos
         eventoElegido.zonaActual = "eventos";                           // actualizar zona
         log("You place " + eventoElegido.nombre + " in your Event Zone.");
-        enviarJugada("eventoColocadoVoluntario", {                       // avisar al rival
-          cartaId: eventoElegido.info?.id                                // id del evento
+        db.ref("partidas/" + salaActual + "/confirmacionEvento").set({ 
+          jugador: miNumero,
+          tipo: "eventoColocadoVoluntario",
+          cartaId: eventoElegido.info?.id
         });
         enviarCantidadMano();                                            // sincronizar mano
         renderMano();                                                    // actualizar mano
         renderManoRival();                                               // actualizar mano rival
         renderCampo();                                                   // actualizar campo
       } else {                                                           // si no quiere colocar
-        enviarJugada("eventoRechazado", {});                             // avisar que rechazó
+        db.ref("partidas/" + salaActual + "/confirmacionEvento").set({
+          jugador: miNumero,
+          tipo: "eventoRechazado"
+        });
       }
     });
     break;
@@ -416,7 +428,11 @@ function aplicarJugadaRival(jugada) {
         }
       });
 
-      enviarJugada("gutsRivalTrasheado", { zona: zonaTrashear, cartasIds: jugada.cartasIds });
+      db.ref("partidas/" + salaActual + "/confirmacionGuts").set({
+        jugador: miNumero,                                               // quién responde
+        zona: zonaTrashear,                                             // zona trasheada
+        cartasIds: jugada.cartasIds                                     // ids de las cartas
+      });
       if (modoOnline) enviarTrash(miJugadorTrashear);
 
       if (zonaTrashear === "eventos") {           // mismo fix preventivo
@@ -460,7 +476,7 @@ function aplicarJugadaRival(jugada) {
       renderCampo();                                                         // actualizar campo
       break;
 
-    case "pedirMoverAFondoMazo": // ========================================= PEDIR MOVER AL FONDO DEL MAZO (ej. TAKEDA)
+    case "pedirMoverAFondoMazo":
       const miJugadorFondoMazo = game.jugadores[miNumero - 1];
       const zonaFondoMazo = jugada.zona;
       const indexFondoMazo = miJugadorFondoMazo.zonas[zonaFondoMazo]
@@ -471,26 +487,24 @@ function aplicarJugadaRival(jugada) {
         log(carta.nombre + " was placed at the bottom of your deck by an opponent's effect.");
       }
 
-      enviarJugada("cartaMovidaAFondoMazo", { zona: zonaFondoMazo, cartaId: jugada.cartaId }); // ahora con payload
-      if (modoOnline) enviarMazo();
+      // confirmar al rival usando ruta separada
+      db.ref("partidas/" + salaActual + "/confirmacionMoverMazo").set({
+        jugador: miNumero,
+        zona: zonaFondoMazo,
+        cartaId: jugada.cartaId
+      });
 
-      // si la zona afectada es la de eventos, hay que re-sincronizarla explícitamente,
-      // porque tiene su propio listener continuo (escucharEventosRival) que si no, sobreescribiría este cambio
-      if (zonaFondoMazo === "eventos") {
-        enviarEventos(miJugadorFondoMazo);
+      if (modoOnline) enviarMazo();                                          // sincronizar conteo de mazo
+
+      if (zonaFondoMazo === "eventos") {                                     // si es zona de eventos
+        enviarEventos(miJugadorFondoMazo);                                   // sincronizar eventos
       }
 
       renderCampo();
       break;
 
-      enviarJugada("cartaMovidaAFondoMazo", {});                              // avisar al rival que ya se aplicó
-      if (modoOnline) enviarMazo();                                           // sincronizar conteo de mazo
-
-      renderCampo();                                                          // actualizar campo
-      break;
-
-    case "cartaMovidaAFondoMazo": // ============================================ CONFIRMACIÓN
-      break; // gestionado por el Promise en moverCartaZonaAFondoMazoRival
+    case "cartaMovidaAFondoMazo":
+      break; // ya no se usa, gestionado por confirmacionMoverMazo
 
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste

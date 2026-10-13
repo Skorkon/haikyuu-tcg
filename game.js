@@ -3042,11 +3042,10 @@ async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
   enviarJugada("pedirDescarte", { rivalIndex: rivalIndex });           // avisar al rival
 
   await new Promise(resolve => {                                       // esperar respuesta del rival
-    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");     // escuchar Firebase
+    let ref = db.ref("partidas/" + salaActual + "/confirmacionDescarte");     // escuchar Firebase
     ref.on("value", function(snap) {                                   // cuando cambie
       let jugada = snap.val();                                         // leer datos
       if (!jugada) return;                                             // ignorar si vacío
-      if (jugada.tipo !== "cartaDescartadaRival") return;             // ignorar si no es la respuesta
       if (jugada.jugador === miNumero) return;                         // ignorar si es mío
 
       ref.off();                                                       // desactivar listener
@@ -3112,11 +3111,10 @@ async function trashearGutsZonaRival(rival, rivalIndex, zona, cartasIds) {
   enviarJugada("pedirTrashearGuts", { rivalIndex: rivalIndex, zona: zona, cartasIds: cartasIds }); // avisar al rival
 
   await new Promise(resolve => {                                          // esperar respuesta del rival
-    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");        // escuchar Firebase
+    let ref = db.ref("partidas/" + salaActual + "/confirmacionGuts");      // escuchar Firebase
     ref.on("value", function(snap) {                                      // cuando cambie
       let jugada = snap.val();                                            // leer datos
       if (!jugada) return;                                                // ignorar si vacío
-      if (jugada.tipo !== "gutsRivalTrasheado") return;                  // ignorar si no es la respuesta
       if (jugada.jugador === miNumero) return;                            // ignorar si es mío
 
       ref.off();                                                          // desactivar listener
@@ -3155,11 +3153,10 @@ async function moverCartaZonaAFondoMazoRival(rival, rivalIndex, zona, cartaId) {
   enviarJugada("pedirMoverAFondoMazo", { rivalIndex: rivalIndex, zona: zona, cartaId: cartaId }); // avisar al rival
 
   await new Promise(resolve => {                                         // esperar respuesta del rival
-    let ref = db.ref("partidas/" + salaActual + "/ultimaJugada");       // escuchar Firebase
+    let ref = db.ref("partidas/" + salaActual + "/confirmacionMoverMazo");       // escuchar Firebase
     ref.on("value", function(snap) {                                     // cuando cambie
       let jugada = snap.val();                                           // leer datos
       if (!jugada) return;                                               // ignorar si vacío
-      if (jugada.tipo !== "cartaMovidaAFondoMazo") return;               // ignorar si no es la respuesta
       if (jugada.jugador === miNumero) return;                           // ignorar si es mío
 
       ref.off();                                                         // desactivar listener
@@ -3638,7 +3635,7 @@ const todasLasCartas = inicializarCartas();
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-/*
+
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
 ["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-084"].forEach(id => {
@@ -3689,13 +3686,13 @@ mazoPruebaNekoma.forEach(id => {
 ["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-005", "HV-P02-083", "HV-P02-080"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
@@ -3731,7 +3728,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
@@ -3863,16 +3860,16 @@ mazoPruebaShiratorizawa.forEach(id => {
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P02-073", "HV-D02-003", "HV-P01-066", "HV-P02-099", "HV-D01-011"].forEach(id => {
+["HV-P02-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 4; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-075"); // Onaga Wataru (Fukurodani)
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
@@ -3880,7 +3877,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 ["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
@@ -3911,7 +3908,7 @@ const mazoPruebaMultiEscuela = [
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <
 
@@ -3939,7 +3936,7 @@ for (let i = 0; i < 7; i++) {
   // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

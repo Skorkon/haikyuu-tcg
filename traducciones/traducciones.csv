@@ -169,3 +169,7 @@ log.d02011b;+1 a la recepción de tu receptor. ;+1 to your receiver's reception 
 log.colocarEnGuts;Colocar en el GUTS de {zona};Place in {zona} GUTS;Placer dans le GUTS de {zona};
 log.cartaAlGuts;{carta} colocada en el GUTS de {zona} desde la mano;{carta} placed in {zona} GUTS from hand;{carta} placée dans le GUTS de {zona} depuis la main;
 log.colocarCartaGutsSiPunto;Efecto activo: si el rival pierde el punto en su siguiente turno, podrás colocar 1 carta de {escuela} de tu mano en una zona de GUTS al inicio del siguiente turno;Active effect: if the rival loses the point on their next turn, you can place 1 {escuela} card from your hand in a GUTS zone at the start of the next turn;Effet actif : si le rival perd le point à son prochain tour, tu pourras placer 1 carte {escuela} de ta main dans une zone GUTS au début du prochain tour;
+log.cartaAManoDesdeGuts;{carta} añadida a la mano desde el GUTS de {zona};{carta} added to hand from {zona} GUTS;{carta} ajoutée à la main depuis le GUTS de {zona};
+log.rivalDevuelveMano;{jugador} devuelve su mano al mazo y baraja;{jugador} returns their hand to the deck and shuffles;{jugador} remet sa main dans le deck et mélange;
+log.condicionEscuelaNoCumplida;No todos tus personajes en juego son de {escuela};Not all your characters in play are from {escuela};Tous tes personnages en jeu ne sont pas de {escuela};
+log.condicionCartasEnMano;No tienes el número de cartas en mano requerido;You don’t have the required number of cards in hand;Tu n’as pas le nombre de cartes en main requis;

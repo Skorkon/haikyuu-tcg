@@ -173,7 +173,11 @@ const TRADUCCIONES = {
       "d02011b": "+1 a la recepción de tu receptor.",
       "colocarEnGuts": "Colocar en el GUTS de {zona}",
       "cartaAlGuts": "{carta} colocada en el GUTS de {zona} desde la mano",
-      "colocarCartaGutsSiPunto": "Efecto activo: si el rival pierde el punto en su siguiente turno, podrás colocar 1 carta de {escuela} de tu mano en una zona de GUTS al inicio del siguiente turno"
+      "colocarCartaGutsSiPunto": "Efecto activo: si el rival pierde el punto en su siguiente turno, podrás colocar 1 carta de {escuela} de tu mano en una zona de GUTS al inicio del siguiente turno",
+      "cartaAManoDesdeGuts": "{carta} añadida a la mano desde el GUTS de {zona}",
+      "rivalDevuelveMano": "{jugador} devuelve su mano al mazo y baraja",
+      "condicionEscuelaNoCumplida": "No todos tus personajes en juego son de {escuela}",
+      "condicionCartasEnMano": "No tienes el número de cartas en mano requerido"
     }
   },
   "en": {
@@ -347,7 +351,11 @@ const TRADUCCIONES = {
       "d02011b": "+1 to your receiver's reception",
       "colocarEnGuts": "Place in {zona} GUTS",
       "cartaAlGuts": "{carta} placed in {zona} GUTS from hand",
-      "colocarCartaGutsSiPunto": "Active effect: if the rival loses the point on their next turn, you can place 1 {escuela} card from your hand in a GUTS zone at the start of the next turn"
+      "colocarCartaGutsSiPunto": "Active effect: if the rival loses the point on their next turn, you can place 1 {escuela} card from your hand in a GUTS zone at the start of the next turn",
+      "cartaAManoDesdeGuts": "{carta} added to hand from {zona} GUTS",
+      "rivalDevuelveMano": "{jugador} returns their hand to the deck and shuffles",
+      "condicionEscuelaNoCumplida": "Not all your characters in play are from {escuela}",
+      "condicionCartasEnMano": "You don’t have the required number of cards in hand"
     }
   },
   "fr": {
@@ -521,7 +529,11 @@ const TRADUCCIONES = {
       "d02011b": "+1 à la réception de ton receveur",
       "colocarEnGuts": "Placer dans le GUTS de {zona}",
       "cartaAlGuts": "{carta} placée dans le GUTS de {zona} depuis la main",
-      "colocarCartaGutsSiPunto": "Effet actif : si le rival perd le point à son prochain tour, tu pourras placer 1 carte {escuela} de ta main dans une zone GUTS au début du prochain tour"
+      "colocarCartaGutsSiPunto": "Effet actif : si le rival perd le point à son prochain tour, tu pourras placer 1 carte {escuela} de ta main dans une zone GUTS au début du prochain tour",
+      "cartaAManoDesdeGuts": "{carta} ajoutée à la main depuis le GUTS de {zona}",
+      "rivalDevuelveMano": "{jugador} remet sa main dans le deck et mélange",
+      "condicionEscuelaNoCumplida": "Tous tes personnages en jeu ne sont pas de {escuela}",
+      "condicionCartasEnMano": "Tu n’as pas le nombre de cartes en main requis"
     }
   },
   "": {
@@ -695,7 +707,11 @@ const TRADUCCIONES = {
       "d02011b": "",
       "colocarEnGuts": "",
       "cartaAlGuts": "",
-      "colocarCartaGutsSiPunto": ""
+      "colocarCartaGutsSiPunto": "",
+      "cartaAManoDesdeGuts": "",
+      "rivalDevuelveMano": "",
+      "condicionEscuelaNoCumplida": "",
+      "condicionCartasEnMano": ""
     }
   }
 };

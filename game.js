@@ -1204,11 +1204,11 @@ async function usarGuts(jugador, zona, cantidad) {
   return true;
 }
 // ======================================================================================================================= USAR GUTS MULTIZONA
-async function usarGutsMultiZona(jugador, cantidad) { // GUTS de múltiples zonas
+async function usarGutsMultiZona(jugador, cantidad, zonas = ["saque", "recepcion", "pase", "remate", "bloqueo"]) { // GUTS de múltiples zonas
   // recopilar todos los GUTS disponibles de todas las zonas
   let todasGuts = [];                                                    // array de {carta, zona}
-  ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => { // para cada zona
-    jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {     // excluir recién jugadas
+  zonas.forEach(zona => {                                                // para cada zona permitida
+    jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {      // excluir recién jugadas
       todasGuts.push({ carta: c, zona: zona });                          // guardar carta + zona
     });
   });
@@ -1569,14 +1569,18 @@ function resolverBloqueo() {
 
   log(t("log.defensaTotal", { valor: defensaTotal }));
 
+  let bloqueoForzadoFallido = false;                    // variable para indicar si se fuerza el fallo
   if (tieneEfecto("bloqueoMinimo")) {
-    let efecto = game.efectosActivos.find(e => e.tipo === "bloqueoMinimo");
-    if (defensaTotal <= efecto.valor) {
+    let efecto = game.efectosActivos.find(e =>
+      e.tipo === "bloqueoMinimo" && e.activadoPor !== game.jugadorActivo // solo si lo activó el rival
+    );
+    if (efecto && defensaTotal <= efecto.valor) {       // defensa total igual o inferior al mínimo
       log(t("log.bloqueoMinimo"));
+      bloqueoForzadoFallido = true;
     }
   }
 
-  if (defensaTotal >= game.valorAtaque) { // ================================= BLOQUEO EXITOSO
+    if (!bloqueoForzadoFallido && defensaTotal >= game.valorAtaque) { // ================================= BLOQUEO EXITOSO
     log(t("log.bloqueoExitoso"));
     if (tieneEfecto("doshat")) {
       let efecto = game.efectosActivos.find(e => e.tipo === "doshat");
@@ -1606,7 +1610,8 @@ function resolverBloqueo() {
     renderManoRival()
     renderCampo();                                      // redibujar campo
 
-  } else { // ================================================================ BLOQUEO FALLIDO
+  } 
+  else { // ================================================================ BLOQUEO FALLIDO
     log(t("log.bloqueoFallido"));
     game.valorDefensa = 0;                              // resetear defensa
     game.gutsDescartados = [];                          // limpiar GUTS descartados
@@ -3734,23 +3739,23 @@ mazoPruebaKarasuno.forEach(id => {
 
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ >
 // MANO DATE
-["HV-P02-036", "HV-P02-037", "HV-P02-038", "HV-P02-039", "HV-P02-041", "HV-P02-042"].forEach(id => {
+["HV-P02-039", "HV-P02-040", "HV-P02-038"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS DATE
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-044"); // Sasaya sin habilidad
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH DATE — para Aone P02-037 y Sakunami P02-041
 ["HV-P01-054", "HV-P02-036", "HV-P02-040", "HV-P02-043", "HV-P02-044", "HV-P02-045"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO DATE
@@ -3774,14 +3779,14 @@ const mazoPruebaDate = [
 ];
 mazoPruebaDate.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
 
 // ---------------------------------------------------------------------------------- TEST FUKURODANI >
 // MANO FUKURODANI
-["HV-P02-064", "HV-P02-067", "HV-P01-051"].forEach(id => {
+["HV-P01-045", "HV-P02-067", "HV-P01-051"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
@@ -3862,7 +3867,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 // MANO MULTI-ESCUELA
 ["HV-P02-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
@@ -3876,13 +3881,13 @@ mazoPruebaShiratorizawa.forEach(id => {
 // TRASH MULTI ESCUELA 
 ["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
-  game.jugadores[0].zonas.eventos.push(evento);
+  // game.jugadores[0].zonas.eventos.push(evento);
   game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
@@ -3907,7 +3912,7 @@ const mazoPruebaMultiEscuela = [
 ];
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <

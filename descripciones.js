@@ -302,9 +302,9 @@ const DESCRIPCIONES = {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Añade +2 al pase. Después, busca un <strong>Kotaro Bokuto</strong> en tu pila de descartes y añádelo a tu mano.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Add +2 to the set. Then, search for a <strong>Kotaro Bokuto</strong> in your discard pile and add it to your hand.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Ajoutez +2 à la passe. Ensuite, cherchez un <strong>Kotaro Bokuto</strong> dans votre pile de défausse et ajoutez-le à votre main."
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 4</strong>: Paga 4 GUTS en total entre tus zonas de <strong><span style=&quot;color:#2e7d32&quot;>pase</span></strong> y <strong><span style=&quot;color:#c62828&quot;>remate</span></strong>. +2 al pase. Añade hasta 1 <strong>Kotaro Bokuto</strong> de tu descarte a tu mano.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 4</strong>: Pay 4 GUTS in total between your <strong><span style=&quot;color:#2e7d32&quot;>set</span></strong> and <strong><span style=&quot;color:#c62828&quot;>spike</span></strong> zones. +2 to the set. Add up to 1 <strong>Kotaro Bokuto</strong> from your discard pile to your hand.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 4</strong> : Payez 4 GUTS au total entre vos zones de <strong><span style=&quot;color:#2e7d32&quot;>passe</span></strong> et d'<strong><span style=&quot;color:#c62828&quot;>attaque</span></strong>. +2 à la passe. Ajoutez jusqu'à 1 <strong>Kotaro Bokuto</strong> depuis votre défausse à votre main."
   },
   "HV-P01-047": {
     "nombre_es": "",

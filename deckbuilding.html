@@ -40,7 +40,7 @@
 
     /* -------------------------------------------------- COLUMNAS ------------------------------------------ */
     #columna-izquierda {
-      width: 350px;                               /* ancho fijo y pequeño */
+      width: 360px;                               /* ancho fijo y pequeño */
       flex-shrink: 0;                             /* no se encoge nunca, aunque falte espacio */
       background-image: url('img/fondos/deckb.jpg'); 
       background-color: #1a1a2e;                /* color de respaldo mientras no hay imagen */
@@ -373,7 +373,7 @@
     }
     .preview-imagen {
       width: 100%;
-      height: 380px;                      /* tamaño grande, pero no toda la columna */
+      aspect-ratio: 5 / 7;
       background-size: cover;
       background-position: center;
       flex-shrink: 0;

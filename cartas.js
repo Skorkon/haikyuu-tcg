@@ -2066,44 +2066,62 @@ function inicializarCartas() {
     }
   ),
   crearCarta("Keiji Akaashi", // ================================================================ P01-045
-    { saque: 2,
+    {
+      saque: 2,
       recepcion: 0,
       pase: 1,
       remate: 2,
       bloqueo: 1
     },
     async function(jugador, game, carta) {
-      if (carta.zonaActual !== "pase") {
+      if (carta.zonaActual !== "pase") {                                    // comprobar que está en pase
         log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
-        return;
+        return false;                                                       // return false: condición no cumplida
       }
-      if (!await usarGuts(jugador, "pase", 2)) {
-        return;
+
+      if (!await usarGutsMultiZona(jugador, 4, ["pase", "remate"])) {       // pagar 4 GUTS en total entre pase y remate
+        return false;                                                       // return false: GUTS insuficientes o cancelado
       }
-      game.valorAtaque += 2;
+
+      game.valorAtaque += 2;                                                // +2 al pase
       log(t("log.habilidadActivada", { carta: carta.nombre }));
-      let bokutos = jugador.trash.filter(c => c.nombre === "Kotaro Bokuto"); // buscar todos los Bokutos
-      if (bokutos.length === 0) {
+      log(t("log.ataqueAumentado", { valor: 2 }));
+
+      let bokutos = jugador.trash.filter(c => c.nombre === "Kotaro Bokuto"); // buscar Bokutos en el trash
+      if (bokutos.length === 0) {                                           // si no hay ninguno
         log(t("log.condicionNoCumplida"));
-        return;
+        renderMano();
+        renderManoRival();
+        renderCampo();
+        return;                                                             // sin return false: el coste ya está pagado
       }
 
-      let bokutoElegido = await mostrarSelectorCartas(t("log.elegirCarta"), bokutos); // selector
-      if (!bokutoElegido) return;
+      let bokutoElegido = await mostrarSelectorCartas(                      // selector cancelable
+        t("log.elegirCarta"),
+        bokutos,
+        true
+      );
 
-      let index = jugador.trash.indexOf(bokutoElegido);           // buscar en el trash
-      jugador.trash.splice(index, 1);                             // sacar del trash
-      añadirCartaAMano(jugador, bokutoElegido);                   // añadir a la mano
-      log(t("log.cartaAMano", { carta: "Kotaro Bokuto" }));
-      renderMano();
-      },
-    { tipo: "personaje",
-        id: "HV-P01-045",
-        escuela: "Fukurodani",
-        posicion: "S",
-        anyo: 2,
-        rareza: "S",
-        descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong>: Añade +2 al pase. Después, busca un <strong>Kotaro Bokuto</strong> en tu pila de descartes y añádelo a tu mano.`
+      if (bokutoElegido) {                                                  // si elige uno
+        let index = jugador.trash.indexOf(bokutoElegido);                   // buscar en el trash
+        jugador.trash.splice(index, 1);                                     // sacar del trash
+        añadirCartaAMano(jugador, bokutoElegido);                           // añadir a la mano
+        log(t("log.cartaAMano", { carta: bokutoElegido.nombre }));
+        if (modoOnline) enviarTrash(jugador);                               // sincronizar trash
+      }
+
+      renderMano();                                                         // actualizar mano
+      renderManoRival();                                                    // actualizar mano rival
+      renderCampo();                                                        // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P01-045",
+      escuela: "Fukurodani",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R",
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 4</strong>: Paga 4 GUTS en total entre tus zonas de <strong><span style="color:#2e7d32">pase</span></strong> y <strong><span style="color:#c62828">remate</span></strong>. +2 al pase. Añade hasta 1 <strong>Kotaro Bokuto</strong> de tu descarte a tu mano.`
     }
   ),
   crearCarta("Keiji Akaashi", // ================================================================ P01-046

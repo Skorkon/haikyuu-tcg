@@ -753,8 +753,10 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
       // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
       // comprobar efecto Yaku P01-023
       let cartaDebajo = jugador.zonas.recepcion.at(-2);             // carta debajo de la recién jugada
-      if (cartaDebajo?.info?.id === "HV-P01-023") {                 // si es Yaku P01-023
-        aplicarYaku023(jugador, carta);                             // lanzar habilidad de Yaku
+      if (cartaDebajo?.info?.id === "HV-P01-023" &&                 // si debajo hay un Yaku P01-023
+          carta.info?.escuela === "Nekoma" &&                       // y el personaje que entra es de Nekoma
+          carta.nombre !== "Yaku Morisuke") {                       // y no es Morisuke Yaku
+        aplicarYaku023(jugador, carta, cartaDebajo);                // lanzar habilidad de Yaku (le paso la carta de debajo)
       }
       if (modoOnline) {
         enviarJugada("cartaJugada", {      // enviar jugada al rival
@@ -3253,7 +3255,7 @@ async function aplicarKenma019(jugador, carta) { // ============================
   renderManoRival();                                              // actualizar mano rival
   renderCampo();                                                  // actualizar campo
 }
-async function aplicarYaku023(jugador, carta) { // =========================================== YAKU P01-023
+async function aplicarYaku023(jugador, carta, yaku) { // =========================================== YAKU P01-023
   // preguntar si quiere activar la habilidad
   let eleccion = await mostrarEleccion([
     { texto: t("log.activarHabilidad", { carta: "Yaku Morisuke" }) },
@@ -3261,32 +3263,25 @@ async function aplicarYaku023(jugador, carta) { // =============================
   ]);
   if (eleccion !== 0) return;                                     // si no quiere activar, ignorar
 
-  // comprobar que hay cartas de Nekoma en la mano
-  let nekomanEnMano = jugador.mano.filter(c => c.info?.escuela === "Nekoma"); // filtrar Nekoma
-  if (nekomanEnMano.length === 0) {                               // si no hay ninguna
-    log(t("log.sinCartasValidas"));
-    return;                                                       // ignorar
-  }
+  // Yaku está justo debajo de la carta que acaba de entrar: se localiza por posición
+  let index = jugador.zonas.recepcion.length - 2;                 // posición de Yaku
+  if (jugador.zonas.recepcion[index] !== yaku) return false;      // return false: Yaku ya no está ahí
 
-  // elegir carta de Nekoma para descartar
-  let cartaDescarte = await mostrarSelectorCartas(                // abrir selector
-    "Elige una carta de Nekoma de tu mano para descartar:",       // título
-    nekomanEnMano                                                 // solo Nekoma
-  );
-  if (!cartaDescarte) return;                                     // si cancela, ignorar
+  jugador.zonas.recepcion.splice(index, 1);                       // sacar a Yaku de la zona (coste)
+  jugador.trash.push(yaku);                                       // enviar a Yaku al descarte
 
-  let index = jugador.mano.indexOf(cartaDescarte);                // buscar en la mano
-  jugador.mano.splice(index, 1);                                  // sacar de la mano
-  jugador.trash.push(cartaDescarte);                              // enviar al trash
-  log(cartaDescarte.nombre + " descartada de la mano como coste.");
-
-  game.valorDefensa += 2;                                         // +2 a la recepción
+  game.valorDefensa += 2;                                         // +2 a la recepción del personaje que entró
   log(t("log.potenciarReceptor", { valor: 2, carta: carta.nombre }));
+  actualizarContadoresVisual()
 
-  let yaku = jugador.zonas.recepcion.at(-2);                      // buscar Yaku en recepción
-  if (yaku) yaku.habilidadUsada = true;                           // marcar habilidad como usada
-
-  if (modoOnline) enviarTrash(jugador);                           // sincronizar trash con el rival
+  if (modoOnline) {
+    enviarJugada("quitarCartaZona", {                             // avisar al rival de que Yaku sale de recepción
+      zona: "recepcion",
+      cartaId: yaku.info?.id,
+      indice: index                                               // posición exacta, para no quitar otra copia de Yaku
+    });
+    enviarTrash(jugador);                                         // sincronizar trash
+  }
 
   renderMano();                                                   // actualizar mano
   renderManoRival();                                              // actualizar mano rival
@@ -3640,20 +3635,20 @@ const todasLasCartas = inicializarCartas();
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
-/*
+
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
-["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-084"].forEach(id => {
+["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-023"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-028"); 
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -3682,13 +3677,13 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-PR-003", "HV-P02-005", "HV-P02-083", "HV-P02-080"].forEach(id => {
+["HV-P02-002", "HV-P02-003", "HV-P01-076"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
@@ -3697,8 +3692,8 @@ mazoPruebaNekoma.forEach(id => {
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
@@ -3868,7 +3863,7 @@ mazoPruebaShiratorizawa.forEach(id => {
 ["HV-P02-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
@@ -3882,13 +3877,13 @@ mazoPruebaShiratorizawa.forEach(id => {
 ["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
   // game.jugadores[0].zonas.eventos.push(evento);
-  game.jugadores[1].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
 const mazoPruebaMultiEscuela = [
@@ -3913,7 +3908,7 @@ const mazoPruebaMultiEscuela = [
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <
 
@@ -3941,7 +3936,7 @@ for (let i = 0; i < 7; i++) {
   // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
-*/
+
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

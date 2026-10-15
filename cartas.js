@@ -419,6 +419,7 @@ function inicializarCartas() {
       let index = jugador.mano.indexOf(cartaDescarte);      // buscar la carta elegida en la mano
       jugador.mano.splice(index, 1);                        // sacarla de la mano
       jugador.trash.push(cartaDescarte);                    // enviarla al trash
+      if (modoOnline) enviarTrash(jugador);                 // sincronizar trash
       log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
 
       game.valorDefensa += 2;                               // añadir +2 a la recepción de esta jugada
@@ -1358,9 +1359,9 @@ function inicializarCartas() {
       escuela: "Nekoma",
       posicion: "Li",
       anyo: 3,
-      rareza: "S",
+      rareza: "R",
       zonasProhibidas: ["saque", "bloqueo"],
-      descripcion: `Cuando coloques un personaje de <strong>Nekoma</strong> encima de esta carta en <strong><span style="color:#1565c0">recepción</span></strong>, puedes descartar 1 carta de <strong>Nekoma</strong> de tu mano para añadir +2 a su recepción.`
+      descripcion: `Cuando coloques un personaje de <strong>Nekoma</strong> distinto de <strong>Yaku Morisuke</strong> encima de esta carta en <strong><span style="color:#1565c0">recepción</span></strong>, puedes enviar esta carta al descarte para añadir +2 a su recepción.`
     }
   ),
   crearCarta("Yaku Morisuke", // ================================================================ P01-024
@@ -2098,8 +2099,7 @@ function inicializarCartas() {
 
       let bokutoElegido = await mostrarSelectorCartas(                      // selector cancelable
         t("log.elegirCarta"),
-        bokutos,
-        true
+        bokutos
       );
 
       if (bokutoElegido) {                                                  // si elige uno
@@ -2918,7 +2918,7 @@ function inicializarCartas() {
 
       // elegir zona
       let eleccion = await mostrarEleccion(                    // mostrar selector de zonas
-        zonasValidas.map(zona => ({ texto: zona }))            // convertir zonas a opciones
+        zonasValidas.map(zona => ({ texto: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) })) // nombre de la zona traducido
       );
       let zonaElegida = zonasValidas[eleccion];                // zona elegida por el jugador
 
@@ -2943,7 +2943,7 @@ function inicializarCartas() {
         let index = jugador.zonas[zonaElegida].indexOf(cartaElegida); // buscar en la zona
         jugador.zonas[zonaElegida].splice(index, 1);           // sacar de la zona
         añadirCartaAMano(jugador, cartaElegida);               // añadir a la mano
-        log(t("log.cartaAManoDesdeGuts", { carta: cartaElegida.nombre, zona: zonaElegida }));
+        log(t("log.cartaAManoDesdeGuts", { carta: cartaElegida.nombre, zona: t("ui.zona" + zonaElegida.charAt(0).toUpperCase() + zonaElegida.slice(1)) }));
       }
 
       renderMano();                                            // actualizar mano

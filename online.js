@@ -253,8 +253,15 @@ function aplicarJugadaRival(jugada) {
       const rivalIndiceQuitar = miNumero === 1 ? 1 : 0;   // índice del rival
       const rivalQuitar = game.jugadores[rivalIndiceQuitar]; // jugador rival
       const zonaQuitar = jugada.zona;                      // zona de donde sacar
-      const indexQuitar = rivalQuitar.zonas[zonaQuitar]    // buscar carta por id
-        .findIndex(c => c.info?.id === jugada.cartaId);
+
+      // si el rival envía la posición exacta y coincide con la carta, se usa esa posición
+      // (evita quitar otra copia de la misma carta); si no, se busca por id
+      let indexQuitar = (jugada.indice !== undefined &&
+          rivalQuitar.zonas[zonaQuitar][jugada.indice]?.info?.id === jugada.cartaId)
+        ? jugada.indice                                    // posición exacta enviada por el rival
+        : rivalQuitar.zonas[zonaQuitar]                    // coincidencia por id
+            .findIndex(c => c.info?.id === jugada.cartaId);
+
       if (indexQuitar !== -1) {
         rivalQuitar.zonas[zonaQuitar].splice(indexQuitar, 1); // sacar de la zona
       }

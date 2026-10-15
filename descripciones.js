@@ -206,9 +206,9 @@ const DESCRIPCIONES = {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "Cuando coloques un personaje de <strong>Nekoma</strong> encima de esta carta en <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong>, puedes descartar 1 carta de <strong>Nekoma</strong> de tu mano para añadir +2 a su recepción.",
-    "en": "When you place a <strong>Nekoma</strong> character on top of this card in <strong><span style=&quot;color:#1565c0&quot;>reception</span></strong>, you may discard 1 <strong>Nekoma</strong> card from your hand to add +2 to its reception.",
-    "fr": "Lorsque vous placez un personnage de <strong>Nekoma</strong> par-dessus cette carte en <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong>, vous pouvez défausser 1 carte de <strong>Nekoma</strong> de votre main pour ajouter +2 à sa réception."
+    "es": "Cuando coloques un personaje de <strong>Nekoma</strong> distinto de <strong>Yaku Morisuke</strong> encima de esta carta en <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong>, puedes enviar esta carta al descarte para añadir +2 a su recepción.",
+    "en": "When a <strong>Nekoma</strong> character other than <strong>Yaku Morisuke</strong> enters on top of this card in your <strong><span style=&quot;color:#1565c0&quot;>receive</span></strong> area, you may send this card to the discard pile to use this skill. That character gets +2 receive points.",
+    "fr": "Lorsque vous placez un personnage de <strong>Nekoma</strong> autre que <strong>Yaku Morisuke</strong> par-dessus cette carte en <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong>, vous pouvez envoyer cette carte à la défausse pour ajouter +2 à sa réception."
   },
   "HV-P01-025": {
     "nombre_es": "",

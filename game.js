@@ -310,6 +310,7 @@ function perderPunto(jugador) {
     let carta = jugador.mazoPuntos.shift();               // roba del mazo de puntos
     jugador.mano.push(carta);                             // va a la mano
     log(t("log.pierdeUnPunto", { jugador: jugador.nombre, cantidad: jugador.mazoPuntos.length }));
+    reproducirFinPartido();
     enviarJugada("perderPunto", {});                      // avisar al rival del punto perdido
 
     // comprobar efecto motivacionRobar
@@ -329,7 +330,8 @@ function perderPunto(jugador) {
       }
     }
 
-  } else { // ------------------------------------------- // Modo local                                            
+  } else { // ------------------------------------------- // Modo local
+    reproducirFinPartido();                                            
     game.jugadores.forEach(j => {
       let cartasQueNecesita = 6 - j.mano.length;          // cartas que necesita hasta 6
       if (cartasQueNecesita > 0) {
@@ -596,6 +598,36 @@ function resolverLog(jugador, carta, zona, resultado) {
   );
 }
 
+// ===================================================================================== SONIDOS
+// =============================================================================================
+const cacheAudio = {};   // guarda cada audio ya cargado, para no recargarlo en cada reproducción
+
+// reproduce un archivo con el volumen que el jugador tenga configurado
+function reproducirArchivo(ruta) {
+  if (!cacheAudio[ruta]) cacheAudio[ruta] = new Audio(ruta);
+  const audio = cacheAudio[ruta];
+  audio.volume = obtenerVolumen();       // viene de sonidos.js
+  audio.currentTime = 0;                  // vuelve al principio, por si aún estaba sonando
+  audio.play().catch(() => {});           // si el navegador lo bloquea, no da error
+}
+
+// sonido de la hinchada elegida (inicio de partida y punto ganado)
+function reproducirHinchada() {
+  try {
+    const id = obtenerHinchada();           // viene de sonidos.js
+    if (id === "ninguna") return;           // el jugador eligió "Sin sonido"
+    reproducirArchivo(`audio/${id}.mp3`);
+  } catch (e) { console.warn("[sonido]", e); }   // un fallo de sonido nunca debe afectar a la partida
+} 
+
+// sonido fijo de final de partida (victoria, derrota o rival que abandona)
+function reproducirFinPartido() {
+  try {
+    if (obtenerHinchada() === "ninguna") return;   // "Sin sonido" silencia también este
+    reproducirArchivo("audio/finpartido.mp3");
+  } catch (e) { console.warn("[sonido]", e); }
+}
+
 // ==================================================================================================================================================================== COLOCAR CARTA 
 // ==================================================================================================================================================================================
 function colocarCarta(jugador, carta, zona) { 
@@ -629,8 +661,11 @@ function colocarCarta(jugador, carta, zona) {
     }
   }
   // ========================================================================================================= 2: Colocar carta normal
-let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
+  let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
     if (index === -1) {                         // si no hay carta seleccionada
+        log(t("log.seleccionaCarta"));
+        renderMano();
+        return;
     } else {
       if (carta.info?.personajeDoble) {         // si es personaje doble, clonar antes de sacar
         carta = {                               // crear copia independiente
@@ -974,10 +1009,11 @@ let index = jugador.mano.indexOf(carta);    // para sacar la carta de la mano
         
       // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
       // ------------------------------------------------------------------------- LEV D02-004
-        let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev
+        let levEnRemate = jugador.zonas.remate.at(-1);                 // la carta de arriba de remate
+        let esLevD02004 = levEnRemate?.info?.id === "HV-D02-004";      // solo esta Lev tiene la habilidad
         let levEnBloqueo = [...jugador.zonas.bloqueo, ...jugador.zonas.bloqueoApoyo]
-           .some(c => c.nombre === "Haiba Lev");                             // comprobar si ya hay un Lev en bloqueo
-        if (levEnRemate && !levEnBloqueo && game.bloqueoActual.apoyos.length < 2) {
+          .some(c => c.nombre === "Haiba Lev");                       // "ya hay un Lev" sigue por nombre
+        if (esLevD02004 && !levEnBloqueo && game.bloqueoActual.apoyos.length < 2) {
           aplicarLevApoyo(jugador);
         }
 
@@ -1126,26 +1162,6 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
         }
       }
     }
-
-    if (esHabilidad && tieneEfecto("descartePorRobo")) {
-      let efecto = game.efectosActivos.find(e => e.tipo === "descartePorRobo");
-      if (efecto.activadoPor !== game.jugadores.indexOf(jugador)) {        // si lo activó el rival
-        mostrarSelectorCartas(                                             // selector en la propia pantalla
-          "Efecto Oikawa: debes descartar 1 carta:",
-          jugador.mano
-        ).then(cartaElegida => {
-          if (!cartaElegida) return;
-          let index = jugador.mano.indexOf(cartaElegida);
-          jugador.mano.splice(index, 1);
-          jugador.trash.push(cartaElegida);
-          log(t("log.descartaPorEfecto", { jugador: jugador.nombre, carta: cartaElegida.nombre }));
-          if (modoOnline) enviarTrash(jugador);                            // sincronizar trash
-          renderMano();
-          renderManoRival();
-          renderCampo();
-        });
-      }
-    }
   }
   log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: cantidad }));
   if (modoOnline) enviarMazo();                                         // sincronizar mazo con el rival
@@ -1164,10 +1180,7 @@ async function usarGuts(jugador, zona, cantidad) {
     window._cerrarFuera = null;                                                     // limpiar referencia global
   }
 
-  const ultimaCartaZona = jugador.zonas[zona].at(-1);         // detectar última carta zona
-  const cartasDisponibles = ultimaCartaZona?.recienJugada
-    ? jugador.zonas[zona].slice(0, -1)                       // excluir del guts si es recienJugada
-    : jugador.zonas[zona];                                   // incluir todas si no lo es
+  const cartasDisponibles = jugador.zonas[zona].slice(0, -1);   // GUTS = todas las cartas debajo de la carta de arriba
 
   if (cartasDisponibles.length < cantidad) {
     log(t("log.gutsInsuficiente"));
@@ -1210,7 +1223,7 @@ async function usarGutsMultiZona(jugador, cantidad, zonas = ["saque", "recepcion
   // recopilar todos los GUTS disponibles de todas las zonas
   let todasGuts = [];                                                    // array de {carta, zona}
   zonas.forEach(zona => {                                                // para cada zona permitida
-    jugador.zonas[zona].filter(c => !c.recienJugada).forEach(c => {      // excluir recién jugadas
+    jugador.zonas[zona].slice(0, -1).forEach(c => {                      // GUTS = todo menos la carta de arriba
       todasGuts.push({ carta: c, zona: zona });                          // guardar carta + zona
     });
   });
@@ -1333,6 +1346,8 @@ function jugarBloqueo() {
   }
   const jugador = game.jugadores[game.jugadorActivo];
   colocarCarta(jugador, game.cartaSeleccionada, "bloqueo");
+  game.cartaSeleccionada = null; 
+  renderMano();                                                   // refrescar mano y botones (el botón de jugar ya no debe verse)
 }
 // ============================================================================================================================= BOTÓN
 // ======================================================================================================================= JUGAR CARTA
@@ -1747,14 +1762,13 @@ async function jugarEvento() {
   }
   if (carta.info?.unica) {                                         // si la carta tiene restricción 1 Única
     let yaJugada = jugador.zonas.eventos.some(                     // buscar en la zona de eventos
-      e => e.nombre === carta.nombre                               // si ya hay una carta con ese nombre
+      e => e.recienJugada && e.nombre === carta.nombre             // jugada ESTE turno y con el mismo nombre
     );
-    if (yaJugada) {                                                // si ya fue jugada este turno
+    if (yaJugada) {                                                // si ya se jugó una este turno
       log(t("log.cartaUnica", { carta: carta.nombre }));
-      jugador.mano.push(carta);                                    // devolver a la mano
       renderMano();                                                // actualizar mano
       renderManoRival();                                           // actualizar mano rival
-      return;                                                      // cancelar
+      return;                                                      // la carta nunca salió de la mano: no hay que devolverla
     }
   }
 
@@ -1763,8 +1777,7 @@ async function jugarEvento() {
 
   jugador.zonas.eventos.push(carta); // colocar en zona de eventos
   carta.zonaActual = "eventos";
-  // game.ultimaCarta = carta;
-  // game.ultimoJugador = jugador;
+  carta.recienJugada = true;                                       // jugada este turno (se limpia al cambiar de turno)
 
   log(t("log.eventoJugado", { jugador: jugador.nombre, carta: carta.nombre }));
 
@@ -1845,6 +1858,7 @@ function jugarHabilidadDesdeMano() {
 // ============================================================================================================================= BOTÓN
 // ==================================================================================================================== CONCEDER PUNTO
 function concederPunto() {
+  if (game.fase === "mulligan") return;
   if (modoOnline && game.jugadorActivo !== miNumero - 1) { // comprobar turno en online
     log(t("log.noEsTuTurno")); 
     return;
@@ -1911,6 +1925,7 @@ function actualizarFaseUI() {
   moverPelota();
   actualizarBotonesAccion();
   actualizarFaseTracker();
+  aplicarBloqueoMulligan();
 }
 // ===================================================================================================================================
 // =========================================================================================================== ACTUALIZAR FASE TRACKER
@@ -2146,6 +2161,13 @@ function bloquearUI() {
 }
 function desbloquearUI() {
   document.querySelectorAll("button").forEach(btn => btn.disabled = false); // habilitar todos los botones
+  aplicarBloqueoMulligan();
+}
+// Mientras la fase sea "mulligan" (sorteo y mulligan incluidos) no se puede conceder punto ni deseleccionar carta
+function aplicarBloqueoMulligan() {
+  const bloquear = game.fase === "mulligan";
+  document.querySelectorAll('button[onclick^="concederPunto"], button[onclick^="deseleccionarCarta"]')
+    .forEach(btn => btn.disabled = bloquear);
 }
 // ===================================================================================================================================
 // ================================================================================================================ ACTUALIZAR MARCADOR
@@ -2500,8 +2522,11 @@ function mostrarTooltip(carta, e) {
 
   let x = e.clientX + 15;
   let y = e.clientY + 15;
-  if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - 15;
-  if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - 15;
+  if (x + tooltip.offsetWidth > window.innerWidth - 8) x = e.clientX - tooltip.offsetWidth - 15;
+
+  // siempre hacia abajo del ratón; si no cabe, se sube lo justo para entrar en pantalla
+  const maxY = window.innerHeight - tooltip.offsetHeight - 8;
+  y = Math.max(8, Math.min(y, maxY));
 
   tooltip.style.left = x + "px";
   tooltip.style.top = y + "px";
@@ -2922,9 +2947,11 @@ function contarNombresUnicosEnTrash(jugador, escuela) {
       .map(c => c.nombre)
   ).size;
 }
-
-
-// ======================================== LLEVAR DEL TRASH A LA MANO
+// ================================================================ CALCULAR GUTS DE UNA ZONA
+function obtenerGuts(jugador, zona) {
+  return jugador.zonas[zona].slice(0, -1);                           // GUTS = todo menos la carta de arriba
+}
+// ================================================================ LLEVAR DEL TRASH A LA MANO
 async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porque tiene selector
   let elegibles = filtrarTrash(jugador, filtros);
   if (elegibles.length === 0) {
@@ -3327,7 +3354,8 @@ async function aplicarYamamoto028(jugador, carta) { // =========================
   renderCampo();                                                  // actualizar campo
 }
 async function aplicarLevApoyo(jugador) { // ================================================ LEV D02-004
-  let levEnRemate = jugador.zonas.remate.find(c => c.nombre === "Haiba Lev"); // buscar Lev en remate
+  let levEnRemate = jugador.zonas.remate.at(-1);                 // la carta de arriba de remate
+  if (levEnRemate?.info?.id !== "HV-D02-004") return false;      // seguridad: solo Lev D02-004
 
   let eleccion = await mostrarEleccion([                                    // preguntar al jugador
     { texto: t("log.activarHabilidad", { carta: "Haiba Lev" }) },
@@ -3614,7 +3642,12 @@ async function aplicarPersonajeDoble(jugador, carta) { // ======================
 
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
+let partidaTerminada = false;                               // evita que el sonido y el panel se repitan
 function mostrarFinPartida(gane) {
+  if (partidaTerminada) return;                          // si ya se mostró, no hace nada
+  partidaTerminada = true;
+  reproducirFinPartido();                                // el mismo sonido para victoria y derrota
+  
   const panel = document.getElementById("panel-fin");       // recuperar panel
   const titulo = document.getElementById("fin-titulo");     // recuperar título
 
@@ -3641,14 +3674,14 @@ const todasLasCartas = inicializarCartas();
 ["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-023"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -3677,30 +3710,30 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P02-002", "HV-P02-003", "HV-P01-076"].forEach(id => {
+["HV-P01-077", "HV-P01-077", "HV-P01-011", "HV-P01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
 ["HV-P01-054"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -3728,7 +3761,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
@@ -3774,7 +3807,7 @@ const mazoPruebaDate = [
 ];
 mazoPruebaDate.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
@@ -3950,3 +3983,5 @@ if (!modoOnline) {  // IF añadido para el modo online
   renderMano();  // mostrar la mano al jugador inicial al empezar el juego
   renderManoRival()
 }
+
+aplicarBloqueoMulligan();     // ← nuevo: estado inicial

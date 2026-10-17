@@ -4,6 +4,10 @@
 const HINCHADAS = [
   { id: "karasuno", nombre: "Karasuno" },
   { id: "dateko",     nombre: "Date Kôgyo" },
+  { id: "nekoma",     nombre: "Nekoma" },
+  { id: "inarizaki",     nombre: "Inarizaki" },
+  { id: "seijo",     nombre: "Aoba Jôsai" },
+  { id: "shiratorizawa",     nombre: "Shiratorizawa" },
 ];
 
 const HINCHADA_DEFECTO = "karasuno";   // la que suena si el jugador aún no ha elegido nada

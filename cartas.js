@@ -1256,8 +1256,8 @@ function inicializarCartas() {
 
       // buscar zonas con al menos 1 carta de Nekoma en el GUTS (excluyendo recién jugadas)
       let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona => {
-        let guts = jugador.zonas[zona].filter(c => !c.recienJugada);  // excluir todas las recién jugadas
-        return guts.some(c => c.info?.escuela === "Nekoma");           // al menos 1 Nekoma en el GUTS
+        let guts = obtenerGuts(jugador, zona);                        // excluir todas las recién jugadas
+        return guts.some(c => c.info?.escuela === "Nekoma");          // al menos 1 Nekoma en el GUTS
       });
 
       if (zonasValidas.length === 0) {                                // si no hay ninguna zona válida
@@ -1272,7 +1272,7 @@ function inicializarCartas() {
       let zonaElegida = zonasValidas[eleccion];                       // zona elegida por el jugador
 
       // calcular GUTS de esa zona (excluyendo todas las recién jugadas)
-      let cartasGuts = jugador.zonas[zonaElegida].filter(c => !c.recienJugada); // excluir recién jugadas
+      let cartasGuts = obtenerGuts(jugador, zonaElegida);             // antes: ...filter(c => !c.recienJugada)
 
       // filtrar solo Nekoma
       let gutNekoma = cartasGuts.filter(c => c.info?.escuela === "Nekoma");     // solo Nekoma
@@ -2909,7 +2909,7 @@ function inicializarCartas() {
       }
 
       let zonasValidas = ["saque", "recepcion", "pase", "remate", "bloqueo"].filter(zona =>
-        jugador.zonas[zona].length >= 2                        // buscar zonas con al menos 2 cartas en el GUTS
+        obtenerGuts(jugador, zona).length >= 2                             // antes: jugador.zonas[zona].length >= 2
       );
       if (zonasValidas.length === 0) {                         // si no hay ninguna zona válida
         log(t("log.condicionNoCumplida"));
@@ -2923,7 +2923,7 @@ function inicializarCartas() {
       let zonaElegida = zonasValidas[eleccion];                // zona elegida por el jugador
 
       // elegir 2 cartas del GUTS de esa zona con el selector
-      let cartasGuts = jugador.zonas[zonaElegida];  
+      let cartasGuts = obtenerGuts(jugador, zonaElegida);   
       if (cartasGuts.length < 2) {                             // comprobar que hay al menos 2
         log(t("log.condicionNoCumplida"));
         return false;                                          // return false: habilidad no ejecutada
@@ -3076,9 +3076,7 @@ function inicializarCartas() {
       log(t("log.defensaAumentada", { valor: 1 }));
 
       if (bloqueador.nombre === "Tsukishima Kei") {                  // si el bloqueador es Tsukishima
-        let yamaguchisEnGuts = jugador.zonas.saque.filter(c =>       // buscar en toda la zona de saque
-          c.nombre === "Yamaguchi Tadashi"                            // solo Yamaguchi
-        );
+        let yamaguchisEnGuts = obtenerGuts(jugador, "saque").filter(c => c.nombre === "Yamaguchi Tadashi"); 
 
         if (yamaguchisEnGuts.length > 0) {                           // si hay alguno
           let yamaguchi = await mostrarSelectorCartas(               // abrir selector directamente
@@ -3391,15 +3389,12 @@ function inicializarCartas() {
 
       robarCarta(jugador, 1, true);                                      // roba 1 carta
 
-      // +1 al pase de un Oikawa Toru en el campo
+      // +1 al pase de un Oikawa Toru en el campo (solo tiene efecto si está en la zona de pase)
       let oikawaEnPase = jugador.zonas.pase.at(-1);                      // buscar Oikawa en pase
       if (oikawaEnPase?.nombre === "Oikawa Toru") {                      // si hay Oikawa en pase
         game.valorAtaque += 1;                                           // +1 al pase
         log(t("log.ataqueAumentado", { valor: 1 }));
-      } else if (sacador?.nombre === "Oikawa Toru") {                    // si hay Oikawa en saque
-        game.valorAtaque += 1;                                           // +1 al saque
-        log(t("log.ataqueAumentado", { valor: 1 }));
-      }
+      } 
       descartePorRobo();                                                 // activar efecto
     },
     {
@@ -3408,7 +3403,7 @@ function inicializarCartas() {
       fases: ["saque", "pase"],                                          // saque y pase
       escuela: "Aoba Jôsai",
       rareza: "N",
-      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Solo puedes jugar esta carta si tu sacador o colocador es <strong>Oikawa Toru</strong>. Roba 1 carta y +1 al parámetro activo de <strong>Oikawa Toru</strong>. Durante el siguiente turno rival, cada vez que el rival añada una carta a su mano por medios no estándar, deberá descartar 1 carta de su mano.`
+      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Solo puedes jugar esta carta si tu sacador o colocador es <strong>Oikawa Toru</strong>. Roba 1 carta y +1 al pase de uno de tus personajes llamados <strong>Oikawa Toru</strong>. Durante el siguiente turno rival, cada vez que el rival añada una carta a su mano, excepto robando, deberá descartar 1 carta de su mano.`
     }
   ),
   crearCarta("Vosotros sois fuertes", // ======================================================== P01-088

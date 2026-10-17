@@ -587,6 +587,8 @@ function arrancarPartidaOnline(mazoJ1, mazoJ2, nombreJ1, nombreJ2) {
   if (miNumero === 1) {
     db.ref("partidas/" + salaActual).onDisconnect().remove(); // borrar sala al desconectarse
   }
+
+  vigilarPresenciaRival();
 }
 
 function construirMazo(mazoData) {
@@ -634,6 +636,46 @@ function leerParametrosURL() {
       return;
     }
     arrancarPartidaOnline(sala.jugador1mazo, sala.jugador2mazo, sala.jugador1nombre, sala.jugador2nombre);
+  });
+}
+
+// ==================================================================== DETECTAR SI EL RIVAL ABANDONA
+// ==================================================================================================
+const SEGUNDOS_GRACIA_ABANDONO = 8;   // margen antes de dar la victoria por abandono
+
+function vigilarPresenciaRival() {
+  const miRef = db.ref("partidas/" + salaActual + "/presencia/jugador" + miNumero);
+
+  // cada vez que me (re)conecto a Firebase: marco que estoy aquí y programo el borrado si me desconecto
+  db.ref(".info/connected").on("value", function(snap) {
+    if (snap.val() !== true) return;
+    miRef.onDisconnect().remove();
+    miRef.set(true);
+  });
+
+  const rivalNumero = miNumero === 1 ? 2 : 1;
+  let rivalVisto = false;               // evita falsos avisos antes de que el rival entre
+  let temporizador = null;              // cuenta atrás de abandono
+
+  db.ref("partidas/" + salaActual + "/presencia/jugador" + rivalNumero).on("value", function(snap) {
+    if (snap.val()) {                                   // el rival está conectado
+      rivalVisto = true;
+      if (temporizador) {                               // estaba en cuenta atrás: ha vuelto a tiempo
+        clearTimeout(temporizador);
+        temporizador = null;
+        log(t("log.rivalVuelve"));
+      }
+      return;
+    }
+    if (!rivalVisto || partidaTerminada || temporizador) return;   // nada que vigilar, o ya hay cuenta atrás
+
+    log(t("log.rivalDesconectado", { segundos: SEGUNDOS_GRACIA_ABANDONO }));
+    temporizador = setTimeout(function() {
+      temporizador = null;
+      if (partidaTerminada) return;                     // la partida acabó mientras tanto
+      log(t("log.rivalAbandona"));
+      mostrarFinPartida(true);                          // gano por abandono (y suena finpartido)
+    }, SEGUNDOS_GRACIA_ABANDONO * 1000);
   });
 }
 
@@ -819,6 +861,7 @@ function enviarMazoPuntos() {
     .set(miJugador.mazoPuntos.length);                       // número de cartas en mazoPuntos
 }
 
+let puntosRivalAnterior = null;
 function escucharMazoPuntosRival() {
   const rivalNumero = miNumero === 1 ? 2 : 1;               // número del rival
   const rivalIndice = miNumero === 1 ? 1 : 0;               // índice del rival
@@ -826,6 +869,11 @@ function escucharMazoPuntosRival() {
   db.ref("partidas/" + salaActual + "/mazoPuntos/jugador" + rivalNumero).on("value", function(snap) {
     const cantidad = snap.val();                             // cantidad de cartas del rival
     if (cantidad === null) return;                           // ignorar si no hay dato
+    console.log("mazoPuntos rival:", puntosRivalAnterior, "→", cantidad);
+    // si el rival tiene menos que antes, ha perdido un punto: lo he ganado yo
+    if (puntosRivalAnterior !== null && cantidad < puntosRivalAnterior) reproducirFinPartido();  
+    puntosRivalAnterior = cantidad;     
+
     game.jugadores[rivalIndice].mazoPuntos = Array(cantidad).fill({}); // simular mazoPuntos
     actualizarMarcador();                                    // actualizar marcador
     renderCampo();                                           // redibujar campo
@@ -852,7 +900,6 @@ function escucharMazoRival() {
   });
 }
 
-
 // ── BORRAR PARTIDA TERMINADA ──────────────────────────────
 function borrarPartida() {
   if (!modoOnline) return;                               // solo en modo online
@@ -861,7 +908,8 @@ function borrarPartida() {
     .catch(e => console.log("Error deleting match " + e)); // error
 }
 
-// ── SORTEO INICIAL ────────────────────────────────────────
+// ================================================================================= SORTEO INICIAL 
+// ================================================================================================
 function iniciarSorteo() {
   console.log("Starting coin flip, myNumber:", miNumero, "room:", salaActual);
   document.getElementById("btn-confirmar-mulligan").style.display = "none";
@@ -874,7 +922,9 @@ function iniciarSorteo() {
 
     if (!sorteo || !sorteo.jugador1 || !sorteo.jugador2) return;
 
+    // desactivar listener
     db.ref("partidas/" + salaActual + "/sorteo").off();
+    reproducirHinchada();
 
     const miPuntuacion = sorteo["jugador" + miNumero];                          // mi puntuación
     const rivalPuntuacion = sorteo["jugador" + (miNumero === 1 ? 2 : 1)];       // puntuación rival

@@ -175,3 +175,9 @@ log.condicionEscuelaNoCumplida;No todos tus personajes en juego son de {escuela}
 log.condicionCartasEnMano;No tienes el número de cartas en mano requerido;You don’t have the required number of cards in hand;Tu n’as pas le nombre de cartes en main requis;
 log.opcionPotenciarRecepcion;+1 a la recepción de un personaje;+1 to a character’s reception;+1 à la réception d’un personnage;
 log.opcionFijarRecepcion;Fijar la recepción de un personaje con recepción 5 o más en 7;Set a character’s reception with 5 or more reception to 7;Fixer la réception d’un personnage avec réception 5 ou plus à 7;
+log.efectoOikawa;Efecto Oikawa: elige una carta para descartar;Oikawa effect: choose a card to discard;Effet Oikawa : choisissez une carte à défausser;
+log.hasGanado;¡Has ganado!;You win!;Tu as gagné !;
+log.hasPerdido;¡Has perdido!;You lose!;Tu as perdu !;
+log.rivalAbandona;Tu rival ha abandonado la partida;Your opponent has left the match;Ton adversaire a quitté la partie;
+log.rivalDesconectado;Tu rival se ha desconectado. Si no vuelve en {segundos}s, ganas la partida;Your opponent disconnected. If they don’t come back in {segundos}s, you win the match;Ton adversaire s’est déconnecté. S’il ne revient pas dans {segundos}s, tu gagnes la partie;
+log.rivalVuelve;Tu rival ha vuelto;Your opponent is back;Ton adversaire est de retour;

@@ -245,6 +245,18 @@
             <button type="button" class="swatch-color" data-color="#1AA6A0" style="background:#1AA6A0;" title="Aoba Jôsai" onclick="elegirColorPreset('#1AA6A0')"></button>
           </div>
         </div>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelHinchada">Hinchada</label>
+          <div style="display:flex; gap:6px;">
+            <select id="select-hinchada" class="input-settings" style="flex:1;"></select>   <!-- las opciones las rellena el JS del paso 4.2 -->
+            <button type="button" class="btn-idioma" onclick="probarHinchada()">▶</button>
+          </div>
+        </div>
+
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelVolumen">Volumen</label>
+          <input type="range" id="input-volumen" min="0" max="100" step="5" style="width:100%; accent-color:var(--accent);">
+        </div>
       </div>
         <button onclick="guardarSettings()" class="btn-menu" data-i18n="menu.btnGuardar">Guardar</button>
         <button onclick="mostrarPantalla('principal')" class="btn-menu" data-i18n="menu.btnVolver">← Volver</button>
@@ -260,6 +272,7 @@
   </div> <!-- fin triptico -->
 
   <script src="i18n.js"></script>
+  <script src="sonidos.js"></script>
   <script>
     // =============================================================== APLICAR COLOR GUARDADO AL CARGAR PÁGINA
     const colorGuardado = localStorage.getItem("hv-accent");
@@ -283,6 +296,7 @@
       colorTemporal = localStorage.getItem("hv-accent") || "#E8761A";       // recuperar color actual
       marcarIdiomaSettings();                                               // pintar el botón activo
       marcarColorActivo();
+      cargarSonidoSettings();
       mostrarPantalla("settings");                                          // mostrar la pantalla
     }
     // ======================================================================================== CAMBIAR IDIOMA
@@ -322,6 +336,10 @@
       idiomaActivo = idiomaTemporal;    // actualizar la variable que usa t()
       aplicarIdioma();                  // refrescar los textos ya traducidos en pantalla
       document.documentElement.style.setProperty("--accent", colorTemporal); 
+
+      localStorage.setItem("hv-hinchada", document.getElementById("select-hinchada").value);  
+      localStorage.setItem("hv-volumen", document.getElementById("input-volumen").value / 100); 
+      cargarSonidoSettings();          // repinta "Sin sonido" en el idioma recién guardado
     }
 
     // ======================================================================================== BIENVENIDA
@@ -333,6 +351,36 @@
         boton.classList.toggle("activo", boton.dataset.idioma === idiomaBienvenida); // marcar botón activo
       });
     }
+
+    // ===================================================================================== SETTINGS: SONIDO 
+    // ======================================================================================================
+    // rellena el desplegable con "Sin sonido" + las hinchadas de sonidos.js
+    function llenarHinchadas() {
+      const select = document.getElementById("select-hinchada");
+      select.innerHTML = "";
+      select.add(new Option(t("menu.sonidoNinguno"), "ninguna"));
+      HINCHADAS.forEach(h => select.add(new Option(h.nombre, h.id)));
+    }
+
+    // rellena el desplegable y pone el valor guardado (o el de por defecto)
+    function cargarSonidoSettings() {
+      llenarHinchadas();
+      const select = document.getElementById("select-hinchada");
+      const guardada = obtenerHinchada();                   // viene de sonidos.js
+      select.value = guardada;
+      if (select.value !== guardada) select.value = HINCHADA_DEFECTO;   // si la guardada ya no existe en la lista
+      document.getElementById("input-volumen").value = Math.round(obtenerVolumen() * 100);
+    }
+
+    // botón ▶: suena lo que hay elegido ahora, aunque aún no se haya guardado
+    function probarHinchada() {
+      const id = document.getElementById("select-hinchada").value;
+      if (id === "ninguna") return;                         // "Sin sonido" no suena
+      const audio = new Audio(`audio/${id}.mp3`);
+      audio.volume = document.getElementById("input-volumen").value / 100;
+      audio.play().catch(() => {});
+    }
+
     // ================================================================================ CONFIRMAR Y GUARDAR
     function confirmarBienvenida() {
       const nombre = document.getElementById("input-nombre-bienvenida").value.trim() || "Jugador"; // nombre o valor por defecto

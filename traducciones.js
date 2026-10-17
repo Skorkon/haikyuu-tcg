@@ -179,7 +179,13 @@ const TRADUCCIONES = {
       "condicionEscuelaNoCumplida": "No todos tus personajes en juego son de {escuela}",
       "condicionCartasEnMano": "No tienes el número de cartas en mano requerido",
       "opcionPotenciarRecepcion": "+1 a la recepción de un personaje",
-      "opcionFijarRecepcion": "Fijar la recepción de un personaje con recepción 5 o más en 7"
+      "opcionFijarRecepcion": "Fijar la recepción de un personaje con recepción 5 o más en 7",
+      "efectoOikawa": "Efecto Oikawa: elige una carta para descartar",
+      "hasGanado": "¡Has ganado!",
+      "hasPerdido": "¡Has perdido!",
+      "rivalAbandona": "Tu rival ha abandonado la partida",
+      "rivalDesconectado": "Tu rival se ha desconectado. Si no vuelve en {segundos}s, ganas la partida",
+      "rivalVuelve": "Tu rival ha vuelto"
     }
   },
   "en": {
@@ -359,7 +365,13 @@ const TRADUCCIONES = {
       "condicionEscuelaNoCumplida": "Not all your characters in play are from {escuela}",
       "condicionCartasEnMano": "You don’t have the required number of cards in hand",
       "opcionPotenciarRecepcion": "+1 to a character’s reception",
-      "opcionFijarRecepcion": "Set a character’s reception with 5 or more reception to 7"
+      "opcionFijarRecepcion": "Set a character’s reception with 5 or more reception to 7",
+      "efectoOikawa": "Oikawa effect: choose a card to discard",
+      "hasGanado": "You win!",
+      "hasPerdido": "You lose!",
+      "rivalAbandona": "Your opponent has left the match",
+      "rivalDesconectado": "Your opponent disconnected. If they don’t come back in {segundos}s, you win the match",
+      "rivalVuelve": "Your opponent is back"
     }
   },
   "fr": {
@@ -539,7 +551,13 @@ const TRADUCCIONES = {
       "condicionEscuelaNoCumplida": "Tous tes personnages en jeu ne sont pas de {escuela}",
       "condicionCartasEnMano": "Tu n’as pas le nombre de cartes en main requis",
       "opcionPotenciarRecepcion": "+1 à la réception d’un personnage",
-      "opcionFijarRecepcion": "Fixer la réception d’un personnage avec réception 5 ou plus à 7"
+      "opcionFijarRecepcion": "Fixer la réception d’un personnage avec réception 5 ou plus à 7",
+      "efectoOikawa": "Effet Oikawa : choisissez une carte à défausser",
+      "hasGanado": "Tu as gagné !",
+      "hasPerdido": "Tu as perdu !",
+      "rivalAbandona": "Ton adversaire a quitté la partie",
+      "rivalDesconectado": "Ton adversaire s’est déconnecté. S’il ne revient pas dans {segundos}s, tu gagnes la partie",
+      "rivalVuelve": "Ton adversaire est de retour"
     }
   },
   "": {
@@ -719,7 +737,13 @@ const TRADUCCIONES = {
       "condicionEscuelaNoCumplida": "",
       "condicionCartasEnMano": "",
       "opcionPotenciarRecepcion": "",
-      "opcionFijarRecepcion": ""
+      "opcionFijarRecepcion": "",
+      "efectoOikawa": "",
+      "hasGanado": "",
+      "hasPerdido": "",
+      "rivalAbandona": "",
+      "rivalDesconectado": "",
+      "rivalVuelve": ""
     }
   }
 };

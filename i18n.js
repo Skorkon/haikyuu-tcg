@@ -52,6 +52,9 @@ const I18N = {
           btnGuardar:       "GUARDAR",
           btnVolver:        "VOLVER",
           colorSecundario:  "Color secundario",
+          labelHinchada: "Hinchada",
+          labelVolumen:  "Volumen",
+          sonidoNinguno: "Sin sonido",
         },
         lobby: {                                          // ← para lobby.html
           volverInicio:     "← Volver a inicio",
@@ -172,6 +175,9 @@ const I18N = {
           btnGuardar:       "SAVE",
           btnVolver:        "BACK",
           colorSecundario:  "Secondary colour",
+          labelHinchada: "Cheering crowd",
+          labelVolumen:  "Volume",
+          sonidoNinguno: "No sound",
         },
         lobby: {
           volverInicio:     "← Back to home",
@@ -292,6 +298,9 @@ const I18N = {
           btnGuardar:       "ENREGISTRER",
           btnVolver:        "RETOUR",
           colorSecundario:  "Couleur secondaire",
+          labelHinchada: "Supporters",
+          labelVolumen:  "Volume",
+          sonidoNinguno: "Aucun son",
         },
         lobby: {
           volverInicio:     "← Retour à l'accueil",

@@ -1011,8 +1011,8 @@ function colocarCarta(jugador, carta, zona) {
       // ------------------------------------------------------------------------- LEV D02-004
         let levEnRemate = jugador.zonas.remate.at(-1);                 // la carta de arriba de remate
         let esLevD02004 = levEnRemate?.info?.id === "HV-D02-004";      // solo esta Lev tiene la habilidad
-        let levEnBloqueo = [...jugador.zonas.bloqueo, ...jugador.zonas.bloqueoApoyo]
-          .some(c => c.nombre === "Haiba Lev");                       // "ya hay un Lev" sigue por nombre
+        let levEnBloqueo = [game.bloqueoActual.central, ...game.bloqueoActual.apoyos] // solo los bloqueadores de este bloqueo
+          .some(c => c?.nombre === "Haiba Lev");                          
         if (esLevD02004 && !levEnBloqueo && game.bloqueoActual.apoyos.length < 2) {
           aplicarLevApoyo(jugador);
         }
@@ -1130,7 +1130,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
   for (let i = 0; i < cantidad; i++) {
     if (jugador.mazo.length === 0) {
       log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
-      return;
+      break;
     }
 
   // comprobar efecto negarRobar
@@ -1139,7 +1139,7 @@ function robarCarta(jugador, cantidad = 1, esHabilidad = false) {       // jugad
       let jugadorIndex = game.jugadores.indexOf(jugador);             // índice del jugador que roba
       if (efecto.activadoPor !== jugadorIndex) {                       // si lo activó el rival
         log(t("log.negarRobar", { jugador: jugador.nombre }));
-        return;                                                        // bloquear el robo
+        break;                                                        // bloquear el robo
       }
     }
 
@@ -3358,7 +3358,7 @@ async function aplicarLevApoyo(jugador) { // ===================================
   if (levEnRemate?.info?.id !== "HV-D02-004") return false;      // seguridad: solo Lev D02-004
 
   let eleccion = await mostrarEleccion([                                    // preguntar al jugador
-    { texto: t("log.activarHabilidad", { carta: "Haiba Lev" }) },
+    { texto: t("log.activarHabilidadNombre", { carta: "Haiba Lev" }) },
     { texto: t("log.noActivar") }
   ]);
   if (eleccion !== 0) return;                                               // si no quiere, ignorar
@@ -3671,17 +3671,17 @@ const todasLasCartas = inicializarCartas();
 /*
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
-["HV-P01-021", "HV-D02-012", "HV-P01-018", "HV-P01-023"].forEach(id => {
+["HV-D02-004", "HV-D02-004", "HV-P01-018", "HV-P01-023"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-003"); 
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -3710,7 +3710,7 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
@@ -3719,21 +3719,21 @@ mazoPruebaNekoma.forEach(id => {
 ["HV-P01-077", "HV-P01-077", "HV-P01-011", "HV-P01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
 ["HV-P01-054"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -3761,7 +3761,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 

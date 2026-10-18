@@ -2691,13 +2691,13 @@ function inicializarCartas() {
   function(jugador, game, carta) {
     if (carta.zonaActual !== "remate") {
       log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
-      return;
+      return false;
     }
 
     // condición 1: 3 o menos cartas en mano
     if (jugador.mano.length > 3) {
       log(t("log.condicionCartasEnMano"));
-      return;
+      return false;
     }
 
     // condición 2: 4 o más escuelas diferentes en juego
@@ -2707,7 +2707,7 @@ function inicializarCartas() {
       jugador.zonas.remate.at(-1),
       jugador.zonas.bloqueo.at(-1),
       jugador.zonas.saque.at(-1)
-    ].filter(c => c !== null);
+    ].filter(c => c !== null && c !== undefined);  
 
     let escuelas = new Set(cartasEnJuego.map(c => c.info?.escuela));
     if (escuelas.size < 4) {
@@ -5002,7 +5002,7 @@ function inicializarCartas() {
       let todosBloqueo = [
         game.bloqueoActual.central,
         ...game.bloqueoActual.apoyos
-      ].filter(c => c !== null);
+      ].filter(c => c !== null && c !== undefined);
 
       let dateTeches = todosBloqueo.filter(c => c?.info?.escuela === "Date Kôgyô");
       if (dateTeches.length < 3) {

@@ -2904,6 +2904,13 @@ function oneTouch(n) {
 
   jugadorBloqueo.zonas.bloqueoApoyo = [];
   game.bloqueoActual = { central: null, apoyos: [] };
+  robarCarta(jugadorBloqueo, 1); 
+
+  if (modoOnline) {
+    enviarJugada("limpiarBloqueadores", {});               // avisar al rival que limpie los apoyos
+    enviarTrash(jugadorBloqueo);                           // sincronizar trash con las cartas de apoyo
+    enviarFase("recepcion");                               // avisar del cambio de fase (incluye el ataque ya reducido)
+  }
   actualizarFaseUI();
   renderMano();
   renderManoRival()

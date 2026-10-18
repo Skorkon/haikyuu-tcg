@@ -2342,7 +2342,7 @@ function inicializarCartas() {
       rareza: "NP"
     }
   ),
-  // ===================================================================================================== SHIRATORIZAWA
+  // ====================================================================================================== SHIRATORIZAWA
   crearCarta("Ushijima Wakatoshi", // =========================================================== P01-056
     {
       saque: 4,
@@ -2446,13 +2446,13 @@ function inicializarCartas() {
       bloqueo: 3
     },
     function(jugador, game, carta) {
-      if (carta.zonaActual !== "bloqueo") {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") {
         log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
-        return;
+        return false;
       }
       if (game.valorAtaque < 4) {
         log(t("log.condicionNoCumplida"));
-        return;
+        return false;
       }
       oneTouch(2);
     },
@@ -2726,7 +2726,7 @@ function inicializarCartas() {
     posicion: "WS",
     anyo: 2,
     rareza: "S",
-    descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 3</strong> Si tienes 3 o menos cartas en mano y tus jugadores en el campo pertenecen a más de 4 escuelas diferentes, añade +2 al remate. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Blockout (2)</strong></span> : En el próximo turno, si el bloqueador rival central tiene un bloqueo original de 2 o menos, irá al descarte en lugar de quedarse en la zona de bloqueo.`
+    descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tienes 3 o menos cartas en tu mano y hay 4 o más personajes de escuelas distintas en tu campo, +2 al remate. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Blockout (2)</strong></span> : Durante el próximo turno rival, cuando un personaje con bloqueo base de 2 o menos entre en su zona de bloqueo, el rival pierde el punto.`
   }
 ),
   crearCarta("Echigo Sakae", // ================================================================= P01-069
@@ -4337,7 +4337,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si tienes 4 o más cartas de evento de <strong>Karasuno</strong> en tu zona de eventos, +2 al saque. Si tienes 6 o más, +1 adicional.`
     }
   ),
-
+  // ===================================================================================================== INARIZAKI
   crearCarta("Miya Atsumu", // ================================================================= P02-015
     {
       saque: 3,
@@ -4782,7 +4782,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Ojiro Aran", // ============================================================ P02-029
+  crearCarta("Ojiro Aran", // ================================================================== P02-029
     {
       saque: 5,
       recepcion: 2,
@@ -4798,7 +4798,7 @@ function inicializarCartas() {
         return false;
       }
       if (contarNombresUnicosEnTrash(jugador, "Inarizaki") < 6) {
-        log("Necesitas 6 nombres distintos de Inarizaki en el trash (tienes " + contarNombresUnicosEnTrash(jugador, "Inarizaki") + ") ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return false;
       }
@@ -4825,7 +4825,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS - 3</strong>: Si hay 6 o más personajes distintos de <strong>Inarizaki</strong> en tu descarte, +3 al remate. Durante el próximo turno rival, la habilidad del receptor quedará anulada.`
     }
   ),
-  crearCarta("Ojiro Aran", // ============================================================ P02-030
+  crearCarta("Ojiro Aran", // ================================================================== P02-030
     {
       saque: 5,
       recepcion: 4,
@@ -4843,7 +4843,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Riseki Heisuke", // ============================================================ P02-031
+  crearCarta("Riseki Heisuke", // ============================================================== P02-031
     {
       saque: 0,
       recepcion: 2,
@@ -4867,7 +4867,7 @@ function inicializarCartas() {
         log(t("log.habilidadActivada", { carta: carta.nombre }));
         negarColocador();
       } else {
-        log("La carta descartada no es Riseki Heisuke, no se activa el bonus ❌");
+        log(t("log.condicionNoCumplida"));
       }
 
       renderMano();
@@ -4884,7 +4884,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> GUTS - 1</strong>: Si la carta descartada es otro <strong>Riseki Heisuke</strong>, +6 al saque y el rival no podrá colocar un <strong>colocador (S)</strong> el próximo turno.`
     }
   ),
-  crearCarta("Ginjima Hitoshi", // ============================================================ P02-032
+  crearCarta("Ginjima Hitoshi", // ============================================================= P02-032
     {
       saque: 1,
       recepcion: 5,
@@ -4902,7 +4902,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-    crearCarta("Omimi Ren", // ============================================================ P02-033
+  crearCarta("Omimi Ren", // =================================================================== P02-033
     {
       saque: 2,
       recepcion: 3,
@@ -4920,7 +4920,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Akagi Michinari", // ============================================================ P02-034
+  crearCarta("Akagi Michinari", // ============================================================= P02-034
     {
       saque: 0,
       recepcion: 6,
@@ -4939,7 +4939,7 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-  crearCarta("Kosaku Yuto", // ============================================================ P02-035
+  crearCarta("Kosaku Yuto", // ================================================================= P02-035
     {
       saque: 3,
       recepcion: 0,
@@ -4982,7 +4982,8 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta desde tu mano para añadir +2 a la recepción de un personaje de <strong>Inarizaki</strong> en juego.`
     }
   ),
-  crearCarta("Aone Takanobu", // ============================================================== P02-036
+  // ===================================================================================================== DATE KOGYÔ
+  crearCarta("Aone Takanobu", // =============================================================== P02-036
     {
       saque: 1,
       recepcion: 1,
@@ -5005,13 +5006,12 @@ function inicializarCartas() {
 
       let dateTeches = todosBloqueo.filter(c => c?.info?.escuela === "Date Kôgyô");
       if (dateTeches.length < 3) {
-        log("Necesitas 3 personajes de Date Kôgyô en bloqueo.");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return false;
       }
 
       if (!await usarGuts(jugador, "bloqueo", 2)) {
-        log("Necesitas 2 GUTS en bloqueo.");
         carta.habilidadUsada = false;
         return false;
       }
@@ -5029,7 +5029,7 @@ function inicializarCartas() {
       descripcion: `Sólo puedes usar esta habilidad si hay <strong>3 personajes del Date Kôgyô</strong> en el bloqueo actual.</br><strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> GUTS - 2</strong> :</br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo ofensivo (7)</strong></span> : Devuelve un contraataque con potencia de 7.`
     }
   ),
-  crearCarta("Aone Takanobu", // ============================================================== P02-037
+  crearCarta("Aone Takanobu", // =============================================================== P02-037
     {
       saque: 2,
       recepcion: 2,
@@ -5039,7 +5039,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueoApoyo") {
-        log(t("log.condicionNoCumplida"));
+        log(t("log.zonaIncorrecta"));
         carta.habilidadUsada = false;
         return;
       }
@@ -5053,9 +5053,9 @@ function inicializarCartas() {
       }
 
       // mostrar selector si hay varios
-      let aoneElegido = await mostrarSelectorCartas("Elige un Aone Takanobu del trash:", aonesEnTrash);
+      let aoneElegido = await mostrarSelectorCartas(t("log.elegirCarta"), aonesEnTrash);
       if (!aoneElegido) {
-        log("Habilidad cancelada ❌");
+        log(t("log.habilidadCancelada"));
         return false;
       }
 
@@ -5069,7 +5069,7 @@ function inicializarCartas() {
       let indexApoyo = game.bloqueoActual.apoyos.indexOf(carta);
       if (indexApoyo !== -1) game.bloqueoActual.apoyos.splice(indexApoyo, 1);
       jugador.mazo.push(carta);
-      log("Aone (P02-037) enviado al fondo del mazo.");
+      log(t("log.cartaAlFondoMazo", { carta: "Aone Takanobu" }));
 
       // colocar el Aone elegido como bloqueador de apoyo
       jugador.zonas.bloqueoApoyo.push(aoneElegido);
@@ -5079,7 +5079,7 @@ function inicializarCartas() {
       // ajustar valorDefensa: quitar bloqueo base, poner 3
       game.valorDefensa -= aoneElegido.stats.bloqueo;
       game.valorDefensa += 3;
-      log("Aone del trash colocado como apoyo con bloqueo fijo de 3.");
+      log(t("log.cartaJugadaEnZona", { carta: "Aone Takanobu", zona: t("ui.zonaBloqueo") }));
 
       renderCampo();
       renderMano();
@@ -5095,7 +5095,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si esta carta está como bloqueador de apoyo, puedes enviarla al fondo de tu mazo para buscar un <strong>Aone Takanobu</strong> en tu descarte, colocarlo como bloqueador de apoyo y fijar su bloqueo en 3.`
     }
   ),
-  crearCarta("Futakuchi Kenji", // ============================================================== P02-038
+  crearCarta("Futakuchi Kenji", // ============================================================= P02-038
     {
       saque: 1,
       recepcion: 4,
@@ -5105,7 +5105,7 @@ function inicializarCartas() {
     },
     function(jugador, game, carta) {
       if (carta.zonaActual !== "bloqueoApoyo") {
-        log(t("log.condicionNoCumplida"));
+        log(t("log.zonaIncorrecta"));
         carta.habilidadUsada = false;
         return;
       }
@@ -5122,7 +5122,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si esta carta está como bloqueador de apoyo y el bloqueo es exitoso: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (4)</strong></span>. Durante el siguiente turno rival, el receptor que coloque tendrá <strong>-1 a su recepción</strong>.`
     }
   ),
-  crearCarta("Futakuchi Kenji", // ============================================================== P02-039
+  crearCarta("Futakuchi Kenji", // ============================================================= P02-039
     {
       saque: 1,
       recepcion: 2,
@@ -5156,7 +5156,7 @@ function inicializarCartas() {
       rareza: "S",
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Si tu colocador es un <strong><span style="color:#2e7d32">colocador (S) del Date Kôgyô</span></strong>, durante el siguiente turno rival, si su defensa total de bloqueo es <strong>6 o menos</strong>, el bloqueo fallará automáticamente.`    }
   ),
-  crearCarta("Koganegawa Kanji", // ============================================================== P02-040
+  crearCarta("Koganegawa Kanji", // ============================================================ P02-040
     {
       saque: 2,
       recepcion: 2,
@@ -5174,7 +5174,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Sakunami Kosuke", // ============================================================== P02-041
+  crearCarta("Sakunami Kosuke", // ============================================================= P02-041
     {
       saque: 0,
       recepcion: 5,
@@ -5184,7 +5184,7 @@ function inicializarCartas() {
     },
     async function(jugador, game, carta) { // trashea 3 del deck, si son 3 Date, busca 1 date en el trash sin habilidad y ponlo en apoyo
       if (jugador.mazo.length < 3) {
-        log("No hay suficientes cartas en el mazo ❌");
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
         carta.habilidadUsada = false;
         return;
       }
@@ -5192,12 +5192,12 @@ function inicializarCartas() {
       // descartar las 3 primeras cartas del mazo
       let tresCartas = jugador.mazo.splice(0, 3);
       tresCartas.forEach(c => jugador.trash.push(c));
-      log("Cartas descartadas del mazo: " + tresCartas.map(c => c.nombre).join(", "));
+      log(t("log.cartasDescartadasDelMazo", { cantidad: tresCartas.length }));
 
       // comprobar que todas son de Date Kôgyô
       let todasDate = tresCartas.every(c => c.info?.escuela === "Date Kôgyô");
       if (!todasDate) {
-        log("No todas las cartas son de Date Kôgyô. Efecto cancelado.");
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Date Kôgyô" }));
         return;
       }
 
@@ -5214,9 +5214,9 @@ function inicializarCartas() {
       }
 
       // mostrar selector
-      let cartaElegida = await mostrarSelectorCartas("Elige un personaje de Date Kôgyô para colocar como bloqueador de apoyo:", elegibles);
+      let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles);
       if (!cartaElegida) {
-        log("Habilidad cancelada.");
+        log(t("log.habilidadCancelada"));
         return;
       }
 
@@ -5225,7 +5225,7 @@ function inicializarCartas() {
       jugador.trash.splice(indexTrash, 1);
 
       if (game.bloqueoActual.apoyos.length >= 2) {
-        log("Ya hay 2 bloqueadores de apoyo.");
+        log(t("log.maximoBloqueadores"));
         jugador.trash.push(cartaElegida);
         return;
       }
@@ -5233,7 +5233,7 @@ function inicializarCartas() {
       jugador.zonas.bloqueoApoyo.push(cartaElegida);
       game.bloqueoActual.apoyos.push(cartaElegida);
       cartaElegida.zonaActual = "bloqueoApoyo";
-      log(cartaElegida.nombre + " colocado como bloqueador de apoyo desde el trash.");
+      log(t("log.cartaJugadaEnZona", { carta: cartaElegida.nombre, zona: t("ui.zonaBloqueo") }));
 
       if (modoOnline) {
         enviarJugada("cartaJugada", {
@@ -5259,7 +5259,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta las 3 primeras cartas de tu mazo. Si todas son de <strong>Date Kôgyô</strong>, puedes colocar desde tu trash 1 personaje de Date Kôgyô sin habilidad como bloqueador de apoyo.`
     }
   ),
-  crearCarta("Kamasaki Yasushi", // ============================================================== P02-042
+  crearCarta("Kamasaki Yasushi", // ============================================================ P02-042
     {
       saque: 1,
       recepcion: 0,
@@ -5282,13 +5282,14 @@ function inicializarCartas() {
       );
 
       if (cartasValidas.length < 4) {
-        log("El rival no tiene suficientes cartas de evento en pase/remate (necesitas 4, tiene " + cartasValidas.length + ") ❌");
+        log(t("log.condicionNoCumplida"));
         carta.habilidadUsada = false;
         return;
       }
 
       game.valorDefensa += 5;
       log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 5 }));
     },
     {
       tipo: "personaje",
@@ -5300,7 +5301,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el rival tiene 4 o más cartas de eventos de tipo <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> o <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> en su zona de eventos, añade +5 al bloqueo.`
     }
   ),
-  crearCarta("Moniwa Kaname", // ============================================================== P02-043
+  crearCarta("Moniwa Kaname", // =============================================================== P02-043
     {
       saque: 2,
       recepcion: 1,
@@ -5318,7 +5319,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Sasaya Takehito", // ============================================================== P02-044
+  crearCarta("Sasaya Takehito", // ============================================================= P02-044
     {
       saque: 2,
       recepcion: 3,
@@ -5336,7 +5337,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Obara Yutaka", // ============================================================== P02-045
+  crearCarta("Obara Yutaka", // ================================================================ P02-045
     {
       saque: 1,
       recepcion: 5,
@@ -5354,7 +5355,8 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Ushijima Wakatoshi", // ============================================================== P02-046
+  // ===================================================================================================== SHIRATORIZAWA
+  crearCarta("Ushijima Wakatoshi", // ========================================================== P02-046
     {
       saque: 3,
       recepcion: 3,
@@ -5419,7 +5421,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS 3</strong>: Si tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> es el <strong>S</strong> de <strong>Shiratorizawa</strong>, +3 al remate y trashea hasta 2 cartas del GUTS de recepción del rival.`
     }
   ),
-  crearCarta("Ushijima Wakatoshi", // ============================================================== P02-047
+  crearCarta("Ushijima Wakatoshi", // ========================================================== P02-047
     {
       saque: 1,
       recepcion: 5,
@@ -5437,7 +5439,7 @@ function inicializarCartas() {
       rareza: "R"
     }
   ),
-  crearCarta("Tendo Satori", // ==================================================================== P02-048
+  crearCarta("Tendo Satori", // ================================================================ P02-048
     {
       saque: 1,
       recepcion: 1,
@@ -5489,7 +5491,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Lanza una moneda: si sale cara, +4 al bloqueo. Si sale cruz, trashea las 3 primeras cartas de tu mazo.`
     }
   ),
-  crearCarta("Tendo Satori", // ==================================================================== P02-049
+  crearCarta("Tendo Satori", // ================================================================ P02-049
     {
       saque: 2,
       recepcion: 0,
@@ -5518,7 +5520,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
     }
   ),
-  crearCarta("Shirabu Kenjiro", // ================================================================= P02-050
+  crearCarta("Shirabu Kenjiro", // ============================================================= P02-050
     {
       saque: 2,
       recepcion: 0,
@@ -5605,7 +5607,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Solo si todos tus personajes en juego son de <strong>Shiratorizawa</strong>. +2 al pase. Si todo el GUTS pagado era de posición <strong>S</strong>, puedes mover hasta 1 carta de <strong>Shiratorizawa</strong> de tu GUTS a la zona de GUTS de <strong><span style="color:#c62828">remate</span></strong>.`
     }
   ),
-  crearCarta("Goshiki Tsutomu", // ================================================================= P02-051
+  crearCarta("Goshiki Tsutomu", // ============================================================= P02-051
     {
       saque: 4,
       recepcion: 0,
@@ -5624,7 +5626,7 @@ function inicializarCartas() {
       descripcion: `Si esta carta entra en juego desde la mano encima de <strong>Ushijima Wakatoshi</strong> y tienes 3 cartas o menos en tu mano, +2 al remate de esta carta.`
     }
   ),
-  crearCarta("Ohira Reon", // ====================================================================== P02-052
+  crearCarta("Ohira Reon", // ================================================================== P02-052
     {
       saque: 1,
       recepcion: 5,
@@ -5655,7 +5657,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 3</strong>: +2 a la recepción.`
     }
   ),
-  crearCarta("Hayato Yamagata", // ================================================================= P02-053
+  crearCarta("Hayato Yamagata", // ============================================================= P02-053
     {
       saque: 0,
       recepcion: 6,
@@ -5674,7 +5676,7 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-  crearCarta("Taichi Kawanishi", // ================================================================ P02-054
+  crearCarta("Taichi Kawanishi", // ============================================================ P02-054
     {
       saque: 2,
       recepcion: 3,
@@ -5692,7 +5694,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
-  crearCarta("Eita Semi", // ======================================================================= P02-055
+  crearCarta("Eita Semi", // =================================================================== P02-055
     {
       saque: 4,
       recepcion: 1,
@@ -5710,6 +5712,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  // ===================================================================================================== AOBA JÔSAI
   crearCarta("Oikawa Toru", // ================================================================= P02-056
     {
       saque: 1,
@@ -5740,7 +5743,7 @@ function inicializarCartas() {
       }
 
       let iwaizumiElegido = await mostrarSelectorCartas(                 // abrir selector
-        "Elige un Iwaizumi Hajime del trash para añadir a tu mano:",     // título
+        t("log.elegirCarta"),  
         iwaizumisEnTrash                                                 // solo Iwaizumi
       );
       if (!iwaizumiElegido) return;                                      // si cancela, ignorar
@@ -5748,7 +5751,7 @@ function inicializarCartas() {
       let index = jugador.trash.indexOf(iwaizumiElegido);                // buscar en el trash
       jugador.trash.splice(index, 1);                                    // sacar del trash
       añadirCartaAMano(jugador, iwaizumiElegido);                        // añadir a la mano
-      log("Iwaizumi Hajime añadido a la mano desde el trash.");
+      log(t("log.cartaAMano", { carta: "Iwaizumi Hajime" }));
 
       if (modoOnline) enviarTrash(jugador);                              // sincronizar trash
       renderMano();                                                      // actualizar mano
@@ -5782,7 +5785,7 @@ function inicializarCartas() {
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;   // índice del rival
       let rival = game.jugadores[rivalIndex];                            // jugador rival
       if (rival.mano.length > 3) {                                       // comprobar cartas del rival
-        log("El rival debe tener 3 o menos cartas en la mano.");
+        log(t("log.cartasEnManoIncorrectas"));
         return false;                                                    // return false: condición no cumplida
       }
 
@@ -5792,6 +5795,7 @@ function inicializarCartas() {
 
       game.valorDefensa += 7;                                            // +7 a la recepción
       log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 7 }));
 
       renderMano();                                                      // actualizar mano
       renderManoRival();                                                 // actualizar mano rival
@@ -5823,7 +5827,7 @@ function inicializarCartas() {
 
       let cartasQueNecesita = 3 - jugador.mano.length;                  // cartas que faltan hasta 3
       if (cartasQueNecesita <= 0) {                                      // si ya tiene 3 o más
-        log("Ya tienes 3 o más cartas en la mano.");
+        log(t("log.cartasEnManoIncorrectas"));
         return false;                                                    // return false: condición no cumplida
       }
 
@@ -5866,6 +5870,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  // ===================================================================================================== NEKOMA
   crearCarta("Kozume Kenma", // ================================================================ P02-060
     {
       saque: 1,
@@ -5904,6 +5909,7 @@ function inicializarCartas() {
 
       game.valorDefensa += 3;                                            // +3 a la recepción
       log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 3 }));
 
       // buscar rematador rival
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;     // índice del rival
@@ -5913,6 +5919,7 @@ function inicializarCartas() {
       if (rematadorRival && rematadorRival.stats.remate === 0) {         // si remate base del rival es 0
         game.valorDefensa += 3;                                          // +3 adicional a la recepción
         log(t("log.condicionCumplida"));
+        log(t("log.defensaAumentada", { valor: 3 }));
       }
     },
     {
@@ -6008,6 +6015,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  // ===================================================================================================== FUKURODANI
   crearCarta("Kotaro Bokuto", // =============================================================== P02-064
     {
       saque: 5,
@@ -6124,7 +6132,7 @@ function inicializarCartas() {
 
       // comprobar si la carta dropeada es un personaje de Fukurodani
       if (cartaRevelada.info?.escuela !== "Fukurodani") {
-        log(t("log.condicionNoCumplida"));                                   // condición no cumplida, sin más efecto
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Fukurodani" }));
         renderMano();                                                        
         renderManoRival();                                                   
         renderCampo();
@@ -6162,6 +6170,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Dropea la carta superior de tu mazo. Si es un personaje de <strong>Fukurodani</strong>, puedes descartar 1 carta de tu mano para hacer <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Two Attack (3)</strong></span>: fija tu ataque en 3 y pasa directamente a fase de recepción.`
     }
   ),
+  // ===================================================================================================== KAMOMEDAI
   crearCarta("Hoshiumi Kourai", // ============================================================= P02-068
     {
       saque: 3,
@@ -6180,6 +6189,7 @@ function inicializarCartas() {
       rareza: "N"
     }
   ),
+  // ===================================================================================================== ITACHIYAMA
   crearCarta("Sakusa Kiyoomi", // ============================================================== P02-069
     {
       saque: 5,
@@ -6260,6 +6270,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 4</strong>: Roba 2 cartas, coloca 1 carta de tu mano arriba o al fondo de tu mazo, y +3 a la recepción.`
     }
   ),
+  // ===================================================================================================== MULTI ESCUELAS
   crearCarta("Maruyama Kazuki", // ============================================================= P02-071
     {
       saque: 1,
@@ -6522,6 +6533,7 @@ function inicializarCartas() {
       descripcion: `Al colocar esta carta, elige si su nombre es <strong>Sawamura Daichi</strong> o <strong>Kuroo Tetsuro</strong>. El nombre, escuela y posición elegidos se aplican de forma definitiva.`
     }
   ),
+  // ===================================================================================================== EVENTOS
   crearCarta("Yachi Hitoka", // ================================================================ P02-079
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
@@ -6650,11 +6662,10 @@ function inicializarCartas() {
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                  // roba 1 carta
-      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 1 }));
 
       let receptor = jugador.zonas.recepcion.at(-1);                // buscar el receptor en juego
       if (!receptor || receptor.info?.escuela !== "Karasuno") {     // comprobar que es de Karasuno
-        log(t("log.condicionNoCumplida"));
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Karasuno" }));
         return false;                                               // return false: habilidad no ejecutada
       }
 
@@ -6667,6 +6678,7 @@ function inicializarCartas() {
       }
       game.valorDefensa += 1;                                       // +1 a la recepción
       log(t("log.condicionCumplida"));
+      log(t("log.defensaAumentada", { valor: 1 }));
     },
     {
       tipo: "evento",
@@ -6797,12 +6809,12 @@ function inicializarCartas() {
                 && c.info?.escuela === "Inarizaki");                         // solo Inarizaki
 
       if (elegibles.length === 0) {                                          // si no hay ninguno
-        log(t("log.condicionNoCumplida"));
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Inarizaki" }));
         return false;
       }
 
       game.valorDefensa += 1;                                                // +1 a la recepción
-      log("Kurosu: +1 a la recepción 💪");
+      log(t("log.defensaAumentada", { valor: 1 }));
 
       // contar cartas de Inarizaki en zona de eventos jugables en saque, pase o remate
       let cartasValidas = jugador.zonas.eventos.filter(c =>
@@ -6814,7 +6826,8 @@ function inicializarCartas() {
 
       if (cartasValidas.length >= 2) {                                       // si hay 2 o más
         game.valorDefensa += 1;                                              // +1 adicional
-        log("Kurosu: +1 adicional a la recepción por eventos.");
+        log(t("log.condicionCumplida"));
+        log(t("log.defensaAumentada", { valor: 1 }));
       }
     },
     {
@@ -6827,12 +6840,12 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción. Si hay 2 o más cartas de <strong>Inarizaki</strong> jugables en <strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong>, <strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> o <strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> en tu zona de eventos, +1 adicional a la recepción.`
     }
   ),
-  crearCarta("Omimi Taro", // ============================================================================ P02-085
+  crearCarta("Omimi Taro", // ================================================================== P02-085
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
 
       game.valorDefensa += 1;                                                // +1 a la recepción
-      log("Omimi Taro: +1 a la recepción.");
+      log(t("log.defensaAumentada", { valor: 1 }));
 
       // filtrar cartas de Inarizaki en la mano
       let inarizakiEnMano = jugador.mano.filter(c =>                         // buscar en la mano
@@ -6840,19 +6853,19 @@ function inicializarCartas() {
       );
 
       if (inarizakiEnMano.length === 0) {                                    // si no hay ninguna
-        log("No tienes cartas de Inarizaki en la mano para descartar.");
+        log(t("log.sinCartasParaDescartar"));
         return;                                                              // termina sin robar
       }
 
       // preguntar si quiere descartar
       let eleccion = await mostrarEleccion([                                 // mostrar opciones
-        { texto: "Descartar 1 carta de Inarizaki para robar 2." },        // opción 1
-        { texto: "No descartar" }                                           // opción 2
+        { texto: t("log.activarHabilidad") },
+        { texto: t("log.noActivar") }                                           // opción 2
       ]);
 
       if (eleccion === 0) {                                                  // si quiere descartar
         let cartaDescarte = await mostrarSelectorCartas(                     // abrir selector
-          "Elige una carta de Inarizaki para descartar:",
+          t("log.elegirCarta"),
           inarizakiEnMano                                                    // solo muestra Inarizaki
         );
         if (!cartaDescarte) return false;                                    // si cancela
@@ -6860,11 +6873,10 @@ function inicializarCartas() {
         let index = jugador.mano.indexOf(cartaDescarte);                    // buscar en la mano
         jugador.mano.splice(index, 1);                                      // sacar de la mano
         jugador.trash.push(cartaDescarte);                                  // enviar al trash
-        log(cartaDescarte.nombre + " descartada de la mano.");
+        log(t("log.cartaDescartada", { carta: cartaDescarte.nombre }));
         if (modoOnline) enviarTrash(jugador);                               // sincronizar trash con el rival
 
         robarCarta(jugador, 2, true);                                        // robar 2 cartas
-        log("Omimi Taro: roba 2 cartas.");
       }
 
       renderMano();                                                          // actualizar mano
@@ -6880,7 +6892,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> +1 a la recepción. Si descartas 1 carta de <strong>Inarizaki</strong> de tu mano, roba 2 cartas.`
     }
   ),
-  crearCarta("Hinchada de Inarizaki", // ================================================================= P02-086
+  crearCarta("Hinchada de Inarizaki", // ======================================================= P02-086
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) { // comprobar que todos los personajes en juego son de Inarizaki
       let cartasEnJuego = [
@@ -6893,12 +6905,11 @@ function inicializarCartas() {
 
       let todasInarizaki = cartasEnJuego.every(c => c.info?.escuela === "Inarizaki");
       if (!todasInarizaki) {
-        log("Todos tus personajes en juego deben ser de Inarizaki ❌");
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Inarizaki" }));
         return false;
       }
 
       robarCarta(jugador, 1, true);
-      log("Hinchada de Inarizaki: roba 1 carta 🃏");
 
       if (game.fase === "saque") {
         // comprobar si Atsumu está en saque
@@ -6906,11 +6917,9 @@ function inicializarCartas() {
         let atsumuEnSaque = sacador?.nombre === "Miya Atsumu";
 
         debilitarReceptor(1, true); // solo sin habilidad
-        log("Efecto activo: el próximo receptor rival sin habilidad tendrá -1 a la recepción 📉");
 
         if (atsumuEnSaque) {
           debilitarReceptor(1, true); // -1 adicional si Atsumu en saque
-          log("Bonus Atsumu: -1 adicional al receptor rival sin habilidad.");
         }
       }
     },
@@ -6923,21 +6932,20 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Solo puedes jugar esta carta si todos tus personajes en juego son de <strong>Inarizaki</strong>. Roba 1 carta. Si estás en fase de saque, durante el próximo turno rival, cada receptor sin habilidad tendrá <strong>-1 a la recepción</strong>. Si tu sacador es <strong>Miya Atsumu</strong>, -1 adicional.`
     }
   ),
-  crearCarta("¡Justo donde tenía que ir!", // ============================================================ P02-087
+  crearCarta("¡Justo donde tenía que ir!", // ================================================== P02-087
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
-      log("Evento: roba 1 carta.");
 
       // comprobar que hay un Atsumu en pase y un Osamu en remate
       let atsumu = jugador.zonas.pase.at(-1);
       let osamu = jugador.zonas.remate.at(-1);
       if (!atsumu || atsumu.nombre !== "Miya Atsumu") {
-        log("No hay ningún Miya Atsumu en pase ❌");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Atsumu" }));
         return false;
       }
       if (!osamu || osamu.nombre !== "Miya Osamu") {
-        log("No hay ningún Miya Osamu en remate ❌");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Osamu" }));
         return false;
       }
 
@@ -6946,18 +6954,18 @@ function inicializarCartas() {
         tipo: "justoBlanco",
         expira: game.turno + 1
       });
-      log("Efecto activo: ¡Justo donde tenía que ir!");
+      log(t("log.justoBlanco"));
 
       // ============================================================ OPCIÓN 1: traer Atsumu del GUTS de pase
       let atsumusEnGuts = jugador.zonas.pase.slice(0, -1).filter(c => c.nombre === "Miya Atsumu");
       if (atsumusEnGuts.length > 0) {
         let eleccion1 = await mostrarEleccion([
-          { texto: "Traer un Miya Atsumu desde el GUTS de pase" },
-          { texto: "No hacer esta acción" }
+          { texto: t("log.traerDesdeGuts", { carta: "Miya Atsumu", zona: t("ui.zonaPase") }) },
+          { texto: t("log.noActivar") }
         ]);
 
         if (eleccion1 === 0) {
-          let atsumuElegido = await mostrarSelectorCartas("Elige un Miya Atsumu del GUTS de pase:", atsumusEnGuts);
+          let atsumuElegido = await mostrarSelectorCartas(t("log.elegirCarta"), atsumusEnGuts);
           if (atsumuElegido) {
             // restar pase del atsumu anterior
             game.valorAtaque -= atsumu.stats.pase;
@@ -6979,7 +6987,7 @@ function inicializarCartas() {
 
             // sumar pase del nuevo atsumu
             game.valorAtaque += atsumuElegido.stats.pase;
-            log("Miya Atsumu traído desde el GUTS de pase. Valor de ataque actualizado: " + game.valorAtaque + ".");
+            log(t("log.cartaColocadaComoColocador", { carta: "Miya Atsumu", valor: game.valorAtaque }));
             if (modoOnline) {
               enviarJugada("cartaMovida", {                              // avisar al rival del movimiento
                 zona: "pase",                                           // zona donde se movió
@@ -6991,8 +6999,8 @@ function inicializarCartas() {
             // preguntar si usar habilidad
             if (atsumuElegido.habilidad) {
               let eleccionHab = await mostrarEleccion([
-                { texto: "Usar habilidad de Atsumu" },
-                { texto: "No usar habilidad" }
+                { texto: t("log.activarHabilidad") },
+                { texto: t("log.noActivar") }
               ]);
               if (eleccionHab === 0) {
                 let resultado = await atsumuElegido.habilidad(jugador, game, atsumuElegido);
@@ -7002,19 +7010,19 @@ function inicializarCartas() {
           }
         }
       } else {
-        log("No hay Miya Atsumu en el GUTS de pase.");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Atsumu" }));
       }
 
       // ============================================================ OPCIÓN 2: traer Osamu del GUTS de remate
       let osamusEnGuts = jugador.zonas.remate.slice(0, -1).filter(c => c.nombre === "Miya Osamu");
       if (osamusEnGuts.length > 0) {
         let eleccion2 = await mostrarEleccion([
-          { texto: "Traer un Miya Osamu desde el GUTS de remate" },
-          { texto: "No hacer esta acción" }
+          { texto: t("log.traerDesdeGuts", { carta: "Miya Osamu", zona: t("ui.zonaRemate") }) },
+          { texto: t("log.noActivar") }
         ]);
 
         if (eleccion2 === 0) {
-          let osamuElegido = await mostrarSelectorCartas("Elige un Miya Osamu del GUTS de remate:", osamusEnGuts);
+          let osamuElegido = await mostrarSelectorCartas(t("log.elegirCarta"), osamusEnGuts);
           if (osamuElegido) {
             // restar remate del osamu anterior
             game.valorAtaque -= osamu.stats.remate;
@@ -7036,7 +7044,7 @@ function inicializarCartas() {
 
             // sumar remate del nuevo osamu
             game.valorAtaque += osamuElegido.stats.remate;
-            log("Miya Osamu traído desde el GUTS de remate. Valor de ataque actualizado: " + game.valorAtaque + ".");
+            log(t("log.cartaColocadaComoRematador", { carta: "Miya Osamu", valor: game.valorAtaque }));
             if (modoOnline) {
               enviarJugada("cartaMovida", {                              // avisar al rival del movimiento
                 zona: "remate",                                         // zona donde se movió
@@ -7048,8 +7056,8 @@ function inicializarCartas() {
             // preguntar si usar habilidad
             if (osamuElegido.habilidad) {
               let eleccionHab = await mostrarEleccion([
-                { texto: "Usar habilidad de Osamu" },
-                { texto: "No usar habilidad" }
+                { texto: t("log.activarHabilidad") },
+                { texto: t("log.noActivar") }
               ]);
               if (eleccionHab === 0) {
                 let resultado = await osamuElegido.habilidad(jugador, game, osamuElegido);
@@ -7059,18 +7067,18 @@ function inicializarCartas() {
           }
         }
       } else {
-        log("No hay Miya Osamu en el GUTS de remate.");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Osamu" }));
       }
 
       // ============================================================ OPCIÓN 3: +1 al valorAtaque
       let eleccion3 = await mostrarEleccion([
-        { texto: "+1 al ataque de esta jugada." },
-        { texto: "No hacer esta acción" }
+        { texto: t("log.ataqueAumentado", { valor: 1 }) },
+        { texto: t("log.noActivar") }
       ]);
 
       if (eleccion3 === 0) {
         game.valorAtaque += 1;
-        log("Evento: +1 al ataque de la jugada.");
+        log(t("log.ataqueAumentado", { valor: 1 }));;
       }
       renderMano();
       renderManoRival()
@@ -7085,14 +7093,13 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta. Si tu colocador es <strong>Miya Atsumu</strong> y tu rematador es <strong>Miya Osamu</strong>, puedes: </br>· Buscar 1 <strong>Miya Atsumu</strong> del GUTS de pase y añadirlo a la jugada actual.</br>· Buscar 1 <strong>Miya Osamu</strong> del GUTS de remate y añadirlo a la jugada actual.</br>· Añade +1 al ataque de esta jugada.`
     }
   ),
-  crearCarta("Ataque rápido de los gemelos: Tempo negativo!!!", // ============================================================ P02-088
+  crearCarta("Ataque rápido de los gemelos: Tempo negativo!!!", // ============================= P02-088
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
 
       robarCarta(jugador, 1, true);                                          // roba 1 carta
-      log("Tempo negativo: roba 1 carta.");
       game.valorAtaque += 1;                                                 // +1 al ataque
-      log("Tempo negativo: +1 al ataque.");
+      log(t("log.ataqueAumentado", { valor: 1 }));
 
       // comprobar si colocador es Osamu y rematador es Atsumu
       let colocador = jugador.zonas.pase.at(-1);                            // último colocador
@@ -7111,7 +7118,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al ataque. Si tu colocador es <strong>Miya Osamu</strong> y tu rematador es <strong>Miya Atsumu</strong>, durante el próximo turno rival, el rival no podrá jugar eventos de <strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong>.`
     }
   ),
-  crearCarta("¡Oye, ¿no os dije que mis compañeros eran increíbles?!", // ============================================================ P02-089
+  crearCarta("¡Oye, ¿no os dije que mis compañeros eran increíbles?!", // ====================== P02-089
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) { // async porque tiene selector
       let cartasRobadas = 0;                                                 // contador de robos
@@ -7121,23 +7128,23 @@ function inicializarCartas() {
       );
       if (atsumusEnTrash.length > 0) {                                       // si hay alguno
         let eleccion1 = await mostrarEleccion([                              // preguntar
-          { texto: "Añadir 1 Miya Atsumu del trash a la mano." },         // opción sí
-          { texto: "No" }                                                    // opción no
+          { texto: t("log.traerDesdeGuts", { carta: "Miya Atsumu", zona: "trash" }) },
+          { texto: t("log.noActivar") }
         ]);
         if (eleccion1 === 0) {                                               // si quiere robar
           let elegido = await mostrarSelectorCartas(                         // abrir selector
-            "Elige un Miya Atsumu del trash:", atsumusEnTrash                // solo Atsumu
+            t("log.elegirCarta"), atsumusEnTrash                              // solo Atsumu
           );
           if (elegido) {                                                     // si elige uno
             let index = jugador.trash.indexOf(elegido);                     // buscar en trash
             jugador.trash.splice(index, 1);                                 // sacar del trash
             añadirCartaAMano(jugador, elegido);                             // añadir a la mano
-            log("Miya Atsumu añadido a la mano desde el trash.");
+            log(t("log.cartaAMano", { carta: "Miya Atsumu" }));
             cartasRobadas++;                                                 // incrementar contador
           }
         }
       } else {
-        log("No hay Miya Atsumu en el trash.");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Atsumu" }));
       }
 
       // ======================================================================================= PASO 2: buscar Osamu en el trash
@@ -7147,23 +7154,23 @@ function inicializarCartas() {
 
       if (osamusEnTrash.length > 0) {                                        // si hay alguno
         let eleccion2 = await mostrarEleccion([                              // preguntar
-          { texto: "Añadir 1 Miya Osamu del trash a la mano." },          // opción sí
-          { texto: "No" }                                                    // opción no
+          { texto: t("log.cartaAMano", { carta: "Miya Osamu" }) },
+          { texto: t("log.noActivar") }
         ]);
         if (eleccion2 === 0) {                                               // si quiere robar
           let elegido = await mostrarSelectorCartas(                         // abrir selector
-            "Elige un Miya Osamu del trash:", osamusEnTrash                  // solo Osamu
+            t("log.elegirCarta"), osamusEnTrash                  // solo Osamu
           );
           if (elegido) {                                                     // si elige uno
             let index = jugador.trash.indexOf(elegido);                     // buscar en trash
             jugador.trash.splice(index, 1);                                 // sacar del trash
             añadirCartaAMano(jugador, elegido);                             // añadir a la mano
-            log("Miya Osamu añadido a la mano desde el trash.");
+            log(t("log.cartaAMano", { carta: "Miya Osamu" }));
             cartasRobadas++;                                                 // incrementar contador
           }
         }
       } else {
-        log("No hay Miya Osamu en el trash.");
+        log(t("log.personajeNoEncontrado", { carta: "Miya Osamu" }));
       }
 
       // ===================================================================================== PASO 3: buscar cualquier Miya en el trash
@@ -7172,40 +7179,40 @@ function inicializarCartas() {
       );
       if (miyasEnTrash.length > 0) {                                         // si hay alguno
         let eleccion3 = await mostrarEleccion([                              // preguntar
-          { texto: "Añadir 1 carta Miya del trash a la mano." },             // opción sí
-          { texto: "No" }                                                    // opción no
+          { texto: t("log.traerCartaMiyaTrash") },
+          { texto: t("log.noActivar") }
         ]);
         if (eleccion3 === 0) {                                               // si quiere robar
           let elegido = await mostrarSelectorCartas(                         // abrir selector
-            "Elige una carta Miya del trash:", miyasEnTrash                  // cualquier Miya
+            t("log.elegirCarta"), miyasEnTrash                  // cualquier Miya
           );
           if (elegido) {                                                     // si elige uno
             let index = jugador.trash.indexOf(elegido);                     // buscar en trash
             jugador.trash.splice(index, 1);                                 // sacar del trash
             añadirCartaAMano(jugador, elegido);                             // añadir a la mano
-            log("Carta Miya añadida a la mano desde el trash 🃏");
+            log(t("log.cartaAMano", { carta: "Miya" }));
             cartasRobadas++;                                                 // incrementar contador
           }
         }
       } else {
-        log("No hay cartas Miya en el trash.");
+        log(t("log.personajeNoEncontrado", { carta: "Miya" }));
       }
 
       // ===================================================================================== DESCARTAR si robó 3
       if (cartasRobadas === 3) {                                             // si robó las 3
         if (jugador.mano.length === 0) {                                     // si no hay cartas
-          log("No tienes cartas en la mano para descartar ❌");
+          log(t("log.sinCartasParaDescartar"));
           return;
         }
         let cartaDescarte = await mostrarSelectorCartas(                     // abrir selector
-          "Has añadido 3 cartas del trash. Descarta 1 carta de tu mano:",    // título
+          t("log.descartarPorRobo", { cantidad: 3, descartar: 1 }),
           jugador.mano                                                       // toda la mano
         );
         if (cartaDescarte) {                                                 // si elige una
           let index = jugador.mano.indexOf(cartaDescarte);                  // buscar en mano
           jugador.mano.splice(index, 1);                                    // sacar de la mano
           jugador.trash.push(cartaDescarte);                                // enviar al trash
-          log(cartaDescarte.nombre + " descartada de la mano.");
+          log(t("log.cartaDescartada", { carta: cartaDescarte.nombre }));
         }
       }
       renderMano();                                                          // actualizar mano
@@ -7220,13 +7227,13 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Desde tu descarte, puedes añadir a tu mano: hasta 1 <strong>Miya Atsumu</strong>, hasta 1 <strong>Miya Osamu</strong> y hasta 1 carta con <strong>Miya</strong> en el nombre. Si añades las 3, descarta 1 carta de tu mano.`
     }
   ),
-  crearCarta("Oiwake Takuro", // ============================================================== P02-090
+  crearCarta("Oiwake Takuro", // =============================================================== P02-090
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) { // función que será interrumpida por los await y continuada con el promise del selector de carta
       robarCarta(jugador, 1, true);
       let eleccion = await mostrarEleccion([ // await : para la función
-        { texto: "+1 al bloqueo de un personaje de Date Kôgyô con bloqueo 3 🧱" },
-        { texto: "+1 a la recepción de tu receptor de Date Kôgyô 💪" }
+        { texto: t("log.opcionAumentarStat", { valor: 1, stat: t("ui.zonaBloqueo"), escuela: "Date Kôgyô" }) },
+        { texto: t("log.opcionAumentarStat", { valor: 1, stat: t("ui.zonaRecepcion"), escuela: "Date Kôgyô" }) }
       ]);
 
       if (eleccion === 0) { // OPCION 1 : buscar personajes Date Kôgyô con bloqueo 3 en el campo
@@ -7239,27 +7246,27 @@ function inicializarCartas() {
           });
         }
         if (elegibles.length === 0) { // si no hay ninguno 
-          log("No hay personajes de Date Kôgyô con bloqueo 3 en el campo ❌");
+          log(t("log.condicionNoCumplida"));
           return false;
         }
-        let cartaElegida = await mostrarSelectorCartas("Elige un personaje para +1 al bloqueo:", elegibles); // mostrar selector
+        let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles); // mostrar selector
           if (!cartaElegida) return false; // si no se selecciona nada
         game.valorDefensa += 1;
-        log("Oiwake: +1 al bloqueo de " + cartaElegida.nombre + ".");
+        log(t("log.defensaAumentada", { valor: 1 }));
       } 
 
       else { // // OPCION 2 : +1 a la recepción
         let receptor = jugador.zonas.recepcion.at(-1);
         if (!receptor || !receptor.recienJugada) {
-          log("No hay receptor colocado este turno ❌");
+          log(t("log.condicionNoCumplida"));
           return false;
         }
         if (receptor.info?.escuela !== "Date Kôgyô") {
-          log("El receptor no es de Date Kôgyô ❌");
+          log(t("log.condicionEscuelaNoCumplida", { escuela: "Date Kôgyô" }));
           return false;
         }
         game.valorDefensa += 1;
-        log("Oiwake: +1 a la recepción de " + receptor.nombre + ".");
+        log(t("log.defensaAumentada", { valor: 1 }));
       }
     },
     {
@@ -7272,12 +7279,12 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Elige: </br><strong>· +1 al bloqueo</strong> de un personaje de <strong>Date Kôgyô</strong> con bloqueo de 3. </br><strong>· +1 a la recepción</strong> de tu receptor de <strong>Date Kôgyô</strong>.`
     }
   ),
-  crearCarta("La defensa más fuerte es el ataque más rápido, eso es el bloqueo", // ============================================================== P02-091
+  crearCarta("La defensa más fuerte es el ataque más rápido, eso es el bloqueo", // ============ P02-091
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
       game.valorDefensa += 1;
-      log("Evento: +1 al bloqueo.");
+      log(t("log.defensaAumentada", { valor: 1 }));
 
       let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
       let rival = game.jugadores[rivalIndex];
@@ -7288,7 +7295,8 @@ function inicializarCartas() {
 
       if (cartasValidas.length >= 4) {
         game.valorDefensa += 6;
-        log("Evento efecto adicional por condición cumplida: +6 al bloqueo.");
+        log(t("log.condicionCumplida"));
+        log(t("log.bloqueoAumentado", { valor: 6 })); 
         doshat(7);
       }
     },
@@ -7301,7 +7309,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Roba 1 carta y añade +1 al bloqueo. </br>Si el rival tiene 4 o más cartas de eventos de tipo <strong><span style=color:#c62828>Remate</span></strong> o <strong><span style=color:#2e7d32>Pase</span></strong> en su zona de eventos, añade +6 adicional al bloqueo y si el bloqueo es exitoso: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (7)</strong></span>.`
     }
   ),
-  crearCarta("La muralla del año que viene no caerá jamás", // ============================================================== P02-092
+  crearCarta("La muralla del año que viene no caerá jamás", // ================================= P02-092
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
@@ -7309,7 +7317,7 @@ function inicializarCartas() {
       // comprobar bloqueador central de Date Kôgyô año 3
       let central = game.bloqueoActual.central;
       if (!central || central.info?.escuela !== "Date Kôgyô" || central.info?.anyo !== 3) {
-        log("Tu bloqueador central debe ser de Date Kôgyô de año 3 ❌");
+        log(t("log.condicionNoCumplida"));
         return false;
       }
 
@@ -7323,12 +7331,12 @@ function inicializarCartas() {
         });
       });
         if (elegibles.length === 0) {
-          log("No hay personajes de Date Kôgyô de año 1 o 2 en el campo ❌");
+          log(t("log.condicionAnioNoCumplida"));
           return false;
         }
 
       // mostrar selector para recuperar carta
-      let cartaElegida = await mostrarSelectorCartas("Elige un personaje de Date Kôgyô de año 1 o 2:", elegibles);
+      let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles);
       if (!cartaElegida) return false;
       // sacar la carta de su zona
         for (let zona of ["saque", "recepcion", "pase", "remate", "bloqueo"]) {
@@ -7340,19 +7348,19 @@ function inicializarCartas() {
         }
 
       añadirCartaAMano(jugador, cartaElegida);
-      log(cartaElegida.nombre + " añadido a la mano desde el campo.");
+      log(t("log.cartaAMano", { carta: cartaElegida.nombre }));
       renderMano();
       renderManoRival()
       renderCampo();
 
       // descartar 1 carta de la mano con selector
-      let cartaDescarte = await mostrarSelectorCartas("Elige una carta de tu mano para descartar:", jugador.mano);
+      let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), jugador.mano);
       if (!cartaDescarte) return false;
 
       let indexDescarte = jugador.mano.indexOf(cartaDescarte);
       jugador.mano.splice(indexDescarte, 1);
       jugador.trash.push(cartaDescarte);
-      log(cartaDescarte.nombre + " descartada de la mano.");
+      log(t("log.cartaDescartada", { carta: cartaDescarte.nombre }));
 
       renderMano();
       renderManoRival()
@@ -7367,12 +7375,12 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Si tu bloqueador central es de <strong>Date Kôgyô</strong> de año 3, puedes añadir a tu mano 1 personaje de <strong>Date Kôgyô</strong> de año 1 o 2 desde tu campo. Si lo haces, descarta 1 carta de tu mano.`
     }
   ),
-  crearCarta("Bloqueo en grupo coordinado", // ============================================================== P02-093
+  crearCarta("Bloqueo en grupo coordinado", // ================================================= P02-093
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
       game.valorDefensa += 1;
-      log("Evento: +1 al bloqueo.");
+      log(t("log.bloqueoAumentado", { valor: 1 }));
 
       // contar personajes de Date Kôgyô en bloqueo
       let bloqueadores = [
@@ -7382,12 +7390,10 @@ function inicializarCartas() {
 
       if (bloqueadores.length >= 2) {
         doshat(5);
-        log("Evento: 2 o más Date Kôgyô en bloqueo: Bloqueo ofensivo (5) activado.");
       }
 
       if (bloqueadores.length >= 3) {
         debilitarReceptor(1);
-        log("Evento: 3 Date Kôgyô en bloqueo: el próximo receptor rival tendrá -1 a la recepción.");
       }
     },
     {
@@ -7399,7 +7405,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Roba 1 carta y añade +1 al bloqueo. </br>Si hay 2 o más personajes de <strong>Date Kôgyô</strong> en tu bloqueo y el bloqueo es exitoso: <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (5)</strong></span>. </br>Si hay 3, además el próximo receptor rival tendrá <strong>-1 a su recepción</strong>.`
     }
   ),
-  crearCarta("Washijo Tanji", // ============================================================== P02-094
+  crearCarta("Washijo Tanji", // =============================================================== P02-094
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                          // roba 1 carta
@@ -7455,7 +7461,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta y +1 a la recepción de un personaje de <strong>Shiratorizawa</strong> en juego. Puedes descartar 1 personaje de <strong>Shiratorizawa</strong> sin habilidad de tu mano para +2 adicional a la recepción.`
     }
   ),
-  crearCarta("Saito Akira", // ================================================================ P02-095
+  crearCarta("Saito Akira", // ================================================================= P02-095
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       let elegibles = filtrarTrash(jugador, {                               // filtrar el trash
@@ -7504,7 +7510,7 @@ function inicializarCartas() {
           let index = jugador.mano.indexOf(cartaDescarte);                 // buscar en la mano
           jugador.mano.splice(index, 1);                                   // sacar de la mano
           jugador.trash.push(cartaDescarte);                               // enviar al trash
-          log(cartaDescarte.nombre + " descartada de la mano como coste.");
+          log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
           if (modoOnline) enviarTrash(jugador);                            // sincronizar trash
         }
       }
@@ -7523,7 +7529,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Añade a tu mano hasta 2 cartas de personaje de <strong>Shiratorizawa</strong> sin habilidad de tu descarte. Si añades las 2, descarta 1 carta de tu mano.`
     }
   ),
-  crearCarta("Abran paso a nuestro rematador", // ============================================= P02-096
+  crearCarta("Abran paso a nuestro rematador", // ============================================== P02-096
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                          // roba 1 carta
@@ -7610,7 +7616,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si tu colocador es <strong>Shirabu Kenjiro</strong> y el remate base de tu rematador es 3, puedes traer 1 <strong>Ushijima Wakatoshi</strong> del GUTS de remate y añadir +1 a su remate.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
-  crearCarta("Joder, es demasiado bueno...", // =============================================== P02-097
+  crearCarta("Joder, es demasiado bueno...", // ================================================ P02-097
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                          // roba 1 carta
@@ -7637,7 +7643,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si ese personaje es <strong>Ushijima Wakatoshi</strong>, durante el próximo turno rival, el rival no podrá colocar un bloqueador <strong>MB</strong> desde la mano.`
     }
   ),
-  crearCarta("Confío en ti", // =============================================================== P02-098
+  crearCarta("Confío en ti", // ================================================================ P02-098
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                          // roba 1 carta
@@ -7691,7 +7697,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> <strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Roba 1 carta y +1 al remate de un personaje de <strong>Shiratorizawa</strong> en juego. Si ese personaje es <strong>Goshiki Tsutomu</strong>, puedes descartar 1 <strong>Ushijima Wakatoshi</strong> de tu mano para +1 adicional al remate.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
-  crearCarta("Yamaka Mika", // ================================================================ P02-099
+  crearCarta("Yamaka Mika", // ================================================================= P02-099
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mano.length > 4) {                                        // comprobar 4 cartas o menos en mano
@@ -7773,11 +7779,10 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Si tienes 4 cartas o menos en la mano, añade 1 <strong>Daishou Suguru</strong> de tu descarte a tu mano. Si lo añades, añade hasta 1 carta del GUTS de <strong>Nohebi</strong> de tu campo a tu mano.`
     }
   ),
-  crearCarta("Haiba Arisa", // ============================================================== P02-100
+  crearCarta("Haiba Arisa", // ================================================================= P02-100
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                          // roba 1 carta
-      log("Evento: roba 1 carta.");
 
       if (game.fase === "remate") {                                         // si estamos en remate
         let rematador = jugador.zonas.remate.at(-1);                        // buscar el rematador en juego

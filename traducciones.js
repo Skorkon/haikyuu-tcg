@@ -80,7 +80,7 @@ const TRADUCCIONES = {
       "debilitarBloqueadorCentralActivo": "Efecto activo: el próximo bloqueador central rival tendrá -{valor} al bloqueo",
       "efectoTendo": "Efecto Tendo: el rival robará 1 carta cada vez que añadas una carta a tu mano",
       "blockoutActivo": "Efecto activo: los bloqueadores rivales con bloqueo igual o menor a {valor} irán al trash",
-      "blockout": "Blockout: {carta} tiene bloqueo igual o menor a {valor} y va al trash",
+      "blockout": "{carta} entra con bloqueo base de {valor} o menos: se pierde el punto",
       "blockoutApoyoActivo": "Efecto activo: el primer bloqueador de apoyo rival irá directamente al trash",
       "blockoutApoyo": "Blockout de apoyo: {carta} va directamente al trash",
       "efectoBloqueoOfensivo": "Efecto de Bloqueo Ofensivo ({valor}): si el bloqueo es exitoso el contraataque tendrá una potencia de {valor}",
@@ -130,6 +130,7 @@ const TRADUCCIONES = {
       "sinCartasValidas": "No hay cartas válidas en la búsqueda",
       "esperandoDescarte": "Esperando que el rival descarte una carta",
       "cartaColocadaComoRematador": "{carta} colocado como rematador con +{valor} al remate",
+      "cartaColocadaComoColocador": "{carta} colocado como colocador. Valor de pase actualizado: {valor}",
       "habilidadActivada": "Habilidad de {carta} activada",
       "condicionNoCumplida": "Condición no cumplida",
       "condicionCumplida": "Condición adicional cumplida. Efecto activado",
@@ -185,7 +186,17 @@ const TRADUCCIONES = {
       "hasPerdido": "¡Has perdido!",
       "rivalAbandona": "Tu rival ha abandonado la partida",
       "rivalDesconectado": "Tu rival se ha desconectado. Si no vuelve en {segundos}s, ganas la partida",
-      "rivalVuelve": "Tu rival ha vuelto"
+      "rivalVuelve": "Tu rival ha vuelto",
+      "zonaIncorrecta": "Esta carta no está en la zona correcta",
+      "habilidadCancelada": "Habilidad cancelada",
+      "cartasEnManoIncorrectas": "Número de cartas en mano incorrecto",
+      "personajeNoEncontrado": "{carta} no encontrado",
+      "justoBlanco": "Efecto activo: ¡Justo donde tenía que ir!",
+      "traerDesdeGuts": "Traer {carta} desde el GUTS de {zona}",
+      "traerCartaMiyaTrash": "Añadir 1 carta Miya del trash a la mano",
+      "descartarPorRobo": "Has añadido {cantidad} cartas del trash. Descarta {descartar} carta(s) de tu mano",
+      "opcionAumentarStat": "+{valor} al {stat} de un personaje de {escuela}",
+      "condicionAnioNoCumplida": "No hay personajes del año requerido en el campo"
     }
   },
   "en": {
@@ -266,7 +277,7 @@ const TRADUCCIONES = {
       "debilitarBloqueadorCentralActivo": "Active effect: next rival central blocker will have -{valor} to block",
       "efectoTendo": "Tendo effect: rival draws 1 card each time you add a card to your hand",
       "blockoutActivo": "Active effect: rival blockers with block equal or less than {valor} go to discard",
-      "blockout": "Blockout: {carta} has block equal or less than {valor} and goes to discard",
+      "blockout": "{carta} enters with base block of {valor} or less: the point is lost",
       "blockoutApoyoActivo": "Active effect: the first rival support blocker will go directly to discard",
       "blockoutApoyo": "Support blockout: {carta} goes directly to discard",
       "efectoBloqueoOfensivo": "Offensive Block ({valor}) effect: if block is successful the counterattack will have a power of {valor}",
@@ -316,6 +327,7 @@ const TRADUCCIONES = {
       "sinCartasValidas": "No valid cards found",
       "esperandoDescarte": "Waiting for rival to discard a card",
       "cartaColocadaComoRematador": "{carta} placed as spiker with +{valor} to spike",
+      "cartaColocadaComoColocador": "{carta} placed as setter. Set value updated: {valor}",
       "habilidadActivada": "{carta} ability activated",
       "condicionNoCumplida": "Condition not met",
       "condicionCumplida": "Additional condition met. Effect activated",
@@ -371,7 +383,17 @@ const TRADUCCIONES = {
       "hasPerdido": "You lose!",
       "rivalAbandona": "Your opponent has left the match",
       "rivalDesconectado": "Your opponent disconnected. If they don’t come back in {segundos}s, you win the match",
-      "rivalVuelve": "Your opponent is back"
+      "rivalVuelve": "Your opponent is back",
+      "zonaIncorrecta": "This card is not in the correct zone",
+      "habilidadCancelada": "Ability cancelled",
+      "cartasEnManoIncorrectas": "Incorrect number of cards in hand",
+      "personajeNoEncontrado": "{carta} not found",
+      "justoBlanco": "Active effect: Right where it had to go!",
+      "traerDesdeGuts": "Bring {carta} from {zona} GUTS",
+      "traerCartaMiyaTrash": "Add 1 Miya card from the discard to hand",
+      "descartarPorRobo": "You added {cantidad} cards from the discard. Discard {descartar} card(s) from your hand",
+      "opcionAumentarStat": "+{valor} to {stat} of a {escuela} character",
+      "condicionAnioNoCumplida": "No characters of the required year on the field"
     }
   },
   "fr": {
@@ -452,7 +474,7 @@ const TRADUCCIONES = {
       "debilitarBloqueadorCentralActivo": "Effet actif : le prochain bloqueur central rival aura -{valor} au bloc",
       "efectoTendo": "Effet Tendo : le rival pioche 1 carte chaque fois que tu ajoutes une carte à ta main",
       "blockoutActivo": "Effet actif : les bloqueurs rivaux avec bloc inférieur ou égal à {valor} vont à la défausse",
-      "blockout": "Blockout : {carta} a un bloc inférieur ou égal à {valor} et va à la défausse",
+      "blockout": "{carta} entre avec un bloc de base de {valor} ou moins : le point est perdu",
       "blockoutApoyoActivo": "Effet actif : le premier bloqueur de soutien rival ira directement à la défausse",
       "blockoutApoyo": "Blockout de soutien : {carta} va directement à la défausse",
       "efectoBloqueoOfensivo": "Effet Bloc Offensif ({valor}) : si le bloc est réussi le contre-attaque aura une puissance de {valor}",
@@ -502,6 +524,7 @@ const TRADUCCIONES = {
       "sinCartasValidas": "Aucune carte valide trouvée",
       "esperandoDescarte": "En attente que le rival se défausse d'une carte",
       "cartaColocadaComoRematador": "{carta} placé comme attaquant avec +{valor} à l'attaque",
+      "cartaColocadaComoColocador": "{carta} placé comme passeur. Valeur de passe mise à jour : {valor}",
       "habilidadActivada": "Capacité de {carta} activée",
       "condicionNoCumplida": "Condition non remplie",
       "condicionCumplida": "Condition supplémentaire remplie. Effet activé",
@@ -557,7 +580,17 @@ const TRADUCCIONES = {
       "hasPerdido": "Tu as perdu !",
       "rivalAbandona": "Ton adversaire a quitté la partie",
       "rivalDesconectado": "Ton adversaire s’est déconnecté. S’il ne revient pas dans {segundos}s, tu gagnes la partie",
-      "rivalVuelve": "Ton adversaire est de retour"
+      "rivalVuelve": "Ton adversaire est de retour",
+      "zonaIncorrecta": "Cette carte n’est pas dans la bonne zone",
+      "habilidadCancelada": "Capacité annulée",
+      "cartasEnManoIncorrectas": "Nombre de cartes en main incorrect",
+      "personajeNoEncontrado": "{carta} introuvable",
+      "justoBlanco": "Effet actif : Juste là où il fallait !",
+      "traerDesdeGuts": "Amener {carta} depuis le GUTS de {zona}",
+      "traerCartaMiyaTrash": "Ajouter 1 carte Miya depuis la défausse à la main",
+      "descartarPorRobo": "Tu as ajouté {cantidad} cartes de la défausse. Défausse {descartar} carte(s) de ta main",
+      "opcionAumentarStat": "+{valor} au {stat} d’un personnage de {escuela}",
+      "condicionAnioNoCumplida": "Aucun personnage de l’année requise sur le terrain"
     }
   },
   "": {
@@ -688,6 +721,7 @@ const TRADUCCIONES = {
       "sinCartasValidas": "",
       "esperandoDescarte": "",
       "cartaColocadaComoRematador": "",
+      "cartaColocadaComoColocador": "",
       "habilidadActivada": "",
       "condicionNoCumplida": "",
       "condicionCumplida": "",
@@ -743,7 +777,17 @@ const TRADUCCIONES = {
       "hasPerdido": "",
       "rivalAbandona": "",
       "rivalDesconectado": "",
-      "rivalVuelve": ""
+      "rivalVuelve": "",
+      "zonaIncorrecta": "",
+      "habilidadCancelada": "",
+      "cartasEnManoIncorrectas": "",
+      "personajeNoEncontrado": "",
+      "justoBlanco": "",
+      "traerDesdeGuts": "",
+      "traerCartaMiyaTrash": "",
+      "descartarPorRobo": "",
+      "opcionAumentarStat": "",
+      "condicionAnioNoCumplida": ""
     }
   }
 };

@@ -349,6 +349,39 @@ function perderPunto(jugador) {
   actualizarMarcador();                                   // actualizar marcador
   if (modoOnline) enviarMazoPuntos();                          // sincronizar mazoPuntos
 }
+// ============================================================================= PERDER PUNTO POR EFECTO
+// =====================================================================================================
+function perderPuntoPorEfecto(jugadorPerdedor) { // el jugador pierde el punto al instante (ej: Blockout)
+  let rivalIndex = game.jugadores.indexOf(jugadorPerdedor) === 0 ? 1 : 0;   // índice del rival
+  let rival = game.jugadores[rivalIndex];                                   // jugador rival
+
+  if (jugadorPerdedor.zonas.bloqueoApoyo.length > 0) {                      // los apoyos van al trash, como en resolverBloqueo()
+    jugadorPerdedor.zonas.bloqueoApoyo.forEach(c => jugadorPerdedor.trash.push(c));
+    jugadorPerdedor.zonas.bloqueoApoyo = [];
+    if (modoOnline) {
+      enviarJugada("limpiarBloqueadores", {});                              // avisar al rival
+      enviarTrash(jugadorPerdedor);                                         // sincronizar trash
+    }
+  }
+
+  perderPunto(jugadorPerdedor);                                             // pierde el punto
+  log(t("log.puntoParaRival", { jugador: rival.nombre }));
+
+  limpiarJugada();                                                          // limpiar estado de la jugada
+  game.fase = "saque";                                                      // el rival saca
+  if (modoOnline) {
+    enviarCambioTurno(rivalIndex);
+    enviarFase("saque");
+  } else {
+    cambiarJugador(rivalIndex);
+  }
+  game.faseAnterior = "bloqueo";
+  actualizarFaseUI();
+  actualizarMarcador();
+  renderMano();
+  renderManoRival();
+  renderCampo();
+}
 // ================================================================================ BARAJAR MAZO
 // =============================================================================================
 function barajarMazo(jugador) {
@@ -975,18 +1008,6 @@ function colocarCarta(jugador, carta, zona) {
             return;
           }
         }
-        // ------------------------------------------------------------------ BLOCKOUT
-        if (tieneEfecto("blockout")) {
-          let efecto = game.efectosActivos.find(e => e.tipo === "blockout"); // buscar efecto
-          if (carta.stats.bloqueo <= efecto.valor) {                         // si bloqueo insuficiente
-            log(t("log.blockout", { carta: carta.nombre, valor: efecto.valor }));
-            jugador.trash.push(carta);                                        // carta al trash
-            renderMano();
-            renderManoRival()
-            renderCampo();
-            return;
-          }
-        }
 
         // asignar bloqueador central
         game.bloqueoActual.central = carta;           // marcar como bloqueador central
@@ -1117,6 +1138,20 @@ function colocarCarta(jugador, carta, zona) {
         }
         log(t("log.cartaColocadaBloqueo", { jugador: jugador.nombre, carta: carta.nombre, stat: carta.stats.bloqueo, tipo: t("log.apoyoBloqueo") }));
       }
+
+      // ------------------------------------------------------------------ BLOCKOUT
+      // comprobar Blockout: la carta ya está colocada; si su bloqueo base es igual o inferior, pierde el punto
+      let efectoBlockout = game.efectosActivos.find(e =>
+        e.tipo === "blockout" &&
+        e.activadoPor !== game.jugadorActivo &&                  // lo activó el rival
+        carta.stats.bloqueo <= e.valor                           // bloqueo base (impreso) igual o inferior
+      );
+      if (efectoBlockout) {
+        log(t("log.blockout", { carta: carta.nombre, valor: efectoBlockout.valor }));
+        perderPuntoPorEfecto(jugador);                           // el que bloquea pierde el punto
+        return;
+      }      
+
       actualizarFaseUI();
       renderMano(); 
       renderManoRival()
@@ -2728,6 +2763,7 @@ function blockout(nivelBloqueo) {
   game.efectosActivos.push({
     tipo: "blockout",
     valor: nivelBloqueo,            // bloqueo máximo afectado
+    activadoPor: game.jugadorActivo,
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos();  // sincronizar efectos con el rival
@@ -3674,14 +3710,14 @@ const todasLasCartas = inicializarCartas();
 ["HV-D02-004", "HV-D02-004", "HV-P01-018", "HV-P01-023"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -3710,7 +3746,7 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
@@ -3807,7 +3843,7 @@ const mazoPruebaDate = [
 ];
 mazoPruebaDate.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
@@ -3893,30 +3929,30 @@ mazoPruebaShiratorizawa.forEach(id => {
 
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA  >
 // MANO MULTI-ESCUELA
-["HV-P02-004"].forEach(id => {
+["HV-P01-060", "HV-D02-002"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 4; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-075"); // Onaga Wataru (Fukurodani)
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH MULTI ESCUELA 
 ["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
   // game.jugadores[0].zonas.eventos.push(evento);
-  // game.jugadores[1].zonas.eventos.push(evento);
+  game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
 const mazoPruebaMultiEscuela = [
@@ -3941,7 +3977,7 @@ const mazoPruebaMultiEscuela = [
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <
 

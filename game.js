@@ -789,15 +789,14 @@ function colocarCarta(jugador, carta, zona) {
       log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "recepcion", stat: carta.stats.recepcion }));
 
       // ================================================== Efectos
-      if (tieneEfecto("debilitarReceptor")) {
-        let efecto = game.efectosActivos.find(e => e.tipo === "debilitarReceptor");
-        if (efecto.activadoPor !== game.jugadorActivo) {
-          if (!efecto.soloSinHabilidad || carta.habilidad === null) {
+      game.efectosActivos
+        .filter(e => e.tipo === "debilitarReceptor" && e.activadoPor !== game.jugadorActivo)   // todos los debuffs del rival
+        .forEach(efecto => {                                                                   // aplicar cada uno
+          if (!efecto.soloSinHabilidad || carta.habilidad === null) {                          // solo si afecta a este receptor
             game.valorDefensa -= efecto.valor;
             log(t("log.efectoDebilitarReceptor", { valor: efecto.valor, carta: carta.nombre }));
           }
-        }
-      }
+        });
       if (tieneEfecto("potenciarReceptor")) {                                // si efecto activo
         let efecto = game.efectosActivos.find(e => e.tipo === "potenciarReceptor"); // buscar efecto
         if (efecto.activadoPor === game.jugadorActivo &&                     // si lo activó el rival
@@ -3753,30 +3752,30 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P01-077", "HV-P01-077", "HV-P01-011", "HV-P01-011"].forEach(id => {
+["HV-P01-077", "HV-D01-006", "HV-P01-011", "HV-P01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
 ["HV-P01-054"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -3804,7 +3803,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
@@ -3812,21 +3811,21 @@ mazoPruebaKarasuno.forEach(id => {
 // MANO DATE
 ["HV-P02-039", "HV-P02-040", "HV-P02-038"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS DATE
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-044"); // Sasaya sin habilidad
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH DATE — para Aone P02-037 y Sakunami P02-041
 ["HV-P01-054", "HV-P02-036", "HV-P02-040", "HV-P02-043", "HV-P02-044", "HV-P02-045"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO DATE
@@ -3850,7 +3849,7 @@ const mazoPruebaDate = [
 ];
 mazoPruebaDate.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- DATE KÔGYÔ
@@ -3939,27 +3938,27 @@ mazoPruebaShiratorizawa.forEach(id => {
 ["HV-P01-060", "HV-D02-002"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS MULTI-ESCUELA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 4; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-075"); // Onaga Wataru (Fukurodani)
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH MULTI ESCUELA 
 ["HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO EVENTOS PRUEBAS 
 for (let i = 0; i < 3; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-P01-074");
   // game.jugadores[0].zonas.eventos.push(evento);
-  game.jugadores[1].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
 }
 // MAZO MULTI-ESCUELA — 1 copia de una carta por cada escuela distinta
 const mazoPruebaMultiEscuela = [
@@ -3984,10 +3983,9 @@ const mazoPruebaMultiEscuela = [
 mazoPruebaMultiEscuela.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- MULTI-ESCUELA <
-
 
 // ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
@@ -4012,6 +4010,46 @@ for (let i = 0; i < 7; i++) {
   // game.jugadores[1].zonas.eventos.push(evento);
   // game.jugadores[0].zonas.eventos.push(evento);
 }
+
+// ---------------------------------------------------------------------------------- INARIZAKI > 
+// MANO INARIZAKI
+["HV-P02-016", "HV-P02-086"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
+});
+// GUTS INARIZAKI
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 3; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-033"); 
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// TRASH INARIZAKI
+["HV-P02-028"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
+// MAZO INARIZAKI
+const mazoPruebaInarizaki = [
+  "HV-P02-016", "HV-P02-016",                          // 
+  "HV-P02-017", "HV-P02-017",                          // 
+  "HV-P02-018", "HV-P02-018",                          // 
+  "HV-P02-020", "HV-P02-020",                          // 
+  "HV-P02-021", "HV-P02-021",                          // 
+  "HV-P02-022", "HV-P02-022",                          // 
+  "HV-P02-024", "HV-P02-024",                          // 
+  "HV-P02-025", "HV-P02-025",                          // 
+  "HV-P02-027", "HV-P02-027",                          // 
+];
+mazoPruebaInarizaki.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- INARIZAKI <
 */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
@@ -4027,4 +4065,4 @@ if (!modoOnline) {  // IF añadido para el modo online
   renderManoRival()
 }
 
-aplicarBloqueoMulligan();     // ← nuevo: estado inicial
+aplicarBloqueoMulligan();  

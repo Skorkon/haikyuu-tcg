@@ -192,3 +192,11 @@ log.traerCartaMiyaTrash;Añadir 1 carta Miya del trash a la mano;Add 1 Miya card
 log.descartarPorRobo;Has añadido {cantidad} cartas del trash. Descarta {descartar} carta(s) de tu mano;You added {cantidad} cards from the discard. Discard {descartar} card(s) from your hand;Tu as ajouté {cantidad} cartes de la défausse. Défausse {descartar} carte(s) de ta main;
 log.opcionAumentarStat;+{valor} al {stat} de un personaje de {escuela};+{valor} to {stat} of a {escuela} character;+{valor} au {stat} d’un personnage de {escuela};
 log.condicionAnioNoCumplida;No hay personajes del año requerido en el campo;No characters of the required year on the field;Aucun personnage de l’année requise sur le terrain;
+log.rivalUsaGuts;{jugador} usa GUTS en {zona};{jugador} uses GUTS in {zona};{jugador} utilise le GUTS en {zona};
+log.rivalColocaEventoEnZona;{jugador} coloca {carta} en su zona de eventos;{jugador} places {carta} in their event zone;{jugador} place {carta} dans sa zone d’événements;
+log.efectoRivalDevuelveMano;Efecto rival: devuelves tu mano al mazo y barajas;Opponent’s effect: you return your hand to your deck and shuffle;Effet rival : tu remets ta main dans ton deck et tu mélanges;
+log.robarPorEfectoReactivo;Robas {cantidad} carta(s) por efecto reactivo;You draw {cantidad} card(s) from a reactive effect;Tu pioches {cantidad} carte(s) par effet réactif;
+log.esperandoMulliganRival;Esperando que el rival confirme su mulligan...;Waiting for opponent to confirm their mulligan...;En attente de la confirmation du mulligan du rival...;
+log.ambosListos;Ambos jugadores listos. Iniciando partida...;Both players ready. Starting match...;Les deux joueurs sont prêts. Démarrage de la partie...;
+log.ganadoSorteo;¡Has ganado el sorteo! ¡Elige quién empieza!;You won the toss! Choose who starts!;Tu as gagné le tirage ! Choisis qui commence !;
+log.rivalGanoSorteo;Tu rival ganó el sorteo. Esperando su decisión...;Your opponent won the toss. Waiting for their decision...;Ton adversaire a gagné le tirage. En attente de sa décision...;

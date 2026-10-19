@@ -42,8 +42,8 @@ function inicializarCartas() {
       escuela: "Karasuno",
       posicion: "MB",
       anyo: 1,
-      rareza: "DP",
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> GUTS 2</strong>: +2 al remate.`
+      rareza: "D",
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Ataque</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Este personaje obtiene +2 puntos de ataque.`
     }
   ),
   crearCarta("Kageyama Tobio", // ============================================================ D01-002
@@ -72,7 +72,7 @@ function inicializarCartas() {
       posicion: "S",
       anyo: 1,
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong>: +2 al pase.`
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Este personaje obtiene +2 puntos de pase.`
     }
   ),
   crearCarta("Tsukishima Kei", // ============================================================ D01-003
@@ -104,7 +104,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "D",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> GUTS - 1</strong>: Sólo puedes usar esta habilidad si el ataque del rival es igual o inferior a 4. Roba una carta.`
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Si el ataque del rival es 4 o menos, puedes pagar 1 GUTS para usar esta habilidad. Roba 1 carta.`
     }
   ),
   crearCarta("Yamaguchi Tadashi", // ========================================================= D01-004
@@ -153,7 +153,7 @@ function inicializarCartas() {
       posicion: "L",
       anyo: 2,
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS - 3</strong>: roba 1 carta y +2 a la recepción.`,
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Puedes pagar 3 GUTS para usar esta habilidad. Roba 1 carta. Este personaje obtiene +2 puntos de recepción.`,
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
@@ -221,7 +221,7 @@ function inicializarCartas() {
       posicion: "WS",
       anyo: 2,
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Descarta 1 carta de tu mano para añadir +3 a la recepción.`
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Puedes descartar 1 carta de tu mano para usar esta habilidad. Este personaje obtiene +3 puntos de recepción.`
     }
   ),
   crearCarta("Sawamura Daichi", // =========================================================== D01-008
@@ -278,7 +278,7 @@ function inicializarCartas() {
       rareza: "D"
     }
   ),
-  crearCarta("¡El voleibol es un deporte en el que siempre mira hacia arriba!", // =========== D01-011
+  crearCarta("El voleibol es un deporte... ¡¡en el que siempre miras hacia arriba!!", // ===== D01-011
     {saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0},
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true); // robar 1 carta
@@ -304,10 +304,10 @@ function inicializarCartas() {
       fases: ["recepcion"],
       escuela: "Karasuno",
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1. +1 de recepción. Si la recepción de base del jugador es de 4 o menos, +1 de recepción adicional.`
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Uno de tus personajes obtiene +1 punto de recepción. Si los puntos de recepción de ese personaje son 4 o menos, ese personaje obtiene +1 punto de recepción adicional.`
     }
   ),
-  crearCarta("Ataque amplio", // ============================================================= D01-012
+  crearCarta("Ataque deslizado", // ========================================================== D01-012
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);
@@ -327,7 +327,7 @@ function inicializarCartas() {
       fases: ["remate"],
       escuela: "Karasuno",
       rareza: "D",
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Roba 1 carta y añade +1 al remate. Si en la jugada están presentes <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> y <strong><span style= color:#c62828>Hinata Shoyo</span></strong>, el rival no podrá usar bloqueadores laterales para defender.`
+      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Ataque</span></strong> Roba 1 carta, y uno de tus personajes de <strong>Karasuno</strong> obtiene +1 punto de ataque. Si el personaje en tu zona de pase es <strong><span style="color:#2e7d32">Kageyama Tobio</span></strong> y el personaje en tu zona de ataque es <strong><span style="color:#c62828">Hinata Shoyo</span></strong>, durante el próximo turno del rival, este no podrá colocar más de 1 personaje en su zona de bloqueo.`
     }
   ),
 // =========================================================================================================================== 
@@ -361,7 +361,7 @@ function inicializarCartas() {
       posicion: "S",
       anyo: 2,
       rareza: "D",
-      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS - 2</strong> : +1 al pase. Durante el próximo turno, el rematador rival tendrá -2 al remate.`
+      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Este personaje obtiene +1 punto de pase. Durante el próximo turno del rival, cada vez que un personaje del rival entre en su zona de ataque, ese personaje obtiene -2 puntos de ataque.`
     }
   ),
   crearCarta("Kuroo Tetsuro", // ============================================================= D02-002
@@ -389,7 +389,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 3,
       rareza: "D",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> GUTS - 1</strong>: Si el bloqueo es exitoso : </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo Ofensivo (5)</strong></span> : Devuelve un contraataque con potencia de 5.`
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Puedes pagar 1 GUTS para usar esta habilidad. Durante este turno, cuando bloquees con éxito, <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo ofensivo (5)</strong></span>.`
     }
   ),
   crearCarta("Yaku Morisuke", // ============================================================= D02-003
@@ -437,7 +437,7 @@ function inicializarCartas() {
       anyo: 3,
       rareza: "D",
       zonasProhibidas: ["saque", "bloqueo"],                
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Descarta 1 carta de tu mano para añadir +2 a la recepción.`
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Puedes descartar 1 carta de tu mano para usar esta habilidad. Este personaje obtiene +2 puntos de recepción.`
     }
   ),
   crearCarta("Haiba Lev", // ================================================================= D02-004
@@ -456,7 +456,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "D",
-      descripcion: `Durante un bloqueo, una vez que jueges un bloqueador central, si esta carta está en tu zona de <strong><span style= color:#c62828>remate</span></strong>, puedes <strong>GUTS - 2</strong> de tu zona de remate para desplazar esta carta como bloqueador de apoyo.`
+      descripcion: `Cuando tu personaje entre en tu zona de bloqueo, si este personaje está en tu zona de ataque, puedes pagar 2 GUTS para usar esta habilidad. Coloca este personaje en tu zona de bloqueo como bloqueador de apoyo. (Si ya tienes un personaje llamado <strong>Haiba Lev</strong> en tu zona de bloqueo o si tienes 3 personajes en tu zona de bloqueo, este personaje no puede entrar en tu zona de bloqueo.)`
     }
   ),
   crearCarta("Kai Nobuyuki", // ============================================================== D02-005
@@ -557,7 +557,7 @@ function inicializarCartas() {
       posicion: "L",
       anyo: 1,
       rareza: "D",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS - 2</strong>: Roba 1 carta.`,
+      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Roba 1 carta.`,
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
@@ -579,32 +579,29 @@ function inicializarCartas() {
       rareza: "D",
     }
   ),
-  crearCarta("¡Las manos al frente, Lev!", // ================================================ D02-011
+  crearCarta("¡Las manos delante!", // ======================================================= D02-011
     {saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0},
-    async function(jugador, game, carta) { // async porque hay que esperar a que se cumpla el Promise
-      robarCarta(jugador, 1, true);
+    function(jugador, game, carta) {
+      robarCarta(jugador, 1, true);                                         // roba 1 carta
 
-      let eleccion = await mostrarEleccion([
-        { texto: "+1 al bloqueo de Kuroo Tetsuro." },
-        { texto: "+1 a la recepción de tu receptor." }
-      ]);
-
-      if (eleccion === 0) {
-        let kuroo = jugador.zonas.bloqueo.at(-1);
-        if (!kuroo || kuroo.nombre !== "Kuroo Tetsuro") {
+      if (game.fase === "bloqueo") {                                        // en bloqueo: +1 al bloqueo de Kuroo
+        let kuroo = [game.bloqueoActual.central, ...game.bloqueoActual.apoyos]
+          .find(c => c?.nombre === "Kuroo Tetsuro");                        // Kuroo entre los bloqueadores de este bloqueo
+        if (!kuroo) {
           log(t("log.condicionNoCumplida"));
           return false;
         }
-        game.valorAtaque -= 1;
-        log(t("log.defensaAumentada", { valor: 1}));
-      } else {
+        game.valorDefensa += 1;                                             // +1 al bloqueo
+        log(t("log.defensaAumentada", { valor: 1 }));
+
+      } else if (game.fase === "recepcion") {                               // en recepción: +1 al receptor
         let receptor = jugador.zonas.recepcion.at(-1);
-        if (!receptor) {
+        if (!receptor || !receptor.recienJugada) {                          // receptor de esta jugada
           log(t("log.condicionNoCumplida"));
           return false;
         }
-        game.valorDefensa += 1;
-        log(t("log.defensaAumentada", { valor: 1}));
+        game.valorDefensa += 1;                                             // +1 a la recepción
+        log(t("log.defensaAumentada", { valor: 1 }));
       }
     },
     {
@@ -613,10 +610,10 @@ function inicializarCartas() {
       fases: ["bloqueo", "recepcion"],
       escuela: "Nekoma",
       rareza: "D",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong><strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Elige: </br><strong>· +1 al bloqueo de Kuroo</strong> </br><strong>· +1 a la recepción</strong>.`
+      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Roba 1 carta. Después, elige una de las siguientes opciones: </br>· Uno de tus personajes llamado <strong><span style="color:#424242">Kuroo Tetsuro</span></strong> en tu zona de bloqueo obtiene +1 punto de bloqueo. </br>· Uno de tus personajes obtiene +1 punto de recepción.`
     }
   ),
-  crearCarta("Basta con golpear físicamente, ¿verdad?",  // ================================== D02-012
+  crearCarta("Entonces simplemente les golpeas en la cabeza con un ataque normal. Es la única forma",  // =============== D02-012
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (jugador.mazo.length === 0) {
@@ -672,7 +669,7 @@ function inicializarCartas() {
       faseRobo: true,
       escuela: "Nekoma",
       rareza: "D",
-      descripcion: `Roba 1 carta. Después, mira las 3 primeras de tu mazo: si hay un <strong>Haiba Lev</strong> o un <strong>Inuoka So</strong>, puedes añadir 1 de ellos a tu mano. </br>Devuelve las otras cartas al fondo del mazo.`
+      descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Roba 1 carta. Mira las 3 primeras cartas de tu mazo. Revela hasta 1 carta llamada <strong>Haiba Lev</strong> o <strong>Inuoka So</strong> de entre ellas y añádela a tu mano. Pon las cartas restantes en el fondo de tu mazo en el orden que quieras.`
     }
   ),
   // ========================================================================================================= P01
@@ -685,7 +682,7 @@ function inicializarCartas() {
       escuela: "Karasuno",
       posicion: "MB",
       anyo: 1,
-      rareza: "HI",
+      rareza: "SEC",
     }
   ),
   crearCarta("Hinata Shoyo", // ================================================================= P01-002
@@ -6911,16 +6908,10 @@ function inicializarCartas() {
 
       robarCarta(jugador, 1, true);
 
-      if (game.fase === "saque") {
-        // comprobar si Atsumu está en saque
-        let sacador = jugador.zonas.saque.at(-1);
+      if (game.fase === "saque") {   
+        let sacador = jugador.zonas.saque.at(-1);                 // comprobar si Atsumu está en saque
         let atsumuEnSaque = sacador?.nombre === "Miya Atsumu";
-
-        debilitarReceptor(1, true); // solo sin habilidad
-
-        if (atsumuEnSaque) {
-          debilitarReceptor(1, true); // -1 adicional si Atsumu en saque
-        }
+        debilitarReceptor(atsumuEnSaque ? 2 : 1, true);
       }
     },
     {

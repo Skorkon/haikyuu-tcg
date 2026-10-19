@@ -196,7 +196,15 @@ const TRADUCCIONES = {
       "traerCartaMiyaTrash": "Añadir 1 carta Miya del trash a la mano",
       "descartarPorRobo": "Has añadido {cantidad} cartas del trash. Descarta {descartar} carta(s) de tu mano",
       "opcionAumentarStat": "+{valor} al {stat} de un personaje de {escuela}",
-      "condicionAnioNoCumplida": "No hay personajes del año requerido en el campo"
+      "condicionAnioNoCumplida": "No hay personajes del año requerido en el campo",
+      "rivalUsaGuts": "{jugador} usa GUTS en {zona}",
+      "rivalColocaEventoEnZona": "{jugador} coloca {carta} en su zona de eventos",
+      "efectoRivalDevuelveMano": "Efecto rival: devuelves tu mano al mazo y barajas",
+      "robarPorEfectoReactivo": "Robas {cantidad} carta(s) por efecto reactivo",
+      "esperandoMulliganRival": "Esperando que el rival confirme su mulligan...",
+      "ambosListos": "Ambos jugadores listos. Iniciando partida...",
+      "ganadoSorteo": "¡Has ganado el sorteo! ¡Elige quién empieza!",
+      "rivalGanoSorteo": "Tu rival ganó el sorteo. Esperando su decisión..."
     }
   },
   "en": {
@@ -393,7 +401,15 @@ const TRADUCCIONES = {
       "traerCartaMiyaTrash": "Add 1 Miya card from the discard to hand",
       "descartarPorRobo": "You added {cantidad} cards from the discard. Discard {descartar} card(s) from your hand",
       "opcionAumentarStat": "+{valor} to {stat} of a {escuela} character",
-      "condicionAnioNoCumplida": "No characters of the required year on the field"
+      "condicionAnioNoCumplida": "No characters of the required year on the field",
+      "rivalUsaGuts": "{jugador} uses GUTS in {zona}",
+      "rivalColocaEventoEnZona": "{jugador} places {carta} in their event zone",
+      "efectoRivalDevuelveMano": "Opponent’s effect: you return your hand to your deck and shuffle",
+      "robarPorEfectoReactivo": "You draw {cantidad} card(s) from a reactive effect",
+      "esperandoMulliganRival": "Waiting for opponent to confirm their mulligan...",
+      "ambosListos": "Both players ready. Starting match...",
+      "ganadoSorteo": "You won the toss! Choose who starts!",
+      "rivalGanoSorteo": "Your opponent won the toss. Waiting for their decision..."
     }
   },
   "fr": {
@@ -590,7 +606,15 @@ const TRADUCCIONES = {
       "traerCartaMiyaTrash": "Ajouter 1 carte Miya depuis la défausse à la main",
       "descartarPorRobo": "Tu as ajouté {cantidad} cartes de la défausse. Défausse {descartar} carte(s) de ta main",
       "opcionAumentarStat": "+{valor} au {stat} d’un personnage de {escuela}",
-      "condicionAnioNoCumplida": "Aucun personnage de l’année requise sur le terrain"
+      "condicionAnioNoCumplida": "Aucun personnage de l’année requise sur le terrain",
+      "rivalUsaGuts": "{jugador} utilise le GUTS en {zona}",
+      "rivalColocaEventoEnZona": "{jugador} place {carta} dans sa zone d’événements",
+      "efectoRivalDevuelveMano": "Effet rival : tu remets ta main dans ton deck et tu mélanges",
+      "robarPorEfectoReactivo": "Tu pioches {cantidad} carte(s) par effet réactif",
+      "esperandoMulliganRival": "En attente de la confirmation du mulligan du rival...",
+      "ambosListos": "Les deux joueurs sont prêts. Démarrage de la partie...",
+      "ganadoSorteo": "Tu as gagné le tirage ! Choisis qui commence !",
+      "rivalGanoSorteo": "Ton adversaire a gagné le tirage. En attente de sa décision..."
     }
   },
   "": {
@@ -787,7 +811,15 @@ const TRADUCCIONES = {
       "traerCartaMiyaTrash": "",
       "descartarPorRobo": "",
       "opcionAumentarStat": "",
-      "condicionAnioNoCumplida": ""
+      "condicionAnioNoCumplida": "",
+      "rivalUsaGuts": "",
+      "rivalColocaEventoEnZona": "",
+      "efectoRivalDevuelveMano": "",
+      "robarPorEfectoReactivo": "",
+      "esperandoMulliganRival": "",
+      "ambosListos": "",
+      "ganadoSorteo": "",
+      "rivalGanoSorteo": ""
     }
   }
 };

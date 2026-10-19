@@ -1,0 +1,1152 @@
+<!DOCTYPE html>  <!-- Le dice al navegador que esto es HTML moderno -->
+<meta charset="UTF-8">
+
+<html>
+
+<!-- Tipografías (Google Fonts) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Estilos compartidos entre páginas -->
+<link rel="stylesheet" href="base.css">
+
+<style>
+  * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 1 */
+:root {
+  --bg: #f2f0e8;              /* fondo gris clarito, papel de manga */
+  --surface: #16161a;         /* superficie oscura de paneles */
+  --surface2: #1e1e24;        /* superficie secundaria (inputs) */
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #e8e8ec;            /* texto claro (sobre fondos oscuros) */
+  --text2: #9090a0;           /* texto gris apagado */
+  --cancha2: #7fb8d9; 
+  --bggris: #B9B9B9;
+}
+
+body {
+  font-family: var(--font-texto), Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* background: var(--bg);      /* ← antes #d0d0d0, ahora el gris clarito de toda la app */
+}
+
+/* ------------------------------------------------------------------------------------------------------- REMAKE 2 */
+/* título: el texto, recto y en blanco */
+.panel h3,
+.panel-derecha h3 {
+  position: relative;          /* referencia para colocar la placa detrás */
+  isolation: isolate;          /* la placa (z-index:-1) queda detrás del texto, pero no detrás del panel */
+  display: inline-block;       /* la caja mide lo que el texto, no todo el ancho */
+  margin: 0 0 12px 3px;
+  padding: 9px 12px 8px;
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: var(--espaciado-titulos);
+  color: var(--papel);
+}
+
+/* la placa negra inclinada, dibujada detrás del texto */
+.panel h3::before,
+.panel-derecha h3::before {
+  content: "";                 /* sin esto, el pseudoelemento no aparece */
+  position: absolute;
+  inset: 0;                    /* ocupa exactamente la caja del título */
+  z-index: -1;                 /* detrás del texto */
+  background: var(--accent);
+  transform: skewX(-10deg);    /* inclinación estilo Persona */
+  box-shadow: 3px 3px 0 var(--tinta);   /* sombra dura en tu color */
+}
+
+/* -------------------------------------------------- ZONA PRINCIPAL */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------- IZQUIERDA */
+.panel-izquierda {
+  width: 30%;
+  background: transparent;        /* ← antes var(--bg) */
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 2px solid var(--accent);   
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.titulo-mano-rival {
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  letter-spacing: var(--espaciado-titulos);
+  font-size: 18px;
+  color: var(--tinta);
+  margin: 6px 0 10px;
+  text-align: center;
+}
+#mano-rival {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: -10px -10px 10px -10px;
+  padding-top: 4px;
+  flex-shrink: 0;   /* ← nuevo: nunca se encoge, siempre arriba del todo */
+}
+
+.contenido-inferior {
+  display: flex;
+  flex-direction: column;              
+  margin-top: auto;      
+}
+
+/* -------------------------------------------------- DERECHA */
+.panel-derecha {
+  width: 20%;
+  background: transparent;        /* ← antes var(--bg) */
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 2px solid var(--accent);    
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  margin-bottom: 15px;
+  /*padding: 10px 12px;
+  /* background: var(--papel);          /* interior blanco */
+  /* border: var(--contorno);           /* trazo de tinta */
+  /* border-radius: 0;                  /* esquinas rectas, como una viñeta */
+  /* box-shadow: var(--sombra-dura);    /* sombra dura */
+  color: var(--tinta);
+}
+
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 2 */
+/* ---------------------------------------- BOTONES DE PANEL (estilo Persona) */
+.panel button {
+  position: relative;
+  isolation: isolate;            /* la placa queda detrás del texto, dentro del botón */
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 9px 12px 8px;
+  background: transparent;       /* el fondo lo dibuja la placa */
+  border: none;
+  color: var(--papel);
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: var(--espaciado-titulos);
+  cursor: pointer;
+}
+/* la placa en romboide */
+.panel button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--tinta);
+  transform: skewX(-10deg);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+/* hover: se rellena de tu color */
+.panel button:hover {
+  color: var(--accent-ink, var(--tinta));   /* --accent-ink llega en el siguiente paso; mientras, negro */
+}
+.panel button:hover::before {
+  background: var(--accent);
+  box-shadow: 3px 3px 0 var(--tinta);
+}
+/* pulsado: se hunde hasta tapar la sombra */
+.panel button:active {
+  transform: translate(3px, 3px);
+}
+.panel button:active::before {
+  box-shadow: none;
+}
+/* deshabilitado: gris y plano (va al final para ganar a hover y active) */
+.panel button:disabled {
+  color: var(--papel);
+  cursor: not-allowed;
+  transform: none;
+}
+.panel button:disabled::before {
+  background: var(--gris-medio);
+  box-shadow: none;
+}
+
+/* ---------------------------------------- PANEL ACCIONES: título a la izquierda, botones a la derecha */
+/* ---------------------------------------- PANEL ACCIONES: título abajo, botones creciendo hacia arriba */
+.panel-acciones {
+  display: flex;
+  align-items: flex-end;         /* título y columna de botones alineados por abajo */
+  gap: 14px;
+  margin: 0 14px 15px;           /* margen lateral dentro de la franja */
+}
+
+.panel-acciones h3 {
+  flex: none;                    /* el título no se estira ni se encoge */
+  margin: 0 0 0 3px;
+}
+
+.acciones-botones {
+  flex: 1;                       /* la columna ocupa todo el ancho restante */
+  display: flex;
+  flex-direction: column-reverse;   /* el primer botón del HTML va abajo; los siguientes, encima */
+  gap: 8px;
+}
+
+.acciones-botones button {
+  margin: 0;                     /* el espacio entre botones ya lo da gap */
+}
+.panel-otros {
+  display: grid;
+  grid-template-columns: auto 1fr;     /* columna 1: lo que mida el título · columna 2: el resto */
+  column-gap: 14px;
+  row-gap: 8px;
+  align-items: center;                 /* el título y el primer botón, centrados en su fila */
+  align-content: start;                /* las filas se apilan arriba, no se reparten la altura */
+}
+.panel-otros h3 {
+  grid-column: 1;                      /* el título, siempre en la columna izquierda */
+  margin: 0 0 0 3px;                   /* el espacio entre filas ya lo da row-gap */
+}
+.panel-otros button {
+  grid-column: 2;                      /* todos los botones, en la columna derecha */
+  margin: 0;
+}
+
+/* panel Otros: fijo en el centro vertical del panel izquierdo */
+.panel-otros {
+  position: absolute;            /* saca a Otros del flujo del panel, sin verse afectado por los otros paneles*/
+  top: 40%;                      /* su borde superior, a media altura */
+  left: 24px;
+  right: 24px;
+  margin: 0;
+}
+
+.mano-bottom {
+  background: var(--papel);
+  border: var(--contorno);
+  border-radius: 0;
+  box-shadow: var(--sombra-dura);
+  padding: 12px;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 3 Columna derecha */
+
+#log-container {
+  border-bottom: 2px solid var(--accent) !important;   /* sustituye el #ccc inline del HTML */
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+}
+
+#log {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#selector-cartas {
+  background: var(--papel);
+  color: var(--tinta);
+  border: var(--contorno);
+  box-shadow: var(--sombra-dura);
+}
+
+#selector-cartas button {
+  background: #000000;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 9px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#selector-cartas button:hover {
+  background: var(--accent);
+  color: #000000;
+}
+
+#selector-mano {
+  display: flex;
+  flex-wrap: nowrap;      /* ← cambia esto: nunca salta de línea */
+  overflow-x: auto;        /* scroll horizontal si no caben todas */
+  gap: 5px;
+}
+
+/* título del selector: texto normal, sin placa */
+#selector-titulo {
+  display: block;
+  padding: 0;
+  margin: 0 0 6px;
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  font-size: 16px;
+  letter-spacing: var(--espaciado-titulos);
+  color: var(--tinta);
+}
+
+#selector-titulo::before {
+  content: none;               /* elimina la placa negra que le llega de las reglas generales */
+}
+
+  /* -------------------- BARRA DE SCROLL PERSONALIZADA  ------------------------- */
+  /* ── SCROLLBAR PANEL IZQUIERDA ────────────────────────────── */
+.panel-izquierda::-webkit-scrollbar { width: 6px; }
+.panel-izquierda::-webkit-scrollbar-track { background: var(--bg); }
+.panel-izquierda::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.panel-izquierda::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
+
+/* ── SCROLLBAR PANEL DERECHA ──────────────────────────────── */
+.panel-derecha::-webkit-scrollbar { width: 6px; }
+.panel-derecha::-webkit-scrollbar-track { background: var(--bg); }
+.panel-derecha::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.panel-derecha::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
+  
+  #log-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  #log-container::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  #log-container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 6px;
+  }
+  #log-container::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+    border: 2px solid var(--accent);
+  }
+
+/* -------------------------------------------------- CENTRO 60% */
+.campo-central {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  background: var(--bggris);
+  padding: 10px;
+  outline: 5px solid white;     /* gris oscuro alrededor del borde blanco */
+  min-width: 0;                   /* deja que el campo central sea más estrecho que el tablero */
+  overflow: hidden;               /* lo que sobre del tablero (antes de escalar) no se ve */
+}
+/* -------------------------------------------------- TABLERO (todo el campo, tamaño fijo) */
+.tablero {
+  position: relative;        /* el marco se coloca respecto a esta caja */
+  width: 780px;              /* mismo ancho que cada .lado-jugador */
+  height: 680px;             /* cabe la cancha completa + la zona libre */
+  padding-top: 80px;         /* hueco arriba para la zona libre y las zonas del rival que suben */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;            /* que el campo central no lo aplaste */
+}
+.lado-jugador {
+  position: relative;
+  width: 660px;
+  height: 240px;
+}
+
+/* ----------------------------------------- Red con postes----------- */
+.red-linea {
+  position: relative;
+  width: 540px;
+  height: 8px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 10;
+  top: 5px;
+  margin: 8px 0 8px -50px;
+}
+
+.red-malla {
+  flex: 1;
+  height: 8px;
+  background: black;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px rgba(0,0,0,0.3);   /* sombra suave debajo  */
+}
+
+.poste {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(90deg, #ffffff, #d0d0d0, #ffffff);
+  border-radius: 50px;    
+  flex-shrink: 0;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+
+
+
+/* -------------------------------------------------- LOG */
+#log {
+  white-space: pre-wrap;
+  font-size: 12px;
+  flex-direction: column;  /* cada línea debajo de la anterior */
+  gap: 2px;                /* pequeño espacio entre líneas */
+}
+
+/* -------------------------------------------------- MANO */
+
+#mano {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-wrap: nowrap; /* no saltar a segunda fila */
+}
+
+/* -------------------------------------------------- CARTAS */
+.carta {
+  border: 1px solid black;
+  border-radius: 0;
+  width: 80px;
+  height: 112px;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carta:hover {
+  /* filter: brightness(1.1);          aclara ligeramente la carta */
+  outline: 2px solid #31d1ae;      /* marco verde al hacer hover */
+  outline-offset: -2px;            /* el marco queda por dentro de la carta */
+}
+
+.carta.seleccionada {
+  outline: 2px solid red;
+  outline-offset: -2px;
+}
+
+/* -------------------------------------------------- PREVIEW */
+.preview {
+  position: fixed;
+  bottom: 80px;
+  left: 10px;
+  background: white;
+  border: 2px solid black;
+  padding: 15px;
+  width: 18%;
+  text-align: center;
+  z-index: 10;
+}
+
+/* -------------------------------------------------- MARCADOR */
+.marcador {
+  display: flex;
+  gap: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+/* -------------------------------------------------- TOOLTIP */
+.tooltip {
+  display: none;
+  position: fixed;
+  background: var(--bg);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  z-index: 100;
+  width: 300px;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+.tooltip-imagen {
+  width: 100%;
+  height: 420px;
+  background-size: cover;
+  background-position: center;
+}
+.tooltip-info {
+  background: #000000;
+  color: var(--text);
+  padding: 12px;
+}
+.tooltip-info h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.tooltip-info .tooltip-meta {
+  font-size: 10px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+.tooltip-info .tooltip-stats {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+.tstat {
+  flex: 1;
+  text-align: center;
+  padding: 3px 2px;
+  border-radius: 3px;
+  font-size: 9px;
+}
+.tstat span {
+  display: block;
+  font-size: 7px;
+  opacity: 0.8;
+}
+.tstat strong {
+  display: block;
+  font-size: 11px;
+}
+.tstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
+.tstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
+.tstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
+.tstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
+.tstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
+.tooltip-info .tooltip-desc {
+  font-size: 10px;
+  line-height: 1.5;
+  border-top: 1px solid var(--border2);
+  padding-top: 8px;
+}
+
+/* -------------------------------------------------- ZONAS */
+.zona {
+  position: absolute;
+  width: 80px;
+  height: 112px;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+
+/* zona tumbada horizontal */
+.zona.horizontal {
+  width: 112px;
+  height: 80px;
+}
+
+.zona .carta {
+  position: absolute;
+  width: 68px;
+  height: 92px;
+  background: white;
+  border: 1px solid black;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: -webkit-optimize-contrast;   /* mejora nitidez en Chrome/Edge/Safari al reducir imágenes */
+  image-rendering: crisp-edges;                    /* fallback para otros navegadores */
+}
+
+.lado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.red {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* -------------------------------------------------- BOTONES */
+button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------- LADO JUGADOR */
+.lado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.fila-zonas {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* -------------------------------------------------- COLORES */
+.zona-recepcion  { background: #2b6bc4; border: 4px solid #0f4a8d; }
+.zona-pase       { background: #3d9142; border: 4px solid #27692a; }
+.zona-remate     { background: #d94040; border: 4px solid #9c1f1f; }
+.zona-bloqueo    { background: #3a3a3a; border: 4px solid #070707; }
+.zona-apoyo      { background: #757575; border: 4px solid #070707; }
+.zona-mazo       { background: #dcdcdc; border: 4px solid white; color: #333; }
+.zona-puntos     { background: #dcdcdc; border: 4px solid white; color: #333; }
+.zona-trash      { background: #464e52; border: 4px solid white; color: #333; }
+.zona-saque      { background: #f26a00; border: 4px solid white; }
+.zona-eventos    { background: #a3b4bd; border: 4px solid white; color: #333; }
+
+/* -------------------------------------------------- ZONA LATERAL */
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+/* -------------------------------------------------- POSICIONES JUGADOR 1 */
+#campo-j1 .zona-puntos    { top: 20px;    left: 40px; }
+#campo-j1 .zona-saque     { top: 170px; left: 80px; }
+#campo-j1 #j1-eventos     { top: 170px;  left: -5px; }
+#campo-j1 #j1-mazo        { top: 8px;    left: 460px;}
+#campo-j1 #j1-trash       { top: 150px;  left: 460px; }
+
+/* -------------------------------------------------- POSICIONES JUGADOR 2 (espejo) */
+#campo-j2 .zona-puntos    { top: 150px;  left: 460px; }
+#campo-j2 .zona-saque     { top: -40px; left: 460px; }
+#campo-j2 #j2-eventos     { top: -40px; left: 545px; }
+#campo-j2 #j2-mazo        { top: 130px;  left: 80px; }
+#campo-j2 #j2-trash       { top: -10px;   left: 80px; }
+
+.zona.horizontal .carta {/* las cartas de las zonas horizontales están en horizontal */
+  width: 104px;
+  height: 74px;
+}
+
+.btn-campo {
+  color: white;
+  font-weight: bold;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 3px;
+}
+
+#btn-evento {
+  position: absolute;
+  top: 260px;       
+  left: -5px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #b0bec5;
+  color: #333;
+}
+
+#btn-saque {
+  position: absolute;
+  top: 122px; 
+  left: 80px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #e65100;
+  /* display: none;  oculto por defecto */
+}
+
+#btn-recepcion {
+  position: absolute;
+  top: 228px; 
+  left: 170px;
+  width: 80px;
+  font-size: 10px;
+  padding: 3px;
+  background: #1565c0;
+  /* display: none; oculto por defecto */
+}
+
+#btn-pase {
+  position: absolute;
+  top: 228px; 
+  left: 256px;
+  width: 80px;
+  background: #2e7d32;
+}
+
+#btn-remate {
+  position: absolute;
+  top: 228px;
+  left: 342px;
+  width: 80px;
+  background: #c62828;
+}
+
+#btn-bloqueo {
+  position: absolute;
+  top: -5px; /* encima del bloqueo, pero ya está arriba del todo */
+  left: 430px;
+  width: 80px; /* ancho para cubrir los 3 bloqueadores */
+  background: #212121;
+}
+
+/* -------------------------------------------------- CONTADORES DE ZONA */
+.zona-contador {
+  position: absolute;
+  top: 5px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 3px;
+  z-index: 30;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+#selector-idioma {
+  display: flex;
+  gap: 4px;
+}
+
+/* --------------------------------------------------------------------------------- NUEVA CANCHA */
+.cancha-rect {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: 112px 16px 112px;
+  gap: 6px;
+  padding: 8px;
+  border: 5px solid white;
+  border-radius: 0px;
+  background: #E8761A;   /* fondo ligeramente distinguible del resto de la cancha */
+}
+
+  /* posición del rectángulo dentro de cada .lado-jugador — ajusta estos valores según el resto de tus zonas */
+  #cancha-j1 { top: 0px; left: 170px; }
+  #cancha-j2 { top: -20px; left: 170px; }
+
+  .cancha-rect .zona {
+  position: relative;   /* dentro del grid, no queremos position:absolute */
+  top: auto;
+  left: auto;
+}
+
+  /* la línea divisoria, ocupa toda la fila del medio */
+  .cancha-rect::before {
+    content: "";
+    grid-column: 1 / 4;    /* ocupa las 3 columnas */
+    grid-row: 2;            /* la fila del medio */
+    height: 6px;
+    background: white;
+    align-self: center;
+    margin: 0 -8px;
+  }
+
+  #cancha-j1 {
+    top: 0px;
+    left: 170px;
+    border-top: none;    /* ← quita el borde que mira hacia la red */
+  }
+
+  #cancha-j2 {
+    top: -20px;
+    left: 170px;
+    border-bottom: none;  /* ← quita el borde que mira hacia la red */
+    z-index: 2;
+  }
+
+  .cancha-conector {
+    position: absolute;
+    left: 170px;              /* mismo left que #cancha-j1/j2, ahora sí en el mismo sistema de coordenadas */
+    top: -40px;                 /* sube por encima del propio #campo-j1, para tapar el hueco hacia la red */
+    width: 277px;               /* ancho recalculado con box-sizing: border-box */
+    height: 40px;
+    background: #E8761A;
+    border-left: 5px solid white;
+    border-right: 5px solid white;
+    z-index: 1;
+  }
+
+  .cancha-marco {
+    position: absolute;
+    left: 172px;      /* 130 de franja + 170 (inicio de la cancha) − 50 de zona libre − 8 de borde */
+    top: 2px;         /* 50px de zona libre por encima de la línea de fondo del rival */
+    width: 394px;     /* 278 de cancha + 2×50 de zona libre + 2×8 de borde */
+    height: 673px;    /* 557 de cancha (las dos mitades) + 2×50 + 2×8 */
+    background: var(--cancha2);
+    border: 8px solid white;
+    z-index: 0;       /* por detrás de todo lo demás */
+  }
+
+  .fase-tracker {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    z-index: 20;
+  }
+
+  .fase-barra {
+    width: 80px;
+    padding: 3px 6px;
+    background: #999999;    /* gris por defecto, fase inactiva */
+    border: 2px solid #777777;
+    border-radius: 4px;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .fase-flecha {
+    font-size: 8px;
+    color: #999999;
+    line-height: 1;
+  }
+
+  /* FASE ACTIVA: color de esa fase + borde más grueso */
+  .fase-barra.activa {
+    border-width: 3px;
+  }
+  .fase-barra[data-fase="saque"].activa      { background: #f26a00; border-color: #e65100; }
+  .fase-barra[data-fase="robo"].activa       { background: #9c27b0; border-color: #7b1fa2; }
+  .fase-barra[data-fase="recepcion"].activa  { background: #2b6bc4; border-color: #1565c0; }
+  .fase-barra[data-fase="pase"].activa       { background: #3d9142; border-color: #2e7d32; }
+  .fase-barra[data-fase="remate"].activa     { background: #d94040; border-color: #c62828; }
+  .fase-barra[data-fase="bloqueo"].activa    { background: #3a3a3a; border-color: #212121; }
+
+  /* CONTADOR DE ATAQUE Y DEFENSA */
+  .contador-campo {
+    background: #fdfaf0;
+    border: 2px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;      
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+  }
+
+  .tarjeta-papel {
+    background: #fdfaf0;
+    border: 2px solid #2a2a2a;
+    border-radius: 2px;
+    width: 26px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: 900;
+    color: #1a1a1a;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.3);
+    /* transform: rotate(-1.5deg); */
+  }
+
+  .etiqueta-marcador {
+    background: #fdfaf0;
+    border: 2px solid #2a2a2a;
+    border-radius: 2px;
+    padding: 2px 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.15), 1px 2px 2px rgba(0,0,0,0.2);
+    /* transform: rotate(1deg);   rotación ligera */
+  }
+
+  #contador-ataque {
+    position: absolute;
+    top: 300px;
+    right: 80px;
+  }
+
+  #contador-defensa {
+    position: absolute;
+    top: 300px;
+    right: 20px;
+  }
+
+  @keyframes flipPapel {
+    0%   { transform: rotate(-1.5deg) translateY(0); opacity: 1; }
+    50%  { transform: rotate(-1.5deg) translateY(-8px); opacity: 0.3; }   /* ← menos desplazamiento (-8px en vez de -20px), no llega a opacidad 0 del todo */
+    51%  { transform: rotate(-1.5deg) translateY(8px); opacity: 0.3; }     /* ← igual, menos desplazamiento */
+    100% { transform: rotate(-1.5deg) translateY(0); opacity: 1; }
+  }
+
+  .tarjeta-papel.cambiando {
+    animation: flipPapel 0.22s ease-in-out;
+  }
+
+  /* --------------------------------------------------------------------------------- CONTADOR TURNO */
+  .contador-turno {
+    position: absolute;
+    top: 322px;
+    left: 14px;
+    background: #999999;
+    border: 2px solid #777777;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    z-index: 10;
+  }
+
+</style>
+<!----------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------- HTML -->
+<link rel="icon" type="image/png" href="favicon.png"> <!-- Icono navegador -->
+
+<!------------------------------------------------------------------------------------------------ ZONA PRINCIPAL -->
+<div class="main">
+  <!--------------------------------------------------------------------------- IZQUIERDA: PREVIEW + BOTONES -->
+  <div class="panel-izquierda">
+
+    <!----------------------------------------------------------------------- MANO DEL RIVAL -->
+    <div id="mano-rival"></div>
+    <h3 class="titulo-mano-rival" id="tituloManoRival"></h3>
+    <!----------------------------------------------------------------------- ACCIONES -->
+    <div class="contenido-inferior">
+      <div class="panel panel-otros">
+        <h3 data-i18n="ui.panelBotones">Otros</h3>
+        <button onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
+        <button onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
+        <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
+      </div> <!-- fin panel otros -->
+      <div class="panel panel-acciones">
+        <h3 data-i18n="ui.panelAcciones">Acciones</h3>
+        <div class="acciones-botones">   <!-- NUEVO: columna de botones -->
+          <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
+          <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
+          <button id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
+          <button id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
+          <button id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
+          <button id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
+          <button id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
+          <button id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
+          <button id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
+          <button id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
+        </div>                            <!-- NUEVO: fin columna de botones -->
+      </div> <!-- fin panel acciones -->
+      <div class="mano-bottom">
+        <div id="mano"></div>
+      </div>
+    </div> <!-- fin panel contenido inferior -->
+  </div> <!-- fin panel izquierda -->
+
+<div class="campo-central">
+  <div id="pelota" style="position:absolute; width:32px; height:32px; z-index:50; transition: all 0.3s ease;">
+    <img src="img/pelota.png" alt="pelota" style="width:100%; height:100%; object-fit:contain; filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));">
+  </div>
+  <div class="tablero" id="tablero">
+    <div id="contador-turno" class="contador-turno">Turno 1</div>
+    <div class="cancha-marco"></div>
+    <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
+    <div class="lado-jugador" id="campo-j2">
+      <!-- Dentro de #campo-j2, mismo bloque pero con orden invertido (espejo vertical) -->
+      <div class="cancha-rect" id="cancha-j2">
+        <div class="zona zona-remate" id="j2-remate" data-i18n="ui.zonaRemate">Remate</div>
+        <div class="zona zona-pase" id="j2-pase" data-i18n="ui.zonaPase">Pase</div>
+        <div class="zona zona-recepcion" id="j2-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+        <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-bloqueo" id="j2-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+        <div class="zona zona-apoyo" id="j2-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+      </div>
+
+      <div class="zona zona-puntos horizontal" id="j2-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
+      <div class="zona zona-saque" id="j2-saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="zona zona-eventos" id="j2-eventos" data-i18n="ui.zonaEventos">Eventos</div>
+      <div class="zona zona-mazo" id="j2-mazo" data-i18n="ui.zonaMazo">Mazo</div>
+      <div class="zona zona-trash" id="j2-trash" data-i18n="ui.zonaTrash">Trash</div>
+    </div>
+
+    <!-- RED -->
+    <div class="red-linea">
+      <div class="poste poste-izq"></div>
+      <div class="red-malla"></div>
+      <div class="poste poste-der"></div>
+    </div>
+
+    
+
+    <!------------------------------------------------------------------------------------------------------------------------ JUGADOR 1 -->
+    <div class="lado-jugador" id="campo-j1">
+      <div class="cancha-conector"></div>
+      <!-- Dentro de #campo-j1 -->
+      <div class="cancha-rect" id="cancha-j1">
+        <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-bloqueo" id="j1-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+        <div class="zona zona-apoyo" id="j1-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-recepcion" id="j1-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+        <div class="zona zona-pase" id="j1-pase" data-i18n="ui.zonaPase">Pase</div>
+        <div class="zona zona-remate" id="j1-remate" data-i18n="ui.zonaRemate">Remate</div>
+      </div>
+
+      <!-- El resto de zonas de J1 se quedan fuera, con su posición absoluta normal -->
+      <div class="zona zona-puntos horizontal" id="j1-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
+      <div class="zona zona-saque" id="j1-saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="zona zona-eventos" id="j1-eventos" data-i18n="ui.zonaEventos">Eventos</div>
+      <div class="zona zona-mazo" id="j1-mazo" data-i18n="ui.zonaMazo">Mazo</div>
+      <div class="zona zona-trash" id="j1-trash" data-i18n="ui.zonaTrash">Trash</div>
+    </div>
+  
+    <div class="fase-tracker" id="faseTracker">
+      <div class="fase-barra" data-fase="saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="robo" data-i18n="ui.zonaRobo">Robo</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="pase" data-i18n="ui.zonaPase">Pase</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="remate" data-i18n="ui.zonaRemate">Remate</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+    </div>
+
+      <!-- ── NUEVO: contadores independientes ── -->
+    <div id="contador-ataque" class="contador-campo">
+      <span class="tarjeta-papel">0</span>
+      <span class="etiqueta-marcador">ATK</span>
+    </div>
+    <div id="contador-defensa" class="contador-campo">
+      <span class="tarjeta-papel">0</span>
+      <span class="etiqueta-marcador">DEF</span>
+    </div>
+  </div> <!-- Fin tablero -->
+</div> <!-- fin campo central -->
+<!-------------------------------------------------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------------------------------- DERECHA: LOG -->
+  <div class="panel-derecha">
+    <div id="log-container" style="height:65%; overflow-y:auto; border-bottom: 2px solid #ccc; padding:10px;">
+      <h3 data-i18n="ui.tituloLog">Log</h3>
+      <div id="log"></div>
+    </div>
+    <div id="selector-cartas" style="height:30%; padding:10px; display:none; flex-direction:column; gap:8px; margin-top:auto;">
+      <h3 id="selector-titulo" data-i18n="ui.elegirCarta">Elige una carta:</h3>
+      <div id="selector-mano" style="display:flex; flex-wrap:nowrap; gap:5px; overflow-x:auto;" onmouseleave="document.getElementById('tooltip').style.display='none'">
+      <button onclick="cancelarSelector()" data-i18n="ui.cancelar">Cancelar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- PANEL FIN DE PARTIDA -->
+<div id="panel-fin" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 3px solid black;
+  padding: 40px;
+  z-index: 500;
+  text-align: center;
+  min-width: 300px;
+">
+  <h2 id="fin-titulo" style="font-size: 28px; margin-bottom: 20px;"></h2>
+  <button onclick="volverLobby()" style="padding: 12px 24px; font-size: 16px;" data-i18n="ui.volverLobby">Volver al lobby</button>
+</div>
+ 
+<!-- TOOLTIP -->
+<div id="tooltip" class="tooltip"></div>
+
+<!-- PANEL DE OPCIONES A ELEGIR -->
+<div id="panel-eleccion" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; border:2px solid black; padding:20px; z-index:200; flex-direction:column; gap:10px; text-align:center;">
+  <h3 data-i18n="ui.elegirOpcion">Elige una opción:</h3>
+  <div id="opciones-eleccion" style="display:flex; flex-direction:column; gap:8px;"></div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<!-- Otros JS -->
+<script>
+  // APLICAR COLOR SECUNDARIO ACCENT
+  const colorGuardado = localStorage.getItem("hv-accent");
+  if (colorGuardado) {
+    document.documentElement.style.setProperty("--accent", colorGuardado);
+  }
+</script>
+<script src="descripciones.js"></script>
+<script src="cartas.js"></script>
+<script src="online.js"></script>
+<script src="traducciones.js"></script>
+<script src="i18n.js"></script> <!-- Script con las lenguas -->
+<script src="sonidos.js"></script>
+<script src="game.js"></script>
+<script>
+  // ====================================================== ESCALAR EL TABLERO AL ESPACIO DISPONIBLE
+  const ESCALA_MAXIMA = 1.6;   // tope de ampliación, para que las cartas no se vean borrosas en monitores grandes
+  const TAMANO_PELOTA = 32;    // tamaño de la pelota a escala 1, en px
+
+  function escalarTablero() {
+    const campo   = document.querySelector(".campo-central");
+    const tablero = document.getElementById("tablero");
+    const pelota  = document.getElementById("pelota");
+    const estilo  = getComputedStyle(campo);
+
+    // espacio libre dentro del campo central (sin contar su padding)
+    const anchoLibre = campo.clientWidth  - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+    const altoLibre  = campo.clientHeight - parseFloat(estilo.paddingTop)  - parseFloat(estilo.paddingBottom);
+
+    // la escala es la menor de las dos: así el tablero cabe entero sin deformarse
+    const escala = Math.min(
+      anchoLibre / tablero.offsetWidth,     // offsetWidth es el tamaño real, sin escalar
+      altoLibre  / tablero.offsetHeight,
+      ESCALA_MAXIMA
+    );
+
+    tablero.style.transform = `scale(${escala})`;                // amplía o reduce desde el centro
+    pelota.style.width  = TAMANO_PELOTA * escala + "px";         // la pelota crece con el tablero
+    pelota.style.height = TAMANO_PELOTA * escala + "px";
+    moverPelota();                                               // recolocar la pelota en su zona
+  }
+
+  // se ejecuta al cargar y cada vez que cambie el tamaño del campo central
+  new ResizeObserver(escalarTablero).observe(document.querySelector(".campo-central"));
+</script>
+
+</html>

@@ -56,7 +56,7 @@ function crearPartida(mazo) {
     jugador2mazo:  null,
     jugador1nombre: miNombre, // nombre del jugador 1
   });
-  console.log("Partida creada: " + codigo);
+  console.log("Match created: " + codigo);
   return codigo;
 }
 
@@ -70,7 +70,7 @@ function unirseAPartida(codigo, mazo) {
   db.ref("partidas/" + codigo + "/jugador2nombre").set(miNombre); // nombre del jugador 2
   db.ref("partidas/" + codigo + "/estado").set("completa"); // cambia el estado de la partida
 
-  console.log("Unido a la partida: " + codigo);
+  console.log("Joined the match: " + codigo);
 
   // esperar un momento y redirigir
     setTimeout(function() {
@@ -151,7 +151,7 @@ function aplicarJugadaRival(jugada) {
       }
     }
     game.jugadaActual[jugada.zona] = carta;               // guardar en jugada actual
-    log("Opponent plays " + carta.nombre + " in " + jugada.zona); // log
+    log(t("log.cartaColocadaEn", { jugador: rival.nombre, carta: carta.nombre, zona: jugada.zona, stat: carta.stats[jugada.zona] })); // log
     renderCampo();                                        // redibujar campo
     break;
 
@@ -162,7 +162,7 @@ function aplicarJugadaRival(jugada) {
 
       const rivalIndiceEvento = miNumero === 1 ? 1 : 0;                       // índice del rival
       game.jugadores[rivalIndiceEvento].zonas.eventos.push(evento);           // añadir a zona eventos
-      log("Opponent plays the event: " + evento.nombre);                         // log
+      log(t("log.eventoJugado", { jugador: rival.nombre, carta: evento.nombre }));
       renderCampo();                                                           // redibujar campo
       break;
 
@@ -185,7 +185,7 @@ function aplicarJugadaRival(jugada) {
         }
       });
 
-      log("Opponent uses GUTS in " + jugada.zona);                 // log
+      log(t("log.rivalUsaGuts", { jugador: rival.nombre, zona: jugada.zona }));
       renderCampo();                                           // redibujar campo
       break;
 
@@ -213,7 +213,7 @@ function aplicarJugadaRival(jugada) {
       if (rivalPunto.mazoPuntos.length > 0) {
         let carta = rivalPunto.mazoPuntos.shift();            // roba del mazo de puntos
         rivalPunto.mano.push(carta);                          // va a la mano del rival
-        log("Opponent loses a point. Remaining: " + rivalPunto.mazoPuntos.length);
+        log(t("log.pierdeUnPunto", { jugador: rival.nombre, cantidad: rivalPunto.mazoPuntos.length }));
       }
       actualizarMarcador();                                   // actualizar marcador
       renderMano();                                           // redibujar mano
@@ -307,7 +307,7 @@ function aplicarJugadaRival(jugada) {
     case "pedirDescarte": // ========================================================= PEDIR DESCARTE (OIKAWA)
       const miJugadorDescarte = game.jugadores[miNumero - 1];              // jugador local (el que descarta)
       if (miJugadorDescarte.mano.length === 0) {                           // si no tiene cartas
-        log("You have no cards to discard");
+        log(t("log.sinCartasParaDescartar"));
         return;
       }
       mostrarSelectorCartas(                                               // abrir selector obligatorio
@@ -319,7 +319,7 @@ function aplicarJugadaRival(jugada) {
         let index = miJugadorDescarte.mano.indexOf(cartaElegida);         // buscar en la mano
         miJugadorDescarte.mano.splice(index, 1);                          // sacar de la mano
         miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
-        log("You discarded " + cartaElegida.nombre + " due to an opponent's effect.");
+        log(t("log.descartaPorEfecto", { jugador: jugador.nombre, carta: cartaElegida.nombre }));
 
         db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({
           jugador: miNumero,
@@ -371,7 +371,7 @@ function aplicarJugadaRival(jugada) {
         miJugadorEvento.mano.splice(index, 1);                          // sacar de la mano
         miJugadorEvento.zonas.eventos.push(eventoElegido);              // colocar en zona de eventos
         eventoElegido.zonaActual = "eventos";                           // actualizar zona
-        log("You place " + eventoElegido.nombre + " in your Event Zone.");
+        log(t("log.eventoColocadoEnZona", { carta: eventoElegido.nombre }));
         db.ref("partidas/" + salaActual + "/confirmacionEvento").set({ 
           jugador: miNumero,
           tipo: "eventoColocadoVoluntario",
@@ -399,7 +399,7 @@ function aplicarJugadaRival(jugada) {
     );
     if (eventoVol) {                                                     // si se encontró
       rivalEventoVol.zonas.eventos.push(eventoVol);                     // colocar en zona de eventos
-      log("Opponent places " + eventoVol.nombre + " in their Event Zone.");
+      log(t("log.rivalColocaEventoEnZona", { jugador: rival.nombre, carta: eventoVol.nombre }));
     }
     renderCampo();                                                       // actualizar campo
     break;
@@ -413,9 +413,9 @@ function aplicarJugadaRival(jugada) {
       miJugadorReset.mazo.push(...miJugadorReset.mano);                  // devolver mano al mazo
       miJugadorReset.mano = [];                                          // vaciar mano
       barajarMazo(miJugadorReset);                                       // barajar mazo
-      log("Opponent's effect: you return your hand to your deck and shuffle.");
+      log(t("log.efectoRivalDevuelveMano"));
       robarCarta(miJugadorReset, 6);                                     // robar 6 cartas
-      log("You draw 6 cards.");
+      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 6 }));
       enviarCantidadMano();                                              // sincronizar cantidad de mano
       enviarMazo();                                                      // sincronizar mazo
       renderMano();                                                      // actualizar mano
@@ -533,7 +533,7 @@ function aplicarJugadaReactivaRival(jugada) {                          // aplica
     case "robarCartaReactivo":                                         // robar carta reactivo
       const miJugadorReactivo = game.jugadores[miNumero - 1];          // jugador local
       robarCarta(miJugadorReactivo, jugada.cantidad);                  // robar en local
-      log("You draw " + jugada.cantidad + " card(s) from a reactive effect.");
+      log(t("log.robarPorEfectoReactivo", { cantidad: jugada.cantidad }));
       renderMano();                                                    // actualizar mano
       renderManoRival();                                               // actualizar mano rival
       renderCampo();                                                   // actualizar campo
@@ -682,14 +682,14 @@ function vigilarPresenciaRival() {
 // ── CONFIRMAR MULLIGAN ONLINE ─────────────────────────────
 function confirmarMulliganOnline() {
   db.ref("partidas/" + salaActual + "/mulligan/jugador" + miNumero).set(true);
-  log("Waiting for opponent to confirm their mulligan...");
+  log(t("log.esperandoMulliganRival"));
 
   db.ref("partidas/" + salaActual + "/mulligan").on("value", function(snap) {
     const mulligan = snap.val();
     if (!mulligan) return;
 
     if (mulligan.jugador1 && mulligan.jugador2) {
-      log("Both players ready. Starting match...");
+      log(t("log.ambosListos"));
         game.fase = "saque";        // fase inicial
         // game.jugadorActivo = 0;     // el jugador activo ya se decide por sorteo
         document.getElementById("btn-confirmar-mulligan").disabled = false; // desbloquear boton mulligan por si acaso
@@ -791,7 +791,6 @@ function escucharEfectos() {
     const parsed = JSON.parse(data);
     game.efectosActivos = parsed.efectos;                              // actualizar efectos
     game.turno = parsed.turno;                                         // sincronizar turno
-    // log("Effects updated: " + game.efectosActivos.map(e => e.tipo).join(", "));
   });
 }
 
@@ -933,7 +932,7 @@ function iniciarSorteo() {
     console.log("I win:", yoGano, "myScore:", miPuntuacion, "rivalScore:", rivalPuntuacion);
 
     if (yoGano) {
-      log("You won the toss! Choose who starts!");
+      log(t("log.ganadoSorteo"));
       let eleccion = await mostrarEleccion([
         { texto: "I'll serve first" },
         { texto: "Opponent serves first" }
@@ -952,7 +951,7 @@ function iniciarSorteo() {
       });
 
     } else {
-      log("Your opponent won the toss. Waiting for their decision...");
+      log(t("log.rivalGanoSorteo"));
 
       db.ref("partidas/" + salaActual + "/sorteo/j1Saca").on("value", function(snap2) {
         const j1Saca = snap2.val();
@@ -969,8 +968,7 @@ function arrancarMulligan(indicePrimerSacador) {
   game.jugadorActivo = indicePrimerSacador;                  // el que saca primero
   iniciarMano(game.jugadores[0]);                            // repartir mano al jugador 0
   iniciarMano(game.jugadores[1]);                            // repartir mano al jugador 1
-  log("Serving first:" + game.jugadores[indicePrimerSacador].nombre);
-  console.log("Starting mulligan — first server:", indicePrimerSacador);
+  log(t("log.partidaIniciada", { jugador: game.jugadores[indicePrimerSacador].nombre }));
   renderMano();
   renderCampo();
 }

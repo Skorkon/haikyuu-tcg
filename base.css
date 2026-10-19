@@ -1,0 +1,36 @@
+/* ===================================================== BASE COMPARTIDA (todas las páginas) */
+:root {
+  /* tinta y papel */
+  --tinta: #000000;          /* contornos, sombras duras, bloques negros */
+  --papel: #FFFFFF;          /* viñetas y zona libre */
+  --gris-claro: #E4E7EA;     /* fondo de paneles, con trama de puntos */
+  --gris-medio: #9A9EA3;     /* pabellón alrededor del campo */
+
+  /* colores de equipo */
+  --accent: #E8761A;         /* por defecto; cada página lo cambia por el guardado en hv-accent */
+  --rival: #2D5BD0;          /* cobalto por defecto; más adelante se calculará con el mazo rival */
+
+  /* tipografías */
+  --font-titulos: 'Noto Sans JP', sans-serif;      /* títulos y botones */
+  --peso-titulos: 900;                             /* Black */
+  --espaciado-titulos: 0.06em;                     /* aire entre letras de los títulos */
+  --font-texto: 'Noto Sans JP', sans-serif;        /* todo lo demás */
+
+  /* viñetas */
+  --contorno: 3px solid var(--tinta);          /* el trazo de tinta de cada viñeta */
+  --sombra-dura: 2px 2px 0 var(--tinta);       /* sombra sólida desplazada, sin difuminar */
+}
+
+/* ===================================================== FONDO: PAPEL CON TRAMA DE SEMITONO */
+body {
+  background-color: var(--gris-claro);
+  background-image:
+    linear-gradient(to bottom, var(--gris-claro) 25%, transparent 90%),  /* tapa la trama arriba */
+    radial-gradient(rgba(0, 0, 0, 0.18) 1.2px, transparent 1.6px);       /* la trama */
+  background-size: auto, 5px 5px;
+}
+
+/* ===================================================== MAYÚSCULAS: SOLO TÍTULOS Y BOTONES */
+h1, h2, h3, button {
+  text-transform: uppercase;     /* solo visual: el texto real no cambia */
+}

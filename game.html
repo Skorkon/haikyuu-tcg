@@ -232,7 +232,20 @@ body {
   flex: 1;
   background: var(--bggris);
   padding: 10px;
-  outline: 5px solid white;    /* gris oscuro alrededor del borde blanco */
+  outline: 5px solid white;     /* gris oscuro alrededor del borde blanco */
+  min-width: 0;                   /* deja que el campo central sea más estrecho que el tablero */
+  overflow: hidden;               /* lo que sobre del tablero (antes de escalar) no se ve */
+}
+/* -------------------------------------------------- TABLERO (todo el campo, tamaño fijo) */
+.tablero {
+  position: relative;        /* el marco se coloca respecto a esta caja */
+  width: 780px;              /* mismo ancho que cada .lado-jugador */
+  height: 680px;             /* cabe la cancha completa + la zona libre */
+  padding-top: 80px;         /* hueco arriba para la zona libre y las zonas del rival que suben */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;            /* que el campo central no lo aplaste */
 }
 .lado-jugador {
   position: relative;
@@ -674,20 +687,19 @@ button {
 
   .cancha-marco {
     position: absolute;
-    left: 18%;      
-    width: 57%;      
-    top: -30px;         
-    height: 1200px;       
-    bottom: 0;
-    background: var(--cancha2);   /* gris del marco */
+    left: 172px;      /* 130 de franja + 170 (inicio de la cancha) − 50 de zona libre − 8 de borde */
+    top: 2px;         /* 50px de zona libre por encima de la línea de fondo del rival */
+    width: 394px;     /* 278 de cancha + 2×50 de zona libre + 2×8 de borde */
+    height: 673px;    /* 557 de cancha (las dos mitades) + 2×50 + 2×8 */
+    background: var(--cancha2);
     border: 8px solid white;
-    z-index: 0;    /* por detrás de todo lo demás */
+    z-index: 0;       /* por detrás de todo lo demás */
   }
 
   .fase-tracker {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 10px;
+    right: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -770,14 +782,14 @@ button {
 
   #contador-ataque {
     position: absolute;
-    top: 340px;
-    right: 62.5px;
+    top: 300px;
+    right: 80px;
   }
 
   #contador-defensa {
     position: absolute;
-    top: 340px;
-    right: 7.5px;
+    top: 300px;
+    right: 20px;
   }
 
   @keyframes flipPapel {
@@ -794,8 +806,8 @@ button {
   /* --------------------------------------------------------------------------------- CONTADOR TURNO */
   .contador-turno {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 322px;
+    left: 14px;
     background: #999999;
     border: 2px solid #777777;
     border-radius: 4px;
@@ -849,84 +861,85 @@ button {
   </div> <!-- fin panel izquierda -->
 
 <div class="campo-central">
-  <div id="contador-turno" class="contador-turno">Turno 1</div>
   <div id="pelota" style="position:absolute; width:32px; height:32px; z-index:50; transition: all 0.3s ease;">
     <img src="img/pelota.png" alt="pelota" style="width:100%; height:100%; object-fit:contain; filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));">
   </div>
-  <div class="cancha-marco"></div>
-  <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
-  <div class="lado-jugador" id="campo-j2">
-    <!-- Dentro de #campo-j2, mismo bloque pero con orden invertido (espejo vertical) -->
-    <div class="cancha-rect" id="cancha-j2">
-      <div class="zona zona-remate" id="j2-remate" data-i18n="ui.zonaRemate">Remate</div>
-      <div class="zona zona-pase" id="j2-pase" data-i18n="ui.zonaPase">Pase</div>
-      <div class="zona zona-recepcion" id="j2-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
-      <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
-      <div class="zona zona-bloqueo" id="j2-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
-      <div class="zona zona-apoyo" id="j2-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+  <div class="tablero" id="tablero">
+    <div id="contador-turno" class="contador-turno">Turno 1</div>
+    <div class="cancha-marco"></div>
+    <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
+    <div class="lado-jugador" id="campo-j2">
+      <!-- Dentro de #campo-j2, mismo bloque pero con orden invertido (espejo vertical) -->
+      <div class="cancha-rect" id="cancha-j2">
+        <div class="zona zona-remate" id="j2-remate" data-i18n="ui.zonaRemate">Remate</div>
+        <div class="zona zona-pase" id="j2-pase" data-i18n="ui.zonaPase">Pase</div>
+        <div class="zona zona-recepcion" id="j2-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+        <div class="zona zona-apoyo" id="j2-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-bloqueo" id="j2-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+        <div class="zona zona-apoyo" id="j2-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+      </div>
+
+      <div class="zona zona-puntos horizontal" id="j2-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
+      <div class="zona zona-saque" id="j2-saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="zona zona-eventos" id="j2-eventos" data-i18n="ui.zonaEventos">Eventos</div>
+      <div class="zona zona-mazo" id="j2-mazo" data-i18n="ui.zonaMazo">Mazo</div>
+      <div class="zona zona-trash" id="j2-trash" data-i18n="ui.zonaTrash">Trash</div>
     </div>
 
-    <div class="zona zona-puntos horizontal" id="j2-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
-    <div class="zona zona-saque" id="j2-saque" data-i18n="ui.zonaSaque">Saque</div>
-    <div class="zona zona-eventos" id="j2-eventos" data-i18n="ui.zonaEventos">Eventos</div>
-    <div class="zona zona-mazo" id="j2-mazo" data-i18n="ui.zonaMazo">Mazo</div>
-    <div class="zona zona-trash" id="j2-trash" data-i18n="ui.zonaTrash">Trash</div>
-  </div>
+    <!-- RED -->
+    <div class="red-linea">
+      <div class="poste poste-izq"></div>
+      <div class="red-malla"></div>
+      <div class="poste poste-der"></div>
+    </div>
 
-  <!-- RED -->
-  <div class="red-linea">
-    <div class="poste poste-izq"></div>
-    <div class="red-malla"></div>
-    <div class="poste poste-der"></div>
-  </div>
+    
 
+    <!------------------------------------------------------------------------------------------------------------------------ JUGADOR 1 -->
+    <div class="lado-jugador" id="campo-j1">
+      <div class="cancha-conector"></div>
+      <!-- Dentro de #campo-j1 -->
+      <div class="cancha-rect" id="cancha-j1">
+        <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-bloqueo" id="j1-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
+        <div class="zona zona-apoyo" id="j1-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
+        <div class="zona zona-recepcion" id="j1-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+        <div class="zona zona-pase" id="j1-pase" data-i18n="ui.zonaPase">Pase</div>
+        <div class="zona zona-remate" id="j1-remate" data-i18n="ui.zonaRemate">Remate</div>
+      </div>
+
+      <!-- El resto de zonas de J1 se quedan fuera, con su posición absoluta normal -->
+      <div class="zona zona-puntos horizontal" id="j1-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
+      <div class="zona zona-saque" id="j1-saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="zona zona-eventos" id="j1-eventos" data-i18n="ui.zonaEventos">Eventos</div>
+      <div class="zona zona-mazo" id="j1-mazo" data-i18n="ui.zonaMazo">Mazo</div>
+      <div class="zona zona-trash" id="j1-trash" data-i18n="ui.zonaTrash">Trash</div>
+    </div>
   
-
-  <!------------------------------------------------------------------------------------------------------------------------ JUGADOR 1 -->
-  <div class="lado-jugador" id="campo-j1">
-    <div class="cancha-conector"></div>
-    <!-- Dentro de #campo-j1 -->
-    <div class="cancha-rect" id="cancha-j1">
-      <div class="zona zona-apoyo" id="j1-bloqueoApoyoIzq" data-i18n="ui.zonaApoyo">Apoyo</div>
-      <div class="zona zona-bloqueo" id="j1-bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
-      <div class="zona zona-apoyo" id="j1-bloqueoApoyo" data-i18n="ui.zonaApoyo">Apoyo</div>
-      <div class="zona zona-recepcion" id="j1-recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
-      <div class="zona zona-pase" id="j1-pase" data-i18n="ui.zonaPase">Pase</div>
-      <div class="zona zona-remate" id="j1-remate" data-i18n="ui.zonaRemate">Remate</div>
+    <div class="fase-tracker" id="faseTracker">
+      <div class="fase-barra" data-fase="saque" data-i18n="ui.zonaSaque">Saque</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="robo" data-i18n="ui.zonaRobo">Robo</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="pase" data-i18n="ui.zonaPase">Pase</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="remate" data-i18n="ui.zonaRemate">Remate</div>
+      <div class="fase-flecha">▼</div>
+      <div class="fase-barra" data-fase="bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
     </div>
 
-    <!-- El resto de zonas de J1 se quedan fuera, con su posición absoluta normal -->
-    <div class="zona zona-puntos horizontal" id="j1-mazoPuntos" data-i18n="ui.zonaPuntos">Puntos</div>
-    <div class="zona zona-saque" id="j1-saque" data-i18n="ui.zonaSaque">Saque</div>
-    <div class="zona zona-eventos" id="j1-eventos" data-i18n="ui.zonaEventos">Eventos</div>
-    <div class="zona zona-mazo" id="j1-mazo" data-i18n="ui.zonaMazo">Mazo</div>
-    <div class="zona zona-trash" id="j1-trash" data-i18n="ui.zonaTrash">Trash</div>
-  </div>
-
-  <div class="fase-tracker" id="faseTracker">
-    <div class="fase-barra" data-fase="saque" data-i18n="ui.zonaSaque">Saque</div>
-    <div class="fase-flecha">▼</div>
-    <div class="fase-barra" data-fase="robo" data-i18n="ui.zonaRobo">Robo</div>
-    <div class="fase-flecha">▼</div>
-    <div class="fase-barra" data-fase="recepcion" data-i18n="ui.zonaRecepcion">Recepción</div>
-    <div class="fase-flecha">▼</div>
-    <div class="fase-barra" data-fase="pase" data-i18n="ui.zonaPase">Pase</div>
-    <div class="fase-flecha">▼</div>
-    <div class="fase-barra" data-fase="remate" data-i18n="ui.zonaRemate">Remate</div>
-    <div class="fase-flecha">▼</div>
-    <div class="fase-barra" data-fase="bloqueo" data-i18n="ui.zonaBloqueo">Bloqueo</div>
-  </div>
-
-    <!-- ── NUEVO: contadores independientes ── -->
-  <div id="contador-ataque" class="contador-campo">
-    <span class="tarjeta-papel">0</span>
-    <span class="etiqueta-marcador">ATK</span>
-  </div>
-  <div id="contador-defensa" class="contador-campo">
-    <span class="tarjeta-papel">0</span>
-    <span class="etiqueta-marcador">DEF</span>
-  </div>
-
+      <!-- ── NUEVO: contadores independientes ── -->
+    <div id="contador-ataque" class="contador-campo">
+      <span class="tarjeta-papel">0</span>
+      <span class="etiqueta-marcador">ATK</span>
+    </div>
+    <div id="contador-defensa" class="contador-campo">
+      <span class="tarjeta-papel">0</span>
+      <span class="etiqueta-marcador">DEF</span>
+    </div>
+  </div> <!-- Fin tablero -->
 </div> <!-- fin campo central -->
 <!-------------------------------------------------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------------------------------- DERECHA: LOG -->
@@ -990,6 +1003,36 @@ button {
 <script src="i18n.js"></script> <!-- Script con las lenguas -->
 <script src="sonidos.js"></script>
 <script src="game.js"></script>
+<script>
+  // ====================================================== ESCALAR EL TABLERO AL ESPACIO DISPONIBLE
+  const ESCALA_MAXIMA = 1.6;   // tope de ampliación, para que las cartas no se vean borrosas en monitores grandes
+  const TAMANO_PELOTA = 32;    // tamaño de la pelota a escala 1, en px
 
+  function escalarTablero() {
+    const campo   = document.querySelector(".campo-central");
+    const tablero = document.getElementById("tablero");
+    const pelota  = document.getElementById("pelota");
+    const estilo  = getComputedStyle(campo);
+
+    // espacio libre dentro del campo central (sin contar su padding)
+    const anchoLibre = campo.clientWidth  - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+    const altoLibre  = campo.clientHeight - parseFloat(estilo.paddingTop)  - parseFloat(estilo.paddingBottom);
+
+    // la escala es la menor de las dos: así el tablero cabe entero sin deformarse
+    const escala = Math.min(
+      anchoLibre / tablero.offsetWidth,     // offsetWidth es el tamaño real, sin escalar
+      altoLibre  / tablero.offsetHeight,
+      ESCALA_MAXIMA
+    );
+
+    tablero.style.transform = `scale(${escala})`;                // amplía o reduce desde el centro
+    pelota.style.width  = TAMANO_PELOTA * escala + "px";         // la pelota crece con el tablero
+    pelota.style.height = TAMANO_PELOTA * escala + "px";
+    moverPelota();                                               // recolocar la pelota en su zona
+  }
+
+  // se ejecuta al cargar y cada vez que cambie el tamaño del campo central
+  new ResizeObserver(escalarTablero).observe(document.querySelector(".campo-central"));
+</script>
 
 </html>

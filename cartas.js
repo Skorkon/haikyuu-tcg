@@ -1142,6 +1142,7 @@ function inicializarCartas() {
 
       game.valorAtaque += 1;                                          // +1 al pase
       log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 1 }));
 
       // comprobar que todos los personajes en juego son de Nekoma
       let cartasEnJuego = [

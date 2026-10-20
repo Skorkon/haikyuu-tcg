@@ -204,7 +204,11 @@ const TRADUCCIONES = {
       "esperandoMulliganRival": "Esperando que el rival confirme su mulligan...",
       "ambosListos": "Ambos jugadores listos. Iniciando partida...",
       "ganadoSorteo": "¡Has ganado el sorteo! ¡Elige quién empieza!",
-      "rivalGanoSorteo": "Tu rival ganó el sorteo. Esperando su decisión..."
+      "rivalGanoSorteo": "Tu rival ganó el sorteo. Esperando su decisión...",
+      "cartaTrasheadaPorEfectoRival": "{carta} enviada al trash desde tu zona de {zona} por efecto rival",
+      "cartaAlFondoMazoPorEfectoRival": "{carta} enviada al fondo de tu mazo por efecto rival",
+      "yoSaquePrimero": "Yo saco primero",
+      "rivalSaquePrimero": "El rival saca primero"
     }
   },
   "en": {
@@ -409,7 +413,11 @@ const TRADUCCIONES = {
       "esperandoMulliganRival": "Waiting for opponent to confirm their mulligan...",
       "ambosListos": "Both players ready. Starting match...",
       "ganadoSorteo": "You won the toss! Choose who starts!",
-      "rivalGanoSorteo": "Your opponent won the toss. Waiting for their decision..."
+      "rivalGanoSorteo": "Your opponent won the toss. Waiting for their decision...",
+      "cartaTrasheadaPorEfectoRival": "{carta} sent to discard from your {zona} zone by an opponent’s effect",
+      "cartaAlFondoMazoPorEfectoRival": "{carta} placed at the bottom of your deck by an opponent’s effect",
+      "yoSaquePrimero": "I’ll serve first",
+      "rivalSaquePrimero": "Opponent serves first"
     }
   },
   "fr": {
@@ -614,7 +622,11 @@ const TRADUCCIONES = {
       "esperandoMulliganRival": "En attente de la confirmation du mulligan du rival...",
       "ambosListos": "Les deux joueurs sont prêts. Démarrage de la partie...",
       "ganadoSorteo": "Tu as gagné le tirage ! Choisis qui commence !",
-      "rivalGanoSorteo": "Ton adversaire a gagné le tirage. En attente de sa décision..."
+      "rivalGanoSorteo": "Ton adversaire a gagné le tirage. En attente de sa décision...",
+      "cartaTrasheadaPorEfectoRival": "{carta} envoyée à la défausse depuis ta zone {zona} par l’effet de l’adversaire",
+      "cartaAlFondoMazoPorEfectoRival": "{carta} envoyée au fond de ton deck par l’effet de l’adversaire",
+      "yoSaquePrimero": "Je sers en premier",
+      "rivalSaquePrimero": "L’adversaire sert en premier"
     }
   },
   "": {
@@ -819,7 +831,11 @@ const TRADUCCIONES = {
       "esperandoMulliganRival": "",
       "ambosListos": "",
       "ganadoSorteo": "",
-      "rivalGanoSorteo": ""
+      "rivalGanoSorteo": "",
+      "cartaTrasheadaPorEfectoRival": "",
+      "cartaAlFondoMazoPorEfectoRival": "",
+      "yoSaquePrimero": "",
+      "rivalSaquePrimero": ""
     }
   }
 };

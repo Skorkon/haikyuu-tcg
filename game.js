@@ -673,7 +673,10 @@ function colocarCarta(jugador, carta, zona) {
   }
   
   if (carta.info?.zonasProhibidas?.includes(zona)) {                // Comprobar zonas prohibidas 
-    log(t("log.zonaProhibida", { carta: carta.nombre, zona: zona }));
+    log(t("log.zonaProhibida", { 
+      carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+      zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) 
+    }));
     return;
   }
   
@@ -733,7 +736,12 @@ function colocarCarta(jugador, carta, zona) {
     game.ultimoJugador = jugador;
     game.jugadaActual.saque = carta;
     game.valorAtaque = carta.stats.saque;   
-    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "saque", stat: carta.stats.saque }));
+    log(t("log.cartaColocadaEn", { 
+      jugador: jugador.nombre, 
+      carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+      zona: t("ui.zonaSaque"), 
+      stat: carta.stats.saque 
+    }));
 
     // ---------------------------------------------------------- Efectos automáticos
     // comprobar personaje doble
@@ -786,7 +794,12 @@ function colocarCarta(jugador, carta, zona) {
       game.ultimaCarta = carta;
       game.ultimoJugador = jugador;
       game.jugadaActual.recepcion = carta;
-      log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "recepcion", stat: carta.stats.recepcion }));
+      log(t("log.cartaColocadaEn", { 
+        jugador: jugador.nombre, 
+        carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+        zona: t("ui.zonaRecepcion"), 
+        stat: carta.stats.recepcion 
+      }));
 
       // ================================================== Efectos
       game.efectosActivos
@@ -855,7 +868,12 @@ function colocarCarta(jugador, carta, zona) {
     game.ultimoJugador = jugador;
     game.jugadaActual.pase = carta;
     game.valorAtaque = carta.stats.pase; 
-    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "pase", stat: carta.stats.pase }));
+    log(t("log.cartaColocadaEn", { 
+      jugador: jugador.nombre, 
+      carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+      zona: t("ui.zonaPase"), 
+      stat: carta.stats.pase 
+    }));
 
     // ================================================== Efectos
     if (tieneEfecto("debilitarColocador")) {
@@ -919,7 +937,12 @@ function colocarCarta(jugador, carta, zona) {
     game.ultimaCarta = carta;
     game.ultimoJugador = jugador;
     game.jugadaActual.remate = carta;
-    log(t("log.cartaColocadaEn", { jugador: jugador.nombre, carta: carta.nombre, zona: "remate", stat: carta.stats.remate }));
+    log(t("log.cartaColocadaEn", { 
+      jugador: jugador.nombre, 
+      carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+      zona: t("ui.zonaRemate"), 
+      stat: carta.stats.remate 
+    }));
 
     // ------------------------------------------------------------------------- COMPROBAR EFECTOS ÚNICOS
     // ------------------------------------------------------------------------- Potenciar personaje
@@ -1243,7 +1266,9 @@ async function usarGuts(jugador, zona, cantidad) {
   renderCampo(); 
   renderMano(); 
   renderManoRival() 
-  log(t("log.gutsUsado", { zona: zona }));
+  log(t("log.gutsUsado", { 
+    zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) 
+  }));
   if (modoOnline) {
     enviarJugada("gutsUsado", {                          // enviar GUTS al rival
       zona: zona,                                        // zona donde se usó
@@ -1799,7 +1824,9 @@ async function jugarEvento() {
       e => e.recienJugada && e.nombre === carta.nombre             // jugada ESTE turno y con el mismo nombre
     );
     if (yaJugada) {                                                // si ya se jugó una este turno
-      log(t("log.cartaUnica", { carta: carta.nombre }));
+      log(t("log.cartaUnica", { 
+        carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre 
+      }));
       renderMano();                                                // actualizar mano
       renderManoRival();                                           // actualizar mano rival
       return;                                                      // la carta nunca salió de la mano: no hay que devolverla
@@ -1813,7 +1840,10 @@ async function jugarEvento() {
   carta.zonaActual = "eventos";
   carta.recienJugada = true;                                       // jugada este turno (se limpia al cambiar de turno)
 
-  log(t("log.eventoJugado", { jugador: jugador.nombre, carta: carta.nombre }));
+  log(t("log.eventoJugado", { 
+    jugador: jugador.nombre, 
+    carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre 
+  }));
 
   if (carta.habilidad) { // activar el efecto
     await carta.habilidad(jugador, game, carta);
@@ -1869,7 +1899,10 @@ function jugarHabilidadDesdeMano() {
   let index = jugador.mano.indexOf(carta);
   if (index !== -1) jugador.mano.splice(index, 1);
   jugador.trash.push(carta);
-  log(t("log.descartaDesdeMano", { jugador: jugador.nombre, carta: carta.nombre }));
+  log(t("log.descartaDesdeMano", { 
+    jugador: jugador.nombre, 
+    carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre 
+  }));
 
   if (carta.habilidad) {
     carta.habilidad(jugador, game, carta);
@@ -3079,7 +3112,10 @@ async function colocarCartaEnGutsDesdeMano(jugador, escuela) {
   cartaElegida.habilidadUsada = false;                                   // habilidad no usada
   jugador.zonas[zonaElegida].push(cartaElegida);                         // añadir al GUTS de la zona
 
-  log(t("log.cartaAlGuts", { carta: cartaElegida.nombre, zona: zonaElegida }));
+  log(t("log.cartaAlGuts", { 
+    carta: DESCRIPCIONES[cartaElegida.info?.id]?.["nombre_" + idiomaActivo] || cartaElegida.nombre, 
+    zona: t("ui.zona" + zonaElegida.charAt(0).toUpperCase() + zonaElegida.slice(1)) 
+  }));
 
   if (modoOnline) {
     enviarJugada("cartaDesdeManoAGuts", {                                 // avisar al rival
@@ -3373,7 +3409,7 @@ async function aplicarYamamoto028(jugador, carta) { // =========================
 
   // elegir carta de Nekoma para descartar
   let cartaDescarte = await mostrarSelectorCartas(                // abrir selector
-    "Elige una carta de Nekoma de tu mano para descartar:",       // título
+    t("log.elegirCarta"),     
     nekomaEnMano                                                  // solo Nekoma
   );
   if (!cartaDescarte) return;                                     // si cancela, ignorar

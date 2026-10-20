@@ -200,3 +200,7 @@ log.esperandoMulliganRival;Esperando que el rival confirme su mulligan...;Waitin
 log.ambosListos;Ambos jugadores listos. Iniciando partida...;Both players ready. Starting match...;Les deux joueurs sont prêts. Démarrage de la partie...;
 log.ganadoSorteo;¡Has ganado el sorteo! ¡Elige quién empieza!;You won the toss! Choose who starts!;Tu as gagné le tirage ! Choisis qui commence !;
 log.rivalGanoSorteo;Tu rival ganó el sorteo. Esperando su decisión...;Your opponent won the toss. Waiting for their decision...;Ton adversaire a gagné le tirage. En attente de sa décision...;
+log.cartaTrasheadaPorEfectoRival;{carta} enviada al trash desde tu zona de {zona} por efecto rival;{carta} sent to discard from your {zona} zone by an opponent’s effect;{carta} envoyée à la défausse depuis ta zone {zona} par l’effet de l’adversaire;
+log.cartaAlFondoMazoPorEfectoRival;{carta} enviada al fondo de tu mazo por efecto rival;{carta} placed at the bottom of your deck by an opponent’s effect;{carta} envoyée au fond de ton deck par l’effet de l’adversaire;
+log.yoSaquePrimero;Yo saco primero;I’ll serve first;Je sers en premier;
+log.rivalSaquePrimero;El rival saca primero;Opponent serves first;L’adversaire sert en premier;

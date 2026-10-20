@@ -151,7 +151,12 @@ function aplicarJugadaRival(jugada) {
       }
     }
     game.jugadaActual[jugada.zona] = carta;               // guardar en jugada actual
-    log(t("log.cartaColocadaEn", { jugador: rival.nombre, carta: carta.nombre, zona: jugada.zona, stat: carta.stats[jugada.zona] })); // log
+    log(t("log.cartaColocadaEn", { 
+      jugador: rival.nombre, 
+      carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+      zona: t("ui.zona" + jugada.zona.charAt(0).toUpperCase() + jugada.zona.slice(1)), 
+      stat: carta.stats[jugada.zona] 
+    })); 
     renderCampo();                                        // redibujar campo
     break;
 
@@ -185,7 +190,10 @@ function aplicarJugadaRival(jugada) {
         }
       });
 
-      log(t("log.rivalUsaGuts", { jugador: rival.nombre, zona: jugada.zona }));
+      log(t("log.rivalUsaGuts", { 
+        jugador: rival.nombre, 
+        zona: t("ui.zona" + jugada.zona.charAt(0).toUpperCase() + jugada.zona.slice(1)) 
+      }));
       renderCampo();                                           // redibujar campo
       break;
 
@@ -352,8 +360,8 @@ function aplicarJugadaRival(jugada) {
     }
 
     mostrarEleccion([                                                    // preguntar al jugador local
-      { texto: "Place 1 Event card in your Event Zone" },
-      { texto: "Not place" }
+      { texto: t("log.colocarEventoZona") },
+      { texto: t("log.noColocar") }
     ]).then(async eleccion => {                                          // cuando elige
       if (eleccion === 0) {                                              // si quiere colocar
         let eventoElegido = await mostrarSelectorCartas(                 // abrir selector
@@ -431,7 +439,10 @@ function aplicarJugadaRival(jugada) {
         if (index !== -1) {
           let carta = miJugadorTrashear.zonas[zonaTrashear].splice(index, 1)[0];
           miJugadorTrashear.trash.push(carta);
-          log(carta.nombre + " was trashed from your " + zonaTrashear + " zone by an opponent's effect.");
+          log(t("log.cartaTrasheadaPorEfectoRival", { 
+            carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
+            zona: t("ui.zona" + zonaTrashear.charAt(0).toUpperCase() + zonaTrashear.slice(1)) 
+          }));
         }
       });
 
@@ -491,7 +502,9 @@ function aplicarJugadaRival(jugada) {
       if (indexFondoMazo !== -1) {
         let carta = miJugadorFondoMazo.zonas[zonaFondoMazo].splice(indexFondoMazo, 1)[0];
         miJugadorFondoMazo.mazo.push(carta);
-        log(carta.nombre + " was placed at the bottom of your deck by an opponent's effect.");
+        log(t("log.cartaAlFondoMazoPorEfectoRival", { 
+          carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre 
+        }));
       }
 
       // confirmar al rival usando ruta separada
@@ -934,8 +947,8 @@ function iniciarSorteo() {
     if (yoGano) {
       log(t("log.ganadoSorteo"));
       let eleccion = await mostrarEleccion([
-        { texto: "I'll serve first" },
-        { texto: "Opponent serves first" }
+        { texto: t("log.yoSaquePrimero") },
+        { texto: t("log.rivalSaquePrimero") }
       ]);
 
       const miIndice = miNumero - 1;

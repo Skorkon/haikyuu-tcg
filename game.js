@@ -1541,9 +1541,15 @@ function resolverPase(){
     return;
   }
 
-  log(t("log.paseConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
   game.ultimaCarta = null;
+  // comprobar efecto finta
+  if (tieneEfecto("finta")) {                                      // finta activada en pase (ej: Akaashi P02-067)
+    let efecto = game.efectosActivos.find(e => e.tipo === "finta");
+    ejecutarFinta(efecto.valor);                                   // fija el ataque y pasa a la recepción del rival
+    return;                                                        // salir sin pasar por remate
+  }
+  log(t("log.paseConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.fase = "remate";
   game.faseAnterior = "pase";
   if (modoOnline) enviarFase("remate"); // avisar al rival del cambio de fase
@@ -1572,28 +1578,11 @@ function resolverRemate() {
   log(t("log.remataConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
 
-    // comprobar efecto finta
-  if (tieneEfecto("finta")) {                                          // si efecto finta activo
-    let efecto = game.efectosActivos.find(e => e.tipo === "finta");    // buscar efecto
-    game.valorAtaque = efecto.valor;                                   // fijar ataque al valor de finta
-    log(t("log.finta", { valor: efecto.valor }));
-    // el que va a recibir roba 1 carta
-    if (modoOnline) {
-      enviarJugada("robarCarta", { cantidad: 1 });                         // avisar al rival que robe
-    } else {
-      let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;                  // índice del rival
-      robarCarta(game.jugadores[rivalIndex], 1);                           // el rival roba en local
-    }
-    game.fase = "recepcion";                                           // saltar a recepción
-    game.ultimaCarta = null;
-    game.faseAnterior = "remate";
-    if (modoOnline) enviarFase("recepcion");                           // sincronizar fase
-    cambiarJugador();                                                  // turno al rival
-    actualizarFaseUI();                                                // actualizar letrero
-    renderMano();                                                      // actualizar mano
-    renderManoRival();                                                 // actualizar mano rival
-    renderCampo();                                                     // actualizar campo
-    return;                                                            // salir sin pasar por bloqueo
+  // comprobar efecto finta
+  if (tieneEfecto("finta")) {                                      // si efecto finta activo
+    let efecto = game.efectosActivos.find(e => e.tipo === "finta");
+    ejecutarFinta(efecto.valor);
+    return;                                                        // salir sin pasar por bloqueo
   }
 
   game.fase = "bloqueo";
@@ -2061,6 +2050,12 @@ function calcularValoresEnVivo() {
 
   if (game.fase === 'bloqueo') {
     defensa = calcularDefensaBloqueoActual();
+  }
+
+    // ataque fijado por Finta: mientras el efecto esté activo, el marcador muestra ese valor
+  const finta = game.efectosActivos.find(e => e.tipo === "finta");
+  if (finta && (game.fase === "pase" || game.fase === "remate")) {
+    ataque = finta.valor;
   }
 
   return { ataque, defensa };
@@ -2918,6 +2913,27 @@ function finta(n) { // fijar ataque a n y saltar fase de bloqueo
   });
   if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
   log(t("log.finta", { valor: n }));
+}
+// ============================================================ EJECUTAR FINTA (Two Attack)
+function ejecutarFinta(n) { // fija el ataque en n y pasa directamente a la recepción del rival
+  game.valorAtaque = n;                                          // el ataque queda fijado en n
+  log(t("log.finta", { valor: n }));
+
+  if (modoOnline) {
+    enviarJugada("robarCarta", { cantidad: 1 });                 // el que va a recibir roba 1 carta
+  } else {
+    let rivalIndex = game.jugadorActivo === 0 ? 1 : 0;           // índice del rival
+    robarCarta(game.jugadores[rivalIndex], 1);                   // el rival roba en local
+  }
+  game.faseAnterior = game.fase;                                 // fase desde la que se hizo la finta (antes de cambiarla)
+  game.fase = "recepcion";                                       // saltar directamente a recepción
+  game.ultimaCarta = null;
+  if (modoOnline) enviarFase("recepcion");                       // sincronizar fase (incluye el ataque ya fijado)
+  cambiarJugador();                                              // turno al rival
+  actualizarFaseUI();
+  renderMano();
+  renderManoRival();
+  renderCampo();
 }
 // ======================================= ONE TOUCH
 function oneTouch(n) {
@@ -3788,13 +3804,13 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P01-077", "HV-D01-006", "HV-P01-011", "HV-P01-011"].forEach(id => {
+["HV-P01-011", "HV-D01-002", "HV-D01-005"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);
@@ -3802,13 +3818,13 @@ mazoPruebaNekoma.forEach(id => {
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-005"); 
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-010"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
-["HV-P01-054"].forEach(id => {
+["HV-P01-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
@@ -3933,23 +3949,23 @@ mazoPruebaFukurodani.forEach(id => {
 
 // ---------------------------------------------------------------------------------- TEST SHIRATORIZAWA >
 // MANO SHIRATORIZAWA
-["HV-P02-048", "HV-P02-047", "HV-P02-050", "HV-P02-094", "HV-P02-098", "HV-P01-058", "HV-P01-058"].forEach(id => {
+["HV-P01-056", "HV-P02-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
 });
 // GUTS SHIRATORIZAWA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-056"); 
-    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH SHIRATORIZAWA 
 ["HV-P02-047", "HV-P02-047", "HV-P01-058", "HV-P01-058", "HV-P02-050"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO SHIRATORIZAWA
@@ -3964,7 +3980,7 @@ const mazoPruebaShiratorizawa = [
 ];
 mazoPruebaShiratorizawa.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- SHIRATORIZAWA <
@@ -4051,21 +4067,21 @@ for (let i = 0; i < 7; i++) {
 // MANO INARIZAKI
 ["HV-P02-016", "HV-P02-086"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mano.push(carta);
+  // if (carta) game.jugadores[0].mano.push(carta);
   // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS INARIZAKI
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P02-033"); 
-    game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
     // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH INARIZAKI
 ["HV-P02-028"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO INARIZAKI
@@ -4082,7 +4098,7 @@ const mazoPruebaInarizaki = [
 ];
 mazoPruebaInarizaki.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- INARIZAKI <

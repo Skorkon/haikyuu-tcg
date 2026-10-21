@@ -1000,7 +1000,7 @@
         <button class="card-add-btn" title="Añadir al deck">+</button>
         <div class="card-info">
           <div class="card-name" title="${nombre}">${nombre}</div>
-          ${c.posicion ? `<span class="card-position" style="background:${colorEscuela}">${c.posicion}</span>` : ''}
+          ${c.rareza ? `<span class="card-position" style="background:${colorEscuela}">${c.rareza}</span>` : ''}
         </div>`;
       
       div.querySelector('.card-add-btn').addEventListener('click', e => {

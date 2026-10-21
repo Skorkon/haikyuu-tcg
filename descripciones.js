@@ -118,129 +118,129 @@ const DESCRIPCIONES = {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: +4 al remate. El rival no podrá recibir con un jugador que tenga una recepción de base igual o superior a 6.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: +4 to the spike. The opponent cannot receive with a player whose base reception is 6 or higher.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : +4 à l'attaque. L'adversaire ne pourra pas recevoir avec un joueur dont la réception de base est égale ou supérieure à 6."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +4 puntos de ataque. Durante el próximo turno del rival, este no podrá colocar personajes con puntos de recepción originales de 6 o más en su zona de recepción.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> You may pay 3 GUTS to use this skill. This character gets +4 Attack Point. During your opponent's next turn, they cannot play characters with original Receive Point of 6 or more into their Receive Area.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Vous pouvez payer 3 GUTS pour utiliser cette capacité. Ce personnage obtient +4 points d'attaque. Pendant le prochain tour de l'adversaire, celui-ci ne peut pas placer de personnages ayant des points de réception d'origine de 6 ou plus dans sa zone de réception."
   },
   "HV-P01-003": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si tienes 3 cartas o menos en tu mano y tu colocador ha sido <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong>: +2 al remate. </br>El rival solo puede colocar <strong>2 bloqueadores</strong> en el próximo turno.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If you have 3 or fewer cards in your hand and your setter has been <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong>: +2 to the spike. </br>The opponent can only place <strong>2 blockers</strong> on the next turn.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si vous avez 3 cartes ou moins en main et que votre passeur a été <strong><span style= color:#2e7d32>Kageyama Tobio</span></strong> : +2 à l'attaque. </br>L'adversaire ne peut placer que <strong>2 contreurs</strong> lors du prochain tour."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Puedes usar esta habilidad si este personaje entró desde tu mano, tienes 3 o menos cartas en tu mano y el personaje en tu zona de pase es <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>. </br>Este personaje obtiene +2 puntos de ataque. Durante el próximo turno del rival, este no podrá colocar más de 2 personajes en su zona de bloqueo.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> You may use this skill if this character entered from your hand, you have 3 or fewer cards in your hand, and the character in your Set Area is <strong><span style=&quot;color:#2e7d32&quot;>Tobio Kageyama</span></strong>. </br>This character gets +2 Attack Point. During your opponent's next turn, they can play no more than 2 characters into their Block Area.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Vous pouvez utiliser cette capacité si ce personnage est entré depuis votre main, que vous avez 3 cartes ou moins dans votre main et que le personnage dans votre zone de passe est <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>. </br>Ce personnage obtient +2 points d'attaque. Pendant le prochain tour de l'adversaire, celui-ci ne peut pas placer plus de 2 personnages dans sa zone de contre."
   },
   "HV-P01-006": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Revela la primera carta del mazo. Si es <strong><span style= color:#c62828>Hinata Shoyo</span></strong> o <strong><span style= color:#c62828>Ataque amplio</span></strong>, añádela a tu mano. Si no es el caso, envía la carta al fondo de tu mazo. Añade +2 al remate de esta jugada, si el rematador es <strong><span style= color:#c62828>Hinata Shoyo</span></strong>.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Reveal the top card of the deck. If it is <strong><span style= color:#c62828>Hinata Shoyo</span></strong> or <strong><span style= color:#c62828>Wide attack</span></strong>, add it to your hand. If not, send the card to the bottom of your deck. Add +2 to the spike of this play, if the spiker is <strong><span style= color:#c62828>Hinata Shoyo</span></strong>.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Révélez la première carte du deck. S'il s'agit de <strong><span style= color:#c62828>Hinata Shoyo</span></strong> ou d'<strong><span style= color:#c62828>Attaque large</span></strong>, ajoutez-la à votre main. Sinon, envoyez la carte au fond de votre deck. Ajoutez +2 à l'attaque de cette action, si l'attaquant est <strong><span style= color:#c62828>Hinata Shoyo</span></strong>."
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Revela la carta superior de tu mazo. Añade a tu mano hasta 1 carta llamada <strong>Hinata Shoyo</strong> o <strong>Four Set</strong> de entre la carta revelada, luego pon la carta restante en el fondo de tu mazo. </br>Además, durante este turno, cada vez que entre tu <strong>Hinata Shoyo</strong>, ese personaje obtiene +2 puntos de ataque.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> You may pay 2 GUTS to use this skill. Reveal the top card of your deck. Add up to 1 card named <strong>Shoyo Hinata</strong> or <strong>Four Set</strong> from the revealed card to your hand, then put the remaining card on the bottom of your deck. </br>In addition, during this turn, whenever your <strong>Shoyo Hinata</strong> enters, that character gets +2 Attack Point.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Vous pouvez payer 2 GUTS pour utiliser cette capacité. Révélez la carte du dessus de votre deck. Ajoutez à votre main jusqu'à 1 carte nommée <strong>Hinata Shoyo</strong> ou <strong>Four Set</strong> parmi la carte révélée, puis placez la carte restante au fond de votre deck. </br>De plus, pendant ce tour, chaque fois que votre <strong>Hinata Shoyo</strong> entre en jeu, ce personnage obtient +2 points d'attaque."
   },
   "HV-P01-008": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span> GUTS 2</strong>: Si hay un <strong>Yamaguchi Tadashi</strong> en tu campo, añade +2 al bloqueo. </br>Si el bloqueo es exitoso : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo ofensivo (6)</strong></span> : Devuelve un contraataque con potencia de 6.",
-    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span> GUTS - 2</strong>: If there is a <strong>Yamaguchi Tadashi</strong> on your field, add +2 to the block. </br>If the block is successful: </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive block (6)</strong></span>: Return a counterattack with power 6.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span> GUTS 2</strong> : S'il y a un <strong>Yamaguchi Tadashi</strong> sur votre terrain, ajoutez +2 au contre. </br>Si le contre réussit : </br><span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre offensif (6)</strong></span> : Renvoyez une contre-attaque avec une puissance de 6."
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Puedes pagar 2 GUTS para hacer todo lo siguiente. </br>· Si tienes un personaje llamado <strong>Yamaguchi Tadashi</strong> en tu campo, este personaje obtiene +2 puntos de bloqueo. </br>· Durante este turno, cuando bloquees con éxito, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo ofensivo (6)</strong></span>.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> You may pay 2 GUTS to do all of the following. </br>· If you have a character named <strong>Tadashi Yamaguchi</strong> in your court, this character gets +2 Block Point. </br>· During this turn, when you successfully block, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Stuffed (6)</strong></span>.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Vous pouvez payer 2 GUTS pour faire tout ce qui suit. </br>· Si vous avez un personnage nommé <strong>Yamaguchi Tadashi</strong> sur votre terrain, ce personnage obtient +2 points de contre. </br>· Pendant ce tour, lorsque vous bloquez avec succès, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre offensif (6)</strong></span>."
   },
   "HV-P01-010": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Revela la carta superior de tu mazo. Si es de <strong>Karasuno</strong>, el próximo colocador rival tendrá <strong>-2 al pase</strong>. </br>Coloca la carta mostrada al fondo del mazo.",
-    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> Reveal the top card of your deck. If it is from <strong>Karasuno</strong>, the opponent's next setter will have <strong>-2 to the set</strong>. </br>Place the revealed card at the bottom of the deck.",
-    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Révélez la carte du dessus de votre deck. Si elle appartient à <strong>Karasuno</strong>, le prochain passeur adverse aura <strong>-2 à la passe</strong>. </br>Placez la carte révélée au fond du deck."
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Revela la carta superior de tu mazo. Si esa carta es una carta de <strong>Karasuno</strong>, durante el próximo turno del rival, cada vez que un personaje entre en su zona de pase, ese personaje obtiene -2 puntos de pase. Pon la carta revelada en el fondo de tu mazo.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> Reveal the top card of your deck. If that card is a <strong>Karasuno</strong> card, during your opponent's next turn, whenever a character enters their Set Area, that character gets -2 Set Point. Put the revealed card on the bottom of your deck.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Révélez la carte du dessus de votre deck. Si cette carte est une carte de <strong>Karasuno</strong>, pendant le prochain tour de l'adversaire, chaque fois qu'un personnage entre dans sa zone de passe, ce personnage obtient -2 points de passe. Placez la carte révélée au fond de votre deck."
   },
   "HV-P01-013": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Descarta esta carta desde tu mano para añadir +2 a la recepción de un personaje de <strong>Karasuno</strong> en juego.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Discard this card from your hand to add +2 to the reception of a <strong>Karasuno</strong> character in play.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Défaussez cette carte depuis votre main pour ajouter +2 à la réception d'un personnage de <strong>Karasuno</strong> en jeu."
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> (Descarta esta carta de tu mano): Uno de tus personajes de <strong>Karasuno</strong> obtiene +2 puntos de recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Receive</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> (Discard this card from your hand): One of your <strong>Karasuno</strong> characters gets +2 Receive Point.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> (Défaussez cette carte de votre main) : L'un de vos personnages de <strong>Karasuno</strong> obtient +2 points de réception."
   },
   "HV-P01-015": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 2</strong>: Roba 1 carta y +1 al pase.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 2</strong>: Draw 1 card and +1 to the set.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 2</strong> : Piochez 1 carte et +1 à la passe."
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Roba 1 carta. Este personaje obtiene +1 punto de pase.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> You may pay 2 GUTS to use this skill. Draw 1 card. This character gets +1 Set Point.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Vous pouvez payer 2 GUTS pour utiliser cette capacité. Piochez 1 carte. Ce personnage obtient +1 point de passe."
   },
   "HV-P01-016": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 4</strong>: Si tu colocador es un <strong>colocador (S) de Karasuno</strong>, +2 al remate.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 4</strong>: If your setter is a <strong>Karasuno setter (S)</strong>, +2 to the spike.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 4</strong> : Si votre passeur est un <strong>passeur (S) de Karasuno</strong>, +2 à l'attaque."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Si el personaje en tu zona de pase es un <strong>S</strong> de <strong>Karasuno</strong>, puedes pagar 4 GUTS para usar esta habilidad. Este personaje obtiene +2 puntos de ataque.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> If the character in your Set Area is an <strong>S</strong> from <strong>Karasuno</strong>, you may pay 4 GUTS to use this skill. This character gets +2 Attack Point.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si le personnage dans votre zone de passe est un <strong>S</strong> de <strong>Karasuno</strong>, vous pouvez payer 4 GUTS pour utiliser cette capacité. Ce personnage obtient +2 points d'attaque."
   },
   "HV-P01-018": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span> GUTS 3</strong>: +1 al pase. Si todos tus personajes en juego son de <strong>Nekoma</strong>, puedes añadir 1 carta de tu zona de eventos a tu mano.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span> GUTS 3</strong>: +1 to the set. If all your characters in play are from <strong>Nekoma</strong>, you may add 1 card from your event zone to your hand.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span> GUTS 3</strong> : +1 à la passe. Si tous vos personnages en jeu sont de <strong>Nekoma</strong>, vous pouvez ajouter 1 carte de votre zone d'événements à votre main."
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +1 punto de pase. Si todos tus personajes son personajes de <strong>Nekoma</strong>, añade hasta 1 carta de tu zona de eventos a tu mano.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> You may pay 3 GUTS to use this skill. This character gets +1 Set Point. If all of your characters are <strong>Nekoma</strong> characters, add up to 1 card from your Event Area to your hand.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Vous pouvez payer 3 GUTS pour utiliser cette capacité. Ce personnage obtient +1 point de passe. Si tous vos personnages sont des personnages de <strong>Nekoma</strong>, ajoutez jusqu'à 1 carte de votre zone d'événements à votre main."
   },
   "HV-P01-019": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "Si tu rematador esta jugada tiene un remate base de 3, puedes gastar <strong>GUTS 2</strong> de <strong><span style=&quot;color:#2e7d32&quot;>pase</span></strong> para traer un personaje de <strong>Nekoma</strong> del GUTS de remate y añadir <strong>+2</strong> a su remate.",
-    "en": "If your spiker this play has a base spike of 3, you can spend <strong>GUTS 2</strong> from <strong><span style=&quot;color:#2e7d32&quot;>set</span></strong> to bring a <strong>Nekoma</strong> character from the spike GUTS and add <strong>+2</strong> to its spike.",
-    "fr": "Si votre attaquant sur cette action a une attaque de base de 3, vous pouvez dépenser <strong>GUTS 2</strong> de <strong><span style=&quot;color:#2e7d32&quot;>passe</span></strong> pour amener un personnage de <strong>Nekoma</strong> depuis le GUTS d'attaque et ajouter <strong>+2</strong> à son attaque."
+    "es": "Cuando un personaje con puntos de ataque originales de 3 entre en tu zona de ataque, si este personaje está en tu zona de pase, puedes pagar 2 GUTS para usar esta habilidad. Elige 1 carta de <strong>Nekoma</strong> del GUTS de tu zona de ataque y coloca ese personaje en la zona de ataque. Después, ese personaje obtiene +2 puntos de ataque.",
+    "en": "When a character with original Attack Point of 3 enters your Attack Area, if this character is in your Set Area, you may pay 2 GUTS to use this skill. Choose 1 <strong>Nekoma</strong> card from the GUTS in your Attack Area and play that character into the Attack Area. Then, that character gets +2 Attack Point.",
+    "fr": "Lorsqu'un personnage ayant des points d'attaque d'origine de 3 entre dans votre zone d'attaque, si ce personnage est dans votre zone de passe, vous pouvez payer 2 GUTS pour utiliser cette capacité. Choisissez 1 carte de <strong>Nekoma</strong> parmi le GUTS de votre zone d'attaque et placez ce personnage dans la zone d'attaque. Ensuite, ce personnage obtient +2 points d'attaque."
   },
   "HV-P01-021": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 3</strong>: +3 al remate. Después, elige una zona de tu campo y añade a tu mano hasta 2 cartas de <strong>Nekoma</strong> del GUTS de esa zona con nombres distintos entre sí.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 3</strong>: +3 to the spike. Then, choose a zone on your field and add up to 2 <strong>Nekoma</strong> cards with different names from that zone's GUTS to your hand.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 3</strong> : +3 à l'attaque. Ensuite, choisissez une zone de votre terrain et ajoutez à votre main jusqu'à 2 cartes de <strong>Nekoma</strong> du GUTS de cette zone ayant des noms différents entre elles."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +3 puntos de ataque. Añade a tu mano 2 cartas de <strong>Nekoma</strong> con nombres distintos del GUTS de una de tus zonas.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> You may pay 3 GUTS to use this skill. This character gets +3 Attack Point. Add 2 <strong>Nekoma</strong> cards with different names from the GUTS in one of your Areas to your hand.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Vous pouvez payer 3 GUTS pour utiliser cette capacité. Ce personnage obtient +3 points d'attaque. Ajoutez à votre main 2 cartes de <strong>Nekoma</strong> avec des noms différents provenant du GUTS de l'une de vos zones."
   },
   "HV-P01-023": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "Cuando coloques un personaje de <strong>Nekoma</strong> distinto de <strong>Yaku Morisuke</strong> encima de esta carta en <strong><span style=&quot;color:#1565c0&quot;>recepción</span></strong>, puedes enviar esta carta al descarte para añadir +2 a su recepción.",
-    "en": "When a <strong>Nekoma</strong> character other than <strong>Yaku Morisuke</strong> enters on top of this card in your <strong><span style=&quot;color:#1565c0&quot;>receive</span></strong> area, you may send this card to the discard pile to use this skill. That character gets +2 receive points.",
-    "fr": "Lorsque vous placez un personnage de <strong>Nekoma</strong> autre que <strong>Yaku Morisuke</strong> par-dessus cette carte en <strong><span style=&quot;color:#1565c0&quot;>réception</span></strong>, vous pouvez envoyer cette carte à la défausse pour ajouter +2 à sa réception."
+    "es": "Cuando un personaje de <strong>Nekoma</strong> distinto de <strong>Yaku Morisuke</strong> entre encima de este personaje en tu zona de recepción, puedes enviar esta carta al descarte para usar esta habilidad. Ese personaje obtiene +2 puntos de recepción.",
+    "en": "When a <strong>Nekoma</strong> character other than <strong>Morisuke Yaku</strong> enters on top of this character in your Receive Area, you may send this card into the Drop Area to use this skill. That character gets +2 Receive Point.",
+    "fr": "Lorsqu'un personnage de <strong>Nekoma</strong> autre que <strong>Yaku Morisuke</strong> entre par-dessus ce personnage dans votre zone de réception, vous pouvez envoyer cette carte à la défausse pour utiliser cette capacité. Ce personnage obtient +2 points de réception."
   },
   "HV-P01-025": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span> GUTS 2</strong>: </br>· Durante el próximo turno rival, cada bloqueador central que coloque tendrá <strong>-3 al bloqueo</strong>.</br>· Si esta carta fue traída por la habilidad de <strong><span style=&quot;color:#2e7d32&quot;>Kozume Kenma</span></strong>, +2 al remate.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span> GUTS 2</strong>: </br>· During the opponent's next turn, each middle blocker they place will have <strong>-3 to the block</strong>.</br>· If this card was brought in by <strong><span style=&quot;color:#2e7d32&quot;>Kozume Kenma</span></strong>'s ability, +2 to the spike.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span> GUTS 2</strong> : </br>· Pendant le prochain tour adverse, chaque contreur central qu'il place aura <strong>-3 au contre</strong>.</br>· Si cette carte a été amenée par la capacité de <strong><span style=&quot;color:#2e7d32&quot;>Kozume Kenma</span></strong>, +2 à l'attaque."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Puedes pagar 2 GUTS para hacer todo lo siguiente. </br>· Si este personaje entró en el campo por una habilidad de <strong>Kozume Kenma</strong>, este personaje obtiene +2 puntos de ataque. </br>· Durante el próximo turno del rival, cada vez que su personaje entre en su zona de bloqueo como bloqueador central, ese personaje obtiene -3 puntos de bloqueo.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> You may pay 2 GUTS to do all of the following. </br>· If this character entered the court by a skill of <strong>Kenma Kozume</strong>, this character gets +2 Attack Point. </br>· During your opponent's next turn, whenever their character enters their Block Area as the Center Blocker, that character gets -3 Block Point.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Vous pouvez payer 2 GUTS pour faire tout ce qui suit. </br>· Si ce personnage est entré sur le terrain grâce à une capacité de <strong>Kozume Kenma</strong>, ce personnage obtient +2 points d'attaque. </br>· Pendant le prochain tour de l'adversaire, chaque fois que son personnage entre dans sa zone de contre en tant que contreur central, ce personnage obtient -3 points de contre."
   },
   "HV-P01-028": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "Cuando coloques a <strong>Haiba Lev</strong> encima de esta carta en <strong><span style=&quot;color:#c62828&quot;>remate</span></strong>, puedes descartar 1 carta de <strong>Nekoma</strong> de tu mano para añadir +1 a su remate.",
-    "en": "When you place <strong>Haiba Lev</strong> on top of this card in <strong><span style=&quot;color:#c62828&quot;>spike</span></strong>, you may discard 1 <strong>Nekoma</strong> card from your hand to add +1 to its spike.",
-    "fr": "Lorsque vous placez <strong>Haiba Lev</strong> par-dessus cette carte en <strong><span style=&quot;color:#c62828&quot;>attaque</span></strong>, vous pouvez défausser 1 carte de <strong>Nekoma</strong> de votre main pour ajouter +1 à son attaque."
+    "es": "Si un personaje llamado <strong><span style=&quot;color:#c62828&quot;>Haiba Lev</span></strong> entra encima de este personaje en tu zona de ataque, puedes descartar 1 carta de <strong>Nekoma</strong> para usar esta habilidad. Ese personaje obtiene +1 punto de ataque.",
+    "en": "If a character named <strong><span style=&quot;color:#c62828&quot;>Lev Haiba</span></strong> enters on top of this character in your Attack Area, you may discard 1 <strong>Nekoma</strong> card to use this skill. That character gets +1 Attack Point.",
+    "fr": "Si un personnage nommé <strong><span style=&quot;color:#c62828&quot;>Haiba Lev</span></strong> entre par-dessus ce personnage dans votre zone d'attaque, vous pouvez défausser 1 carte de <strong>Nekoma</strong> pour utiliser cette capacité. Ce personnage obtient +1 point d'attaque."
   },
   "HV-P01-031": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> Descarta esta carta desde tu mano para añadir +2 a la recepción de un personaje de <strong>Nekoma</strong> en juego.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> Discard this card from your hand to add +2 to the reception of a <strong>Nekoma</strong> character in play.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> Défaussez cette carte depuis votre main pour ajouter +2 à la réception d'un personnage de <strong>Nekoma</strong> en jeu."
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Desde la mano</span></strong> (Descarta esta carta de tu mano): Uno de tus personajes de <strong>Nekoma</strong> obtiene +2 puntos de recepción.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Receive</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>From hand</span></strong> (Discard this card from your hand): One of your <strong>Nekoma</strong> characters gets +2 Receive Point.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Depuis la main</span></strong> (Défaussez cette carte de votre main) : L'un de vos personnages de <strong>Nekoma</strong> obtient +2 points de réception."
   },
   "HV-P01-032": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Durante el próximo turno rival, las habilidades del <strong>receptor</strong> y del <strong>colocador</strong> quedan anuladas.",
-    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> During the opponent's next turn, the abilities of the <strong>receiver</strong> and the <strong>setter</strong> are nullified.",
-    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Pendant le prochain tour adverse, les capacités du <strong>réceptionneur</strong> et du <strong>passeur</strong> sont annulées."
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Durante el próximo turno del rival, los personajes en su zona de recepción y en su zona de pase no pueden usar sus habilidades.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> During your opponent's next turn, characters in their Receive Area and in their Set Area cannot use their abilities.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Pendant le prochain tour de l'adversaire, les personnages dans sa zone de réception et dans sa zone de passe ne peuvent pas utiliser leurs capacités."
   },
   "HV-P01-033": {
     "nombre_es": "",
@@ -411,12 +411,12 @@ const DESCRIPCIONES = {
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> <span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si votre réceptionneur ou attaquant est de <strong>Karasuno</strong>, +1 à son paramètre selon la phase. Si vous êtes en <strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong>, piochez également 1 carte."
   },
   "HV-P01-076": {
-    "nombre_es": "¡Ánimo!",
-    "nombre_en": "Come on!",
-    "nombre_fr": "Allez !",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Si tienes 4 o menos cartas en la mano, elige una de tus zonas y añade 2 cartas de su GUTS a tu mano.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If you have 4 or fewer cards in hand, choose one of your zones and add 2 cards from its GUTS to your hand.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si vous avez 4 cartes ou moins en main, choisissez une de vos zones et ajoutez 2 cartes de son GUTS à votre main."
+    "nombre_es": "Buena suerte",
+    "nombre_en": "Good luck",
+    "nombre_fr": "Bonne chance",
+    "es": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Robo</span></strong> Si tienes 4 cartas o menos en tu mano, añade a tu mano 2 GUTS de la misma escuela de una de tus zonas.",
+    "en": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Draw</span></strong> If you have 4 or fewer cards in your hand, add 2 GUTS with the same affiliation from one of your Areas to your hand.",
+    "fr": "<strong><span style=&quot;background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;&quot;>Pioche</span></strong> Si vous avez 4 cartes ou moins dans votre main, ajoutez à votre main 2 GUTS de la même école provenant de l'une de vos zones."
   },
   "HV-P01-077": {
     "nombre_es": "¡Vamos a por ello!",
@@ -427,20 +427,20 @@ const DESCRIPCIONES = {
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> <strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong> +2 à la réception d'un personnage de <strong>Karasuno</strong>. Si ce personnage est <strong>Nishinoya Yu</strong>, piochez 1 carte.</br><strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;&quot;>Unique</span></strong><span style=&quot;font-size:0.85em&quot;> : Vous ne pouvez jouer qu'1 carte portant ce nom par tour."
   },
   "HV-P01-078": {
-    "nombre_es": "Ataque abierto",
-    "nombre_en": "Open attack",
-    "nombre_fr": "Attaque ouverte",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Roba 2 cartas y descarta 1 de tu mano. </br>Si hay 2 o menos <strong>Ataque abierto</strong> en tu zona de eventos, puedes traer un <strong>Hinata Shoyo</strong> del trash a la zona de remate y añadir +1 a su remate.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> Draw 2 cards and discard 1 from your hand. </br>If there are 2 or fewer <strong>Open attack</strong> in your event zone, you may bring a <strong>Hinata Shoyo</strong> from the trash to the spike zone and add +1 to its spike.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 2 cartes et défaussez 1 de votre main. </br>S'il y a 2 <strong>Attaque ouverte</strong> ou moins dans votre zone d'événements, vous pouvez amener un <strong>Hinata Shoyo</strong> depuis la défausse vers la zone d'attaque et ajouter +1 à son attaque."
+    "nombre_es": "Four Set",
+    "nombre_en": "Four Set",
+    "nombre_fr": "Four Set",
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Roba 2 cartas y luego descarta 1 carta. Si hay 2 o menos cartas <strong>Four Set</strong> en tu zona de eventos, coloca 1 <strong><span style=&quot;color:#c62828&quot;>Hinata Shoyo</span></strong> de tu descarte en tu zona de ataque. Ese personaje obtiene +1 punto de ataque.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> Draw 2 cards, then discard 1 card. If there are 2 or fewer <strong>Four Set</strong> cards in your Event Area, play 1 <strong><span style=&quot;color:#c62828&quot;>Shoyo Hinata</span></strong> from your Drop Area into your Attack Area. That character gets +1 Attack Point.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Piochez 2 cartes, puis défaussez 1 carte. S'il y a 2 cartes <strong>Four Set</strong> ou moins dans votre zone d'événements, placez 1 <strong><span style=&quot;color:#c62828&quot;>Hinata Shoyo</span></strong> de votre défausse dans votre zone d'attaque. Ce personnage obtient +1 point d'attaque."
   },
   "HV-P01-079": {
-    "nombre_es": "Nunca pensé ni por un momento que podría ganar solo",
-    "nombre_en": "I never thought for a moment I could win alone",
-    "nombre_fr": "Je n'ai jamais pensé un seul instant que je pouvais gagner seul",
-    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Roba 1 carta y +1 al bloqueo de un personaje de <strong>Karasuno</strong>. </br>Si ese bloqueador es <strong>Tsukishima Kei</strong>, puedes añadir un <strong>Yamaguchi Tadashi</strong> del GUTS de saque a tu mano. Además, durante el siguiente turno rival, el receptor tendrá <strong>-2 a la recepción</strong>.",
-    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> Draw 1 card and +1 to the block of a <strong>Karasuno</strong> character. </br>If that blocker is <strong>Tsukishima Kei</strong>, you may add a <strong>Yamaguchi Tadashi</strong> from the serve GUTS to your hand. Also, during the opponent's next turn, the receiver will have <strong>-2 to the reception</strong>.",
-    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Piochez 1 carte et +1 au contre d'un personnage de <strong>Karasuno</strong>. </br>Si ce contreur est <strong>Tsukishima Kei</strong>, vous pouvez ajouter un <strong>Yamaguchi Tadashi</strong> depuis le GUTS de service à votre main. De plus, pendant le prochain tour adverse, le réceptionneur aura <strong>-2 à la réception</strong>."
+    "nombre_es": "No me hago ilusiones de poder vencerte yo solo",
+    "nombre_en": "I am under no illusions that I could ever beat you on my own",
+    "nombre_fr": "Je ne me fais aucune illusion sur ma capacité à te battre tout seul",
+    "es": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Bloqueo</span></strong> Roba 1 carta. Uno de tus personajes de <strong>Karasuno</strong> en tu zona de bloqueo obtiene +1 punto de bloqueo. Si ese personaje es <strong><span style=&quot;color:#424242&quot;>Tsukishima Kei</span></strong>, añade a tu mano hasta 1 personaje llamado <strong><span style=&quot;color:#e65100&quot;>Yamaguchi Tadashi</span></strong> de tu zona de saque. Durante el próximo turno del rival, cada vez que un personaje entre en su zona de recepción, ese personaje obtiene -2 puntos de recepción.",
+    "en": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Block</span></strong> Draw 1 card. One of your <strong>Karasuno</strong> characters in your Block Area gets +1 Block Point. If that character is <strong><span style=&quot;color:#424242&quot;>Kei Tsukishima</span></strong>, add up to 1 character named <strong><span style=&quot;color:#e65100&quot;>Tadashi Yamaguchi</span></strong> from your Serve Area to your hand. During your opponent's next turn, whenever a character enters their Receive Area, that character gets -2 Receive Point.",
+    "fr": "<strong><span style=&quot;background:#424242; color:white; padding:1px 4px; border-radius:2px;&quot;>Contre</span></strong> Piochez 1 carte. L'un de vos personnages de <strong>Karasuno</strong> dans votre zone de contre obtient +1 point de contre. Si ce personnage est <strong><span style=&quot;color:#424242&quot;>Tsukishima Kei</span></strong>, ajoutez à votre main jusqu'à 1 personnage nommé <strong><span style=&quot;color:#e65100&quot;>Yamaguchi Tadashi</span></strong> de votre zone de service. Pendant le prochain tour de l'adversaire, chaque fois qu'un personnage entre dans sa zone de réception, ce personnage obtient -2 points de réception."
   },
   "HV-P01-080": {
     "nombre_es": "",
@@ -886,9 +886,9 @@ const DESCRIPCIONES = {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Dropea la carta superior de tu mazo. Si es un personaje de <strong>Fukurodani</strong>, puedes descartar 1 carta de tu mano para hacer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span>: fija tu ataque en 3 y pasa directamente a fase de recepción.",
-    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> Discard the top card of your deck. If it is a <strong>Fukurodani</strong> character, you may discard 1 card from your hand to perform <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span>: fix your attack at 3 and go directly to the reception phase.",
-    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Défaussez la carte du dessus de votre deck. Si c'est un personnage de <strong>Fukurodani</strong>, vous pouvez défausser 1 carte de votre main pour effectuer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Two Attack (3)</strong></span> : fixez votre attaque à 3 et passez directement à la phase de réception."
+    "es": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Pase</span></strong> Descarta la carta superior de tu mazo. Si es un personaje de <strong>Fukurodani</strong>, puedes descartar 1 carta de tu mano para hacer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Finta (3)</strong></span>: fija tu ataque en 3 y pasa directamente a fase de recepción.",
+    "en": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Set</span></strong> Discard the top card of your deck. If it is a <strong>Fukurodani</strong> character, you may discard 1 card from your hand to perform <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Feint (3)</strong></span>: fix your attack at 3 and go directly to the reception phase.",
+    "fr": "<strong><span style=&quot;background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;&quot;>Passe</span></strong> Défaussez la carte du dessus de votre deck. Si c'est un personnage de <strong>Fukurodani</strong>, vous pouvez défausser 1 carte de votre main pour effectuer <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Feinte (3)</strong></span> : fixez votre attaque à 3 et passez directement à la phase de réception."
   },
   "HV-P02-070": {
     "nombre_es": "",

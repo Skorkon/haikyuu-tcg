@@ -204,3 +204,5 @@ log.cartaTrasheadaPorEfectoRival;{carta} enviada al trash desde tu zona de {zona
 log.cartaAlFondoMazoPorEfectoRival;{carta} enviada al fondo de tu mazo por efecto rival;{carta} placed at the bottom of your deck by an opponent’s effect;{carta} envoyée au fond de ton deck par l’effet de l’adversaire;
 log.yoSaquePrimero;Yo saco primero;I’ll serve first;Je sers en premier;
 log.rivalSaquePrimero;El rival saca primero;Opponent serves first;L’adversaire sert en premier;
+log.recepcionFijada;Recepción de {carta} fijada en {valor};{carta}’s reception set to {valor};Réception de {carta} fixée à {valor};
+log.descartarBloqueadorMenosAtaque;{carta} enviado al trash desde el bloqueo: -{valor} al ataque rival;{carta} sent to discard from block: -{valor} to rival attack;{carta} envoyé à la défausse depuis le bloc : -{valor} à l’attaque rivale;

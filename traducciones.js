@@ -208,7 +208,9 @@ const TRADUCCIONES = {
       "cartaTrasheadaPorEfectoRival": "{carta} enviada al trash desde tu zona de {zona} por efecto rival",
       "cartaAlFondoMazoPorEfectoRival": "{carta} enviada al fondo de tu mazo por efecto rival",
       "yoSaquePrimero": "Yo saco primero",
-      "rivalSaquePrimero": "El rival saca primero"
+      "rivalSaquePrimero": "El rival saca primero",
+      "recepcionFijada": "Recepción de {carta} fijada en {valor}",
+      "descartarBloqueadorMenosAtaque": "{carta} enviado al trash desde el bloqueo: -{valor} al ataque rival"
     }
   },
   "en": {
@@ -417,7 +419,9 @@ const TRADUCCIONES = {
       "cartaTrasheadaPorEfectoRival": "{carta} sent to discard from your {zona} zone by an opponent’s effect",
       "cartaAlFondoMazoPorEfectoRival": "{carta} placed at the bottom of your deck by an opponent’s effect",
       "yoSaquePrimero": "I’ll serve first",
-      "rivalSaquePrimero": "Opponent serves first"
+      "rivalSaquePrimero": "Opponent serves first",
+      "recepcionFijada": "{carta}’s reception set to {valor}",
+      "descartarBloqueadorMenosAtaque": "{carta} sent to discard from block: -{valor} to rival attack"
     }
   },
   "fr": {
@@ -626,7 +630,9 @@ const TRADUCCIONES = {
       "cartaTrasheadaPorEfectoRival": "{carta} envoyée à la défausse depuis ta zone {zona} par l’effet de l’adversaire",
       "cartaAlFondoMazoPorEfectoRival": "{carta} envoyée au fond de ton deck par l’effet de l’adversaire",
       "yoSaquePrimero": "Je sers en premier",
-      "rivalSaquePrimero": "L’adversaire sert en premier"
+      "rivalSaquePrimero": "L’adversaire sert en premier",
+      "recepcionFijada": "Réception de {carta} fixée à {valor}",
+      "descartarBloqueadorMenosAtaque": "{carta} envoyé à la défausse depuis le bloc : -{valor} à l’attaque rivale"
     }
   },
   "": {
@@ -835,7 +841,9 @@ const TRADUCCIONES = {
       "cartaTrasheadaPorEfectoRival": "",
       "cartaAlFondoMazoPorEfectoRival": "",
       "yoSaquePrimero": "",
-      "rivalSaquePrimero": ""
+      "rivalSaquePrimero": "",
+      "recepcionFijada": "",
+      "descartarBloqueadorMenosAtaque": ""
     }
   }
 };

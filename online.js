@@ -166,8 +166,12 @@ function aplicarJugadaRival(jugada) {
       if (!evento) return;                                                     // si no existe, ignorar
 
       const rivalIndiceEvento = miNumero === 1 ? 1 : 0;                       // índice del rival
-      game.jugadores[rivalIndiceEvento].zonas.eventos.push(evento);           // añadir a zona eventos
-      log(t("log.eventoJugado", { jugador: rival.nombre, carta: evento.nombre }));
+      const rivalEvento = game.jugadores[rivalIndiceEvento];
+      rivalEvento.zonas.eventos.push(evento);                                 // añadir a zona eventos
+      log(t("log.eventoJugado", { 
+        jugador: rivalEvento.nombre, 
+        carta: DESCRIPCIONES[evento.info?.id]?.["nombre_" + idiomaActivo] || evento.nombre 
+      }));
       renderCampo();                                                           // redibujar campo
       break;
 

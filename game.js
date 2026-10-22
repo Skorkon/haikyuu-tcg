@@ -1961,6 +1961,7 @@ function deseleccionarCarta() {
 // ===================================================================================================================================
 // ========================================================================================================== ACTUALIZAR FASE DE LA UI
 function actualizarFaseUI() {
+  moverPelota();
   // comprobar efecto colocarCartaGutsSiPunto: se autoconsume, solo se dispara 1 vez al llegar el saque propio
   if (game.fase === "saque") {
     let efecto = game.efectosActivos.find(e =>
@@ -1978,7 +1979,6 @@ function actualizarFaseUI() {
   
   document.getElementById("contador-turno").textContent = t("ui.contadorTurno", { turno: game.turno });
   actualizarContadoresVisual();  
-  moverPelota();
   actualizarBotonesAccion();
   actualizarFaseTracker();
   aplicarBloqueoMulligan();
@@ -2522,6 +2522,7 @@ function renderCampo() {
         });
         actualizarContador(eventosCont, jugador.zonas.eventos.length); // muestra el número de cartas
       }
+      moverPelota();
   }); 
 }
 
@@ -3848,7 +3849,7 @@ const mazoPruebaKarasuno = [
   "HV-P01-074", "HV-P01-074",                          // Ukai Ikki N x2
   "HV-P01-075", "HV-P01-075",                          // Shimizu N x2
   "HV-P01-077", "HV-P01-077",                          // ¡Vamos a por ello! N x2
-  "HV-P01-078", "HV-P01-078",                          // Ataque abierto S x2
+  "HV-P01-078", "HV-P01-078",                          // Four Set S x2
   "HV-P01-079", "HV-P01-079",                          // Nunca pensé... N x2
   "HV-P02-082", "HV-P02-082",                          // ¡Super Inner Cross!!! S x2
 ];

@@ -5,6 +5,7 @@
   --papel: #FFFFFF;          /* viñetas y zona libre */
   --gris-claro: #E4E7EA;     /* fondo de paneles, con trama de puntos */
   --gris-medio: #9A9EA3;     /* pabellón alrededor del campo */
+  --bg: #f2f0e8; 
 
   /* colores de equipo */
   --accent: #E8761A;         /* por defecto; cada página lo cambia por el guardado en hv-accent */
@@ -19,18 +20,64 @@
   /* viñetas */
   --contorno: 3px solid var(--tinta);          /* el trazo de tinta de cada viñeta */
   --sombra-dura: 2px 2px 0 var(--tinta);       /* sombra sólida desplazada, sin difuminar */
+  
+  /* placa estilo pegatina: sombra de tu color + borde blanco alrededor de todo */
+  --sombra-placa:
+    2px 2px 0 var(--accent),
+    0 0 0 2px var(--papel),
+    2px 2px 0 2px var(--papel);
+
+    /* placa estilo pegatina: sombra de tu color + borde blanco alrededor de todo */
+  --sombra-invertida:
+    2px 2px 0 var(--tinta),           /* sombra: negra (invertida) */
+    0 0 0 2px var(--papel),           /* el borde blanco no cambia */
+    2px 2px 0 2px var(--papel);
 }
 
 /* ===================================================== FONDO: PAPEL CON TRAMA DE SEMITONO */
 body {
-  background-color: var(--gris-claro);
-  background-image:
-    linear-gradient(to bottom, var(--gris-claro) 25%, transparent 90%),  /* tapa la trama arriba */
-    radial-gradient(rgba(0, 0, 0, 0.18) 1.2px, transparent 1.6px);       /* la trama */
-  background-size: auto, 5px 5px;
+  background-color: var(--bg);
 }
 
 /* ===================================================== MAYÚSCULAS: SOLO TÍTULOS Y BOTONES */
 h1, h2, h3, button {
   text-transform: uppercase;     /* solo visual: el texto real no cambia */
+}
+
+/* ===================================================== BOTÓN (compartido por todas las páginas) */
+/* aquí va solo el ASPECTO; el tamaño y la colocación los decide cada página */
+.btn-menu {
+  background: var(--tinta);
+  border: 2px solid var(--accent);
+  border-radius: 0;
+  color: var(--accent);
+  font-family: var(--font-texto);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-menu:hover {
+  background: var(--accent);               /* se invierte: fondo del color */
+  color: var(--tinta);                     /* texto negro */
+}
+.btn-menu:disabled,
+.btn-menu:disabled:hover {
+  background: var(--tinta);                /* deshabilitado: no reacciona al ratón */
+  color: var(--accent);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===================================================== CAMPO DE TEXTO / DESPLEGABLE (compartido) */
+/* aquí va solo el ASPECTO; el tamaño lo decide cada página */
+.campo {
+  background: var(--tinta);
+  border: 2px solid var(--accent);
+  border-radius: 0;
+  color: var(--papel);
+  font-family: var(--font-texto);
+  outline: none;                         /* quitamos el contorno azul del navegador… */
+}
+.campo::placeholder {
+  color: rgba(255, 255, 255, 0.45);      /* el texto de ejemplo, en gris tenue */
 }

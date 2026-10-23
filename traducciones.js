@@ -214,7 +214,11 @@ const TRADUCCIONES = {
       "opcionRobarCarta": "Robar 1 carta",
       "opcionPersonajeDescarte": "Añadir a la mano hasta 1 personaje de tu descarte",
       "rivalCartaAManoDesdeDescarte": "{jugador} añade {carta} de su descarte a su mano.",
-      "descarteForzado": "Descarte forzado: debes descartar 1 carta de tu mano:"
+      "descarteForzado": "Descarte forzado: debes descartar 1 carta de tu mano:",
+      "efectoDescarteRival": "Efecto de descarte: {jugador} debe descartar 1 carta de su mano"
+    },
+    "deckbuilder": {
+      "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
     }
   },
   "en": {
@@ -429,7 +433,11 @@ const TRADUCCIONES = {
       "opcionRobarCarta": "Draw 1 card",
       "opcionPersonajeDescarte": "Add up to 1 character card from your drop zone to your hand",
       "rivalCartaAManoDesdeDescarte": "{jugador} adds {carta} from their drop zone to their hand.",
-      "descarteForzado": "Forced discard: you must discard 1 card from your hand:"
+      "descarteForzado": "Forced discard: you must discard 1 card from your hand:",
+      "efectoDescarteRival": "Discard effect: {jugador} must discard 1 card from their hand"
+    },
+    "deckbuilder": {
+      "aplicaFiltro": "Apply at least one filter to see cards"
     }
   },
   "fr": {
@@ -641,10 +649,14 @@ const TRADUCCIONES = {
       "rivalSaquePrimero": "L’adversaire sert en premier",
       "recepcionFijada": "Réception de {carta} fixée à {valor}",
       "descartarBloqueadorMenosAtaque": "{carta} envoyé à la défausse depuis le bloc : -{valor} à l’attaque rivale",
-      "opcionRobarCarta": "",
-      "opcionPersonajeDescarte": "",
-      "rivalCartaAManoDesdeDescarte": "",
-      "descarteForzado": ""
+      "opcionRobarCarta": "Piocher 1 carte",
+      "opcionPersonajeDescarte": "Ajouter jusqu’à 1 carte personnage de ta défausse à ta main",
+      "rivalCartaAManoDesdeDescarte": "{jugador} ajoute {carta} de sa défausse à sa main",
+      "descarteForzado": "Défausse forcée : tu dois défausser 1 carte de ta main :",
+      "efectoDescarteRival": "Effet de défausse : {jugador} doit défausser 1 carte de sa main"
+    },
+    "deckbuilder": {
+      "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
     }
   },
   "": {
@@ -859,7 +871,11 @@ const TRADUCCIONES = {
       "opcionRobarCarta": "",
       "opcionPersonajeDescarte": "",
       "rivalCartaAManoDesdeDescarte": "",
-      "descarteForzado": ""
+      "descarteForzado": "",
+      "efectoDescarteRival": ""
+    },
+    "deckbuilder": {
+      "aplicaFiltro": ""
     }
   }
 };

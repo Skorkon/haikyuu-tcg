@@ -4,13 +4,15 @@
   <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
   <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
-  <title>HV-TCG · Deckbuilder</title>
+  <title>HVB-TCG · Deckbuilder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700&display=swap'); /* fuentes google font */
     * { box-sizing: border-box; margin: 0; padding: 0; }          /* reset básico para todos los elementos */
 
     :root {                                       /* variables de color reutilizables, mismas que index.html y lobby.html */
-      --bg: #f2f0e8;                            /* fondo gris clarito */
       --surface: #16161a;                       /* superficie oscura de paneles */
       --surface2: #1e1e24;                      /* superficie secundaria (inputs, etc) */
       --surface3: #26262e;                      /* superficie terciaria, para detalles */
@@ -18,14 +20,13 @@
       --border2: rgba(255,255,255,0.13);        /* borde algo más marcado */
       --text: #e8e8ec;                          /* texto claro (para fondos oscuros) */
       --text2: #9090a0;                         /* texto gris apagado */
-      --accent: #E8761A;                        /* naranja color secundario */
-      --font-display: 'Bebas Neue', sans-serif;   /* fuente de títulos */
-      --font-body: 'Noto Sans JP', sans-serif;    /* fuente de texto normal */
+      --font-display: 'Anton', sans-serif;        /* fuente de títulos, la misma que el index */
+      --cartas-por-fila: 8;                     /* número de cartas por fila en el catálogo */
     }
     body {
       background: var(--bg);           /* fondo general de la página */
-      color: var(--text);              /* color de texto por defecto */
-      font-family: var(--font-body);   /* fuente base */
+      color: var(--tinta);             /* texto oscuro por defecto: el fondo de la página es claro */
+      font-family: var(--font-texto);  /* fuente base, de base.css */
       font-size: 14px;                 /* tamaño de texto base */
       min-height: 100vh;               /* ocupa toda la altura de pantalla */
       overflow: hidden;                /* sin scroll en el body — cada columna scrollea por su cuenta */
@@ -40,7 +41,8 @@
 
     /* -------------------------------------------------- COLUMNAS ------------------------------------------ */
     #columna-izquierda {
-      width: 360px;                               /* ancho fijo y pequeño */
+      width: 20%;                                 /* siempre el 20% de la pantalla */
+      min-width: 260px;                           /* pero nunca tan estrecha que el preview no quepa */
       flex-shrink: 0;                             /* no se encoge nunca, aunque falte espacio */
       background-image: url('img/fondos/deckb.jpg'); 
       background-color: #1a1a2e;                /* color de respaldo mientras no hay imagen */
@@ -57,7 +59,8 @@
       background: var(--bg);       /* mismo fondo gris clarito */
     }
     .columna-derecha {
-      width: 380px;                 /* ancho fijo, mediano (más pequeño que el central, más grande que la izquierda) */
+      width: 22%;                   /* siempre el 22% de la pantalla */
+      min-width: 300px;             /* pero nunca tan estrecha que los botones del mazo no quepan */
       flex-shrink: 0;               /* no se encoge */
       background: var(--bg);        
       border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
@@ -77,12 +80,17 @@
       flex-shrink: 0;
     }
     header h1 {
-      flex: 1;                /* ocupa el espacio disponible entre "volver" y las pestañas */
-      text-align: center;     /* centrado */
-      font-size: 24px;        /* más pequeño que el h1 normal de las otras pantallas */
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin: 0;               /* quita cualquier margen que el h1 general pudiera tener */
+      flex: 1;                                    /* ocupa el espacio entre "volver" y las pestañas */
+      text-align: center;
+      margin: 0;
+      font-family: var(--font-display);           /* Anton, como el index */
+      font-weight: 400;                           /* Anton solo tiene un grosor */
+      font-size: 36px;
+      letter-spacing: 3px;
+      line-height: 1;
+      color: var(--tinta);                        /* relleno negro */
+      -webkit-text-stroke: 3px var(--accent);     /* contorno de tu color */
+      paint-order: stroke fill;                   /* el contorno se pinta detrás del relleno */
     }
     .volver-link {
       text-decoration: none;
@@ -99,25 +107,12 @@
 
     /* -------------------------------------------------- BOTONES ------------------------------------------ */
     .tab-btn {
-      background: #000000;                 /* mismo negro que .btn-menu */
-      border: 2px solid var(--accent);       /* mismo borde naranja que .btn-menu */
-      color: var(--text);                    /* texto claro */
       padding: 8px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: var(--font-body);
       font-size: 13px;
-      font-weight: bold;                     /* negrita, como el resto de botones */
-      transition: all 0.15s;
-    }
-    .tab-btn:hover {
-      background: var(--accent);
-      color: #000000;
     }
     .tab-btn.active {
       background: var(--accent);
-      border-color: var(--accent);
-      color: #000000;
+      color: var(--tinta);
     }
 
     /* -------------------------------------------------- FILTROS ------------------------------------------ */
@@ -156,32 +151,17 @@
       flex: 1;                /* el buscador "crece" para ocupar todo el espacio que sobra junto a los selects */
       min-width: 180px;      /* pero nunca se encoge por debajo de 180px, aunque falte sitio */
     }
-    .search-wrap input { /* buscador de texto opciones css */
-      width: 100%;                      /* ocupa todo el ancho de su contenedor (.search-wrap) */
-      background: #f5f5f5;            /* gris muy clarito, para diferenciarlo del blanco de fondo */
-      border: 1px solid #ccc;         /* borde sutil */
-      border-radius: 6px;               /* esquinas redondeadas */
-      color: #333;                    /* texto oscuro, legible sobre fondo claro */
-      padding: 7px 10px;                /* aire interior del texto */
-      font-family: inherit;             /* usa la misma fuente que el resto de la página */
+    .search-wrap input {
+      width: 100%;
+      padding: 7px 10px;
       font-size: 13px;
-      outline: none;                    /* quita el borde azul feo que pone el navegador al hacer clic */
-    }
-    .search-wrap input:focus {
-      border-color: var(--accent);      /* cuando se escribe dentro, el borde se pone de color */
     }
 
     /* -------------------------------------- LISTAS --------------------------------- */
     .filters select {
-      background: #f5f5f5;            /* mismo estilo que el buscador, para que combinen */
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      color: #333;
       padding: 7px 10px;
-      font-family: inherit;
       font-size: 13px;
-      cursor: pointer;                  /* cursor de mano, indica que es clicable */
-      outline: none;
+      cursor: pointer;
     }
 
     /* ------------------------------- BOTONES DE FILTRO PEQUEÑOS --------------------------------- */
@@ -190,43 +170,26 @@
       gap: 5px;                 /* separación pequeña entre ellas */
       flex-wrap: wrap;          /* saltan de línea si no caben */
     }
-    .pill {
-      padding: 4px 12px;                /* aire interior, más redondeado que un botón normal */
-      border-radius: 6px;               
-      border: 1px solid var(--accent);
-      background: #000000;
-      color: var(--text);                
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;            /* transición suave al cambiar de estado (hover, activo) */
-      white-space: nowrap;              /* el texto de la pill nunca se parte en dos líneas */
-    }
-    .pill:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--text);                      /* texto un poco más oscuro */
-    }
-    .pill.on {
-      background: var(--accent);          /* pill SELECCIONADA (clase "on" añadida por JS): fondo naranja sólido */
-      border-color: var(--accent);
-      color: var(--text);                 /* texto blanco para que resalte sobre el naranja */
-    }
-    /* ------------------------------- BOTÓN DE FILTRO RESET --------------------------------- */
+    .pill,
     .pill-reset {
-      padding: 4px 8px;                   /* mismo aspecto que una pill normal */
-      border-radius: 50px;
-      border: 1px solid #ccc;
-      background: #000000;
-      color: var(--text);
+      padding: 4px 12px;
+      border: 1px solid var(--accent);
+      background: var(--tinta);
+      color: var(--accent);
+      font-family: inherit;
       font-size: 12px;
       cursor: pointer;
-      font-family: inherit;              /* como es un <button>, hay que decirle que use la fuente de la página (si no, usa la fuente por defecto del navegador) */
       white-space: nowrap;
+      transition: all 0.15s;
     }
+    .pill-reset {
+      padding: 4px 8px;
+    }
+    .pill:hover,
+    .pill.on,
     .pill-reset:hover {
       background: var(--accent);
-      border-color: var(--accent);
-      color: var(--text);
+      color: var(--tinta);
     }
 
     /* ------------------------------- ESTILO CONTADOR Y GRID DE CARTAS --------------------------------- */
@@ -244,42 +207,43 @@
       padding: 2px 20px;
       margin-right: 4px;
       display: grid;                    /* rejilla de miniaturas */
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* tantas columnas como quepan, mínimo 130px cada una */
+      grid-template-columns: repeat(var(--cartas-por-fila), minmax(0, 1fr));  /* siempre el número de cartas que elijas */
       gap: 12px;                        /* separación entre miniaturas */
       align-content: start;             /* las cartas se agrupan arriba, no se estiran para llenar el alto */
+      grid-auto-rows: max-content;      /* cada fila mide lo que su carta necesita: si no caben, aparece el scroll */
     }
 
     /* ------------------------------- CARTAS EN MINIATURA --------------------------------- */
-    .card-thumb { /* ------------------------------------- Caja negra de la carta */
-      background: #000000;          /* color de fondo */
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .card-thumb { /* ------------------------------------- Caja de la carta */
+      background: var(--tinta);
+      border-radius: 0;                             /* esquinas rectas */
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+      transition: transform 0.12s, box-shadow 0.12s;
       position: relative;
       display: flex;
       flex-direction: column;
       user-select: none;
-      min-height: 230px;
+      /* el borde del color de la escuela lo pone el JS */
     }
-    .card-thumb:hover { /* ------------------------------------- Ratón por encima de la carta */
+    .card-thumb:hover { /* ------------------------------------- Ratón por encima */
       transform: translateY(-3px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 12px rgba(0,0,0,.15); /* longitud vertical / desenfoque / (,,,,opacidad) */ 
+      box-shadow: 3px 3px 0 var(--color-escuela);   /* sombra dura del color de escuela */
     }
-    .card-thumb.in-deck { /* ------------------------------------- Carta ya añadida al mazo */
-      box-shadow: 0 0 0 3px var(--accent);   /* un halo alrededor */
+    .card-thumb.in-deck,
+    .card-thumb.in-deck:hover { /* ------------------------------------- Carta ya en el mazo */
+      box-shadow: 0 0 0 3px var(--accent);          /* halo de tu color, también al pasar el ratón */
     }
     .card-art { /* ------------------------------------- Contenedor de la carta */
       width: 100%;
-      height: 196px;
+      aspect-ratio: 5 / 7;          /* la proporción de una carta: el alto sigue al ancho */
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #eee;           /* color de respaldo mientras la imagen carga o si falta */
+      flex-shrink: 0;               /* la imagen nunca se encoge: siempre conserva su forma de carta */
     }
     .card-art img { /* ------------------------------------- Arte de la carta */
       width: 100%;
@@ -451,21 +415,12 @@
       border-bottom: 3px solid var(--accent);
       flex-shrink: 0;
     }
-    .deck-name-input {                        /* Caja de texto del nombre del mazo */
+    .deck-name-input {
       width: 100%;
-      background: #f5f5f5;
-      border: 2px solid var(--accent);
-      border-radius: 6px;
-      color: #333;
       padding: 8px 10px;
-      font-family: inherit;
       font-size: 14px;
-      font-weight: bold;
-      outline: none;
+      font-weight: 700;          /* el nombre del mazo, en negrita: es el título de lo que construyes */
       margin-bottom: 8px;
-    }
-    .deck-name-input:focus {
-      border-color: var(--accent);
     }
 
     .deck-stats-row {
@@ -494,19 +449,10 @@
     .btn-mini {
       flex: 1;
       padding: 7px 4px;
-      border-radius: 6px;
-      border: 2px solid var(--accent);
-      background: var(--surface2);
-      color: var(--accent);
-      font-family: inherit;
       font-size: 11px;
-      cursor: pointer;
       text-align: center;
       white-space: nowrap;
-      transition: all 0.15s;
-    }
-    .btn-mini:hover {
-      color: var(--text);
+      text-transform: uppercase;
     }
     /* --------------------------------------------------------- DECK LIST ---- */
     .deck-list {                                    /* deck list */
@@ -621,31 +567,14 @@
     }
 
     .select-oscuro {
-      background: #000000;
-      border: 2px solid var(--accent);
-      border-radius: 8px;
-      color: var(--text);
       padding: 7px 10px;
-      font-family: inherit;
       font-size: 13px;
       cursor: pointer;
-      outline: none;
     }
     .btn-eliminar-deck {
       width: 36px;
       flex-shrink: 0;
-      background: #000000;
-      border: 2px solid var(--accent);
-      border-radius: 8px;
-      color: var(--text);
       font-size: 14px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-eliminar-deck:hover {
-      background: var(--accent);
-      color: #000000;
     }
 
     /* -------------------- MAZOS PREDEFINIDOS ------------------------- */
@@ -712,20 +641,7 @@
     .pre-deck-load {
       width: 100%;
       padding: 9px;
-      border-radius: 6px;
-      border: 2px solid var(--accent);
-      background: #000000;
-      color: var(--text);
-      font-family: inherit;
       font-size: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .pre-deck-load:hover {
-      background: var(--accent);
-      color: #000000;
     }
 
 
@@ -765,8 +681,8 @@
         <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
         <h1 data-i18n="menu.btnDeckbuilder">Deckbuilder</h1>
         <nav>
-          <button class="tab-btn active" id="tab-builder" onclick="setTab('builder')" data-i18n="deckbuilder.tabConstructor">Constructor</button>
-          <button class="tab-btn" id="tab-predefined" onclick="setTab('predefined')" data-i18n="deckbuilder.tabPredefinidos">Decks predefinidos</button>
+          <button class="tab-btn btn-menu active" id="tab-builder" onclick="setTab('builder')" data-i18n="deckbuilder.tabConstructor">Constructor</button>
+          <button class="tab-btn btn-menu" id="tab-predefined" onclick="setTab('predefined')" data-i18n="deckbuilder.tabPredefinidos">Decks predefinidos</button>
         </nav>
       </header> <!-- fin cabecera -->
 
@@ -776,19 +692,19 @@
         <div class="filters">
           <div class="filters-fila1">
             <div class="search-wrap">
-              <input type="text" id="searchInput" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
+              <input type="text" id="searchInput" class="campo" placeholder="Buscar carta..." data-i18n-placeholder="deckbuilder.buscarPlaceholder">
             </div>
-            <select id="filterEscuela">
+            <select id="filterEscuela" class="campo">
               <option value="" data-i18n="deckbuilder.todasEscuelas">Todas las escuelas</option>
             </select>
-            <select id="filterPosicion">
+            <select id="filterPosicion" class="campo">
               <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
               <option value="MB">MB — Middle Blocker</option>
               <option value="S">S — Setter</option>
               <option value="WS">WS — Wing Spiker</option>
               <option value="L">L — Libero</option>
             </select>
-            <select id="filterRareza">
+            <select id="filterRareza" class="campo">
               <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
               <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
               <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
@@ -808,7 +724,7 @@
               <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
             </div>
             <span class="separador"></span>
-            <select id="filterStat" class="select-oscuro">
+            <select id="filterStat" class="select-oscuro campo">
               <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
               <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
               <option value="recepcion" data-i18n="deckbuilder.statRecepcion">Recepción</option>
@@ -845,7 +761,7 @@
       <!------------------------ CABECERA DEL MAZO ------------------------------------>
       <div class="deck-header">
         <div class="deck-section-title" style="padding:0 0 4px;" data-i18n="deckbuilder.nombreMazoLabel">Nombre del mazo</div>
-        <input type="text" class="deck-name-input" id="deckNameInput" value="Mi deck">
+        <input type="text" class="deck-name-input campo" id="deckNameInput" value="">
         <div class="deck-stats-row">
           <span class="deck-stat" id="statTotal">0 / 40</span>
           <span class="deck-stat" id="statEventos">0 / 8</span>
@@ -854,10 +770,10 @@
       </div>
       <!------------------------ ACCIONES ------------------------------------>
       <div class="deck-actions">
-        <button class="btn-mini" onclick="clearDeck()" data-i18n="deckbuilder.btnVaciar">Vaciar</button>
-        <button class="btn-mini" onclick="saveDeck()" data-i18n="deckbuilder.btnGuardarMazo">Guardar</button>
-        <button class="btn-mini" onclick="exportDeck()" data-i18n="deckbuilder.btnExportar">Exportar</button>
-        <label class="btn-mini" for="importFileInput" style="cursor:pointer;text-align:center;" data-i18n="deckbuilder.btnImportar">Importar</label>
+        <button class="btn-mini btn-menu" onclick="clearDeck()" data-i18n="deckbuilder.btnVaciar">Vaciar</button>
+        <button class="btn-mini btn-menu" onclick="saveDeck()" data-i18n="deckbuilder.btnGuardarMazo">Guardar</button>
+        <button class="btn-mini btn-menu" onclick="exportDeck()" data-i18n="deckbuilder.btnExportar">Exportar</button>
+        <label class="btn-mini btn-menu" for="importFileInput" style="cursor:pointer;text-align:center;" data-i18n="deckbuilder.btnImportar">Importar</label>
         <input type="file" id="importFileInput" accept=".json" onchange="importDeck(event)" style="display:none">
       </div>
       <!------------------------ LISTADO DE CARTAS ------------------------------------>
@@ -870,10 +786,10 @@
       <div class="saved-decks-bar">
         <div class="saved-title" data-i18n="deckbuilder.decksGuardados">Decks guardados</div>
         <div style="display:flex; gap:6px;">
-          <select id="savedDecksSelect" class="select-oscuro" style="flex:1;" onchange="loadSavedDeck(this.value)">
+          <select id="savedDecksSelect" class="select-oscuro campo" style="flex:1;" onchange="loadSavedDeck(this.value)">
             <option value="" data-i18n="deckbuilder.sinDecksGuardados">No hay decks guardados</option>
           </select>
-          <button class="btn-eliminar-deck" onclick="deleteSelectedDeck()" title="Eliminar">✕</button>
+                    <button class="btn-eliminar-deck btn-menu" onclick="deleteSelectedDeck()" title="Eliminar">✕</button>
         </div>
       </div>
 
@@ -991,6 +907,7 @@
       const nombre = getCardName(c);
       const colorEscuela = getSchoolColor(c.escuela);  // color escuela
       div.style.border = `2px solid ${colorEscuela}`;
+      div.style.setProperty("--color-escuela", colorEscuela);   // el CSS puede usar el color de la escuela de esta carta
 
       div.innerHTML = `
         <div class="card-art">
@@ -1211,7 +1128,7 @@
     function clearDeck() {
       if (!deck.length) return;
       deck = []; currentDeckId = null;
-      document.getElementById('deckNameInput').value = 'Mi deck';
+      document.getElementById('deckNameInput').value = t("deckbuilder.nombreMazoDefecto");
       document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
       document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
       renderDeckList();
@@ -1301,7 +1218,7 @@
     // -------------------------------------------------------------- BOTONES DE LA DECK LIST
     // -------------------------------------------------------------- GUARDAR MAZO
     function saveDeck() {
-      const nombre = document.getElementById('deckNameInput').value.trim() || 'Mi deck';
+      const nombre = document.getElementById('deckNameInput').value.trim() || t("deckbuilder.nombreMazoDefecto");
       if (!deck.length) return;
 
       // Cartas bloqueadas P03
@@ -1420,7 +1337,7 @@
           deck = [];
           data.entries.forEach(entry => { const c = CATALOGUE.find(x => x.id === entry.id); if (c) deck.push({carta:c,qty:entry.qty}); });
           currentDeckId = null;
-          document.getElementById('deckNameInput').value = data.nombre || 'Deck importado';
+          document.getElementById('deckNameInput').value = data.nombre || t("deckbuilder.nombreMazoImportado");
           document.querySelectorAll('.card-count-badge').forEach(b => b.remove());
           document.querySelectorAll('.card-thumb.in-deck').forEach(el => el.classList.remove('in-deck'));
           deck.forEach(e => refreshThumbBadge(e.carta.id));
@@ -1501,7 +1418,7 @@
             <div class="pre-deck-name">${d.nombre}</div>
             <div class="pre-deck-desc">${d.desc}</div>
             <div class="pre-deck-tags">${d.tags.map(t=>`<span class="pre-tag">${t}</span>`).join('')}</div>
-            <button class="pre-deck-load" onclick="loadPredefined(${i})">${t("deckbuilder.cargarPredefinido")}</button>
+            <button class="pre-deck-load btn-menu" onclick="loadPredefined(${i})">${t("deckbuilder.cargarPredefinido")}</button>
           </div>
         </div>`).join('');
     }
@@ -1522,9 +1439,28 @@
     // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR
     renderSavedDecks();
     renderDeckList();
+    document.getElementById('deckNameInput').value = t("deckbuilder.nombreMazoDefecto");   // nombre inicial, en el idioma activo
 
     llenarListaEscuela();
     applyFilters();          // ← esta línea ya la tienes puesta ahora mismo; no hace falta añadir nada nuevo
+  </script>
+
+  <script>
+    // ====================================================== ESCALAR LA ZONA DE ARRIBA (cabecera y filtros)
+    const ANCHO_DISENO_CENTRO = 1100;   // ancho de columna central para el que está diseñada la zona de arriba
+
+    function escalarCabecera() {
+      const centro = document.querySelector(".columna-central");
+      const escala = centro.clientWidth / ANCHO_DISENO_CENTRO;     // cuántas veces cabe el diseño
+
+      // cabecera, filtros, aviso P03 y contador de cartas
+      document.querySelectorAll("header, .filters, .aviso-p03, .card-count").forEach(function (el) {
+        el.style.zoom = escala;
+      });
+    }
+
+    // al cargar y cada vez que cambie el ancho de la columna central
+    new ResizeObserver(escalarCabecera).observe(document.querySelector(".columna-central"));
   </script>
 
 </body>

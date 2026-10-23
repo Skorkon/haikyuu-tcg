@@ -121,6 +121,8 @@ const I18N = {
           cargarPredefinido: "Cargar en constructor →",
           avisoP03: "Las cartas de la expansión P03 aún no están programadas y no funcionan en partida.",
           errorP03: "El mazo contiene cartas de la expansión P03, que aún no están programadas. Quítalas para poder guardarlo.",
+          nombreMazoDefecto: "Mi deck",
+          nombreMazoImportado: "Deck importado",
         }
     },    
     en: {
@@ -244,6 +246,8 @@ const I18N = {
           cargarPredefinido: "Load into builder →",
           avisoP03: "Cards from the P03 expansion are not programmed yet and don't work in matches.",
           errorP03: "The deck contains cards from the P03 expansion, which are not programmed yet. Remove them to save it.",
+          nombreMazoDefecto: "My deck",
+          nombreMazoImportado: "Imported deck",
         }
     },
     fr: {
@@ -367,6 +371,8 @@ const I18N = {
           cargarPredefinido: "Charger dans le constructeur →",
           avisoP03: "Les cartes de l'extension P03 ne sont pas encore programmées et ne fonctionnent pas en partie.",
           errorP03: "Le deck contient des cartes de l'extension P03, qui ne sont pas encore programmées. Retire-les pour pouvoir l'enregistrer.",
+          nombreMazoDefecto: "Mon deck",
+          nombreMazoImportado: "Deck importé",
         }
     }
 };

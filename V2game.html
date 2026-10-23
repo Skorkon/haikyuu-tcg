@@ -19,7 +19,6 @@
 }
 /* ----------------------------------------------------------------------------------------------- REMAKE : PASO 1 */
 :root {
-  --bg: #f2f0e8;              /* fondo gris clarito, papel de manga */
   --surface: #16161a;         /* superficie oscura de paneles */
   --surface2: #1e1e24;        /* superficie secundaria (inputs) */
   --border: rgba(255,255,255,0.07);
@@ -62,9 +61,9 @@ body {
   position: absolute;
   inset: 0;                    /* ocupa exactamente la caja del título */
   z-index: -1;                 /* detrás del texto */
-  background: var(--accent);
+  background: var(--tinta);
   transform: skewX(-10deg);    /* inclinación estilo Persona */
-  box-shadow: 3px 3px 0 var(--tinta);   /* sombra dura en tu color */
+  box-shadow: var(--sombra-placa);
 }
 
 /* -------------------------------------------------- ZONA PRINCIPAL */
@@ -77,13 +76,13 @@ body {
 /* -------------------------------------------------- IZQUIERDA */
 .panel-izquierda {
   width: 30%;
-  background: transparent;        /* ← antes var(--bg) */
+  background: transparent;  
   padding: 10px;
-  overflow-y: auto;
-  border-right: var(--contorno);     /* trazo de tinta, como el de las viñetas */   
+  overflow-y: auto;   
   display: flex;
   flex-direction: column;
   position: relative;
+  border-right: 6px solid var(--accent);    /* como las columnas del index */
 }
 
 .titulo-mano-rival {
@@ -117,7 +116,7 @@ body {
   background: transparent;        /* ← antes var(--bg) */
   padding: 10px;
   overflow-y: auto;
-  border-left: var(--contorno); 
+  border-left: 6px solid var(--accent); 
   display: flex;
   flex-direction: column;
 }
@@ -150,6 +149,7 @@ body {
   line-height: 1;
   letter-spacing: var(--espaciado-titulos);
   cursor: pointer;
+  transition: color 0.15s;                              /* el texto cambia de color suavemente */
 }
 /* la placa en romboide */
 .panel button::before {
@@ -159,22 +159,25 @@ body {
   z-index: -1;
   background: var(--tinta);
   transform: skewX(-10deg);
-  box-shadow: 3px 3px 0 var(--accent);
+  box-shadow: var(--sombra-placa);
+  transition: background 0.15s, box-shadow 0.15s;       /* la placa y la sombra, también */
 }
 /* hover: se rellena de tu color */
 .panel button:hover {
-  color: var(--accent-ink, var(--tinta));   /* --accent-ink llega en el siguiente paso; mientras, negro */
+  color: var(--tinta);
 }
 .panel button:hover::before {
-  background: var(--accent);
-  box-shadow: 3px 3px 0 var(--tinta);
+  background: var(--accent);          /* placa: tu color */
+  box-shadow: var(--sombra-invertida);
 }
 /* pulsado: se hunde hasta tapar la sombra */
 .panel button:active {
-  transform: translate(3px, 3px);
+  color: var(--papel);                    /* texto negro sobre tu color */
+  transform: translate(2px, 2px);         /* se hunde lo que medía la sombra */
 }
 .panel button:active::before {
-  box-shadow: none;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--papel);     /* solo el borde blanco, sin sombra */
 }
 /* deshabilitado: gris y plano (va al final para ganar a hover y active) */
 .panel button:disabled {
@@ -238,7 +241,7 @@ body {
 }
 
 .mano-bottom {
-  padding: 16px 0 4px 0;     /* arriba 16 · derecha 0 · abajo 4 · izquierda 0 */
+  padding: 16px 0 4px;               /* aire arriba para que las cartas suban al pasar el ratón */
   text-align: center;
 }
 
@@ -415,6 +418,11 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   flex-wrap: nowrap; /* no saltar a segunda fila */
+  filter:           /* borde blanco a toda la mano */
+    drop-shadow(2px 0 0 var(--papel))
+    drop-shadow(-2px 0 0 var(--papel))
+    drop-shadow(0 2px 0 var(--papel))
+    drop-shadow(0 -2px 0 var(--papel));
 }
 
 /* -------------------------------------------------- CARTAS */

@@ -195,7 +195,7 @@ function aplicarJugadaRival(jugada) {
       });
 
       log(t("log.rivalUsaGuts", { 
-        jugador: rival.nombre, 
+        jugador: rivalGuts.nombre, 
         zona: t("ui.zona" + jugada.zona.charAt(0).toUpperCase() + jugada.zona.slice(1)) 
       }));
       renderCampo();                                           // redibujar campo
@@ -225,7 +225,7 @@ function aplicarJugadaRival(jugada) {
       if (rivalPunto.mazoPuntos.length > 0) {
         let carta = rivalPunto.mazoPuntos.shift();            // roba del mazo de puntos
         rivalPunto.mano.push(carta);                          // va a la mano del rival
-        log(t("log.pierdeUnPunto", { jugador: rival.nombre, cantidad: rivalPunto.mazoPuntos.length }));
+        log(t("log.pierdeUnPunto", { jugador: rivalPunto.nombre, cantidad: rivalPunto.mazoPuntos.length }));
       }
       actualizarMarcador();                                   // actualizar marcador
       renderMano();                                           // redibujar mano
@@ -331,7 +331,7 @@ function aplicarJugadaRival(jugada) {
         let index = miJugadorDescarte.mano.indexOf(cartaElegida);         // buscar en la mano
         miJugadorDescarte.mano.splice(index, 1);                          // sacar de la mano
         miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
-        log(t("log.descartaPorEfecto", { jugador: jugador.nombre, carta: cartaElegida.nombre }));
+        log(t("log.descartaPorEfecto", { jugador: miJugadorDescarte.nombre, carta: cartaElegida.nombre }));
 
         db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({
           jugador: miNumero,
@@ -427,7 +427,7 @@ function aplicarJugadaRival(jugada) {
       barajarMazo(miJugadorReset);                                       // barajar mazo
       log(t("log.efectoRivalDevuelveMano"));
       robarCarta(miJugadorReset, 6);                                     // robar 6 cartas
-      log(t("log.robarCartas", { jugador: jugador.nombre, cantidad: 6 }));
+      log(t("log.robarCartas", { jugador: miJugadorReset.nombre, cantidad: 6 }));
       enviarCantidadMano();                                              // sincronizar cantidad de mano
       enviarMazo();                                                      // sincronizar mazo
       renderMano();                                                      // actualizar mano
@@ -529,6 +529,19 @@ function aplicarJugadaRival(jugada) {
 
     case "cartaMovidaAFondoMazo":
       break; // ya no se usa, gestionado por confirmacionMoverMazo
+
+    case "notificarLogRival": // ================================================================ LOG ENVIADO POR EL RIVAL
+      if (jugada.clave) {                                           // si llega una clave de traducción
+        let params = { ...(jugada.params || {}) };                  // copia de los parámetros recibidos
+        if (params.cartaId) {                                       // si viene el id de una carta
+          params.carta = DESCRIPCIONES[params.cartaId]?.["nombre_" + idiomaActivo] // nombre traducido al idioma de este cliente
+                      || params.carta;                              // si no hay traducción, el nombre enviado
+        }
+        log(t(jugada.clave, params));                               // traducir y mostrar el log
+      } else if (jugada.texto) {                                    // si llega un texto ya escrito
+        log(jugada.texto);                                          // mostrarlo tal cual
+      }
+      break;
 
     case "finPartida":
       mostrarFinPartida(true);                                 // el rival perdió, tú ganaste

@@ -80,7 +80,7 @@ body {
   background: transparent;        /* ← antes var(--bg) */
   padding: 10px;
   overflow-y: auto;
-  border-right: 2px solid var(--accent);   
+  border-right: var(--contorno);     /* trazo de tinta, como el de las viñetas */   
   display: flex;
   flex-direction: column;
   position: relative;
@@ -117,7 +117,7 @@ body {
   background: transparent;        /* ← antes var(--bg) */
   padding: 10px;
   overflow-y: auto;
-  border-left: 2px solid var(--accent);    
+  border-left: var(--contorno); 
   display: flex;
   flex-direction: column;
 }
@@ -238,11 +238,7 @@ body {
 }
 
 .mano-bottom {
-  background: var(--papel);
-  border: var(--contorno);
-  border-radius: 0;
-  box-shadow: var(--sombra-dura);
-  padding: 12px;
+  padding: 16px 0 4px 0;     /* arriba 16 · derecha 0 · abajo 4 · izquierda 0 */
   text-align: center;
 }
 
@@ -347,6 +343,7 @@ body {
   background: var(--bggris);
   padding: 10px;
   outline: 5px solid white;     /* gris oscuro alrededor del borde blanco */
+  outline-offset: -5px;        /* el filete blanco, por dentro del campo: ya no tapa los bordes de los paneles */
   min-width: 0;                   /* deja que el campo central sea más estrecho que el tablero */
   overflow: hidden;               /* lo que sobre del tablero (antes de escalar) no se ve */
 }
@@ -433,14 +430,39 @@ body {
 }
 
 .carta:hover {
-  /* filter: brightness(1.1);          aclara ligeramente la carta */
-  outline: 2px solid #31d1ae;      /* marco verde al hacer hover */
-  outline-offset: -2px;            /* el marco queda por dentro de la carta */
+  outline: 2px solid var(--tinta);        /* trazo de tinta al pasar el ratón */
+  outline-offset: -2px;                   /* por dentro de la carta */
 }
 
 .carta.seleccionada {
-  outline: 2px solid red;
+  outline: 3px solid var(--tinta);        /* marco negro, por dentro de la carta */
   outline-offset: -2px;
+  box-shadow: 3px 3px 0 var(--accent);    /* sombra dura de tu color, como en los botones */
+}
+
+/* carta de la mano: se levanta al pasar el ratón */
+#mano .carta {
+  position: relative;               /* necesario para que z-index funcione */
+  transition: transform 0.12s ease-out;
+}
+#mano .carta:hover {
+  transform: translateY(-12px);     /* sube 12px */
+  z-index: 10;                      /* se pone delante de sus vecinas */
+}
+/* la carta seleccionada de la mano se queda levantada */
+#mano .carta.seleccionada {
+  transform: translateY(-12px);
+  z-index: 10;
+}
+/* la carta que se está arrastrando se queda semitransparente en su sitio */
+#mano .carta.arrastrando {
+  opacity: 0.4;
+}
+/* mientras se reordena la mano, el hover no levanta cartas (el navegador lo deja "congelado") */
+#mano.ordenando .carta:not(.seleccionada):hover {
+  transform: none;
+  z-index: auto;
+  outline: none;
 }
 
 /* -------------------------------------------------- PREVIEW */
@@ -1147,6 +1169,100 @@ button {
 
   // se ejecuta al cargar y cada vez que cambie el tamaño del campo central
   new ResizeObserver(escalarTablero).observe(document.querySelector(".campo-central"));
+
+  // ====================================================== SONIDO AL CAMBIAR DE POSICIÓN UNA CARTA DE LA MANO
+  const sonidoCarta = new Audio("audio/draw2.mp3");   // se carga una sola vez
+  const VOLUMEN_CARTA = 0.05;                          // 20% del volumen general del jugador
+
+  function reproducirSonidoCarta() {
+    try {
+      if (obtenerHinchada() === "ninguna") return;    // "Sin sonido" en ajustes: silencio
+      sonidoCarta.volume = obtenerVolumen() * VOLUMEN_CARTA;
+      sonidoCarta.currentTime = 0;                    // vuelve al principio si aún sonaba
+      sonidoCarta.play().catch(() => {});             // si el navegador lo bloquea, no da error
+    } catch (err) {
+      console.warn("[sonido]", err);                  // un fallo de sonido nunca debe afectar a la partida
+    }
+  }
+
+  // ====================================================== REORDENAR LA MANO ARRASTRANDO
+  const manoEl = document.getElementById("mano");
+  let cartaArrastrada = null;      // el div de la carta que se está arrastrando
+  let indiceOrigen = null;         // su posición en la mano al empezar
+  let margenSolape = "0px";        // el margen negativo con el que renderMano solapa las cartas
+
+  // la mano que se ve en pantalla (el mismo criterio que usa renderMano)
+  function jugadorDeLaMano() {
+    return modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
+  }
+
+  // renderMano da margen 0 a la primera carta y margen negativo a las demás;
+  // al mover cartas hay que repetirlo, si no el solape se descoloca
+  function reajustarSolape() {
+    Array.from(manoEl.children).forEach((c, i) => {
+      c.style.marginLeft = i === 0 ? "0" : margenSolape;
+    });
+  }
+
+  // 1. empieza el arrastre
+  manoEl.addEventListener("dragstart", function (e) {
+    const carta = e.target.closest(".carta");
+    if (!carta) return;
+    manoEl.classList.add("ordenando");               // desactiva la subida por hover mientras se arrastra
+    const cartas = Array.from(manoEl.children);
+    cartaArrastrada = carta;
+    indiceOrigen = cartas.indexOf(carta);
+    margenSolape = cartas.length > 1 ? cartas[1].style.marginLeft : "0";  // se lo copiamos a renderMano
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", "");                  // Firefox no arrastra sin algún dato
+    document.getElementById("tooltip").style.display = "none";
+
+    // la transparencia se aplica un instante después: si no, la "imagen fantasma"
+    // que el navegador pega al ratón saldría también transparente
+    setTimeout(() => carta.classList.add("arrastrando"), 0);
+  });
+
+  // 2. mientras se arrastra: mover la carta a donde caería
+  manoEl.addEventListener("dragover", function (e) {
+    if (!cartaArrastrada) return;                    // solo si el arrastre empezó en la mano
+    e.preventDefault();                              // permitir soltar aquí
+
+    const destino = e.target.closest(".carta");
+    if (!destino || destino === cartaArrastrada) return;   // en un hueco o sobre sí misma: nada
+
+    // ¿mitad izquierda (va delante) o mitad derecha (va detrás) de la carta de destino?
+    const rect = destino.getBoundingClientRect();
+    const delante = e.clientX < rect.left + rect.width / 2;
+    const referencia = delante ? destino : destino.nextSibling;   // se insertará justo antes de esta
+
+    // si ya está en ese sitio, no tocar nada (evita parpadeos)
+    if (referencia === cartaArrastrada || cartaArrastrada.nextSibling === referencia) return;
+
+    manoEl.insertBefore(cartaArrastrada, referencia);   // referencia null = al final
+    reajustarSolape();
+    reproducirSonidoCarta();                            // suena cada vez que la carta cambia de posición
+  });
+
+  // 3. se suelta dentro de la mano: guardar el orden que se ve en pantalla
+  manoEl.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (!cartaArrastrada) return;
+
+    const indiceFinal = Array.from(manoEl.children).indexOf(cartaArrastrada);
+    const mano = jugadorDeLaMano().mano;
+    const [carta] = mano.splice(indiceOrigen, 1);    // sacarla de su sitio original
+    mano.splice(indiceFinal, 0, carta);              // meterla donde ha quedado en pantalla
+  });
+
+  // 4. fin del arrastre (se haya soltado dentro o fuera)
+  manoEl.addEventListener("dragend", function () {
+    if (!cartaArrastrada) return;
+    manoEl.classList.remove("ordenando");
+    cartaArrastrada = null;
+    indiceOrigen = null;
+    renderMano();   // redibuja desde el array: con el orden nuevo, o el original si se soltó fuera
+  });
 </script>
 
 </html>

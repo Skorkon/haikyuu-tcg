@@ -66,11 +66,14 @@ body {
 #mano-rival {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px;
+  flex-wrap: nowrap;         /* nunca saltar a una segunda fila */
+  gap: 0;                    /* el espacio lo gestiona el solape calculado */
   margin: -10px -10px 10px -10px;
   padding-top: 4px;
   flex-shrink: 0;   /* ← nuevo: nunca se encoge, siempre arriba del todo */
+}
+#mano-rival .carta {
+  flex-shrink: 0;            /* los dorsos nunca se estrechan: si no caben, se solapan más */
 }
 
 .contenido-inferior {

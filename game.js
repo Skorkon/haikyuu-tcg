@@ -142,6 +142,8 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
       personajeDoble: info.personajeDoble || false,         // si es personaje doble
       opcionesDoble: info.opcionesDoble || [],              // opciones de elección para personaje doble
       escuelasDoble: info.escuelasDoble || [],    // escuelas adicionales para el deckbuilder
+      categorias: info.categorias || [],                    // afiliaciones secundarias (ej: "Jóvenes de Miyagi", "Sub 19")
+      manoAEventos: info.manoAEventos || false,             // "Desde la mano" que se coloca en la zona de eventos en vez de ir al trash
       oculta: info.oculta || false,                         // si es una carta oculta (no aparece en el deckbuilder) <- NO FUNCIONA A 03.08
     },
 
@@ -1852,7 +1854,7 @@ async function jugarEvento() {
 }
 // ============================================================================================================================= BOTÓN
 // ================================================================================================================== JUGAR DESDE MANO 
-function jugarHabilidadDesdeMano() {
+async function jugarHabilidadDesdeMano() {                       // async: algunas habilidades desde la mano tienen selector
   if (!game.cartaSeleccionada) {
     log(t("log.seleccionaCarta"));
     return;
@@ -1883,6 +1885,16 @@ function jugarHabilidadDesdeMano() {
   if (!cartaEnJuego || !cartaEnJuego.recienJugada) {               // si no hay carta jugada este turno
     log(t("log.noCartaEnZona", { zona: t("ui.zona" + game.fase.charAt(0).toUpperCase() + game.fase.slice(1)) }));
     return;                                                         // cancelar sin descartar
+  }
+
+  if (carta.info?.manoAEventos) {                                // cartas que se colocan en la zona de eventos (ej: Hinata P03-001)
+    game.cartaSeleccionada = null;                               // deseleccionar antes de abrir selectores
+    await carta.habilidad(jugador, game, carta);                 // la habilidad comprueba condiciones y mueve la carta ella misma
+    renderMano();                                                // actualizar mano
+    renderManoRival();                                           // actualizar mano rival
+    renderCampo();                                               // actualizar campo
+    actualizarFaseUI();                                          // actualizar botones y contadores
+    return;                                                      // salir sin trash ni mensaje habilidadDesdeMano
   }
 
   let index = jugador.mano.indexOf(carta);
@@ -2149,6 +2161,7 @@ function renderMano() {
 
     const div = document.createElement("div");
     div.classList.add("carta");
+    div.draggable = true;                 // se puede arrastrar para reordenar la mano
     div.style.marginLeft = index === 0 ? "0" : `-${overlapNecesario}px`;
 
     if (carta.info?.id) {
@@ -2208,11 +2221,20 @@ function renderManoRival() {
   if (!contenedor) return;                               // si no existe el contenedor, ignorar
   contenedor.innerHTML = "";                             // limpiar contenedor
 
-  rival.mano.forEach(() => {                             // para cada carta del rival
+  // solape calculado como en renderMano: como mínimo el de siempre (40px),
+  // y más si no caben, para que nunca salten a una segunda fila
+  const totalCartas = rival.mano.length;
+  const anchoDisponible = contenedor.offsetWidth;
+  const cartaAncho = 80;
+  const solape = totalCartas > 1
+    ? Math.max(40, (totalCartas * cartaAncho - anchoDisponible) / (totalCartas - 1))
+    : 0;
+
+  rival.mano.forEach((_, index) => {                     // para cada carta del rival (index = su posición)
     const div = document.createElement("div");           // crear div
     div.classList.add("carta");                          // añadir clase carta
     div.style.backgroundImage = "url('img/cartas/cardback.png')"; // dorso
-    div.style.marginLeft = "-40px";                               // superponer cartas
+    div.style.marginLeft = index === 0 ? "0" : `-${solape}px`;    // superponer cartas (la primera, sin margen)
     div.style.marginTop = "-70px";                                // esconder parte superior
     contenedor.appendChild(div);                         // añadir al contenedor
   });
@@ -3042,6 +3064,16 @@ function contarNombresUnicosEnTrash(jugador, escuela) {
 // ================================================================ CALCULAR GUTS DE UNA ZONA
 function obtenerGuts(jugador, zona) {
   return jugador.zonas[zona].slice(0, -1);                           // GUTS = todo menos la carta de arriba
+}
+// ================================================================ TODOS LOS PERSONAJES DE UNA ESCUELA O CATEGORÍA
+function todosDeCategoria(jugador, categoria) {
+  let cartasEnJuego = ["saque", "recepcion", "pase", "remate", "bloqueo"]  // las 5 zonas del campo
+    .map(zona => jugador.zonas[zona].at(-1))                              // carta de arriba de cada zona
+    .filter(c => c !== null && c !== undefined);                          // quitar zonas vacías
+  return cartasEnJuego.every(c =>                                         // todas deben cumplirlo
+    c.info?.escuela === categoria ||                                      // por escuela principal
+    c.info?.categorias?.includes(categoria)                               // o por afiliación secundaria
+  );
 }
 // ================================================================ LLEVAR DEL TRASH A LA MANO
 async function buscarEnTrashAMano(jugador, filtros, cantidad = 1) { // asyn porque tiene selector

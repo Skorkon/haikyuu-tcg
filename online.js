@@ -320,29 +320,32 @@ function aplicarJugadaRival(jugada) {
       const miJugadorDescarte = game.jugadores[miNumero - 1];              // jugador local (el que descarta)
       if (miJugadorDescarte.mano.length === 0) {                           // si no tiene cartas
         log(t("log.sinCartasParaDescartar"));
-        return;
+        db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({   // responder igualmente para no dejar colgado al rival
+          jugador: miNumero,                                               // quién responde
+          cartaId: null                                                    // sin carta descartada
+        });
+        break;
       }
       mostrarSelectorCartas(                                               // abrir selector obligatorio
-        "Forced discard: you must discard 1 card from your hand:",             
+        t("log.descarteForzado"),                                          // título traducido
         miJugadorDescarte.mano                                             // toda la mano
       ).then(cartaElegida => {                                             // cuando elige
-        if (!cartaElegida) return;                                         // no debería cancelarse
+        if (!cartaElegida) return;                                         // no debería cancelarse (selector obligatorio)
 
         let index = miJugadorDescarte.mano.indexOf(cartaElegida);         // buscar en la mano
         miJugadorDescarte.mano.splice(index, 1);                          // sacar de la mano
         miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
-        log(t("log.descartaPorEfecto", { jugador: miJugadorDescarte.nombre, carta: cartaElegida.nombre }));
+        log(t("log.descartaPorEfecto", { jugador: miJugadorDescarte.nombre, carta: cartaElegida.nombre })); // antes usaba "jugador", que no existe aquí
 
-        db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({
-          jugador: miNumero,
-          cartaId: cartaElegida.info?.id
+        enviarTrash(miJugadorDescarte);                                   // sincronizar trash antes de confirmar
+        db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({  // confirmar al rival
+          jugador: miNumero,                                              // quién responde
+          cartaId: cartaElegida.info?.id                                  // carta descartada
         });
 
-        if (modoOnline) enviarTrash(miJugadorDescarte);                   // sincronizar trash
-
-        renderMano();                                                      // actualizar mano
-        renderManoRival();                                                  // actualizar mano rival
-        renderCampo();                                                      // actualizar campo
+        renderMano();                                                     // actualizar mano
+        renderManoRival();                                                // actualizar mano rival
+        renderCampo();                                                    // actualizar campo
       });
       break;
 

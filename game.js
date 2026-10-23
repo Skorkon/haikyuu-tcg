@@ -3200,23 +3200,25 @@ async function forzarDescarteRival(rival, rivalIndex) { // ===== OIKAWA P01-033
   // modo online: enviar petición al rival y esperar respuesta
   log(t("log.esperandoDescarte"));
   bloquearUI();                                                         // bloquear mientras espera
-  enviarJugada("pedirDescarte", { rivalIndex: rivalIndex });           // avisar al rival
+  let ref = db.ref("partidas/" + salaActual + "/confirmacionDescarte"); // ruta de la confirmación
+  await ref.remove();                                                   // borrar la confirmación de un uso anterior
+  enviarJugada("pedirDescarte", { rivalIndex: rivalIndex });           // avisar al rival (después de borrar)
 
   await new Promise(resolve => {                                       // esperar respuesta del rival
-    let ref = db.ref("partidas/" + salaActual + "/confirmacionDescarte");     // escuchar Firebase
-    ref.on("value", function(snap) {                                   // cuando cambie
+    let escuchador = function(snap) {                                  // listener con nombre, para poder quitar solo este
       let jugada = snap.val();                                         // leer datos
       if (!jugada) return;                                             // ignorar si vacío
       if (jugada.jugador === miNumero) return;                         // ignorar si es mío
 
-      ref.off();                                                       // desactivar listener
+      ref.off("value", escuchador);                                    // quitar solo este listener
       log(t("log.rivalDescartaCarta", { jugador: rival.nombre }));
-      desbloquearUI();                                                   // desbloquear tras recibir respuesta
+      desbloquearUI();                                                 // desbloquear tras recibir respuesta
       renderMano();                                                    // actualizar mano
-      renderManoRival();                                                // actualizar mano rival
-      renderCampo();                                                    // actualizar campo
-      resolve();                                                        // resolver el Promise
-    });
+      renderManoRival();                                               // actualizar mano rival
+      renderCampo();                                                   // actualizar campo
+      resolve();                                                       // resolver el Promise
+    };
+    ref.on("value", escuchador);                                       // empezar a escuchar
   });
 }
 function descartePorRobo() {                                            // forzar descarte rival cuando añade carta a la mano

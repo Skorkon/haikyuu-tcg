@@ -209,3 +209,4 @@ log.descartarBloqueadorMenosAtaque;{carta} enviado al trash desde el bloqueo: -{
 log.opcionRobarCarta;Robar 1 carta;Draw 1 card;;
 log.opcionPersonajeDescarte;Añadir a la mano hasta 1 personaje de tu descarte;Add up to 1 character card from your drop zone to your hand;;
 log.rivalCartaAManoDesdeDescarte;{jugador} añade {carta} de su descarte a su mano.;{jugador} adds {carta} from their drop zone to their hand.;;
+log.descarteForzado;Descarte forzado: debes descartar 1 carta de tu mano:;Forced discard: you must discard 1 card from your hand:;;

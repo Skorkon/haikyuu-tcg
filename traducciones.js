@@ -210,7 +210,11 @@ const TRADUCCIONES = {
       "yoSaquePrimero": "Yo saco primero",
       "rivalSaquePrimero": "El rival saca primero",
       "recepcionFijada": "Recepción de {carta} fijada en {valor}",
-      "descartarBloqueadorMenosAtaque": "{carta} enviado al trash desde el bloqueo: -{valor} al ataque rival"
+      "descartarBloqueadorMenosAtaque": "{carta} enviado al trash desde el bloqueo: -{valor} al ataque rival",
+      "opcionRobarCarta": "Robar 1 carta",
+      "opcionPersonajeDescarte": "Añadir a la mano hasta 1 personaje de tu descarte",
+      "rivalCartaAManoDesdeDescarte": "{jugador} añade {carta} de su descarte a su mano.",
+      "descarteForzado": "Descarte forzado: debes descartar 1 carta de tu mano:"
     }
   },
   "en": {
@@ -421,7 +425,11 @@ const TRADUCCIONES = {
       "yoSaquePrimero": "I’ll serve first",
       "rivalSaquePrimero": "Opponent serves first",
       "recepcionFijada": "{carta}’s reception set to {valor}",
-      "descartarBloqueadorMenosAtaque": "{carta} sent to discard from block: -{valor} to rival attack"
+      "descartarBloqueadorMenosAtaque": "{carta} sent to discard from block: -{valor} to rival attack",
+      "opcionRobarCarta": "Draw 1 card",
+      "opcionPersonajeDescarte": "Add up to 1 character card from your drop zone to your hand",
+      "rivalCartaAManoDesdeDescarte": "{jugador} adds {carta} from their drop zone to their hand.",
+      "descarteForzado": "Forced discard: you must discard 1 card from your hand:"
     }
   },
   "fr": {
@@ -632,7 +640,11 @@ const TRADUCCIONES = {
       "yoSaquePrimero": "Je sers en premier",
       "rivalSaquePrimero": "L’adversaire sert en premier",
       "recepcionFijada": "Réception de {carta} fixée à {valor}",
-      "descartarBloqueadorMenosAtaque": "{carta} envoyé à la défausse depuis le bloc : -{valor} à l’attaque rivale"
+      "descartarBloqueadorMenosAtaque": "{carta} envoyé à la défausse depuis le bloc : -{valor} à l’attaque rivale",
+      "opcionRobarCarta": "",
+      "opcionPersonajeDescarte": "",
+      "rivalCartaAManoDesdeDescarte": "",
+      "descarteForzado": ""
     }
   },
   "": {
@@ -843,7 +855,11 @@ const TRADUCCIONES = {
       "yoSaquePrimero": "",
       "rivalSaquePrimero": "",
       "recepcionFijada": "",
-      "descartarBloqueadorMenosAtaque": ""
+      "descartarBloqueadorMenosAtaque": "",
+      "opcionRobarCarta": "",
+      "opcionPersonajeDescarte": "",
+      "rivalCartaAManoDesdeDescarte": "",
+      "descarteForzado": ""
     }
   }
 };

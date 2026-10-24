@@ -50,6 +50,28 @@ function log(texto) {
   logContainer.scrollTop = logContainer.scrollHeight; // autoscroll
 }
 
+// ===================================================================== TRADUCIR NOMBRES DE CARTA EN LOS PARÁMETROS
+function traducirParamsCartas(params = {}) {                   // nombres de carta en el idioma de ESTE cliente
+  let p = { ...params };                                        // copia para no modificar el original
+  if (p.cartaId) {                                              // si hay una sola carta
+    p.carta = DESCRIPCIONES[p.cartaId]?.["nombre_" + idiomaActivo] || p.carta; // traducida, o el nombre enviado
+  }
+  if (p.cartasIds) {                                            // si hay varias cartas
+    p.cartas = p.cartasIds.map((id, i) =>                       // traducir cada una
+      DESCRIPCIONES[id]?.["nombre_" + idiomaActivo] || p.cartasNombres?.[i] || id // traducida, nombre enviado o id
+    ).join(", ");                                               // unirlas en un texto
+  }
+  return p;                                                     // parámetros listos para t()
+}
+// ===================================================================== LOG COMPARTIDO CON EL RIVAL
+function logCompartido(clave, params = {}) {                    // log que ven los dos jugadores, cada uno en su idioma
+  log(t(clave, traducirParamsCartas(params)));                  // mostrarlo en mi cliente
+  if (modoOnline) enviarJugada("notificarLogRival", {           // enviarlo al rival
+    clave: clave,                                               // clave de traducción
+    params: params                                              // parámetros sin traducir (los traduce su cliente)
+  });
+}
+
 // ================================================================================================== FUNCIONES ESTRUCTURALES
 // ==========================================================================================================================
 
@@ -62,6 +84,8 @@ const game = {         // estado general del juego
   turno: 0, 
   valorAtaque: 0,
   valorDefensa: 0,
+  valorPase: 0,         // pase final del colocador (se guarda al resolver el pase, para topes como Kageyama P03-047)
+  ultimaZonaJugada: [null, null], // última zona en la que ha colocado carta cada jugador (índice 0 y 1)
 
   jugadores: [ 
     crearJugador("Andres"), // 0 = jugador 1, 1 = jugador 2
@@ -257,6 +281,10 @@ function limpiarJugada() { // limpiar jugada actual
   game.gutsDescartados = [];                               // limpiar GUTS descartados
   game.valorAtaque = 0;                                    // resetear ataque
   game.valorDefensa = 0;                                   // resetear defensa
+  game.valorPase = 0;                                      // resetear pase guardado
+  game.ultimaZonaJugada = [null, null];                    // resetear la última zona de cada jugador
+  game.ultimaCarta = null;                                 // ninguna carta seleccionada al empezar un punto nuevo
+  game.ultimoJugador = null;                               // ni jugador asociado
 
   game.jugadores.forEach(jugador => {                      // limpiar recienJugada y habilidadUsada en todas las zonas de ambos jugadores
     limpiarRecienJugadas(jugador);                         // limpiar recién jugadas
@@ -371,13 +399,14 @@ function perderPuntoPorEfecto(jugadorPerdedor) { // el jugador pierde el punto a
 
   limpiarJugada();                                                          // limpiar estado de la jugada
   game.fase = "saque";                                                      // el rival saca
+  game.faseAnterior = "bloqueo";                                            // antes de enviarFase, para que viaje al rival
   if (modoOnline) {
     enviarCambioTurno(rivalIndex);
     enviarFase("saque");
   } else {
     cambiarJugador(rivalIndex);
   }
-  game.faseAnterior = "bloqueo";
+
   actualizarFaseUI();
   actualizarMarcador();
   renderMano();
@@ -731,6 +760,7 @@ function colocarCarta(jugador, carta, zona) {
       return
     }
     jugador.zonas.saque.push(carta);        // el jugador pone una carta en la zona de saque
+    game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "saque";      // registrar la última zona de este jugador
     carta.zonaActual = "saque";
     carta.recienJugada = true;
     carta.habilidadUsada = false;
@@ -790,6 +820,7 @@ function colocarCarta(jugador, carta, zona) {
     // ================================================== función a ejecutar
     let resultadoRecepcion = ""; // variable para guardar si buena recepción (no usada por el momento)
     jugador.zonas.recepcion.push(carta); // el jugador pone la carta en la zona de recepción
+      game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "recepcion";  // registrar la última zona de este jugador
       carta.zonaActual = "recepcion";
       carta.recienJugada = true;
       carta.habilidadUsada = false;
@@ -863,6 +894,7 @@ function colocarCarta(jugador, carta, zona) {
 
     // ================================================== función a ejecutar
     jugador.zonas.pase.push(carta); 
+    game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "pase";       // registrar la última zona de este jugador
     carta.zonaActual = "pase";
     carta.recienJugada = true;
     carta.habilidadUsada = false;
@@ -931,6 +963,7 @@ function colocarCarta(jugador, carta, zona) {
     }
 
     jugador.zonas.remate.push(carta); // el jugador pone la carta en la zona de remate
+    game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "remate";     // registrar la última zona de este jugador
     // estado de la carta
     carta.zonaActual = "remate";
     carta.recienJugada = true;
@@ -1036,6 +1069,7 @@ function colocarCarta(jugador, carta, zona) {
         // asignar bloqueador central
         game.bloqueoActual.central = carta;           // marcar como bloqueador central
         jugador.zonas.bloqueo.push(carta);            // añadir a la zona de bloqueo
+        game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "bloqueo";  // registrar la última zona de este jugador
         carta.zonaActual = "bloqueo";                 // zona actual de la carta
         game.ultimaCarta = carta;                     // última carta jugada
         game.ultimoJugador = jugador;                 // último jugador que jugó
@@ -1139,6 +1173,7 @@ function colocarCarta(jugador, carta, zona) {
 
         game.bloqueoActual.apoyos.push(carta);        // añadir al conteo de apoyos
         jugador.zonas.bloqueoApoyo.push(carta);       // añadir a la zona de apoyo
+        game.ultimaZonaJugada[game.jugadores.indexOf(jugador)] = "bloqueoApoyo"; // registrar la última zona de este jugador
         carta.zonaActual = "bloqueoApoyo";            // zona actual de la carta
         carta.recienJugada = true;                    // marcada como recién jugada
         carta.habilidadUsada = false;                 // habilidad no usada
@@ -1509,6 +1544,7 @@ function resolverRecepcion() {
 
     limpiarJugada();                                    // limpiar estado de la jugada
     game.fase = "saque";                                // volver a fase de saque
+    game.faseAnterior = "recepcion";                    // antes de enviarFase, para que viaje al rival
 
     if (modoOnline) {
       enviarCambioTurno(rivalIndex);                    // el rival ganó el punto, saca él
@@ -1516,7 +1552,7 @@ function resolverRecepcion() {
     } else {
       cambiarJugador(rivalIndex);                       // cambiar al rival en local
     }
-    game.faseAnterior = "recepcion";
+
     actualizarFaseUI();                                 // actualizar letrero
     actualizarMarcador();                               // actualizar marcador
     renderMano();                                       // redibujar mano
@@ -1551,6 +1587,7 @@ function resolverPase(){
     ejecutarFinta(efecto.valor);                                   // fija el ataque y pasa a la recepción del rival
     return;                                                        // salir sin pasar por remate
   }
+  game.valorPase = game.valorAtaque;                               // guardar el pase final del colocador (impreso + bonus)
   log(t("log.paseConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.fase = "remate";
   game.faseAnterior = "pase";
@@ -1589,6 +1626,7 @@ function resolverRemate() {
 
   game.fase = "bloqueo";
   game.ultimaCarta = null;
+  game.faseAnterior = "remate";                         // la fase anterior al bloqueo es el remate
   if (modoOnline) enviarFase("bloqueo"); // avisar al rival del cambio de fase
   cambiarJugador();
   actualizarFaseUI();
@@ -1607,12 +1645,16 @@ function resolverBloqueo() {
 
   if (!game.bloqueoActual.central) {                    // si no hay cartas colocadas en bloqueo
     log(t("log.sinBloqueadorCentral"));
-    game.fase = "recepcion";
-    game.valorDefensa = 0;
-    robarCarta(game.jugadores[game.jugadorActivo], 1);
-    actualizarFaseUI();
-    renderMano();
-    renderCampo();
+    game.fase = "recepcion";                            // pasar a recepción
+    game.faseAnterior = "bloqueo";                      // la fase anterior fue bloqueo (como en la rama normal)
+    game.valorDefensa = 0;                              // resetear defensa
+    game.ultimaCarta = null;                            // ninguna carta seleccionada
+    robarCarta(game.jugadores[game.jugadorActivo], 1);  // el que no bloquea roba 1 carta
+    if (modoOnline) enviarFase("recepcion");            // avisar al rival del cambio de fase (incluye valorAtaque/Defensa)
+    actualizarFaseUI();                                 // actualizar letrero y pelota
+    renderMano();                                       // redibujar mano
+    renderManoRival();                                  // redibujar mano rival
+    renderCampo();                                      // redibujar campo
     return;
   }
 
@@ -1649,11 +1691,15 @@ function resolverBloqueo() {
 
     if (!bloqueoForzadoFallido && defensaTotal >= game.valorAtaque) { // ================================= BLOQUEO EXITOSO
     log(t("log.bloqueoExitoso"));
-    if (tieneEfecto("doshat")) {
+    let doshatNegado = game.efectosActivos.some(e =>    // ¿el rival del que bloquea ha anulado el Bloqueo ofensivo?
+      e.tipo === "negarDoshat" && e.activadoPor !== game.jugadorActivo
+    );
+    if (tieneEfecto("doshat") && !doshatNegado) {       // Bloqueo ofensivo activo y no anulado
       let efecto = game.efectosActivos.find(e => e.tipo === "doshat");
       game.valorAtaque = efecto.valor;                  // potencia del contraataque
       log(t("log.bloqueoOfensivo", { valor: efecto.valor }));
     } else {
+      if (tieneEfecto("doshat")) log(t("log.negarDoshat")); // había Bloqueo ofensivo, pero está anulado
       game.valorAtaque = 0;                             // contraataque normal
     }
 
@@ -1723,6 +1769,10 @@ async function usarHabilidad() {
   // =================================================== variables por si acaso
   let carta = game.ultimaCarta;
   let jugador = game.ultimoJugador;
+  if (!carta || !carta.recienJugada) {                     // solo cartas jugadas en esta jugada
+    log(t("log.habilidadSoloCartaJugada"));
+    return;                                                // salir sin marcar nada
+  }
   // =================================================== comprobaciones de efectos
   if (tieneEfecto("anularHabilidadReceptor")) {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadReceptor");
@@ -1836,8 +1886,12 @@ async function jugarEvento() {
     carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre 
   }));
 
+  let faseAlJugar = game.fase;                                     // fase en la que se juega el evento (el efecto podría cambiarla)
   if (carta.habilidad) { // activar el efecto
     await carta.habilidad(jugador, game, carta);
+  }
+  if (faseAlJugar === "remate" && jugador.zonas.eventos.includes(carta)) { // evento jugado de verdad en tu fase de remate
+    aplicarKageyama047(jugador);                                   // comprobar Kageyama P03-047 en pase
   }
 
   game.cartaSeleccionada = null;
@@ -2372,7 +2426,7 @@ function renderCampo() {
               return;
             }
             mostrarSelectorCartas(
-              "GUTS de " + zona + " : " + cartasGuts.length + " carta(s)",
+              t("ui.selectorGuts", { zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)), cantidad: cartasGuts.length }), 
               cartasGuts,
               true                                                    // permite cerrar clicando fuera
             );
@@ -2455,7 +2509,7 @@ function renderCampo() {
         if (selector.style.display === "flex") return;           // si hay selector abierto, no hacer nada
         if (jugador.trash.length === 0) return;                  // si está vacío, no hacer nada
         mostrarSelectorCartas(
-          "Trash de " + jugador.nombre + " — " + jugador.trash.length + " carta(s)",
+          t("ui.selectorTrash", { jugador: jugador.nombre, cantidad: jugador.trash.length }), 
           jugador.trash,
           true                                                   // permite cerrar clicando fuera
         );
@@ -2537,7 +2591,7 @@ function renderCampo() {
           if (selector.style.display === "flex") return;           // si hay selector abierto, no hacer nada
           if (jugador.zonas.eventos.length === 0) return;          // si está vacío, no hacer nada
           mostrarSelectorCartas(
-            "Eventos de " + jugador.nombre + " — " + jugador.zonas.eventos.length + " carta(s)",
+            t("ui.selectorEventos", { jugador: jugador.nombre, cantidad: jugador.zonas.eventos.length }), // título traducido
             jugador.zonas.eventos,
             true                                                   // permite cerrar clicando fuera
           );
@@ -2626,16 +2680,17 @@ function getSchoolColor(escuela) {
     Shiratorizawa:     '#6A1B9A',
     Inarizaki:         '#5C0A1E',
     Kamomedai:         '#4a9ee6',
-    Itachiyama:        '#F9A825',
+    Itachiyama:        '#93C572',
     'Wakutani Minami': '#E91E8C',
     'Date Kôgyô':      '#0F5C3D',
     'Aoba Jôsai':      '#1AA6A0',
     'Tokonami':        '#4A7FA5',
-    'Ōgiminami':       '#2C3E70',
+    Ohgiminami:        '#2C3E70',
     'Kakugawa':        '#7CB342',
-    'Sōryūkawa Kōgyō': '#2E3A6E',
+    'Sarukawa Kôgyô':  '#2E3A6E',
     'Tsubakihara':     '#C9A63C',
     'Niiyama Joshi':   '#E63950',
+     Nohebi:          '#006F68',
   };
   return colores[escuela] || '#999999';
 }
@@ -2967,6 +3022,7 @@ function oneTouch(n) {
   game.valorAtaque -= n;
   log(t("log.oneTouch", { valor: n, ataque: game.valorAtaque }));
   game.fase = "recepcion";
+  game.faseAnterior = "bloqueo";                           // se llega a recepción desde el bloqueo
 
   let jugadorBloqueo = game.jugadores[game.jugadorActivo];
     jugadorBloqueo.zonas.bloqueoApoyo.forEach(carta => {     // enviar apoyos al trash
@@ -2984,7 +3040,7 @@ function oneTouch(n) {
   }
   actualizarFaseUI();
   renderMano();
-  renderManoRival()
+  renderManoRival();
   renderCampo();
 }
 // ======================================== NEGAR ONE TOUCH
@@ -2995,6 +3051,16 @@ function negarOneTouch() {
   });
   if (modoOnline) enviarEfectos(); // sincronizar efectos con el rival
   log(t("log.negarOneTouchActivo"));
+}
+// ======================================== NEGAR BLOQUEO OFENSIVO (DOSHAT)
+function negarDoshat() {
+  game.efectosActivos.push({
+    tipo: "negarDoshat",                                               // tipo del efecto
+    activadoPor: game.jugadorActivo,                                   // quién lo activó
+    expira: game.turno + 2                                             // dura hasta el final del próximo turno rival
+  });
+  if (modoOnline) enviarEfectos();                                     // sincronizar efectos con el rival
+  log(t("log.negarDoshatActivo"));
 }
 // ======================================== NEGAR USAR EFECTOS DESDE LA MANO
 function negarCartaDesdeMano(fases) {
@@ -3768,6 +3834,21 @@ async function aplicarPersonajeDoble(jugador, carta) { // ======================
   });
 }
 
+function aplicarKageyama047(jugador) { // ==================================================== KAGEYAMA P03-047
+  let colocador = jugador.zonas.pase.at(-1);                     // carta de arriba de la zona de pase
+  if (colocador?.info?.id !== "HV-P03-047") return false;        // return false: no es este Kageyama
+  if (!colocador.recienJugada) return false;                     // return false: no es el colocador de esta jugada
+  if (game.valorPase + 1 > 3) {                                  // esta habilidad no puede llevar el pase a 4 o más
+    log(t("log.condicionNoCumplida"));
+    return false;                                                // return false: tope alcanzado
+  }
+  game.valorPase += 1;                                           // +1 al pase guardado (para el tope)
+  game.valorAtaque += 1;                                         // +1 al ataque en curso (el pase ya está dentro de valorAtaque)
+  log(t("log.habilidadActivada", { carta: colocador.nombre }));
+  log(t("log.ataqueAumentado", { valor: 1 }));
+  actualizarContadoresVisual();                                  // refrescar el contador de ataque
+}
+
 
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
@@ -3845,24 +3926,24 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P01-011", "HV-D01-002", "HV-D01-005"].forEach(id => {
+["HV-P03-051", "HV-P01-006", "HV-P03-047"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-010"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
 ["HV-P01-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -3890,7 +3971,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
@@ -4076,10 +4157,10 @@ mazoPruebaMultiEscuela.forEach(id => {
 
 // ---------------------------------------------------------------------------------- AOBA JOSAI
 // MANO AOBA JOSAI
-[ "HV-P01-033", "HV-P01-033", "HV-P01-035", "HV-P01-037"].forEach(id => {
+[ "HV-P01-033", "HV-P01-033", "HV-P01-035", "HV-P03-007"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 
 // GUTS AOBA JOSAI
@@ -4087,7 +4168,7 @@ mazoPruebaMultiEscuela.forEach(id => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-036"); // Sasaya, sin habilidad
     game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 
@@ -4095,7 +4176,7 @@ mazoPruebaMultiEscuela.forEach(id => {
 for (let i = 0; i < 7; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[1].zonas.eventos.push(evento);
-  game.jugadores[0].zonas.eventos.push(evento);
+  // game.jugadores[0].zonas.eventos.push(evento);
 }
 
 // ---------------------------------------------------------------------------------- INARIZAKI > 

@@ -123,6 +123,7 @@ const I18N = {
           errorP03: "El mazo contiene cartas de la expansión P03, que aún no están programadas. Quítalas para poder guardarlo.",
           nombreMazoDefecto: "Mi deck",
           nombreMazoImportado: "Deck importado",
+          anadirUna: "Añadir una",
         }
     },    
     en: {
@@ -248,6 +249,7 @@ const I18N = {
           errorP03: "The deck contains cards from the P03 expansion, which are not programmed yet. Remove them to save it.",
           nombreMazoDefecto: "My deck",
           nombreMazoImportado: "Imported deck",
+          anadirUna: "Add one",
         }
     },
     fr: {
@@ -373,6 +375,7 @@ const I18N = {
           errorP03: "Le deck contient des cartes de l'extension P03, qui ne sont pas encore programmées. Retire-les pour pouvoir l'enregistrer.",
           nombreMazoDefecto: "Mon deck",
           nombreMazoImportado: "Deck importé",
+          anadirUna: "Ajouter une",
         }
     }
 };

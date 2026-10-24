@@ -42,7 +42,6 @@
     /* -------------------------------------------------- COLUMNAS ------------------------------------------ */
     #columna-izquierda {
       width: 20%;                                 /* siempre el 20% de la pantalla */
-      min-width: 260px;                           /* pero nunca tan estrecha que el preview no quepa */
       flex-shrink: 0;                             /* no se encoge nunca, aunque falte espacio */
       background-image: url('img/fondos/deckb.jpg'); 
       background-color: #1a1a2e;                /* color de respaldo mientras no hay imagen */
@@ -60,7 +59,6 @@
     }
     .columna-derecha {
       width: 22%;                   /* siempre el 22% de la pantalla */
-      min-width: 300px;             /* pero nunca tan estrecha que los botones del mazo no quepan */
       flex-shrink: 0;               /* no se encoge */
       background: var(--bg);        
       border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
@@ -263,10 +261,11 @@
       justify-content: space-between;
       gap: 6px;
     }
+
     .card-name { /* ------------------------------------- Nombre del personaje */
       font-size: 11px;
-      font-weight: 700;
-      color: var(--text);
+      color: var(--gris-medio);     /* gris claro sobre el negro de la tarjeta */
+      font-weight: 400;             /* normal: es un dato secundario, no un título */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -274,43 +273,47 @@
     }
     .card-position {
       flex-shrink: 0;           /* nunca se encoge */
-      color: white;              /* texto blanco */
+      color: var(--tinta-escuela);   /* negro o blanco según la escuela */
       font-size: 9px;
       font-weight: 700;
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: 0px;
       line-height: 1.4;
     }
 
-    .card-add-btn { /* ------------------------------------- Botón + para añadir al mazo  */
+    .card-add-btn { /* ------------------------------------- Botón + para añadir al mazo */
       position: absolute;
       top: 6px; right: 6px;
       width: 24px; height: 24px;
-      background: rgba(0,0,0,.75);
-      border: 1px solid var(--accent);
-      border-radius: 50%;
+      background: var(--color-escuela);       /* relleno del color de su escuela */
+      border: 2px solid var(--tinta);         /* contorno negro: se separa de cualquier ilustración */
+      border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       font-size: 15px;
-      color: white;
+      font-weight: 700;
+      color: var(--tinta-escuela);            /* negro o blanco, según la escuela */
       transition: all 0.12s;
       z-index: 3;
     }
     .card-add-btn:hover {
-      background: var(--accent);
+      background: var(--tinta);               /* en hover se invierte: negro… */
+      border-color: var(--color-escuela);     /* …con el borde… */
+      color: var(--color-escuela);            /* …y el + del color de la escuela */
     }
 
-    .card-count-badge { /* ------------------------------------- Contador del número de cartas en el mazo  */
+    .card-count-badge { /* ------------------------------------- Copias de esta carta en el mazo */
       position: absolute;
       top: 6px; left: 6px;
-      background: var(--accent);
-      color: white;
+      background: var(--color-escuela);
+      border: 2px solid var(--tinta);
+      color: var(--tinta-escuela);
       font-size: 11px;
       font-weight: 700;
-      width: 20px; height: 20px;
-      border-radius: 50%;
+      width: 22px; height: 22px;              /* 2px más que antes, para compensar el borde */
+      border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -327,9 +330,9 @@
       transform: translateY(-50%);
       flex-direction: column;
       background: var(--bg);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5);   /* sombra para que se note que "flota" encima */
+      border-radius: 0;
+      overflow: visible;                       /* la etiqueta y el bocadillo podrán sobresalir */
+      box-shadow: 5px 5px 0 var(--tinta);      /* sombra dura negra */
       z-index: 5;
     }
     .preview-panel.show {
@@ -342,54 +345,103 @@
       background-position: center;
       flex-shrink: 0;
     }
-    .preview-info {
-      background: #000000;
-      color: var(--text);
-      padding: 14px;
-      max-height: 260px;          /* límite de altura, con scroll si hace falta */
-      overflow-y: auto;
-    }
-    .preview-info h3 {
-      font-size: 15px;
-      margin-bottom: 2px;
-    }
-    .preview-info .preview-meta {
-      font-size: 11px;
-      color: var(--text2);
-      margin-bottom: 8px;
-    }
-    .preview-info .preview-stats {
-      display: flex;               /* en fila, en vez de grid de 2 columnas */
-      gap: 4px;
-      margin-bottom: 8px;
-    }
-    .pstat {                        /* Posición y tamaño de cuadrados */
-      flex: 1;                      /* los 5 cuadraditos se reparten el ancho por igual */
-      text-align: center;
-      padding: 4px 2px;
-      border-radius: 4px;
-      font-size: 10px;
-    }
-    .pstat span {                   /* Texto cuadrados */
-      display: block;
-      font-size: 8px;
-      opacity: 0.8;
-    }
-    .pstat strong {                 /* Números cuadrados */
-      display: block;
-      font-size: 13px;
-    }
-    .pstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
-    .pstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
-    .pstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
-    .pstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
-    .pstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
 
-    .preview-info .preview-desc {
+    /* bocadillo con la descripción: abajo a la derecha, sobresale un poco */
+    .preview-bocadillo {
+      display: none;
+      position: absolute;
+      right: 12px;                           /* más centrado, como la etiqueta */
+      top: calc(100% - 40px);                /* posición de partida; la ajusta el JS al hacer clic */
+      max-width: calc(100% - 24px);         /* 12px de margen a la derecha (el right) + 12px a la izquierda */
+      padding: 12px 14px;
+      background: var(--color-escuela);      /* colores de la etiqueta del nombre */
+      color: var(--tinta-escuela);
+      border: 3px solid var(--tinta);
+      border-radius: 0;
+      box-shadow: 3px 3px 0 var(--tinta);
+      font-size: 14px;
+      line-height: 1.45;
+      z-index: 2;
+    }
+    .preview-panel.con-descripcion .preview-bocadillo {
+      display: block;                        /* visible tras el clic */
+    }
+    .preview-panel.con-descripcion .preview-bocadillo:empty {
+      display: none;                         /* cartas sin descripción: no sale un bocadillo vacío */
+    }
+
+    /* rabillo del bocadillo, apuntando hacia arriba (hacia la carta) */
+    .preview-bocadillo::before,
+    .preview-bocadillo::after {
+      content: "";
+      position: absolute;
+      border-style: solid;
+      border-bottom-color: var(--color-escuela);
+      border-color: transparent;
+    }
+    .preview-bocadillo::before {             /* triángulo negro: el contorno */
+      top: -14px;
+      left: 24px;
+      border-width: 0 10px 14px 10px;
+      border-bottom-color: var(--tinta);
+    }
+    .preview-bocadillo::after {              /* triángulo blanco, encima: el relleno */
+      top: -9px;
+      left: 27px;
+      border-width: 0 7px 10px 7px;
+      border-bottom-color: var(--color-escuela);
+    }
+
+    /* icono "i": indica que se puede hacer clic para ver la descripción */
+    .preview-icono {
+      position: absolute;
+      left: -10px;                           /* sobresale un poco por la esquina inferior izquierda */
+      bottom: -17px;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-escuela);
+      color: var(--papel);                   /* el icono, en blanco */
+      border: 3px solid var(--tinta);
+      box-shadow: 2px 2px 0 var(--tinta);
+      font-family: var(--font-titulos);
+      font-weight: var(--peso-titulos);
+      font-size: 14px;
+      z-index: 2;
+    }
+    .preview-panel.con-descripcion .preview-icono,
+    .preview-panel.sin-descripcion .preview-icono {
+      display: none;                         /* oculto con el bocadillo abierto o si no hay descripción */
+    }
+
+    /* ---------------------------------------------- PREVIEW ETIQUETA NOMBRE TOOLTIP ------------------------- */
+    /* etiqueta superpuesta en la esquina superior derecha: toque cómic */
+    .preview-etiqueta {
+      position: absolute;
+      bottom: calc(100% - 8px);             /* solo sus últimos 18px se meten en la carta; el resto sobresale */
+      right: 12px;                          /* …y por la derecha */
+      max-width: calc(100% - 24px);         /* 12px de margen a la derecha (el right) + 12px a la izquierda */
+      padding: 6px 10px;
+      background: var(--color-escuela);
+      color: var(--tinta-escuela);           /* negro o blanco, según la escuela */
+      border: 3px solid var(--tinta);
+      box-shadow: 3px 3px 0 var(--tinta);    /* sombra dura, a juego con el panel */
+      /* transform: rotate(2deg);               ligeramente torcida, como un cartel pegado */
+      z-index: 2;                            /* por encima de la ilustración */
+    }
+    .preview-nombre {
+      font-family: var(--font-titulos);
+      font-weight: var(--peso-titulos);
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: var(--espaciado-titulos);
+      text-transform: uppercase;
+    }
+    .preview-datos {
       font-size: 11px;
-      line-height: 1.5;
-      border-top: 1px solid var(--border2);
-      padding-top: 8px;
+      margin-top: 2px;
     }
 
     /* ---------------------------------------------- BARRA DE SCROLL PERSONALIZADA ------------------------- */
@@ -401,11 +453,10 @@
     }
     .catalogue-grid::-webkit-scrollbar-thumb {
       background: var(--accent);      /* color de la barra */
-      border-radius: 6px;             /* esquinas redondeadas */
+      border-radius: 0px;             /* esquinas redondeadas */
     }
     .catalogue-grid::-webkit-scrollbar-thumb:hover {
-      background: #000000;            /* se oscurece un poco al pasar el ratón por encima */
-      border: 2px solid var(--accent);
+      background: var(--tinta);         /* negro al pasar el ratón, sin borde */
     }
 
     /* ---------------------------------------------- COLUMNA DERECHA DECKBUILDER  ------------------------- */
@@ -431,8 +482,8 @@
     }
     .deck-stat {                               /* contadores de cartas y eventos */
       padding: 3px 10px;
-      border-radius: 4px;
-      background: var(--surface3);
+      border-radius: 0;                  /* esquinas rectas */
+      background: var(--tinta);          /* negro, como botones y campos */
       color: var(--accent);
     }
     .deck-stat.warn { color: #ff6b6b; }
@@ -474,29 +525,34 @@
       display: flex;
       align-items: center;
       gap: 7px;
-      padding: 6px 12px 6px 6px;
+      padding: 6px 8px 6px 6px;
       margin: 4px 12px;
-      background: #000000;
-      border-radius: 6px;
-      transition: background 0.1s;
+      background: var(--tinta);
+      border-radius: 0;
+      transition: transform 0.1s, box-shadow 0.1s;
+      cursor: pointer;                              /* se puede hacer clic para ver la descripción */
+      /* el borde y los colores de la escuela los pone el JS */
     }
-    .deck-entry:hover { background: var(--surface2); }
+    .deck-entry:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 3px 0 var(--color-escuela);   /* sombra dura de su escuela, como en el catálogo */
+    }
     .deck-entry-thumb {                             /* miniatura de la imagen */
       width: 32px;
       height: 32px;
-      border-radius: 4px;
+      border-radius: 0;
       flex-shrink: 0;
-      background-size: 150%;                        /* zoom: la imagen se muestra 2.5x más grande que el contenedor */
-      background-position: center 20%;              /* centrado horizontalmente, un poco hacia arriba para enfocar la cara */
+      background-size: 150%;                        /* zoom sobre la ilustración */
+      background-position: center 20%;              /* un poco hacia arriba para enfocar la cara */
       background-repeat: no-repeat;
     }
-    .deck-entry-color {                              /* barra de color de escuela */
+    .deck-entry-color {                             /* barra de color de escuela */
       width: 4px;
       height: 32px;
-      border-radius: 2px;
+      border-radius: 0;
       flex-shrink: 0;
     }
-    .deck-entry-name {                                /* nombre carta */
+    .deck-entry-name {                              /* nombre carta */
       flex: 1;
       overflow: hidden;
       font-size: 12px;
@@ -504,20 +560,20 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .deck-entry-qty {                                  /* cantidad */
+    .deck-entry-qty {                               /* cantidad */
       font-size: 13px;
       font-weight: 700;
       color: var(--text);
       min-width: 16px;
       text-align: center;
     }
-    .deck-entry-rm {                                    /* botones + y - */
+    .deck-entry-rm {                                /* botones − y ✕ */
       width: 20px;
       height: 20px;
-      border: 1px solid transparent;
-      border-radius: 4px;
+      border: 1px solid var(--gris-medio);
+      border-radius: 0;
       background: transparent;
-      color: var(--text2);
+      color: var(--gris-medio);
       cursor: pointer;
       font-size: 13px;
       display: flex;
@@ -526,13 +582,18 @@
       transition: all 0.12s;
       flex-shrink: 0;
     }
-    .deck-entry-rm:hover { border-color: var(--accent); color: var(--accent); }
-    .deck-empty {                                         /* mazo vacío */
+    .deck-entry-rm:hover {
+      background: var(--color-escuela);             /* se rellena del color de la escuela */
+      border-color: var(--color-escuela);
+      color: var(--tinta-escuela);
+    }
+    .deck-empty {                                   /* mazo vacío */
       padding: 40px 20px;
       text-align: center;
       color: var(--text2);
       font-size: 12px;
     }
+
     /* -------------------- BARRA DE SCROLL PERSONALIZADA (deck-list) ------------------------- */
     .deck-list::-webkit-scrollbar {
       width: 10px;
@@ -542,11 +603,10 @@
     }
     .deck-list::-webkit-scrollbar-thumb {
       background: var(--accent);
-      border-radius: 6px;
+      border-radius: 0px;
     }
     .deck-list::-webkit-scrollbar-thumb:hover {
-      background: #000000;
-      border: 2px solid var(--accent);
+      background: var(--tinta);
     }
     /* ----------------------------------------------------------- MAZOS GUARDADOS ---- */
     .saved-decks-bar {
@@ -587,13 +647,14 @@
     .pre-deck-card {
       background: #000000;
       border: 2px solid var(--accent);
-      border-radius: 10px;
+      border-radius: 0;
+      transition: transform 0.12s, box-shadow 0.12s;
       overflow: hidden;
-      transition: transform 0.12s, border-color 0.12s;
     }
 
     .pre-deck-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 3px 3px 0 var(--accent);   /* sombra dura de tu color */
     }
 
     .pre-deck-banner {
@@ -633,7 +694,7 @@
     .pre-tag {
       font-size: 10px;
       padding: 2px 8px;
-      border-radius: 3px;
+      border-radius: 0;
       border: 1px solid var(--accent);
       color: var(--accent);
     }
@@ -660,6 +721,20 @@
       padding: 6px 20px;
       flex-shrink: 0;
     }
+
+    /* etiqueta con el nombre de la carta: sigue al ratón */
+    .etiqueta-nombre {
+      display: none;                         /* oculta hasta que el ratón pasa por la línea de información */
+      position: fixed;                       /* se coloca respecto a la ventana: nada la corta */
+      z-index: 50;
+      padding: 4px 8px;
+      border: 2px solid var(--tinta);        /* borde negro */
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;                   /* el nombre en una sola línea */
+      pointer-events: none;                  /* no estorba al ratón */
+      /* el fondo y el color del texto los pone el JS según la escuela de cada carta */
+    }
   
   </style>
 </head>
@@ -670,7 +745,13 @@
     <div id="columna-izquierda">
       <div class="preview-panel" id="previewPanel">
         <div class="preview-imagen" id="previewImagen"></div>
-        <div class="preview-info" id="previewInfo"></div>
+        <div class="preview-etiqueta" id="previewEtiqueta"></div>
+        <div class="preview-bocadillo" id="previewBocadillo"></div>
+        <div class="preview-icono">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path fill="currentColor" d="M2 2h12v9H6l-3 3v-3H2z"/>   <!-- bocadillo cuadrado con rabillo -->
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -699,16 +780,15 @@
             </select>
             <select id="filterPosicion" class="campo">
               <option value="" data-i18n="deckbuilder.todasPosiciones">Todas las posiciones</option>
-              <option value="MB">MB — Middle Blocker</option>
-              <option value="S">S — Setter</option>
-              <option value="WS">WS — Wing Spiker</option>
-              <option value="L">L — Libero</option>
+              <option value="MB">MB - Middle Blocker</option>
+              <option value="S">S - Setter</option>
+              <option value="WS">WS - Wing Spiker</option>
+              <option value="Li">Li - Libero</option>
             </select>
             <select id="filterRareza" class="campo">
               <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
-              <option value="DP">DP</option><option value="TP">TP</option><option value="S">S</option>
-              <option value="R">R</option><option value="RP">RP</option><option value="T">T</option>
-              <option value="N">N</option><option value="NP">NP</option><option value="P">P</option><option value="D">D</option>
+              <option value="SEC">SEC</option><option value="SR">SR</option><option value="R">R</option>
+              <option value="UC">UC</option><option value="C">C</option>
             </select>
           </div>
 
@@ -796,6 +876,9 @@
     </div>
 
   </div>
+
+    <!-- ETIQUETA CON EL NOMBRE DE LA CARTA (la mueve el JS) -->
+  <div id="etiquetaNombre" class="etiqueta-nombre"></div>
 
   <!------------------ STUBS Y CREAR CARTA (necesario, aunque no se lance, para poder crear cartas ------------------------>
   <script> // -------------------------- STUBS -------------------------------------------
@@ -885,7 +968,7 @@
         Shiratorizawa:   '#6A1B9A',
         Inarizaki:       '#5C0A1E',
         Kamomedai:       '#4a9ee6',
-        Itachiyama:      '#F9A825',
+        Itachiyama:      '#93C572',
         'Wakutani Minami': '#E91E8C',
         'Date Kôgyô':    '#0F5C3D',
         'Aoba Jôsai':      '#1AA6A0',
@@ -894,8 +977,19 @@
         Kakugawa:         '#7CB342',
         'Sarukawa Kôgyô':         '#2E3A6E',
         Tsubakihara:         '#C9A63C',
+        Nohebi:          '#006F68',
+        'Niiyama Joshi': '#E63950'
       };
       return colores[escuela] || '#999999';   // gris por defecto si no coincide ninguna
+    }
+
+    // ------------------------------------- TEXTO NEGRO O BLANCO SEGÚN EL COLOR DE FONDO
+    function tintaSobre(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);      // rojo   (0-255)
+      const g = parseInt(hex.slice(3, 5), 16);      // verde  (0-255)
+      const b = parseInt(hex.slice(5, 7), 16);      // azul   (0-255)
+      const luminosidad = 0.299 * r + 0.587 * g + 0.114 * b;   // cuánto "brilla" el color para el ojo
+      return luminosidad > 150 ? "#000000" : "#FFFFFF";         // fondo claro → texto negro; oscuro → blanco
     }
 
     // ------------------------------------- CONSTRUIR MINIATURA DE CARTA
@@ -908,6 +1002,7 @@
       const colorEscuela = getSchoolColor(c.escuela);  // color escuela
       div.style.border = `2px solid ${colorEscuela}`;
       div.style.setProperty("--color-escuela", colorEscuela);   // el CSS puede usar el color de la escuela de esta carta
+      div.style.setProperty("--tinta-escuela", tintaSobre(colorEscuela));   // negro o blanco, lo que se lea mejor
 
       div.innerHTML = `
         <div class="card-art">
@@ -915,8 +1010,8 @@
           <div class="card-esc-bar" style="background:${colorEscuela}"></div>
         </div>
         <button class="card-add-btn" title="Añadir al deck">+</button>
-        <div class="card-info">
-          <div class="card-name" title="${nombre}">${nombre}</div>
+        <div class="card-info" data-nombre="${nombre}">
+          <div class="card-name">${c.id.replace(/^HV-/, "")}</div>
           ${c.rareza ? `<span class="card-position" style="background:${colorEscuela}">${c.rareza}</span>` : ''}
         </div>`;
       
@@ -924,6 +1019,9 @@
         e.stopPropagation();   // evita que el clic dispare también el hover/mouseleave raro
         addToDeck(c);
       });
+
+      // clic en la carta (no en el +): mostrar u ocultar la descripción en el preview
+      div.addEventListener("click", alternarDescripcion); 
 
       // ------------------------------------------------------------------- Mostrar tooltip al pasar el ratón   
       div.addEventListener("mouseenter", () => mostrarPreview(c));
@@ -936,29 +1034,33 @@
     function mostrarPreview(c) {
       const panel   = document.getElementById("previewPanel");
       const imagen  = document.getElementById("previewImagen"); 
-      const info    = document.getElementById("previewInfo");
       const nombre = getCardName(c);
       const colorEscuela = getSchoolColor(c.escuela);
 
       imagen.style.backgroundImage = `url('${imgPath(c.id)}')`;   // imagen de fondo
       panel.style.border = `3px solid ${colorEscuela}`;           // borde del color de la escuela
-      imagen.style.borderBottom = `5px solid ${colorEscuela}`;    // línea del color de la escuela
+
+      // colores de la escuela, para que el CSS los use en la etiqueta (y luego en el bocadillo)
+      panel.style.setProperty("--color-escuela", colorEscuela);
+      panel.style.setProperty("--tinta-escuela", tintaSobre(colorEscuela));
+
+      // etiqueta: nombre arriba; escuela, posición y código debajo
+      const datos = [
+        c.escuela || (c.tipo === "evento" ? t("deckbuilder.pillEvento") : ""),
+        c.posicion,
+        c.id
+      ].filter(Boolean).join(" · ");                  // quita los huecos vacíos (p. ej. eventos sin posición)
+
+      document.getElementById("previewEtiqueta").innerHTML = `
+        <div class="preview-nombre">${nombre}</div>
+        <div class="preview-datos">${datos}</div>`;
 
       const descripcion = DESCRIPCIONES?.[c.id]?.[idiomaActivo] || c.descripcion || "";
 
-      info.innerHTML = `
-        <h3 style="color:${colorEscuela}">${nombre}</h3>
-        <div class="preview-meta">${c.escuela || (c.tipo === 'evento' ? 'Evento' : '')} ${c.posicion ? '· ' + c.posicion : ''} · ${c.id}</div>
-        ${c.tipo === 'personaje' ? `
-          <div class="preview-stats">
-            <div class="pstat pstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${c.stats.saque}</strong></div>
-            <div class="pstat pstat-bloqueo"><span>${t("deckbuilder.statBloqueoCorto")}</span><strong>${c.stats.bloqueo}</strong></div>
-            <div class="pstat pstat-recepcion"><span>${t("deckbuilder.statRecepcionCorto")}</span><strong>${c.stats.recepcion}</strong></div>
-            <div class="pstat pstat-pase"><span>${t("deckbuilder.statPaseCorto")}</span><strong>${c.stats.pase}</strong></div>
-            <div class="pstat pstat-remate"><span>${t("deckbuilder.statRemateCorto")}</span><strong>${c.stats.remate}</strong></div>
-          </div>` : ''}
-        <div class="preview-desc">${descripcion.replace(/&quot;/g, '"')}</div>
-      `;
+      // bocadillo con la descripción (oculto hasta que se hace clic en la carta)
+      document.getElementById("previewBocadillo").innerHTML = descripcion.replace(/&quot;/g, '"');
+      panel.classList.toggle("sin-descripcion", !descripcion.trim());   // sin texto: no se muestra el icono
+      panel.classList.remove("con-descripcion");      // cada carta nueva empieza sin bocadillo
 
       panel.classList.add("show");
     }
@@ -966,6 +1068,29 @@
     // ------------------------------------- OCULTAR TOOLTIP
     function ocultarPreview() {
       document.getElementById("previewPanel").classList.remove("show");
+    }
+    // ------------------------------------- COLOCAR EL BOCADILLO: lo más abajo posible sin salirse de la pantalla
+    function colocarBocadillo() {
+      const panel     = document.getElementById("previewPanel");
+      const bocadillo = document.getElementById("previewBocadillo");
+      const escala    = parseFloat(panel.style.zoom) || 1;           // zoom actual del panel
+      const rect      = panel.getBoundingClientRect();               // posición del panel en la pantalla
+      const SOLAPE = 40 * escala;                                    // cuánto se mete en la carta (también escalado)
+      const MARGEN = 12;                                             // separación mínima con el borde de la pantalla
+
+      let top = rect.bottom - SOLAPE;                                // posición ideal, en píxeles de pantalla
+      const alto = bocadillo.getBoundingClientRect().height;         // altura real en pantalla
+      if (top + alto > window.innerHeight - MARGEN) {                // si se saldría por abajo…
+        top = window.innerHeight - MARGEN - alto;                    // …se sube lo justo
+      }
+      // pasar de píxeles de pantalla a píxeles dentro del panel (que está escalado)
+      bocadillo.style.top = ((top - rect.top) / escala - panel.clientTop) + "px";
+    }
+    // ------------------------------------- MOSTRAR / OCULTAR LA DESCRIPCIÓN (catálogo y lista del mazo)
+    function alternarDescripcion() {
+      const panel = document.getElementById("previewPanel");
+      panel.classList.toggle("con-descripcion");
+      if (panel.classList.contains("con-descripcion")) colocarBocadillo();
     }
 
     // ----------------------------------------------------------------------------------------- FILTROS //
@@ -1124,6 +1249,11 @@
       refreshThumbBadge(id);                                          // actualiza el contador en el catálogo
       renderDeckList();
     }
+    // -------------------------------------------------------------- SUMAR UNA COPIA DESDE LA LISTA
+    function sumarCopia(id) {
+      const entry = deck.find(e => e.carta.id === id);   // la carta ya está en el mazo: la busco
+      if (entry) addToDeck(entry.carta);                 // y uso la misma función que el + del catálogo
+    }
     // -------------------------------------------------------------- VACIAR MAZO MAZO
     function clearDeck() {
       if (!deck.length) return;
@@ -1189,12 +1319,13 @@
         const color = getSchoolColor(carta.escuela);                    // color de la escuela
         const colorBorde = carta.tipo === 'evento' ? '#999' : color;
         return `
-        <div class="deck-entry" data-id="${carta.id}" style="border: 2px solid ${colorBorde}">
+        <div class="deck-entry" data-id="${carta.id}" style="border: 2px solid ${colorBorde}; --color-escuela: ${colorBorde}; --tinta-escuela: ${tintaSobre(colorBorde)};">
           <div class="deck-entry-thumb" style="background-image:url('${imgPath(carta.id)}')"></div>
           <div class="deck-entry-color" style="background:${colorBorde}"></div>
           <div class="deck-entry-name" title="${nombre}">${nombre}</div>
-          <div class="deck-entry-qty">${qty}</div>
           <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}')" title="${t('deckbuilder.quitarUna')}">−</button>
+          <div class="deck-entry-qty">${qty}</div>
+          <button class="deck-entry-rm" onclick="sumarCopia('${carta.id}')" title="${t('deckbuilder.anadirUna')}">+</button>
           <button class="deck-entry-rm" onclick="removeFromDeck('${carta.id}',true)" title="${t('deckbuilder.quitarTodas')}">✕</button>
         </div>`;
       };
@@ -1212,6 +1343,10 @@
         if (!entry) return;
         el.addEventListener('mouseenter', () => mostrarPreview(entry.carta));
         el.addEventListener('mouseleave', () => ocultarPreview());
+        el.addEventListener('click', e => {
+          if (e.target.closest('.deck-entry-rm')) return;   // los botones − y ✕ no abren el bocadillo
+          alternarDescripcion();
+        });
       });
     }
 
@@ -1436,6 +1571,39 @@
       setTab('builder');   // ← vuelve a la vista constructor para ver el mazo cargado
     }
 
+    // ------------------------------------- ETIQUETA CON EL NOMBRE AL PASAR POR LA LÍNEA DE INFORMACIÓN
+    const etiquetaNombre = document.getElementById("etiquetaNombre");
+    const gridCatalogo   = document.getElementById("catalogueGrid");
+
+    gridCatalogo.addEventListener("mousemove", function (e) {
+      const tarjeta = e.target.closest(".card-thumb");       // ¿el ratón está sobre alguna carta?
+      if (!tarjeta) {                                        // no (está en un hueco entre cartas): ocultar
+        etiquetaNombre.style.display = "none";
+        return;
+      }
+
+      // nombre y colores de esta carta (los guardamos en la tarjeta al crearla)
+      etiquetaNombre.textContent      = tarjeta.querySelector(".card-info").dataset.nombre;
+      etiquetaNombre.style.background = tarjeta.style.getPropertyValue("--color-escuela");
+      etiquetaNombre.style.color      = tarjeta.style.getPropertyValue("--tinta-escuela");
+      etiquetaNombre.style.display    = "block";
+
+      // abajo a la derecha del ratón
+      let x = e.clientX + 12;
+      let y = e.clientY + 16;
+      // si se sale por la derecha de la ventana, se coloca a la izquierda del ratón
+      if (x + etiquetaNombre.offsetWidth > window.innerWidth - 8) {
+        x = e.clientX - etiquetaNombre.offsetWidth - 12;
+      }
+      etiquetaNombre.style.left = x + "px";
+      etiquetaNombre.style.top  = y + "px";
+    });
+
+    // al salir del catálogo, ocultar
+    gridCatalogo.addEventListener("mouseleave", function () {
+      etiquetaNombre.style.display = "none";
+    });
+  
     // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR
     renderSavedDecks();
     renderDeckList();
@@ -1461,6 +1629,32 @@
 
     // al cargar y cada vez que cambie el ancho de la columna central
     new ResizeObserver(escalarCabecera).observe(document.querySelector(".columna-central"));
+
+    // ====================================================== ESCALAR LA COLUMNA DERECHA (el mazo)
+    const ANCHO_DISENO_DERECHA = 340;   // ancho de columna para el que está diseñado su contenido
+
+    function escalarColumnaDerecha() {
+      const columna = document.querySelector(".columna-derecha");
+      const escala = columna.clientWidth / ANCHO_DISENO_DERECHA;
+
+      // cada bloque de la columna: cabecera del mazo, botones, lista y decks guardados
+      columna.querySelectorAll(":scope > *").forEach(function (el) {
+        el.style.zoom = escala;
+      });
+    }
+
+    // ====================================================== ESCALAR EL PREVIEW (columna izquierda)
+    const ANCHO_DISENO_IZQUIERDA = 380;   // ancho de columna para el que está diseñado el preview
+
+    function escalarColumnaIzquierda() {
+      const columna = document.getElementById("columna-izquierda");
+      const escala  = columna.clientWidth / ANCHO_DISENO_IZQUIERDA;
+      document.getElementById("previewPanel").style.zoom = escala;
+    }
+
+    new ResizeObserver(escalarColumnaIzquierda).observe(document.getElementById("columna-izquierda"));
+
+    new ResizeObserver(escalarColumnaDerecha).observe(document.querySelector(".columna-derecha"));
   </script>
 
 </body>

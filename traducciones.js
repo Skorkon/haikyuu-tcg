@@ -215,10 +215,20 @@ const TRADUCCIONES = {
       "opcionPersonajeDescarte": "Añadir a la mano hasta 1 personaje de tu descarte",
       "rivalCartaAManoDesdeDescarte": "{jugador} añade {carta} de su descarte a su mano.",
       "descarteForzado": "Descarte forzado: debes descartar 1 carta de tu mano:",
-      "efectoDescarteRival": "Efecto de descarte: {jugador} debe descartar 1 carta de su mano"
+      "efectoDescarteRival": "Efecto de descarte: {jugador} debe descartar 1 carta de su mano",
+      "negarDoshatActivo": "Durante el próximo turno del rival, se anula su Bloqueo ofensivo",
+      "negarDoshat": "El Bloqueo ofensivo está anulado",
+      "jugadorRevela": "{jugador} revela {carta}.",
+      "jugadorRevelaYAnade": "{jugador} revela {carta} y la añade a su mano."
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
+    },
+    "ui": {
+      "zonaBloqueoApoyo": "Bloqueo (apoyo)",
+      "selectorGuts": "GUTS de {zona} : {cantidad} carta(s)",
+      "selectorTrash": "Descarte de {jugador} : {cantidad} carta(s)",
+      "selectorEventos": "Eventos de {jugador} : {cantidad} carta(s)"
     }
   },
   "en": {
@@ -434,10 +444,20 @@ const TRADUCCIONES = {
       "opcionPersonajeDescarte": "Add up to 1 character card from your drop zone to your hand",
       "rivalCartaAManoDesdeDescarte": "{jugador} adds {carta} from their drop zone to their hand.",
       "descarteForzado": "Forced discard: you must discard 1 card from your hand:",
-      "efectoDescarteRival": "Discard effect: {jugador} must discard 1 card from their hand"
+      "efectoDescarteRival": "Discard effect: {jugador} must discard 1 card from their hand",
+      "negarDoshatActivo": "During the opponent’s next turn, their Stuffed is negated",
+      "negarDoshat": "Stuffed is negated",
+      "jugadorRevela": "{jugador} reveals {carta}.",
+      "jugadorRevelaYAnade": "{jugador} reveals {carta} and adds it to their hand."
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
+    },
+    "ui": {
+      "zonaBloqueoApoyo": "Block (support)",
+      "selectorGuts": "{zona} GUTS : {cantidad} card(s)",
+      "selectorTrash": "{jugador}’s drop zone : {cantidad} card(s)",
+      "selectorEventos": "{jugador}’s event zone : {cantidad} card(s)"
     }
   },
   "fr": {
@@ -653,10 +673,20 @@ const TRADUCCIONES = {
       "opcionPersonajeDescarte": "Ajouter jusqu’à 1 carte personnage de ta défausse à ta main",
       "rivalCartaAManoDesdeDescarte": "{jugador} ajoute {carta} de sa défausse à sa main",
       "descarteForzado": "Défausse forcée : tu dois défausser 1 carte de ta main :",
-      "efectoDescarteRival": "Effet de défausse : {jugador} doit défausser 1 carte de sa main"
+      "efectoDescarteRival": "Effet de défausse : {jugador} doit défausser 1 carte de sa main",
+      "negarDoshatActivo": "Lors du prochain tour de l’adversaire, son Bloc Offensif est annulé",
+      "negarDoshat": "Le Bloc Offensif est annulé",
+      "jugadorRevela": "{jugador} révèle {carta}.",
+      "jugadorRevelaYAnade": "{jugador} révèle {carta} et l’ajoute à sa main."
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
+    },
+    "ui": {
+      "zonaBloqueoApoyo": "Contre (soutien)",
+      "selectorGuts": "GUTS de {zona} : {cantidad} carte(s)",
+      "selectorTrash": "Défausse de {jugador} : {cantidad} carte(s)",
+      "selectorEventos": "Zone d’événements de {jugador} : {cantidad} carte(s)"
     }
   },
   "": {
@@ -872,10 +902,20 @@ const TRADUCCIONES = {
       "opcionPersonajeDescarte": "",
       "rivalCartaAManoDesdeDescarte": "",
       "descarteForzado": "",
-      "efectoDescarteRival": ""
+      "efectoDescarteRival": "",
+      "negarDoshatActivo": "",
+      "negarDoshat": "",
+      "jugadorRevela": "",
+      "jugadorRevelaYAnade": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""
+    },
+    "ui": {
+      "zonaBloqueoApoyo": "",
+      "selectorGuts": "",
+      "selectorTrash": "",
+      "selectorEventos": ""
     }
   }
 };

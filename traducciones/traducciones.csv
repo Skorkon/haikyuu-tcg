@@ -212,3 +212,11 @@ log.rivalCartaAManoDesdeDescarte;{jugador} añade {carta} de su descarte a su ma
 log.descarteForzado;Descarte forzado: debes descartar 1 carta de tu mano:;Forced discard: you must discard 1 card from your hand:;Défausse forcée : tu dois défausser 1 carte de ta main : ;
 log.efectoDescarteRival;Efecto de descarte: {jugador} debe descartar 1 carta de su mano;Discard effect: {jugador} must discard 1 card from their hand;Effet de défausse : {jugador} doit défausser 1 carte de sa main;
 deckbuilder.aplicaFiltro;Aplica al menos un filtro para ver cartas;Apply at least one filter to see cards;Applique au moins un filtre pour voir les cartes;
+log.negarDoshatActivo;Durante el próximo turno del rival, se anula su Bloqueo ofensivo;During the opponent’s next turn, their Stuffed is negated;Lors du prochain tour de l’adversaire, son Bloc Offensif est annulé;
+log.negarDoshat;El Bloqueo ofensivo está anulado;Stuffed is negated;Le Bloc Offensif est annulé;
+log.jugadorRevela;{jugador} revela {carta}.;{jugador} reveals {carta}.;{jugador} révèle {carta}.;
+log.jugadorRevelaYAnade;{jugador} revela {carta} y la añade a su mano.;{jugador} reveals {carta} and adds it to their hand.;{jugador} révèle {carta} et l’ajoute à sa main.;
+ui.zonaBloqueoApoyo;Bloqueo (apoyo);Block (support);Contre (soutien);
+ui.selectorGuts;GUTS de {zona} : {cantidad} carta(s);{zona} GUTS : {cantidad} card(s);GUTS de {zona} : {cantidad} carte(s);
+ui.selectorTrash;Descarte de {jugador} : {cantidad} carta(s);{jugador}’s drop zone : {cantidad} card(s);Défausse de {jugador} : {cantidad} carte(s);
+ui.selectorEventos;Eventos de {jugador} : {cantidad} carta(s);{jugador}’s event zone : {cantidad} card(s);Zone d’événements de {jugador} : {cantidad} carte(s);

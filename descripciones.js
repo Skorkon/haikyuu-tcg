@@ -1266,29 +1266,37 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span></strong> If the opponent's serve has an attack of 2 or less, draw 1 card. If the opponent's serve has an attack of 6 or more, add +2 to this card's reception.",
     "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Si le service adverse a une attaque de 2 ou moins, piochez 1 carte. Si le service adverse a une attaque de 6 ou plus, ajoutez +2 à la réception de cette carte."
   },
+  "HV-P03-047": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "Durante tu fase de ataque, cada vez que juegues una carta de evento desde tu mano, si este personaje es tu colocador, obtiene +1 punto de pase. Durante este turno, esta habilidad no puede hacer que los puntos de pase de este personaje lleguen a 4 o más.",
+    "en": "During your Attack Phase, whenever you play an Event card from your hand, if this character is your setter, it gets +1 Set Point. During this turn, this ability cannot make this character's Set Point reach 4 or more.",
+    "fr": "Pendant votre phase d'attaque, chaque fois que vous jouez une carte événement depuis votre main, si ce personnage est votre passeur, il obtient +1 point de passe. Pendant ce tour, cette capacité ne peut pas faire atteindre 4 points de passe ou plus à ce personnage."
+  },
   "HV-P03-051": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span> GUTS 2</strong>: Si todas las cartas descartadas son de <strong>Karasuno</strong>, añade +2 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 0, resta -3 al ataque del rival.",
-    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Reception</span> GUTS 2</strong>: If all discarded cards are from <strong>Karasuno</strong>, add +2 to this card's reception. If the opponent's attacker has an original attack of 0, subtract -3 from the opponent's attack.",
-    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span> GUTS 2</strong> : Si toutes les cartes défaussées sont de <strong>Karasuno</strong>, ajoutez +2 à la réception de cette carte. Si l'attaquant adverse a une attaque d'origine de 0, soustrayez -3 à l'attaque adverse."
+    "es": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Recepción</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Si todas las cartas pagadas son de <strong>Karasuno</strong>, este personaje obtiene +2 puntos de recepción y, si el personaje con el que te ha atacado el rival tiene 0 puntos originales en ese parámetro, el ataque del rival obtiene -3 puntos.",
+    "en": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Receive</span></strong> You may pay 2 GUTS to use this skill. If all the paid cards are <strong>Karasuno</strong> cards, this character gets +2 Receive Point and, if the character your opponent attacked you with has 0 original points in that parameter, your opponent's attack gets -3 points.",
+    "fr": "<strong><span style=&quot;background:#1565c0; color:white; padding:1px 4px; border-radius:2px;&quot;>Réception</span></strong> Vous pouvez payer 2 GUTS pour utiliser cette capacité. Si toutes les cartes payées sont de <strong>Karasuno</strong>, ce personnage obtient +2 points de réception et, si le personnage avec lequel l'adversaire vous a attaqué a 0 point d'origine dans ce paramètre, l'attaque de l'adversaire obtient -3 points."
   },
   "HV-P03-052": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Coloca 1 carta de tu mano en el fondo de tu mazo para usar esta habilidad: roba 1 carta y añade +5 al saque de esta carta.",
-    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> Place 1 card from your hand at the bottom of your deck to use this ability: draw 1 card and add +5 to this card's serve.",
-    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Placez 1 carte de votre main au fond de votre deck pour utiliser cette capacité : piochez 1 carte et ajoutez +5 au service de cette carte."
+    "es": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Saque</span></strong> Coloca 1 carta de tu mano en el fondo de tu mazo para usar esta habilidad: roba 1 carta y este personaje obtiene +5 puntos de saque.",
+    "en": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Serve</span></strong> Place 1 card from your hand on the bottom of your deck to use this skill: draw 1 card and this character gets +5 Serve Point.",
+    "fr": "<strong><span style=&quot;background:#e65100; color:white; padding:1px 4px; border-radius:2px;&quot;>Service</span></strong> Placez 1 carte de votre main au fond de votre deck pour utiliser cette capacité : piochez 1 carte et ce personnage obtient +5 points de service."
   },
   "HV-P03-053": {
     "nombre_es": "",
     "nombre_en": "",
     "nombre_fr": "",
-    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Remate</span></strong> Si tu colocador es <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, puedes pagar 3 GUTS para usar esta habilidad: añade +3 al ataque de esta carta. </br>Durante el próximo turno rival, se anula <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo Ofensivo</strong></span>, y cuando entre en juego su bloqueador central, resta -4 al bloqueo de esa carta.",
-    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Spike</span></strong> If your setter is <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, you may pay 3 GUTS to use this ability: add +3 to this card's attack. </br>During the opponent's next turn, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Offensive Block</strong></span> is nullified, and when their middle blocker enters play, subtract -4 from that card's block.",
-    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si votre passeur est <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, vous pouvez payer 3 GUTS pour utiliser cette capacité : ajoutez +3 à l'attaque de cette carte. </br>Pendant le prochain tour adverse, <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre Offensif</strong></span> est annulé, et lorsque son contreur central entre en jeu, soustrayez -4 au contre de cette carte."
+    "es": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Ataque</span></strong> Si tu colocador es <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +3 puntos de ataque. Durante el próximo turno del rival, se anula su <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Bloqueo ofensivo (N)</strong></span>, y cada vez que su bloqueador central entre en juego, ese personaje obtiene -4 puntos de bloqueo.",
+    "en": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attack</span></strong> If your setter is <strong><span style=&quot;color:#2e7d32&quot;>Tobio Kageyama</span></strong>, you may pay 3 GUTS to use this skill. This character gets +3 Attack Point. During your opponent's next turn, their <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Stuffed (N)</strong></span> is nullified, and whenever their Center Blocker enters play, that character gets -4 Block Point.",
+    "fr": "<strong><span style=&quot;background:#c62828; color:white; padding:1px 4px; border-radius:2px;&quot;>Attaque</span></strong> Si votre passeur est <strong><span style=&quot;color:#2e7d32&quot;>Kageyama Tobio</span></strong>, vous pouvez payer 3 GUTS pour utiliser cette capacité. Ce personnage obtient +3 points d'attaque. Pendant le prochain tour de l'adversaire, son <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;&quot;><strong>Contre offensif (N)</strong></span> est annulé, et chaque fois que son contreur central entre en jeu, ce personnage obtient -4 points de contre."
   },
   "HV-P03-054": {
     "nombre_es": "",

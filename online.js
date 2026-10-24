@@ -151,11 +151,12 @@ function aplicarJugadaRival(jugada) {
       }
     }
     game.jugadaActual[jugada.zona] = carta;               // guardar en jugada actual
+    game.ultimaZonaJugada[rivalIndice] = jugada.zona;     // registrar la última zona en la que ha jugado el rival
     log(t("log.cartaColocadaEn", { 
       jugador: rival.nombre, 
       carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
       zona: t("ui.zona" + jugada.zona.charAt(0).toUpperCase() + jugada.zona.slice(1)), 
-      stat: carta.stats[jugada.zona] 
+      stat: carta.stats[jugada.zona === "bloqueoApoyo" ? "bloqueo" : jugada.zona] // un apoyo usa su stat de bloqueo
     })); 
     renderCampo();                                        // redibujar campo
     break;
@@ -535,12 +536,7 @@ function aplicarJugadaRival(jugada) {
 
     case "notificarLogRival": // ================================================================ LOG ENVIADO POR EL RIVAL
       if (jugada.clave) {                                           // si llega una clave de traducción
-        let params = { ...(jugada.params || {}) };                  // copia de los parámetros recibidos
-        if (params.cartaId) {                                       // si viene el id de una carta
-          params.carta = DESCRIPCIONES[params.cartaId]?.["nombre_" + idiomaActivo] // nombre traducido al idioma de este cliente
-                      || params.carta;                              // si no hay traducción, el nombre enviado
-        }
-        log(t(jugada.clave, params));                               // traducir y mostrar el log
+        log(t(jugada.clave, traducirParamsCartas(jugada.params || {}))); // traducir nombres y texto en el idioma de este cliente
       } else if (jugada.texto) {                                    // si llega un texto ya escrito
         log(jugada.texto);                                          // mostrarlo tal cual
       }
@@ -768,7 +764,8 @@ function enviarFase(fase) {
   db.ref("partidas/" + salaActual + "/fase").set({       // escribir en Firebase
     nombre: fase,                                        // nombre de la fase
     valorAtaque: game.valorAtaque,                       // valor de ataque actual
-    valorDefensa: game.valorDefensa                      // valor de defensa actual
+    valorDefensa: game.valorDefensa,                     // valor de defensa actual
+    faseAnterior: game.faseAnterior                      // fase anterior (para "si el rival acaba de sacar", etc.)
   });
 }
 
@@ -780,7 +777,7 @@ function escucharFase() {
     game.fase = data.nombre;                             // actualizar fase
     game.valorAtaque = data.valorAtaque;                 // actualizar valor de ataque
     game.valorDefensa = data.valorDefensa;               // actualizar valor de defensa
-
+    if (data.faseAnterior !== undefined) game.faseAnterior = data.faseAnterior; // sincronizar fase anterior (si viene)
     actualizarFaseUI();                                  // actualizar letrero
     renderMano();                                        // redibujar mano
     renderManoRival()

@@ -38,6 +38,8 @@ const I18N = {
             cancelar:         "Cancelar",
             volverLobby:      "Volver al lobby",
             contadorTurno: "Turno {turno}",
+            zonaCampo: "campo",
+            partidaNoExiste: "Esta partida ya no existe. Vuelve al lobby.",
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -124,6 +126,11 @@ const I18N = {
           nombreMazoDefecto: "Mi deck",
           nombreMazoImportado: "Deck importado",
           anadirUna: "Añadir una",
+          pillSoloMazo: "Sólo mi mazo",
+          contadorCartas: "{cantidad} cartas",
+          cargandoCatalogo: "Cargando catálogo…",
+          aplicaFiltro: "Aplica al menos un filtro para ver cartas",
+          porAutor: "por {autor}",
         }
     },    
     en: {
@@ -164,6 +171,8 @@ const I18N = {
             cancelar:         "Cancel",
             volverLobby:      "Back to lobby",
             contadorTurno:    "Turn {turno}",
+            zonaCampo: "field",
+            partidaNoExiste: "This match no longer exists. Return to the lobby.",
         },
         menu: {
           labelNombre:      "Your name",
@@ -250,6 +259,11 @@ const I18N = {
           nombreMazoDefecto: "My deck",
           nombreMazoImportado: "Imported deck",
           anadirUna: "Add one",
+          pillSoloMazo: "My deck only",
+          contadorCartas: "{cantidad} cards",
+          cargandoCatalogo: "Loading catalogue…",
+          aplicaFiltro: "Apply at least one filter to see cards",
+          porAutor: "by {autor}",
         }
     },
     fr: {
@@ -290,6 +304,8 @@ const I18N = {
             cancelar:         "Annuler",
             volverLobby:      "Retour au lobby",
             contadorTurno:    "Tour {turno}",
+            zonaCampo: "terrain",
+            partidaNoExiste: "Cette partie n’existe plus. Retourne au lobby.",
         },
         menu: {
           labelNombre:      "Ton nom",
@@ -376,6 +392,11 @@ const I18N = {
           nombreMazoDefecto: "Mon deck",
           nombreMazoImportado: "Deck importé",
           anadirUna: "Ajouter une",
+          pillSoloMazo: "Mon deck",
+          contadorCartas: "{cantidad} cartes",
+          cargandoCatalogo: "Chargement du catalogue…",
+          aplicaFiltro: "Applique au moins un filtre pour voir les cartes",
+          porAutor: "par {autor}",
         }
     }
 };

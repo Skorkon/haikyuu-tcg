@@ -219,7 +219,20 @@ const TRADUCCIONES = {
       "negarDoshatActivo": "Durante el próximo turno del rival, se anula su Bloqueo ofensivo",
       "negarDoshat": "El Bloqueo ofensivo está anulado",
       "jugadorRevela": "{jugador} revela {carta}.",
-      "jugadorRevelaYAnade": "{jugador} revela {carta} y la añade a su mano."
+      "jugadorRevelaYAnade": "{jugador} revela {carta} y la añade a su mano.",
+      "colocarPersonajeAntesEvento": "Debes colocar antes un personaje en {zona} para jugar este evento.",
+      "descarteForzadoRival": "Descarte forzado: {jugador} debe descartar 1 carta de su mano:",
+      "cartaAlFondoMazoRival": "{carta} se coloca en el fondo del mazo de {jugador}.",
+      "centralBloqueo": "bloqueador central",
+      "rivalSinEventos": "El rival no tiene eventos en la mano.",
+      "elegirEventoColocar": "Elige un evento de tu mano para colocarlo en tu zona de eventos:",
+      "soloTrasSaqueRival": "Solo puedes usar esta habilidad justo después del saque rival.",
+      "personajeTrasEvento": "Ya has jugado un evento en esta fase: no puedes colocar más personajes.",
+      "habilidadTrasEvento": "Ya has jugado un evento en esta fase: no puedes usar habilidades de personajes.",
+      "opcionGutsRobar": "Pagar {cantidad} GUTS: robar 1 carta",
+      "descartarMazoPorAnadirActivo": "Durante el próximo turno del rival, cada vez que añada una carta a su mano sin robar, enviará {cantidad} cartas de su mazo al descarte.",
+      "descartarMazoPorAnadir": "{jugador} envía {cantidad} cartas de su mazo al descarte.",
+      "gritoHinagarasu": "{jugador}: «¡Abandona el nido, Hinagarasu!»"
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -448,7 +461,20 @@ const TRADUCCIONES = {
       "negarDoshatActivo": "During the opponent’s next turn, their Stuffed is negated",
       "negarDoshat": "Stuffed is negated",
       "jugadorRevela": "{jugador} reveals {carta}.",
-      "jugadorRevelaYAnade": "{jugador} reveals {carta} and adds it to their hand."
+      "jugadorRevelaYAnade": "{jugador} reveals {carta} and adds it to their hand.",
+      "colocarPersonajeAntesEvento": "You must place a character in {zona} before playing this event.",
+      "descarteForzadoRival": "Forced discard: {jugador} must discard 1 card from their hand:",
+      "cartaAlFondoMazoRival": "{carta} is placed at the bottom of {jugador}’s deck.",
+      "centralBloqueo": "central blocker",
+      "rivalSinEventos": "The opponent has no events in their hand.",
+      "elegirEventoColocar": "Choose an event from your hand to place in your event zone:",
+      "soloTrasSaqueRival": "You can only use this ability right after the opponent’s serve.",
+      "personajeTrasEvento": "You have already played an event this phase: you can’t place more characters.",
+      "habilidadTrasEvento": "You have already played an event this phase: you can’t use character abilities.",
+      "opcionGutsRobar": "Pay {cantidad} GUTS: draw 1 card",
+      "descartarMazoPorAnadirActivo": "During the opponent’s next turn, each time they add a card to their hand other than by drawing, they send {cantidad} cards from their deck to the drop zone.",
+      "descartarMazoPorAnadir": "{jugador} sends {cantidad} cards from their deck to the drop zone.",
+      "gritoHinagarasu": "{jugador}: “Leave the nest, Hinagarasu!”"
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -677,7 +703,20 @@ const TRADUCCIONES = {
       "negarDoshatActivo": "Lors du prochain tour de l’adversaire, son Bloc Offensif est annulé",
       "negarDoshat": "Le Bloc Offensif est annulé",
       "jugadorRevela": "{jugador} révèle {carta}.",
-      "jugadorRevelaYAnade": "{jugador} révèle {carta} et l’ajoute à sa main."
+      "jugadorRevelaYAnade": "{jugador} révèle {carta} et l’ajoute à sa main.",
+      "colocarPersonajeAntesEvento": "Tu dois d’abord placer un personnage en {zona} pour jouer cet événement.",
+      "descarteForzadoRival": "Défausse forcée : {jugador} doit défausser 1 carte de sa main :",
+      "cartaAlFondoMazoRival": "{carta} est placée en bas du deck de {jugador}.",
+      "centralBloqueo": "contreur central",
+      "rivalSinEventos": "L’adversaire n’a pas d’événement en main.",
+      "elegirEventoColocar": "Choisis un événement de ta main à placer dans ta zone d’événements :",
+      "soloTrasSaqueRival": "Tu ne peux utiliser cette capacité que juste après le service adverse.",
+      "personajeTrasEvento": "Tu as déjà joué un événement pendant cette phase : tu ne peux plus placer de personnages.",
+      "habilidadTrasEvento": "Tu as déjà joué un événement pendant cette phase : tu ne peux plus utiliser de capacités de personnages.",
+      "opcionGutsRobar": "Payer {cantidad} GUTS : piocher 1 carte",
+      "descartarMazoPorAnadirActivo": "Pendant le prochain tour de l’adversaire, chaque fois qu’il ajoute une carte à sa main autrement qu’en piochant, il envoie {cantidad} cartes de son deck dans la défausse.",
+      "descartarMazoPorAnadir": "{jugador} envoie {cantidad} cartes de son deck dans la défausse.",
+      "gritoHinagarasu": "{jugador} : « Quitte le nid, Hinagarasu ! »"
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -906,7 +945,20 @@ const TRADUCCIONES = {
       "negarDoshatActivo": "",
       "negarDoshat": "",
       "jugadorRevela": "",
-      "jugadorRevelaYAnade": ""
+      "jugadorRevelaYAnade": "",
+      "colocarPersonajeAntesEvento": "",
+      "descarteForzadoRival": "",
+      "cartaAlFondoMazoRival": "",
+      "centralBloqueo": "",
+      "rivalSinEventos": "",
+      "elegirEventoColocar": "",
+      "soloTrasSaqueRival": "",
+      "personajeTrasEvento": "",
+      "habilidadTrasEvento": "",
+      "opcionGutsRobar": "",
+      "descartarMazoPorAnadirActivo": "",
+      "descartarMazoPorAnadir": "",
+      "gritoHinagarasu": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

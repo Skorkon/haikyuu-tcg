@@ -131,7 +131,8 @@
       align-items: center;
     }
 
-    .filters-fila2 {
+    .filters-fila2,
+    .filters-fila3 {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -360,36 +361,23 @@
       border-radius: 0;
       box-shadow: 3px 3px 0 var(--tinta);
       font-size: 14px;
-      line-height: 1.45;
+      line-height: 1.5;
       z-index: 2;
     }
+
+    /* cajas de habilidad dentro de la descripción ("Recepción", "Recepción perfecta (1)"…) */
+    .preview-bocadillo span[style*="background"] {
+      display: inline-block;          /* su borde y padding ocupan espacio: la línea crece y no se pisan */
+      margin: 2px 1px;                /* un poco de aire alrededor de cada caja */
+      line-height: 1.25;              /* la caja, más compacta que el texto que la rodea */
+      vertical-align: middle;         /* centrada respecto a la línea */
+    }
+
     .preview-panel.con-descripcion .preview-bocadillo {
       display: block;                        /* visible tras el clic */
     }
     .preview-panel.con-descripcion .preview-bocadillo:empty {
       display: none;                         /* cartas sin descripción: no sale un bocadillo vacío */
-    }
-
-    /* rabillo del bocadillo, apuntando hacia arriba (hacia la carta) */
-    .preview-bocadillo::before,
-    .preview-bocadillo::after {
-      content: "";
-      position: absolute;
-      border-style: solid;
-      border-bottom-color: var(--color-escuela);
-      border-color: transparent;
-    }
-    .preview-bocadillo::before {             /* triángulo negro: el contorno */
-      top: -14px;
-      left: 24px;
-      border-width: 0 10px 14px 10px;
-      border-bottom-color: var(--tinta);
-    }
-    .preview-bocadillo::after {              /* triángulo blanco, encima: el relleno */
-      top: -9px;
-      left: 27px;
-      border-width: 0 7px 10px 7px;
-      border-bottom-color: var(--color-escuela);
     }
 
     /* icono "i": indica que se puede hacer clic para ver la descripción */
@@ -640,13 +628,14 @@
     /* -------------------- MAZOS PREDEFINIDOS ------------------------- */
     .predefined-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-auto-flow: column;                  /* cada mazo nuevo se coloca a la derecha, nunca en otra fila */
+      grid-auto-columns: minmax(0, 1fr);       /* y todos se reparten el ancho a partes iguales */
       gap: 16px;
     }
 
     .pre-deck-card {
       background: #000000;
-      border: 2px solid var(--accent);
+      border: 2px solid var(--color-escuela);
       border-radius: 0;
       transition: transform 0.12s, box-shadow 0.12s;
       overflow: hidden;
@@ -654,11 +643,24 @@
 
     .pre-deck-card:hover {
       transform: translateY(-3px);
-      box-shadow: 3px 3px 0 var(--accent);   /* sombra dura de tu color */
+      box-shadow: 3px 3px 0 var(--color-escuela);
+    }
+
+    /* botón Cargar: con los colores de la escuela de su mazo */
+    .pre-deck-card .pre-deck-load {
+      background: var(--color-escuela);
+      border-color: var(--tinta);
+      color: var(--tinta-escuela);              /* negro o blanco, según la escuela */
+    }
+    .pre-deck-card .pre-deck-load:hover {
+      background: var(--tinta);                 /* en hover se invierte a negro… */
+      border-color: var(--color-escuela);       /* …con el borde de la escuela… */
+      color: var(--papel);                      /* …y el texto en blanco */
     }
 
     .pre-deck-banner {
-      height: 100px;
+      height: 90px;
+      border-bottom: 3px solid var(--color-escuela);
       background-size: cover;
       background-position: center;
       display: flex;
@@ -667,7 +669,10 @@
     }
 
     .pre-deck-body {
-      padding: 14px 16px 16px;
+      flex: 1;                                 /* ocupa el resto de la tarjeta */
+      display: flex;
+      flex-direction: column;
+      padding: 12px 14px 18px;                 /* más aire abajo para el botón */
     }
 
     .pre-deck-name {
@@ -693,16 +698,19 @@
 
     .pre-tag {
       font-size: 10px;
+      font-weight: 700;
       padding: 2px 8px;
       border-radius: 0;
-      border: 1px solid var(--accent);
-      color: var(--accent);
+      border: 2px solid var(--tinta);
+      background: var(--color-escuela);
+      color: var(--tinta-escuela);
     }
 
     .pre-deck-load {
       width: 100%;
       padding: 9px;
       font-size: 12px;
+      margin-top: auto;                        /* empuja el botón al fondo de la tarjeta */
     }
 
 
@@ -734,6 +742,13 @@
       white-space: nowrap;                   /* el nombre en una sola línea */
       pointer-events: none;                  /* no estorba al ratón */
       /* el fondo y el color del texto los pone el JS según la escuela de cada carta */
+    }
+
+    /* mazos predefinidos de usuarios */
+    .pre-deck-autor {
+      font-size: 11px;
+      color: var(--gris-medio);
+      margin-bottom: 8px;
     }
   
   </style>
@@ -784,13 +799,15 @@
               <option value="S">S - Setter</option>
               <option value="WS">WS - Wing Spiker</option>
               <option value="Li">Li - Libero</option>
+              <option value="OP">OP - Opposite Hitter</option>
+              <option value="MASC">MASC - Mascot</option>
             </select>
             <select id="filterRareza" class="campo">
               <option value="" data-i18n="deckbuilder.todasRarezas">Todas las rarezas</option>
               <option value="SEC">SEC</option><option value="SR">SR</option><option value="R">R</option>
               <option value="UC">UC</option><option value="C">C</option>
             </select>
-          </div>
+          </div> <!-- fin filters fila 1 -->
 
           <div class="filters-fila2">
             <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
@@ -799,11 +816,20 @@
               <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
             </div>
             <span class="separador"></span>
-            <div class="filter-pills">
-              <span class="pill" data-filter="hab" data-val="si" data-i18n="deckbuilder.pillHabilidad">Con habilidad</span>
-              <span class="pill" data-filter="hab" data-val="no" data-i18n="deckbuilder.pillSinHabilidad">Sin habilidad</span>
+            <div class="filter-pills" id="expansionPills">
+              <!-- las crea el JS a partir de los códigos de las cartas -->
             </div>
             <span class="separador"></span>
+            <div class="filter-pills" id="fasePills">
+              <!-- las crea el JS -->
+            </div>
+            <span class="separador"></span>
+            <div class="filter-pills">
+              <span class="pill" data-filter="mazo" data-val="si" data-i18n="deckbuilder.pillSoloMazo">Solo mi mazo</span>
+            </div>
+          </div> <!-- fin filters fila 2 -->
+
+          <div class="filters-fila3">
             <select id="filterStat" class="select-oscuro campo">
               <option value="" data-i18n="deckbuilder.filtrarPorStat">Filtrar por estadística...</option>
               <option value="saque" data-i18n="deckbuilder.statSaque">Saque</option>
@@ -813,17 +839,18 @@
               <option value="bloqueo" data-i18n="deckbuilder.statBloqueo">Bloqueo</option>
             </select>
 
-              <div class="filter-pills" id="statValuePills">
-                <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
-              </div>
-          </div>
+            <div class="filter-pills" id="statValuePills">
+              <!-- se rellenan dinámicamente por JS con los valores 0-6 -->
+            </div>
+          </div> <!-- fin filters fila 3 -->
+
         </div> <!-- fin filtros -->
 
         <!------------------------ CARTAS NO PROGRAMADAS P03 ------------------------------------>
         <div class="aviso-p03" data-i18n="deckbuilder.avisoP03">Cards from the P03 expansion are not programmed yet and don't work in matches.</div>
 
         <!------------------------ CONTADOR DE RESULTADOS ------------------------------------>
-        <div class="card-count" id="cardCount">Cargando catálogo...</div>
+        <div class="card-count" id="cardCount" data-i18n="deckbuilder.cargandoCatalogo">Cargando catálogo...</div>
 
         <!------------------------ GRID DE CARTAS ------------------------------------>
         <div class="catalogue-grid" id="catalogueGrid"></div>
@@ -953,10 +980,11 @@
 
     // ------------------------------------- RENDER DEL GRID (sin filtros todavía, solo mostrar todo) 
     function renderCatalogo(lista) {
-      document.getElementById("cardCount").textContent = `${lista.length} cartas`;
+      document.getElementById("cardCount").textContent = t("deckbuilder.contadorCartas", { cantidad: lista.length });
       const grid = document.getElementById("catalogueGrid");
       grid.innerHTML = "";
       lista.forEach(c => grid.appendChild(buildCardThumb(c)));
+      deck.forEach(e => refreshThumbBadge(e.carta.id));   // volver a pintar copias y halo en las cartas visibles
     }
 
     // ------------------------------------- COLORES ESCUELAS
@@ -978,7 +1006,10 @@
         'Sarukawa Kôgyô':         '#2E3A6E',
         Tsubakihara:         '#C9A63C',
         Nohebi:          '#006F68',
-        'Niiyama Joshi': '#E63950'
+        'Niiyama Joshi': '#E63950',
+        'Kitagawa Daiichi': '#2B5DB0',
+        'Asas São Paulo': '#E0471B',
+        'Ifviga Torino': '#2E9E5B',
       };
       return colores[escuela] || '#999999';   // gris por defecto si no coincide ninguna
     }
@@ -1112,7 +1143,7 @@
       });
     }
     // ------------------------------------- ESTADO FILTROS
-    let activeFilters = { tipo: null, hab: null };                   // para los pills (tipo: "personaje"/"evento", hab: "si")
+    let activeFilters = { tipo: null, mazo: null };                  // pills: tipo ("personaje"/"evento") y "solo mi mazo"
     // ------------------------------------- APLICAR FILTROS
     function applyFilters() {                                        // leer todos los filtros
       const q        = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -1121,7 +1152,9 @@
       const rareza   = document.getElementById("filterRareza").value;
 
       // no mostrar nada, si no hay filtro
-      const hayFiltro = q || escuela || posicion || rareza || activeFilters.tipo || activeFilters.hab || (statFiltro.stat && statFiltro.valores.size > 0);
+      const hayFiltro = q || escuela || posicion || rareza || 
+          activeFilters.tipo || (statFiltro.stat && statFiltro.valores.size > 0 || 
+          filtroExpansiones.size > 0 || filtroFases.size > 0 || activeFilters.mazo);
         if (!hayFiltro) {
           document.getElementById("cardCount").textContent = t("deckbuilder.aplicaFiltro") || "Aplica al menos un filtro para ver cartas";
           document.getElementById("catalogueGrid").innerHTML = "";
@@ -1139,9 +1172,10 @@
         if (escuela && c.escuela !== escuela && !c.escuelasDoble?.includes(escuela)) return false;
         if (posicion && c.posicion !== posicion) return false;
         if (rareza   && c.rareza   !== rareza)   return false;
+        if (filtroExpansiones.size > 0 && !filtroExpansiones.has(expansionDe(c))) return false;  // filtro por expansión
+        if (filtroFases.size > 0 && ![...fasesDe(c)].some(f => filtroFases.has(f))) return false;  // filtro por fase
+        if (activeFilters.mazo && getDeckQty(c.id) === 0) return false;  // solo cartas que ya están en el mazo
         if (activeFilters.tipo && c.tipo !== activeFilters.tipo) return false;  // filtro personaje/evento
-        if (activeFilters.hab === "si" && !c.habilidad) return false;           // filtro con habilidad
-        if (activeFilters.hab === "no" && c.habilidad)  return false;           // filtro sin habilidad
 
         // ------------------------ FILTRO POR ESTADÍSTICAS
         if (statFiltro.stat && statFiltro.valores.size > 0) {
@@ -1174,10 +1208,87 @@
       document.getElementById("filterPosicion").value = "";
       document.getElementById("filterRareza").value = "";
       document.getElementById("filterStat").value = "";
-      activeFilters = { tipo: null, hab: null };
+      activeFilters = { tipo: null, mazo: null };
       statFiltro = { stat: "", valores: new Set() };
-      renderStatValuePills();
+      filtroExpansiones.clear();
+      renderExpansionPills();
+      filtroFases.clear();
+      renderFasePills();
       document.querySelectorAll(".pill.on").forEach(p => p.classList.remove("on"));
+      applyFilters();
+    }
+
+    // ------------------------------------- FILTRO POR EXPANSIÓN (selección múltiple)
+    let filtroExpansiones = new Set();                               // expansiones marcadas
+    const expansionDe = c => (c.id || "").split("-")[1] || "";       // "HV-P01-023" → "P01"
+
+    // crear una pastilla por cada expansión que exista en el catálogo
+    function renderExpansionPills() {
+      const contenedor = document.getElementById("expansionPills");
+      contenedor.innerHTML = "";
+      const expansiones = [...new Set(CATALOGUE.map(expansionDe).filter(Boolean))].sort();
+
+      expansiones.forEach(exp => {
+        const pill = document.createElement("span");
+        pill.className = "pill" + (filtroExpansiones.has(exp) ? " on" : "");
+        pill.textContent = exp;
+        pill.addEventListener("click", () => toggleExpansion(exp));
+        contenedor.appendChild(pill);
+      });
+    }
+
+    // marcar o desmarcar una expansión
+    function toggleExpansion(exp) {
+      if (filtroExpansiones.has(exp)) {
+        filtroExpansiones.delete(exp);          // ya estaba marcada < la quito
+      } else {
+        filtroExpansiones.add(exp);             // no estaba > la añado
+      }
+      renderExpansionPills();
+      applyFilters();
+    }
+
+    // ------------------------------------- FILTRO POR FASE DE LA HABILIDAD (selección múltiple)
+    const FASES = ["saque", "recepcion", "pase", "remate", "bloqueo"];   // mismos nombres que en cartas.js
+    let filtroFases = new Set();                                         // fases marcadas
+    
+    // texto de la caja de cada fase en las descripciones en español
+    const ETIQUETA_FASE = {
+      saque:     "Saque",
+      recepcion: "Recepción",
+      pase:      "Pase",
+      remate:    "Ataque",
+      bloqueo:   "Bloqueo",
+    };
+
+    // fases de una carta: las de la primera línea de su descripción + las de su campo "fases"
+    function fasesDe(c) {
+      const desc = DESCRIPCIONES?.[c.id]?.es || "";                       // siempre en español: las etiquetas son fijas
+      const primeraLinea = desc.split(/<\/?br\s*\/?>/i)[0]                 // hasta el primer salto de línea
+                               .replace(/<[^>]+>/g, " ");                  // quitar las etiquetas HTML, dejar solo el texto
+      const encontradas = FASES.filter(f => primeraLinea.includes(ETIQUETA_FASE[f]));
+      return new Set([...encontradas, ...(c.fases || [])]);              // juntar las dos fuentes, sin repetidos
+    }
+
+    function renderFasePills() {
+      const contenedor = document.getElementById("fasePills");
+      contenedor.innerHTML = "";
+
+      FASES.forEach(fase => {
+        const pill = document.createElement("span");
+        pill.className = "pill" + (filtroFases.has(fase) ? " on" : "");
+        // texto traducido: "saque" → t("deckbuilder.statSaque")
+        pill.textContent = t("deckbuilder.stat" + fase.charAt(0).toUpperCase() + fase.slice(1));
+        pill.addEventListener("click", () => toggleFase(fase));
+        contenedor.appendChild(pill);
+      });
+    }
+
+    function toggleFase(fase) {
+      const estabaMarcada = filtroFases.has(fase);
+      filtroFases.clear();                       // desmarcar todas…
+      if (!estabaMarcada) filtroFases.add(fase); // …y marcar la pulsada (salvo que ya lo estuviera: entonces queda ninguna)
+      renderFasePills();
       applyFilters();
     }
 
@@ -1304,6 +1415,7 @@
       se.className   = 'deck-stat' + (eventos > 8 ? ' warn' : '');
       document.getElementById('statEscuelas').textContent = `${escuelas.size} ${t("deckbuilder.statEscuelas")}`;  // rojo o verde con eventos
 
+      if (activeFilters.mazo) applyFilters();   // con "solo mi mazo" activo, repintar el catálogo
       if (!deck.length) {                                               // si el mazo está vacío
         list.innerHTML = `<div class="deck-empty"><div>${t("deckbuilder.deckVacioTexto")}</div></div>`;
         return;
@@ -1348,6 +1460,7 @@
           alternarDescripcion();
         });
       });
+      if (activeFilters.mazo) applyFilters();   // con "solo mi mazo" activo, repintar el catálogo
     }
 
     // -------------------------------------------------------------- BOTONES DE LA DECK LIST
@@ -1485,77 +1598,70 @@
 
     // =======================================================================================
     // ==================================================================== MAZOS PREDEFINIDOS
-    const PREDEFINED_DECKS = [
-      { nombre:'Karasuno (D01)', 
-        desc:'El combo de velocidad de Kageyama y Hinata, apoyado por la versatilidad de Karasuno.', 
-        tags:['Karasuno','Combo','Remate'],
-        banner: 'img/predefinidos/karasuno.png',
-        entries:[
-          {id:'HV-D01-001',qty:4},
-          {id:'HV-D01-002',qty:4},
-          {id:'HV-D01-003',qty:3},
-          {id:'HV-D01-004',qty:3},
-          {id:'HV-D01-005',qty:4},
-          {id:'HV-D01-006',qty:3},
-          {id:'HV-D01-007',qty:2},
-          {id:'HV-D01-008',qty:3},
-          {id:'HV-D01-009',qty:3},
-          {id:'HV-D01-010',qty:3},
-          {id:'HV-D01-011',qty:4},
-          {id:'HV-D01-012',qty:4}
-        ]
-      },
-      { nombre:'Nekoma (D02)', 
-        desc:'La defensa de Nekoma en estado puro. Equipo de desgaste con buenas recepciones.', 
-        tags:['Nekoma','Defensa','Bloqueo'],
-        banner: 'img/predefinidos/nekoma.png',
-        entries:[
-          {id:'HV-D02-001',qty:4},
-          {id:'HV-D02-002',qty:4},
-          {id:'HV-D02-003',qty:3},
-          {id:'HV-D02-004',qty:4},
-          {id:'HV-D02-005',qty:3},
-          {id:'HV-D02-006',qty:3},
-          {id:'HV-D02-007',qty:3},
-          {id:'HV-D02-008',qty:3},
-          {id:'HV-D02-009',qty:3},
-          {id:'HV-D02-010',qty:2},
-          {id:'HV-D02-011',qty:4},
-          {id:'HV-D02-012',qty:4}
-        ]
-      },
-      { nombre:'Karasuno (-)', 
-        desc:'Combos versátiles y jugadas diversas.', 
-        tags:['Karasuno','Combo'],
-        banner: 'img/predefinidos/karasuno.png',
-        entries:[
-          {id:'HV-P01-007',qty:2},
-          {id:'HV-D01-002',qty:2},
-          {id:'HV-P01-004',qty:2},
-          {id:'HV-P01-007',qty:2},
-          {id:'HV-P01-002',qty:1},
-          {id:'HV-P01-003',qty:1},
-          {id:'HV-D01-010',qty:2},
-          {id:'HV-P01-016',qty:1},
-          {id:'HV-D01-006',qty:1},
-          {id:'HV-P01-012',qty:2},
-          {id:'HV-D01-005',qty:2},
-          {id:'HV-P01-011',qty:2},
-        ]
-      },
-    ];
+    let PREDEFINED_DECKS = [];   // se rellena al cargar los archivos de mazos/
+
+    async function cargarMazosPredefinidos() {
+      const resultados = await Promise.all(MAZOS_PREDEFINIDOS.map(async m => {
+        try {
+          const r = await fetch("mazos/" + m.archivo);                      // pedir el archivo
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const data = await r.json();                                      // convertirlo en objeto
+          if (!Array.isArray(data.entries)) throw new Error("el archivo no tiene 'entries'");
+          return {
+            ...m,                                                           // autor, descripción, miniatura…
+            nombre: m.nombre || data.nombre || m.archivo,
+            entries: data.entries.map(e => ({ id: e.id, qty: e.qty }))      // solo id y cantidad
+          };
+        } catch (err) {
+          console.warn("[mazos] no se pudo cargar", m.archivo, err);        // un mazo roto no impide cargar los demás
+          return null;
+        }
+      }));
+      PREDEFINED_DECKS = resultados.filter(Boolean);                        // quitar los que fallaron
+    }
+
+    // escuela principal de un mazo: la que tiene más copias entre sus personajes
+    function escuelaPrincipal(entries) {
+      const cuenta = {};
+      entries.forEach(e => {
+        const c = CATALOGUE.find(x => x.id === e.id);
+        if (c && c.tipo === "personaje" && c.escuela) {
+          cuenta[c.escuela] = (cuenta[c.escuela] || 0) + e.qty;   // sumar sus copias
+        }
+      });
+      // la escuela con el número más alto (o "" si no hay personajes)
+      return Object.keys(cuenta).sort((a, b) => cuenta[b] - cuenta[a])[0] || "";
+    }
+
+    // descripción en el idioma activo: admite texto simple o { es, en, fr }
+    function descripcionMazo(d) {
+      if (typeof d.descripcion === "object" && d.descripcion) {
+        return d.descripcion[idiomaActivo] || d.descripcion.es || "";
+      }
+      return d.descripcion || "";
+    }
 
     function renderPredefined() {
-      document.getElementById("predefinedGrid").innerHTML = PREDEFINED_DECKS.map((d,i) => `
-        <div class="pre-deck-card">
-          <div class="pre-deck-banner" style="background-image:url('${d.banner}')"></div>
+      document.getElementById("predefinedGrid").innerHTML = PREDEFINED_DECKS.map((d, i) => {
+        const escuela   = escuelaPrincipal(d.entries);
+        // color del mazo: el que indiques en lista.js (un #color o el nombre de una escuela); si no, el de su escuela principal
+        const color = d.color
+          ? (d.color.startsWith("#") ? d.color : getSchoolColor(d.color))
+          : getSchoolColor(escuela);
+        const portada   = d.miniatura || d.entries[0]?.id;   // si no eligió portada, la primera carta
+        const enfoque   = d.enfoque || "center 22%";         // por defecto, la zona de la cara
+
+        return `
+        <div class="pre-deck-card" style="--color-escuela:${color}; --tinta-escuela:${tintaSobre(color)}">
+          <div class="pre-deck-banner" style="background-image:url('${imgPath(portada)}'); background-position:${enfoque}"></div>
           <div class="pre-deck-body">
             <div class="pre-deck-name">${d.nombre}</div>
-            <div class="pre-deck-desc">${d.desc}</div>
-            <div class="pre-deck-tags">${d.tags.map(t=>`<span class="pre-tag">${t}</span>`).join('')}</div>
+            ${d.autor ? `<div class="pre-deck-autor">${t("deckbuilder.porAutor", { autor: d.autor })}</div>` : ""}
+            <div class="pre-deck-desc">${descripcionMazo(d)}</div>
             <button class="pre-deck-load btn-menu" onclick="loadPredefined(${i})">${t("deckbuilder.cargarPredefinido")}</button>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join("");
     }
 
     function loadPredefined(idx) {
@@ -1605,12 +1711,15 @@
     });
   
     // -------------------------------------------------------------- ARRANCAR PANEL DEL MAZO AL INICIAR
+    cargarMazosPredefinidos();   // cargar los mazos de la carpeta mazos/
     renderSavedDecks();
     renderDeckList();
     document.getElementById('deckNameInput').value = t("deckbuilder.nombreMazoDefecto");   // nombre inicial, en el idioma activo
 
     llenarListaEscuela();
-    applyFilters();          // ← esta línea ya la tienes puesta ahora mismo; no hace falta añadir nada nuevo
+    renderExpansionPills();
+    renderFasePills();
+    applyFilters();  
   </script>
 
   <script>
@@ -1653,7 +1762,6 @@
     }
 
     new ResizeObserver(escalarColumnaIzquierda).observe(document.getElementById("columna-izquierda"));
-
     new ResizeObserver(escalarColumnaDerecha).observe(document.querySelector(".columna-derecha"));
   </script>
 

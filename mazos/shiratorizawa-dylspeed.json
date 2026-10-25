@@ -1,0 +1,72 @@
+{
+  "nombre": "shiratorizawa",
+  "version": "1.0",
+  "fecha": "2026-10-22T03:18:04.429Z",
+  "entries": [
+    {
+      "id": "HV-P02-047",
+      "nombre": "Ushijima Wakatoshi",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-046",
+      "nombre": "Ushijima Wakatoshi",
+      "qty": 3
+    },
+    {
+      "id": "HV-P02-050",
+      "nombre": "Shirabu Kenjiro",
+      "qty": 5
+    },
+    {
+      "id": "HV-P02-096",
+      "nombre": "Abran paso a nuestro rematador",
+      "qty": 1
+    },
+    {
+      "id": "HV-P02-097",
+      "nombre": "Joder, es demasiado bueno...",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-053",
+      "nombre": "Hayato Yamagata",
+      "qty": 5
+    },
+    {
+      "id": "HV-P02-052",
+      "nombre": "Ohira Reon",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-094",
+      "nombre": "Washijo Tanji",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-058",
+      "nombre": "Goshiki Tsutomu",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-056",
+      "nombre": "Ushijima Wakatoshi",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-095",
+      "nombre": "Saito Akira",
+      "qty": 1
+    },
+    {
+      "id": "HV-P02-055",
+      "nombre": "Eita Semi",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-057",
+      "nombre": "Tendo Satori",
+      "qty": 3
+    }
+  ]
+}

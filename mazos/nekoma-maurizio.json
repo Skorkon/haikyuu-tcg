@@ -1,0 +1,67 @@
+{
+  "nombre": "Nekoma",
+  "version": "1.0",
+  "fecha": "2026-10-11T16:14:08.504Z",
+  "entries": [
+    {
+      "id": "HV-P01-019",
+      "nombre": "Kozume Kenma",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-060",
+      "nombre": "Kozume Kenma",
+      "qty": 3
+    },
+    {
+      "id": "HV-P02-061",
+      "nombre": "Kuroo Tetsuro",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-026",
+      "nombre": "Haiba Lev",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-063",
+      "nombre": "Haiba Lev",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-029",
+      "nombre": "Fukunaga Shohei",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-028",
+      "nombre": "Yamamoto Taketora",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-031",
+      "nombre": "Shibayama Yuki",
+      "qty": 3
+    },
+    {
+      "id": "HV-P02-062",
+      "nombre": "Yaku Morisuke",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-100",
+      "nombre": "Haiba Alisa",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-080",
+      "nombre": "Nekomata Yasufumi",
+      "qty": 4
+    },
+    {
+      "id": "HV-P01-081",
+      "nombre": "Yamamoto Akane",
+      "qty": 2
+    }
+  ]
+}

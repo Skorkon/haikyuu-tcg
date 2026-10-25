@@ -373,7 +373,7 @@ function aplicarJugadaRival(jugada) {
     ]).then(async eleccion => {                                          // cuando elige
       if (eleccion === 0) {                                              // si quiere colocar
         let eventoElegido = await mostrarSelectorCartas(                 // abrir selector
-          "Choose an Event from your hand to place in your Event Zone:",
+          t("log.elegirEventoColocar"),
           eventosEnMano
         );
         if (!eventoElegido) {                                            // si cancela
@@ -424,14 +424,14 @@ function aplicarJugadaRival(jugada) {
     break; // gestionado por el Promise de la habilidad de Yamaguchi
 // =============================================================================================== PEDIR DESCARTE DE EVENTO <
 
-    case "resetearManoRival": // ====================================================== RESETEAR MANO RIVAL (OIKAWA P01-034)
+    case "resetearManoRival": // ====================================================== RESETEAR MANO RIVAL (OIKAWA P01-034, PR-024)
       const miJugadorReset = game.jugadores[miNumero - 1];               // jugador local (el que resetea)
+      const cantidadReset = jugada.cantidad ?? 6;                        // cartas a robar (6 por defecto, como P01-034)
       miJugadorReset.mazo.push(...miJugadorReset.mano);                  // devolver mano al mazo
       miJugadorReset.mano = [];                                          // vaciar mano
       barajarMazo(miJugadorReset);                                       // barajar mazo
       log(t("log.efectoRivalDevuelveMano"));
-      robarCarta(miJugadorReset, 6);                                     // robar 6 cartas
-      log(t("log.robarCartas", { jugador: miJugadorReset.nombre, cantidad: 6 }));
+      robarCarta(miJugadorReset, cantidadReset);                         // robar las cartas indicadas
       enviarCantidadMano();                                              // sincronizar cantidad de mano
       enviarMazo();                                                      // sincronizar mazo
       renderMano();                                                      // actualizar mano
@@ -498,7 +498,7 @@ function aplicarJugadaRival(jugada) {
       cartaManoGuts.recienJugada = false;                                    // entra como GUTS
       rivalManoGuts.zonas[jugada.zona].push(cartaManoGuts);              // añadir al GUTS
 
-      log(t("log.cartaAlGuts", { carta: cartaManoGuts.nombre, zona: jugada.zona }));
+      log(t("log.cartaAlGuts", { carta: cartaManoGuts.nombre, zona: t("ui.zona" + jugada.zona.charAt(0).toUpperCase() + jugada.zona.slice(1)) })); 
       renderCampo();                                                         // actualizar campo
       break;
 
@@ -660,7 +660,7 @@ function leerParametrosURL() {
   db.ref("partidas/" + salaActual).once("value", function(snap) {
     const sala = snap.val();
     if (!sala) {                                               // si la sala no existe
-      alert("This match no longer exists. Return to the lobby.");      // avisar al jugador
+      alert(t("ui.partidaNoExiste")); 
       window.location.href = "lobby.html";                     // volver al lobby
       return;
     }

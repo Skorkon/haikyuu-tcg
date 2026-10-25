@@ -1,0 +1,67 @@
+{
+  "nombre": "Inarizaki",
+  "version": "1.0",
+  "fecha": "2026-10-11T16:14:08.504Z",
+  "entries": [
+    {
+      "id": "HV-P02-017",
+      "nombre": "Miya Atsumu",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-018",
+      "nombre": "Miya Atsumu",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-021",
+      "nombre": "Miya Osamu",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-022",
+      "nombre": "Miya Osamu",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-025",
+      "nombre": "Kita Shinsuke",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-029",
+      "nombre": "Ojiro Aran",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-031",
+      "nombre": "Riseki Heisuke",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-028",
+      "nombre": "Suna Rintaro",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-034",
+      "nombre": "Akagi Michinari",
+      "qty": 4
+    },
+    {
+      "id": "HV-P02-089",
+      "nombre": "I Wanted to Say More About How Amazing My Teammates Are",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-087",
+      "nombre": "Don Pishari",
+      "qty": 2
+    },
+    {
+      "id": "HV-P02-088",
+      "nombre": "Twin Quick Minus Tempo",
+      "qty": 4
+    }
+  ]
+}

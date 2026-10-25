@@ -1,0 +1,92 @@
+{
+  "nombre": "Little Giant All-Stars Hoshiumi",
+  "version": "1.0",
+  "fecha": "2026-10-24T21:12:57.831Z",
+  "entries": [
+    {
+      "id": "HV-P01-093",
+      "nombre": "It matters not who it is-- we accept all challengers",
+      "qty": 6
+    },
+    {
+      "id": "HV-P01-092",
+      "nombre": "This year is shaping up to be an interesting one",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-011",
+      "nombre": "Nishinoya Yu",
+      "qty": 4
+    },
+    {
+      "id": "HV-D02-003",
+      "nombre": "Yaku Morisuke",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-070",
+      "nombre": "Shirofune Itaru",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-069",
+      "nombre": "Echigo Sakae",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-063",
+      "nombre": "Miya Atsumu",
+      "qty": 2
+    },
+    {
+      "id": "HV-D02-001",
+      "nombre": "Kozume Kenma",
+      "qty": 1
+    },
+    {
+      "id": "HV-P01-060",
+      "nombre": "Hyakuzawa Yudai",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-055",
+      "nombre": "Kenji Futakuchi",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-071",
+      "nombre": "Daisho Suguru",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-056",
+      "nombre": "Ushijima Wakatoshi",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-033",
+      "nombre": "Oikawa Toru",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-068",
+      "nombre": "Sakusa Kiyoomi",
+      "qty": 2
+    },
+    {
+      "id": "HV-P01-066",
+      "nombre": "Hoshiumi Korai",
+      "qty": 3
+    },
+    {
+      "id": "HV-PR-028",
+      "nombre": "Kenjiro Shibrabu",
+      "qty": 2
+    },
+    {
+      "id": "HV-PR-026",
+      "nombre": "Yamato Sarukui",
+      "qty": 2
+    }
+  ]
+}

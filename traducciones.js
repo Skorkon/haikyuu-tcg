@@ -232,7 +232,15 @@ const TRADUCCIONES = {
       "opcionGutsRobar": "Pagar {cantidad} GUTS: robar 1 carta",
       "descartarMazoPorAnadirActivo": "Durante el próximo turno del rival, cada vez que añada una carta a su mano sin robar, enviará {cantidad} cartas de su mazo al descarte.",
       "descartarMazoPorAnadir": "{jugador} envía {cantidad} cartas de su mazo al descarte.",
-      "gritoHinagarasu": "{jugador}: «¡Abandona el nido, Hinagarasu!»"
+      "gritoHinagarasu": "{jugador}: «¡Abandona el nido, Hinagarasu!»",
+      "jugadorAnadeDesdeEventos": "{jugador} añade {carta} de su zona de eventos a su mano.",
+      "opcionMasSaque": "+{valor} al saque de este personaje",
+      "opcionDebilitarColocadorRival": "Próximo turno rival: -{valor} al pase de su colocador",
+      "fijarColocadorActivo": "Durante el próximo turno del rival, el pase de su colocador quedará fijado en {valor}.",
+      "paseFijado": "El pase de {carta} queda fijado en {valor}.",
+      "soloFaseRobo": "Esta carta solo se puede usar en la fase de robo, antes de colocar a tu receptor.",
+      "proteccionDebuffActivo": "Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.",
+      "opcionNoRobar": "No robar"
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -474,7 +482,15 @@ const TRADUCCIONES = {
       "opcionGutsRobar": "Pay {cantidad} GUTS: draw 1 card",
       "descartarMazoPorAnadirActivo": "During the opponent’s next turn, each time they add a card to their hand other than by drawing, they send {cantidad} cards from their deck to the drop zone.",
       "descartarMazoPorAnadir": "{jugador} sends {cantidad} cards from their deck to the drop zone.",
-      "gritoHinagarasu": "{jugador}: “Leave the nest, Hinagarasu!”"
+      "gritoHinagarasu": "{jugador}: “Leave the nest, Hinagarasu!”",
+      "jugadorAnadeDesdeEventos": "{jugador} adds {carta} from their event zone to their hand.",
+      "opcionMasSaque": "+{valor} Serve to this character",
+      "opcionDebilitarColocadorRival": "Opponent’s next turn: -{valor} Toss to their setter",
+      "fijarColocadorActivo": "During the opponent’s next turn, their setter’s Toss will be set to {valor}.",
+      "paseFijado": "{carta}’s Toss is set to {valor}.",
+      "soloFaseRobo": "This card can only be used in the draw phase, before placing your receiver.",
+      "proteccionDebuffActivo": "During this turn, the parameters of the indicated characters can’t be reduced.",
+      "opcionNoRobar": "Don’t draw"
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -716,7 +732,15 @@ const TRADUCCIONES = {
       "opcionGutsRobar": "Payer {cantidad} GUTS : piocher 1 carte",
       "descartarMazoPorAnadirActivo": "Pendant le prochain tour de l’adversaire, chaque fois qu’il ajoute une carte à sa main autrement qu’en piochant, il envoie {cantidad} cartes de son deck dans la défausse.",
       "descartarMazoPorAnadir": "{jugador} envoie {cantidad} cartes de son deck dans la défausse.",
-      "gritoHinagarasu": "{jugador} : « Quitte le nid, Hinagarasu ! »"
+      "gritoHinagarasu": "{jugador} : « Quitte le nid, Hinagarasu ! »",
+      "jugadorAnadeDesdeEventos": "{jugador} ajoute {carta} de sa zone d’événements à sa main.",
+      "opcionMasSaque": "+{valor} au service de ce personnage",
+      "opcionDebilitarColocadorRival": "Prochain tour adverse : -{valor} à la passe de son passeur",
+      "fijarColocadorActivo": "Pendant le prochain tour de l’adversaire, la passe de son passeur sera fixée à {valor}.",
+      "paseFijado": "La passe de {carta} est fixée à {valor}.",
+      "soloFaseRobo": "Cette carte ne peut être utilisée que pendant la phase de pioche, avant de placer ton réceptionneur.",
+      "proteccionDebuffActivo": "Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.",
+      "opcionNoRobar": "Ne pas piocher"
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -958,7 +982,15 @@ const TRADUCCIONES = {
       "opcionGutsRobar": "",
       "descartarMazoPorAnadirActivo": "",
       "descartarMazoPorAnadir": "",
-      "gritoHinagarasu": ""
+      "gritoHinagarasu": "",
+      "jugadorAnadeDesdeEventos": "",
+      "opcionMasSaque": "",
+      "opcionDebilitarColocadorRival": "",
+      "fijarColocadorActivo": "",
+      "paseFijado": "",
+      "soloFaseRobo": "",
+      "proteccionDebuffActivo": "",
+      "opcionNoRobar": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

@@ -23,7 +23,6 @@
       --accent: #E8761A;                            /* color naranja secundario */
       --font-display: 'Anton', sans-serif;       /* fuente para títulos */
       --font-body: 'Noto Sans JP', sans-serif;        /* fuente para texto normal */
-      --tinta: #18181c;                /* texto sobre el fondo claro */
     }
     body {
       background: var(--bg);           /* fondo oscuro de toda la página */
@@ -51,7 +50,7 @@
     h1 {                          /* cabecera 1 */
       font-family: var(--font-display);
       font-weight: 400;
-      font-size: 54px;                            /* más grande, para compensar lo estrecha que es Bebas */
+      font-size: 78px;                            /* más grande, para compensar lo estrecha que es Bebas */
       letter-spacing: 4px;
       text-align: center;            /* por si el título llega a partirse en dos líneas */
       padding-left: 4px;             /* compensa el espacio extra que deja letter-spacing tras la última letra */
@@ -77,33 +76,19 @@
       width: 100%;                       /* ancho completo */
       padding: 10px;                     /* aire interior */
       background: var(--surface2);       /* fondo oscuro */
-      border: 1px solid var(--border2);  /* borde sutil */
+      border: 2px solid var(--accent);  /* borde sutil */
       border-radius: 0px;                /* esquinas redondeadas */
       color: var(--text);                /* texto claro */
       font-size: 15px;                   /* tamaño legible */
       font-family: inherit;              /* heredar fuente */
       outline: none;                     /* quitar el borde azul de foco */
     }
-    .btn-idioma {
-      padding: 6px 12px;                  /* aire interior */
-      background: var(--surface2);        /* fondo oscuro */
-      border: 1px solid var(--border2);   /* borde sutil */
-      border-radius: 0px;                 /* esquinas redondeadas */
-      color: var(--text);                 /* texto apagado por defecto */
-      cursor: pointer;                    /* cursor de mano */
-      font-family: inherit;
-      transition: all 0.15s;
-    }
-    .btn-idioma.activo {
-      background: var(--accent);         /* fondo naranja si es el idioma activo */
-      border-color: var(--accent);
-      color: white;                      /* texto blanco cuando está activo */
-    }
 
     /* ------------------------ SETTINGS: DOS COLUMNAS ----------------------- */
     #pantalla-settings {
       max-width: 560px;                  /* más ancha que las demás: caben dos columnas */
     }
+    .btn-opcion     { padding: 5px 9px; font-size: 11px; }
     .ajustes-columnas {
       display: grid;
       grid-template-columns: 1fr 1fr;    /* dos columnas iguales */
@@ -243,6 +228,10 @@
     .fila-botones {
       margin-top: 80px;                  /* opciones → Guardar / Volver */
     }
+
+    #pantalla-settings h1 {
+      font-size: 36px;          /* el mismo que el título del deckbuilder */
+    }
   </style>
 </head>
 
@@ -253,8 +242,8 @@
     <div class="columna-central">
       <!-- ============================================================ PANTALLA 1: BIENVENIDA -->
       <div class="pantalla" id="pantalla-bienvenida">
-        <h1>HAIKYU!! VOBACA BREAK</h1>
-        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Trading Card Game Simulator</p>
+        <h1 class="titulo-marca">H!! VB SIM</h1>
+        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyu!! Vobaca Break TCG Simulator</p>
         <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
           <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelNombre">Tu nombre</label>
           <input type="text" id="input-nombre-bienvenida" maxlength="20" class="input-settings" placeholder="Ej: Andrés" data-i18n-placeholder="menu.placeholderNombre">
@@ -262,17 +251,17 @@
         <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
           <label style="font-size:13px; color:var(--text2);" data-i18n="menu.labelIdioma">Idioma</label>
           <div id="selector-idioma-bienvenida" style="display:flex; gap:6px;">
-            <button type="button" data-idioma="es" onclick="cambiarIdiomaBienvenida('es')" class="btn-idioma">ES</button>
-            <button type="button" data-idioma="en" onclick="cambiarIdiomaBienvenida('en')" class="btn-idioma">EN</button>
-            <button type="button" data-idioma="fr" onclick="cambiarIdiomaBienvenida('fr')" class="btn-idioma">FR</button>
+            <button type="button" data-idioma="es" onclick="cambiarIdiomaBienvenida('es')" class="btn-opcion">ES</button>
+            <button type="button" data-idioma="en" onclick="cambiarIdiomaBienvenida('en')" class="btn-opcion">EN</button>
+            <button type="button" data-idioma="fr" onclick="cambiarIdiomaBienvenida('fr')" class="btn-opcion">FR</button>
           </div>
         </div>
         <button onclick="confirmarBienvenida()" class="btn-menu" data-i18n="menu.btnContinuar">Continuar</button>
       </div>
       <!-- ============================================================ PANTALLA 2: PRINCIPAL -->
       <div class="pantalla" id="pantalla-principal">
-        <h1>HAIKYU!! VOBACA BREAK</h1>
-        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Trading Card Game Simulator</p>
+        <h1 class="titulo-marca">H!! VB SIM</h1>
+        <p style="color: var(--text2); font-size: 14px; margin-top: -12px;">Haikyu!! Vobaca Break TCG Simulator</p>
         <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
           <a href="lobby.html" class="btn-menu" data-i18n="menu.btnJugar">PLAY</a>
           <a href="deckbuilding.html" class="btn-menu" data-i18n="menu.btnDeckbuilder">DECKBUILDER</a>
@@ -282,7 +271,7 @@
       <!-- ============================================================ PANTALLA 3: SETTINGS -->
       <!-- ============================================================ PANTALLA 3: SETTINGS -->
       <div class="pantalla" id="pantalla-settings">
-        <h1 data-i18n="menu.tituloSettings">Settings</h1>
+        <h1 class="titulo-caja" data-i18n="menu.tituloSettings">Settings</h1>
 
         <div class="ajustes-columnas">
           <!-- ---------------------------------- COLUMNA IZQUIERDA: TÚ -->
@@ -294,9 +283,9 @@
             <div class="opcion">
               <label data-i18n="menu.labelIdioma">Idioma</label>
               <div id="selector-idioma-settings" class="fila-opciones">
-                <button type="button" data-idioma="es" onclick="cambiarIdiomaSettings('es')" class="btn-idioma">ES</button>
-                <button type="button" data-idioma="en" onclick="cambiarIdiomaSettings('en')" class="btn-idioma">EN</button>
-                <button type="button" data-idioma="fr" onclick="cambiarIdiomaSettings('fr')" class="btn-idioma">FR</button>
+                <button type="button" data-idioma="es" onclick="cambiarIdiomaSettings('es')" class="btn-opcion">ES</button>
+                <button type="button" data-idioma="en" onclick="cambiarIdiomaSettings('en')" class="btn-opcion">EN</button>
+                <button type="button" data-idioma="fr" onclick="cambiarIdiomaSettings('fr')" class="btn-opcion">FR</button>
               </div>
             </div>
             <div class="opcion">
@@ -318,7 +307,7 @@
               <label data-i18n="menu.labelHinchada">Hinchada</label>
               <div class="fila-opciones">
                 <select id="select-hinchada" class="input-settings"></select>
-                <button type="button" class="btn-idioma" onclick="probarHinchada()">▶</button>
+                <button type="button" class="btn-opcion" onclick="probarHinchada()">▶</button>
               </div>
             </div>
             <div class="opcion">

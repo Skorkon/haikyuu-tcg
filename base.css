@@ -1,4 +1,12 @@
 /* ===================================================== BASE COMPARTIDA (todas las páginas) */
+
+/* ===================================================== FUENTE PROPIA: DIMITRI (solo para el título HVB SIM) */
+@font-face {
+  font-family: "Dimitri";                               /* el nombre con el que la usaremos en el CSS */
+  src: url("fonts/dimitri.ttf") format("truetype");     /* dónde está el archivo, respecto a base.css */
+  font-display: swap;                                   /* mientras carga, se ve la fuente de respaldo */
+}
+
 :root {
   /* tinta y papel */
   --tinta: #000000;          /* contornos, sombras duras, bloques negros */
@@ -16,6 +24,7 @@
   --peso-titulos: 900;                             /* Black */
   --espaciado-titulos: 0.06em;                     /* aire entre letras de los títulos */
   --font-texto: 'Noto Sans JP', sans-serif;        /* todo lo demás */
+  --font-marca: 'Dimitri', 'Anton', sans-serif;    /* título HVB SIM; si Dimitri no carga, Anton */
 
   /* viñetas */
   --contorno: 3px solid var(--tinta);          /* el trazo de tinta de cada viñeta */
@@ -45,8 +54,42 @@ h1, h2, h3, button {
 }
 
 /* ===================================================== BOTÓN (compartido por todas las páginas) */
-/* aquí va solo el ASPECTO; el tamaño y la colocación los decide cada página */
+/* estilo cómic: relleno de color, contorno de tinta y sombra sólida, como las etiquetas del preview */
 .btn-menu {
+  background: var(--accent);
+  border: 3px solid var(--tinta);
+  border-radius: 0;
+  color: var(--tinta);                       /* texto negro: tu color siempre es claro */
+  font-family: var(--font-texto);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--tinta);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.btn-menu:hover {
+  transform: translate(-1px, -1px);          /* se despega un poco del papel… */
+  box-shadow: 4px 4px 0 var(--tinta);        /* …y su sombra crece */
+}
+.btn-menu:active {
+  transform: translate(3px, 3px);            /* se hunde hasta tapar su sombra */
+  box-shadow: none;
+}
+.btn-menu:disabled,
+.btn-menu:disabled:hover,
+.btn-menu:disabled:active {
+  background: var(--gris-claro);             /* deshabilitado: gris y plano */
+  border-color: var(--gris-medio);
+  color: var(--gris-medio);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* ===================================================== BOTÓN DE OPCIÓN (compartido por todas las páginas) */
+/* para elegir entre opciones: idiomas, filtros…
+   la opción elegida lleva la clase .activo (index) o .on (filtros del deckbuilder) */
+.btn-opcion {
+  padding: 8px 16px;                          /* tamaño por defecto; cada página puede cambiarlo */
   background: var(--tinta);
   border: 2px solid var(--accent);
   border-radius: 0;
@@ -54,18 +97,31 @@ h1, h2, h3, button {
   font-family: var(--font-texto);
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s;
+  box-shadow: 2px 2px 0 var(--tinta);
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.btn-menu:hover {
-  background: var(--accent);               /* se invierte: fondo del color */
-  color: var(--tinta);                     /* texto negro */
+.btn-opcion:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--accent);
 }
-.btn-menu:disabled,
-.btn-menu:disabled:hover {
-  background: var(--tinta);                /* deshabilitado: no reacciona al ratón */
-  color: var(--accent);
+.btn-opcion:active {                           /* mientras mantienes el clic */
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+.btn-opcion.activo,
+.btn-opcion.on {                               /* opción elegida: rellena de tu color y hundida */
+  background: var(--accent);
+  color: var(--tinta);
+  border-color: var(--accent);
+  transition: transform 0.1s, box-shadow 0.1s;
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+.btn-opcion:disabled {                         /* por si alguna vez se bloquea (en el juego pasa a menudo) */
   opacity: 0.4;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ===================================================== CAMPO DE TEXTO / DESPLEGABLE (compartido) */
@@ -80,4 +136,34 @@ h1, h2, h3, button {
 }
 .campo::placeholder {
   color: rgba(255, 255, 255, 0.45);      /* el texto de ejemplo, en gris tenue */
+}
+
+/* ===================================================== TÍTULO DE MARCA: HVB SIM */
+/* las letras: relleno negro, contorno de tu color y sombra negra sólida */
+.titulo-marca {
+  font-family: var(--font-marca);
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: 4px;                          /* algo de aire para que los contornos no se junten */
+  color: var(--tinta);                          /* relleno de las letras */
+  -webkit-text-stroke: 4px var(--accent);       /* contorno de tu color */
+  paint-order: stroke fill;                     /* detrás del relleno: letras limpias */
+}
+
+/* ===================================================== TÍTULO EN CAJA (Settings, Deckbuilder…) */
+/* caja blanca, borde de tu color y sombra negra más larga que la de los botones */
+.titulo-caja {
+  display: inline-block;                     /* la caja mide lo que el texto */
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--tinta);
+  background: var(--bg);
+  border: 5px solid var(--tinta);
+  box-shadow: 3px 3px 0px var(--accent);        /* 6px: más larga que la de un botón, para no confundirse */
+  padding: 8px 18px 6px;
+  -webkit-text-stroke: 0;                    /* anula contornos que traiga el h1 de cada página */
+  paint-order: normal;
+  text-shadow: none;
 }

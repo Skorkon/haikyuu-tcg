@@ -69,6 +69,7 @@
 
     /* -------------------------------------------------- CABECERA ------------------------------------------ */
     header {
+      position: relative;          /* referencia para centrar el título */
       display: flex;
       align-items: center;
       gap: 20px;
@@ -76,11 +77,14 @@
       border-bottom: 2px solid var(--accent);       /* línea naranja, coherente con los bordes del tríptico */
       background: var(--bg);                       /* fondo negro, como los paneles de lobby.html */
       flex-shrink: 0;
+      min-height: 90px;            /* altura fija: el título ya no la marca */
     }
     header h1 {
-      flex: 1;                                    /* ocupa el espacio entre "volver" y las pestañas */
-      text-align: center;
+      position: absolute;
+      left: 50%;                   /* su borde izquierdo, en el centro del header… */
+      transform: translateX(-50%); /* …y lo retrocede la mitad de su ancho: centrado exacto */
       margin: 0;
+      text-align: center;
       font-family: var(--font-display);           /* Anton, como el index */
       font-weight: 400;                           /* Anton solo tiene un grosor */
       font-size: 36px;
@@ -91,11 +95,12 @@
       paint-order: stroke fill;                   /* el contorno se pinta detrás del relleno */
     }
     .volver-link {
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: bold;
+      display: inline-block;           /* un enlace necesita esto para aceptar padding como un botón */
+      padding: 8px 14px;
       font-size: 13px;
       white-space: nowrap;
+      text-decoration: none;           /* quitar el subrayado del enlace */
+      text-transform: uppercase;       /* como los botones: base.css solo pone en mayúsculas los <button> */
     }
     nav {                 /* zona de navegación de pestañas con botones */
       display: flex;      /* pone las pestañas en fila, una al lado de otra */
@@ -108,9 +113,11 @@
       padding: 8px 18px;
       font-size: 13px;
     }
-    .tab-btn.active {
-      background: var(--accent);
-      color: var(--tinta);
+    .tab-btn.active {                        /* pestaña activa: "pulsada" y en negro */
+      background: var(--tinta);
+      color: var(--papel);
+      box-shadow: none;
+      transform: translate(3px, 3px);
     }
 
     /* -------------------------------------------------- FILTROS ------------------------------------------ */
@@ -169,26 +176,15 @@
       gap: 5px;                 /* separación pequeña entre ellas */
       flex-wrap: wrap;          /* saltan de línea si no caben */
     }
+    /* pastillas de filtro: el aspecto viene de .btn-opcion (base.css); aquí solo el tamaño */
     .pill,
     .pill-reset {
       padding: 4px 12px;
-      border: 1px solid var(--accent);
-      background: var(--tinta);
-      color: var(--accent);
-      font-family: inherit;
       font-size: 12px;
-      cursor: pointer;
       white-space: nowrap;
-      transition: all 0.15s;
     }
     .pill-reset {
-      padding: 4px 8px;
-    }
-    .pill:hover,
-    .pill.on,
-    .pill-reset:hover {
-      background: var(--accent);
-      color: var(--tinta);
+      padding: 4px 8px;                  /* el ✕ es más estrecho */
     }
 
     /* ------------------------------- ESTILO CONTADOR Y GRID DE CARTAS --------------------------------- */
@@ -468,11 +464,12 @@
       flex-wrap: wrap;
       font-size: 11px;
     }
-    .deck-stat {                               /* contadores de cartas y eventos */
+    .deck-stat {                               /* contadores de cartas, eventos y escuelas */
       padding: 3px 10px;
-      border-radius: 0;                  /* esquinas rectas */
-      background: var(--tinta);          /* negro, como botones y campos */
-      color: var(--accent);
+      border-radius: 0;
+      background: var(--tinta);
+      border: 2px solid var(--accent);
+      color: var(--papel);                     /* letras blancas */
     }
     .deck-stat.warn { color: #ff6b6b; }
     .deck-stat.ok   { color: #6fcf73; }
@@ -774,8 +771,8 @@
     <div class="columna-central">
       <!------------------------ CABECERA ------------------------------------>
       <header>
-        <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
-        <h1 data-i18n="menu.btnDeckbuilder">Deckbuilder</h1>
+        <a href="index.html" class="volver-link btn-menu" data-i18n="lobby.volverInicio">← Volver a inicio</a>
+        <h1 class="titulo-caja" data-i18n="menu.btnDeckbuilder">Deckbuilder</h1>
         <nav>
           <button class="tab-btn btn-menu active" id="tab-builder" onclick="setTab('builder')" data-i18n="deckbuilder.tabConstructor">Constructor</button>
           <button class="tab-btn btn-menu" id="tab-predefined" onclick="setTab('predefined')" data-i18n="deckbuilder.tabPredefinidos">Decks predefinidos</button>
@@ -810,10 +807,10 @@
           </div> <!-- fin filters fila 1 -->
 
           <div class="filters-fila2">
-            <button class="pill-reset" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
+            <button class="pill-reset btn-opcion" title="Resetear filtros" data-i18n-title="deckbuilder.resetearFiltros">✕</button>
             <div class="filter-pills">
-              <span class="pill" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
-              <span class="pill" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
+              <span class="pill btn-opcion" data-filter="tipo" data-val="personaje" data-i18n="deckbuilder.pillPersonaje">Personaje</span>
+              <span class="pill btn-opcion" data-filter="tipo" data-val="evento" data-i18n="deckbuilder.pillEvento">Evento</span>
             </div>
             <span class="separador"></span>
             <div class="filter-pills" id="expansionPills">
@@ -825,7 +822,7 @@
             </div>
             <span class="separador"></span>
             <div class="filter-pills">
-              <span class="pill" data-filter="mazo" data-val="si" data-i18n="deckbuilder.pillSoloMazo">Solo mi mazo</span>
+              <span class="pill btn-opcion" data-filter="mazo" data-val="si" data-i18n="deckbuilder.pillSoloMazo">Solo mi mazo</span>
             </div>
           </div> <!-- fin filters fila 2 -->
 
@@ -881,6 +878,7 @@
         <button class="btn-mini btn-menu" onclick="saveDeck()" data-i18n="deckbuilder.btnGuardarMazo">Guardar</button>
         <button class="btn-mini btn-menu" onclick="exportDeck()" data-i18n="deckbuilder.btnExportar">Exportar</button>
         <label class="btn-mini btn-menu" for="importFileInput" style="cursor:pointer;text-align:center;" data-i18n="deckbuilder.btnImportar">Importar</label>
+        <button class="btn-mini btn-menu" onclick="exportarImagenMazo()" data-i18n="deckbuilder.btnImagen">Imagen</button>
         <input type="file" id="importFileInput" accept=".json" onchange="importDeck(event)" style="display:none">
       </div>
       <!------------------------ LISTADO DE CARTAS ------------------------------------>
@@ -952,6 +950,7 @@
   <script src="descripciones.js"></script>
   <script src="i18n.js"></script>
   <script src="mazos/lista.js"></script>
+  <script src="sonidos.js"></script>
 
   <script>
     // -------------------------------------------------- APLICAR COLOR AL GUARDADO DE PÁGINA ------------------------------------------ 
@@ -1010,6 +1009,7 @@
         'Kitagawa Daiichi': '#2B5DB0',
         'Asas São Paulo': '#E0471B',
         'Ifviga Torino': '#2E9E5B',
+        'Hakusuikan':      '#3D8B6E'
       };
       return colores[escuela] || '#999999';   // gris por defecto si no coincide ninguna
     }
@@ -1230,7 +1230,7 @@
 
       expansiones.forEach(exp => {
         const pill = document.createElement("span");
-        pill.className = "pill" + (filtroExpansiones.has(exp) ? " on" : "");
+        pill.className = "pill btn-opcion" + (filtroExpansiones.has(exp) ? " on" : "");
         pill.textContent = exp;
         pill.addEventListener("click", () => toggleExpansion(exp));
         contenedor.appendChild(pill);
@@ -1276,7 +1276,7 @@
 
       FASES.forEach(fase => {
         const pill = document.createElement("span");
-        pill.className = "pill" + (filtroFases.has(fase) ? " on" : "");
+        pill.className = "pill btn-opcion" + (filtroFases.has(fase) ? " on" : "");
         // texto traducido: "saque" → t("deckbuilder.statSaque")
         pill.textContent = t("deckbuilder.stat" + fase.charAt(0).toUpperCase() + fase.slice(1));
         pill.addEventListener("click", () => toggleFase(fase));
@@ -1304,7 +1304,7 @@
 
       for (let v = 0; v <= 6; v++) {
         const pill = document.createElement("span");
-        pill.className = "pill" + (statFiltro.valores.has(v) ? " on" : "");
+        pill.className = "pill btn-opcion" + (statFiltro.valores.has(v) ? " on" : "");
         pill.textContent = v;
         pill.addEventListener("click", () => toggleStatValue(v));
         contenedor.appendChild(pill);
@@ -1343,8 +1343,24 @@
     let savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]');    // mazos guardados con anterioridad
     let currentDeckId = null;                                                 // si el mazo ya fue guardado antes, aquí se guarda su ID
 
+    // -------------------------------------------------------------- SONIDO DE CARTA (el mismo que en la mano del juego)
+    const sonidoCarta = new Audio("audio/draw2.mp3");   // se carga una sola vez
+    const VOLUMEN_CARTA = 0.05;                         // proporción del volumen general del jugador
+
+    function reproducirSonidoCarta() {
+      try {
+        if (obtenerHinchada() === "ninguna") return;    // "Sin sonido" en ajustes: silencio
+        sonidoCarta.volume = obtenerVolumen() * VOLUMEN_CARTA;
+        sonidoCarta.currentTime = 0;                    // vuelve al principio si aún sonaba
+        sonidoCarta.play().catch(() => {});             // si el navegador lo bloquea, no da error
+      } catch (err) {
+        console.warn("[sonido]", err);                  // un fallo de sonido nunca debe afectar al deckbuilder
+      }
+    }
+
     // -------------------------------------------------------------- AÑADIR AL MAZO
     function addToDeck(c) {
+      reproducirSonidoCarta();
       const total   = deck.reduce((s,e) => s+e.qty, 0);               // total de cartas del mazo
       const eventos = deck.filter(e => e.carta.tipo === 'evento').reduce((s,e) => s+e.qty, 0);  // total de eventos
       const entry = deck.find(e => e.carta.id === c.id);              // busca si la carta ya está en el mazo
@@ -1356,6 +1372,7 @@
     function removeFromDeck(id, all=false) {
       const idx = deck.findIndex(e => e.carta.id === id);             // buscar posición en el array
       if (idx === -1) return; 
+      reproducirSonidoCarta();
       if (all || deck[idx].qty <= 1) deck.splice(idx, 1); else deck[idx].qty--; // si queda más de 1, restar 1, si queda 1, borrar por completo
       refreshThumbBadge(id);                                          // actualiza el contador en el catálogo
       renderDeckList();
@@ -1594,6 +1611,169 @@
       };
       reader.readAsText(file);                                // dispara la lectura del archivo como texto (esto activa el onload de arriba)
       event.target.value = '';
+    }
+
+    // -------------------------------------------------------------- EXPORTAR EL MAZO COMO IMAGEN (PNG)
+    // carga una imagen y espera a que esté lista (si falla, devuelve null en vez de romperlo todo)
+    function cargarImagen(src) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    async function exportarImagenMazo() {
+      if (!deck.length) return;                                    // mazo vacío: nada que exportar
+
+      // ---------- AJUSTES (cámbialos a tu gusto)
+      const URL_SIMULADOR = "hvb-tcg-sim.com";                     // marca de agua, abajo a la derecha
+      const COLOR_FONDO   = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#f2f0e8";
+      const COLUMNAS_PJ = 5, COLUMNAS_EV = 2;                      // cartas por fila en cada columna
+      const ANCHO = 160, ALTO = 224;                               // tamaño de cada carta (proporción 5:7)
+      const HUECO = 14, MARGEN = 40, SEPARACION = 50;              // entre cartas · bordes · entre columnas
+      const TITULO = 90, CABECERA = 40, PIE = 90;                  // altura del título · de "PERSONAJES" · de la marca de agua
+
+      // ---------- DATOS
+      const nombre = document.getElementById("deckNameInput").value.trim() || t("deckbuilder.nombreMazoDefecto");
+      const colorMazo = getSchoolColor(escuelaPrincipal(deck.map(e => ({ id: e.carta.id, qty: e.qty }))));
+      const personajes = deck.filter(e => e.carta.tipo === "personaje")
+        .sort((a, b) => (a.carta.escuela || "").localeCompare(b.carta.escuela || "") || a.carta.nombre.localeCompare(b.carta.nombre));
+      const eventos = deck.filter(e => e.carta.tipo === "evento");
+      const copias = lista => lista.reduce((s, e) => s + e.qty, 0);
+
+      // ---------- MEDIDAS
+      const anchoBloque = cols => cols * ANCHO + (cols - 1) * HUECO;
+      const altoBloque  = n => { const filas = Math.ceil(n / 1); return filas ? filas * ALTO + (filas - 1) * HUECO : 0; };
+      const filasPJ = Math.ceil(personajes.length / COLUMNAS_PJ);
+      const filasEV = Math.ceil(eventos.length / COLUMNAS_EV);
+      const xPJ = MARGEN;
+      const xEV = MARGEN + anchoBloque(COLUMNAS_PJ) + SEPARACION;
+      const yCartas = MARGEN + TITULO + CABECERA;
+
+      const anchoTotal = xEV + anchoBloque(COLUMNAS_EV) + MARGEN;
+      const altoTotal  = yCartas + Math.max(altoBloque(filasPJ), altoBloque(filasEV)) + PIE + MARGEN;
+      const RESOLUCION = 2;                                       // el PNG se dibuja al doble de tamaño: más nitidez
+
+      const canvas = document.createElement("canvas");
+      canvas.width  = anchoTotal * RESOLUCION;
+      canvas.height = altoTotal  * RESOLUCION;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(RESOLUCION, RESOLUCION);                          // seguimos dibujando con las medidas de siempre
+      ctx.imageSmoothingEnabled = true;                           // suavizar al reducir las imágenes…
+      ctx.imageSmoothingQuality = "high";                         // …con la mejor calidad
+
+      // ---------- ESPERAR A LA FUENTE Y A LAS IMÁGENES
+      await document.fonts.load("56px Anton");
+      await document.fonts.load("40px Dimitri");
+      const imgsPJ = await Promise.all(personajes.map(e => cargarImagen(imgPath(e.carta.id))));
+      const imgsEV = await Promise.all(eventos.map(e => cargarImagen(imgPath(e.carta.id))));
+
+      // ---------- FONDO
+      ctx.fillStyle = COLOR_FONDO;
+      ctx.fillRect(0, 0, anchoTotal, altoTotal);
+
+      // ---------- TÍTULO: relleno negro con contorno del color del mazo
+      ctx.textBaseline = "top";
+      ctx.font = "56px Anton";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = colorMazo;
+      ctx.strokeText(nombre.toUpperCase(), MARGEN, MARGEN);
+      ctx.fillStyle = "#000000";
+      ctx.fillText(nombre.toUpperCase(), MARGEN, MARGEN);
+
+      // ---------- CABECERAS DE LAS DOS COLUMNAS
+      ctx.font = "bold 20px 'Noto Sans JP', sans-serif";
+      ctx.fillText(`${t("deckbuilder.seccionPersonajes").toUpperCase()} (${copias(personajes)})`, xPJ, MARGEN + TITULO);
+      if (eventos.length) {
+        ctx.fillText(`${t("deckbuilder.seccionEventos").toUpperCase()} (${copias(eventos)})`, xEV, MARGEN + TITULO);
+      }
+
+      // ---------- UNA CARTA: imagen, borde de escuela, copias e id
+      function dibujarCarta(e, img, x, y) {
+        const color = e.carta.tipo === "evento" ? "#999999" : getSchoolColor(e.carta.escuela);
+        const tinta = tintaSobre(color);
+
+        if (img) ctx.drawImage(img, x, y, ANCHO, ALTO);
+        else { ctx.fillStyle = "#cccccc"; ctx.fillRect(x, y, ANCHO, ALTO); }   // imagen no encontrada
+
+        ctx.lineWidth = 4;                                       // borde de la escuela
+        ctx.strokeStyle = color;
+        ctx.strokeRect(x + 2, y + 2, ANCHO - 4, ALTO - 4);
+
+        // cuadrado con las copias (arriba a la derecha)
+        cuadrado(String(e.qty), x + ANCHO - 7 - 34, y + 7, 34, 34, "bold 20px 'Noto Sans JP', sans-serif", color, tinta);
+
+        // cuadrado pequeño con el id (abajo a la derecha), ancho según el texto
+        const id = e.carta.id.replace(/^HV-/, "");
+        ctx.font = "bold 10px 'Noto Sans JP', sans-serif";
+        const anchoId = ctx.measureText(id).width + 10;
+        cuadrado(id, x + (ANCHO - anchoId) / 2, y + 7, anchoId, 18, ctx.font, color, tinta, 2);
+      }
+
+      // cuadrado de color con borde negro y un texto centrado
+      function cuadrado(texto, x, y, ancho, alto, fuente, fondo, tinta) {
+        ctx.fillStyle = fondo;
+        ctx.fillRect(x, y, ancho, alto);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#000000";
+        ctx.strokeRect(x, y, ancho, alto);
+        ctx.fillStyle = tinta;
+        ctx.font = fuente;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(texto, x + ancho / 2, y + alto / 2 + 1);
+        ctx.textAlign = "left";                                  // dejarlo como estaba
+        ctx.textBaseline = "top";
+      }
+
+      // ---------- COLOCAR LAS CARTAS EN SUS COLUMNAS
+      personajes.forEach((e, i) => dibujarCarta(e, imgsPJ[i],
+        xPJ + (i % COLUMNAS_PJ) * (ANCHO + HUECO),
+        yCartas + Math.floor(i / COLUMNAS_PJ) * (ALTO + HUECO)));
+
+      eventos.forEach((e, i) => dibujarCarta(e, imgsEV[i],
+        xEV + (i % COLUMNAS_EV) * (ANCHO + HUECO),
+        yCartas + Math.floor(i / COLUMNAS_EV) * (ALTO + HUECO)));
+
+      // ---------- PIE: autor del mazo a la izquierda, invitación a la derecha
+      const yPie = altoTotal - MARGEN / 2;
+      ctx.textBaseline = "bottom";
+
+      const autor = localStorage.getItem("hv-nombre");             // el nombre guardado en ajustes
+      if (autor && autor !== "Jugador") {                           // "Jugador" es el nombre por defecto: no lo mostramos
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 16px 'Noto Sans JP', sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(t("deckbuilder.imagenAutor", { autor: autor }), MARGEN, yPie);
+      }
+
+      ctx.fillStyle = "#9A9EA3";                                    // gris discreto
+      ctx.font = "16px 'Noto Sans JP', sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(t("deckbuilder.imagenInvitacion", { url: URL_SIMULADOR }), anchoTotal - MARGEN, yPie);
+
+      // marca HVB SIM, encima de la invitación
+      ctx.font = "40px Dimitri";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "bottom";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = colorMazo;                                 // contorno del color del mazo, como el título
+      ctx.strokeText("H!! VB SIM", anchoTotal - MARGEN, yPie - 26);
+      ctx.fillStyle = "#000000";
+      ctx.fillText("H!! VB SIM", anchoTotal - MARGEN, yPie - 26);
+
+      // ---------- DESCARGAR COMO PNG
+      canvas.toBlob(blob => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = nombre.replace(/\s+/g, "-") + ".png";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }, "image/png");
     }
 
     // =======================================================================================

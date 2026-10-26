@@ -131,6 +131,9 @@ const I18N = {
           cargandoCatalogo: "Cargando catálogo…",
           aplicaFiltro: "Aplica al menos un filtro para ver cartas",
           porAutor: "por {autor}",
+          btnImagen: "Imagen",
+          imagenAutor: "Mazo de {autor}",
+          imagenInvitacion: "Crea tu mazo y juega gratis en {url}",
         }
     },    
     en: {
@@ -264,6 +267,9 @@ const I18N = {
           cargandoCatalogo: "Loading catalogue…",
           aplicaFiltro: "Apply at least one filter to see cards",
           porAutor: "by {autor}",
+          btnImagen: "Image",
+          imagenAutor: "Deck by {autor}",
+          imagenInvitacion: "Build your deck and play free at {url}",
         }
     },
     fr: {
@@ -397,6 +403,9 @@ const I18N = {
           cargandoCatalogo: "Chargement du catalogue…",
           aplicaFiltro: "Applique au moins un filtre pour voir les cartes",
           porAutor: "par {autor}",
+          btnImagen: "Image",
+          imagenAutor: "Deck de {autor}",
+          imagenInvitacion: "Crée ton deck et joue gratuitement sur {url}",
         }
     }
 };

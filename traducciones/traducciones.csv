@@ -241,3 +241,4 @@ log.paseFijado;El pase de {carta} queda fijado en {valor}.;{carta}’s Toss is s
 log.soloFaseRobo;Esta carta solo se puede usar en la fase de robo, antes de colocar a tu receptor.;This card can only be used in the draw phase, before placing your receiver.;Cette carte ne peut être utilisée que pendant la phase de pioche, avant de placer ton réceptionneur.;
 log.proteccionDebuffActivo;Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.;During this turn, the parameters of the indicated characters can’t be reduced.;Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.;
 log.opcionNoRobar;No robar;Don’t draw;Ne pas piocher;
+log.jugadorQuiereRematch;{jugador} quiere jugar una revancha.;{jugador} wants a rematch.;{jugador} veut une revanche.;

@@ -3419,7 +3419,7 @@ function inicializarCartas() {
 
       // +1 al pase de un Oikawa Toru en el campo (solo tiene efecto si está en la zona de pase)
       let oikawaEnPase = jugador.zonas.pase.at(-1);                      // buscar Oikawa en pase
-      if (oikawaEnPase?.nombre === "Oikawa Toru") {                      // si hay Oikawa en pase
+      if (game.fase === "pase" && oikawaEnPase?.recienJugada && oikawaEnPase.nombre === "Oikawa Toru") { // solo el colocador de esta jugada, en fase de pase
         game.valorAtaque += 1;                                           // +1 al pase
         log(t("log.ataqueAumentado", { valor: 1 }));
       } 
@@ -4014,16 +4014,17 @@ function inicializarCartas() {
         const rival = game.jugadores[rivalIndex];                          // jugador rival
 
         bloquearUI();                                                    // bloquear mientras espera
-        enviarJugada("pedirEventoVoluntario", {});                       // avisar al rival
+        let ref = db.ref("partidas/" + salaActual + "/confirmacionEvento"); // ruta de la respuesta
+        await ref.remove();                                              // borrar la respuesta de un uso anterior
+        enviarJugada("pedirEventoVoluntario", {});                       // avisar al rival (después de borrar)
 
         await new Promise(resolve => {                                   // esperar respuesta del rival
-          let ref = db.ref("partidas/" + salaActual + "/confirmacionEvento"); // escuchar ruta separada
-          ref.on("value", function(snap) {                               // cuando cambie
+          ref.on("value", function escuchador(snap) {                    // listener con nombre, para quitar solo este
             let jugada = snap.val();                                     // leer datos
             if (!jugada) return;                                         // ignorar si vacío
             if (jugada.jugador === miNumero) return;                     // ignorar si es mío
 
-            ref.off();                                                   // desactivar listener
+            ref.off("value", escuchador);                                // quitar solo este listener
             desbloquearUI();                                             // desbloquear UI
 
             if (jugada.tipo === "eventoColocadoVoluntario") {            // si colocó evento
@@ -7263,14 +7264,8 @@ function inicializarCartas() {
       ]);
 
       if (eleccion === 0) { // OPCION 1 : buscar personajes Date Kôgyô con bloqueo 3 en el campo
-        let elegibles = []; // meterlos en la variable elegibles
-        for (let zona of ["bloqueo", "bloqueoApoyo"]) {
-          jugador.zonas[zona].forEach(c => {
-            if (c.info?.escuela === "Date Kôgyô" && c.stats.bloqueo === 3) {
-              elegibles.push(c);
-            }
-          });
-        }
+        let elegibles = [game.bloqueoActual.central, ...game.bloqueoActual.apoyos] // solo los bloqueadores de este bloqueo (central + apoyos), sin GUTS
+          .filter(c => c && c.info?.escuela === "Date Kôgyô" && c.stats.bloqueo === 3); // de Date Kôgyô con bloqueo 3 impreso
         if (elegibles.length === 0) { // si no hay ninguno 
           log(t("log.condicionNoCumplida"));
           return false;
@@ -8206,7 +8201,7 @@ function inicializarCartas() {
     }
   ),
   // ===================================================================================================================== P03
-  crearCarta("Hinata Shoyo", // ============================================================== P03-001
+  crearCarta("Hinata Shoyo", // ================================================================ P03-001
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },              // sin parámetros (ー)
     async function(jugador, game, carta) {
       if (!jugador.mano.includes(carta)) {                                    // comprobar que la carta sigue en la mano
@@ -8299,7 +8294,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span> <span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> (Coloca esta carta desde tu mano en tu zona de eventos): Si todos tus personajes son de <strong>Jóvenes de Miyagi</strong>, roba 1 carta o, si tienes 6 o más cartas en tu zona de eventos, añade a tu mano hasta 1 carta de personaje de tu descarte.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
-  crearCarta("Hinata Shoyo", // ============================================================== P03-002
+  crearCarta("Hinata Shoyo", // ================================================================ P03-002
     {
       saque: 2,
       recepcion: 3, 
@@ -8317,7 +8312,7 @@ function inicializarCartas() {
       rareza: "UC"
     }
   ),
-  crearCarta("Tsukishima Kei", // ============================================================ P03-003
+  crearCarta("Tsukishima Kei", // ============================================================== P03-003
     {
       saque: 1, 
       recepcion: 1,  
@@ -8368,7 +8363,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Si todos tus personajes son de <strong>Karasuno</strong> o todos son de <strong>Miyagi Camp</strong>, y tienes 6 o más cartas en tu zona de eventos, este personaje obtiene +3 puntos de ataque. Además, durante el próximo turno del rival, cada vez que su bloqueador central entre en juego, ese personaje obtiene -3 puntos de bloqueo.`
     }
   ),
-  crearCarta("Tsukishima Kei", // ============================================================ P03-004
+  crearCarta("Tsukishima Kei", // ============================================================== P03-004
     {
       saque: 2, 
       recepcion: 3, 
@@ -8387,8 +8382,7 @@ function inicializarCartas() {
       rareza: "C" 
     }
   ),
-
-  crearCarta("Kindaichi Yutaro", // ========================================================== P03-006
+  crearCarta("Kindaichi Yutaro", // ============================================================ P03-005
     {
       saque: 2,
       recepcion: 2,
@@ -8396,18 +8390,70 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 2
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "remate", 2)) {
+        return false;
+      }
+
+      let eventosTotal = jugador.zonas.eventos.length;
+      if (eventosTotal < 4) {
+        log(t("log.condicionNoCumplida"));
+        return;
+      }
+
+      game.valorAtaque += 2;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 2 }));
+
+      debilitarRematador(2);
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-005",
+      escuela: "Aoba Jôsai",
+      posicion: "MB",
+      anyo: 1,
+      categorias: ["Miyagi Camp"],
+      rareza: "R",
+      descripcion: `<strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong></br>Se puede usar pagando 2 Guts. Si hay 4 o más cartas en tu Zona de Evento, este personaje obtiene <strong>+2 a su Ataque</strong>, y durante el siguiente turno rival, cada vez que el rival coloque un personaje, ese personaje tendrá <strong>-2 a su Ataque</strong>.`
+    }
+  ),
+  crearCarta("Kindaichi Yutaro", // ============================================================ P03-006
+    {
+      saque: 2,
+      recepcion: 2,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") {
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;
+      }
+      if (game.valorAtaque < 4) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      oneTouch(2);
+    },
     {
       tipo: "personaje",
       id: "HV-P03-006",
       escuela: "Aoba Jôsai",
       posicion: "MB",
       anyo: 1,
-      rareza: "N",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si el ataque del rival es igual o superior a 4. </br><span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch (2)</strong></span> : resta 2 al ataque del rival y pasa directamente a fase de recepción.`
+      categorias: ["Miyagi Camp"],
+      rareza: "C",
+      descripcion: `<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Bloqueo</span></strong></br>Se puede usar cuando el Ataque rival es 4 o más. Realiza <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Desvío (2)</strong></span>.</br><span style=&quot;background:#29b6f6; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Desvío (N)</strong></span><span style=&quot;font-size:0.85em&quot;> : Reduce el Ataque rival en N. Finaliza inmediatamente la fase de Bloqueo y pasa a tu fase de Recepción.</span>`
     }
   ),
-  crearCarta("Kunimi Akira", // ============================================================== P03-007
+  crearCarta("Kunimi Akira", // ================================================================ P03-007
     {
       saque: 0,
       recepcion: 5,
@@ -8415,18 +8461,59 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "recepcion", 3)) {
+        return false;
+      }
+
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);
+
+      let todasValidas = cartasEnJuego.every(c =>
+        c.info?.escuela === "Aoba Jôsai" || c.info?.categorias?.includes("Miyagi Camp")
+      );
+
+      if (!todasValidas) {
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Aoba Jôsai" }));
+        return false;
+      }
+
+      let eventosTotal = jugador.zonas.eventos.length;
+
+      if (eventosTotal < 4) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      robarCarta(jugador, 1, false);
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      if (eventosTotal >= 6) {
+        game.valorDefensa += 3;
+        log(t("log.recepcionAumentada", { valor: 3 }));
+      }
+    },
     {
       tipo: "personaje",
       id: "HV-P03-007",
       escuela: "Aoba Jôsai",
       posicion: "WS",
       anyo: 1,
-      rareza: "T",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 3</strong>: Si todos tus personajes son de <strong>Aoba Jôsai</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 o más cartas en tu zona de eventos, roba 1 carta. Si tienes 6 o más, añade +3 a la recepción de esta carta.`
+      categorias: ["Miyagi Camp"],
+      rareza: "SR",
+      descripcion: `<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong></br>Se puede usar pagando 3 Guts. Si todos tus personajes son de <strong>Aoba Josai</strong> o <strong>Pseudo-Youth</strong> y hay 4 o más cartas en tu Zona de Evento, roba 1 carta. Si hay 6 o más, este personaje obtiene <strong>+3 a su Recepción</strong>.`
     }
   ),
-  crearCarta("Kunimi Akira", // ============================================================== P03-008
+  crearCarta("Kunimi Akira", // ================================================================ P03-008
     {
       saque: 0,
       recepcion: 5,

@@ -240,7 +240,8 @@ const TRADUCCIONES = {
       "paseFijado": "El pase de {carta} queda fijado en {valor}.",
       "soloFaseRobo": "Esta carta solo se puede usar en la fase de robo, antes de colocar a tu receptor.",
       "proteccionDebuffActivo": "Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.",
-      "opcionNoRobar": "No robar"
+      "opcionNoRobar": "No robar",
+      "jugadorQuiereRematch": "{jugador} quiere jugar una revancha."
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -490,7 +491,8 @@ const TRADUCCIONES = {
       "paseFijado": "{carta}’s Toss is set to {valor}.",
       "soloFaseRobo": "This card can only be used in the draw phase, before placing your receiver.",
       "proteccionDebuffActivo": "During this turn, the parameters of the indicated characters can’t be reduced.",
-      "opcionNoRobar": "Don’t draw"
+      "opcionNoRobar": "Don’t draw",
+      "jugadorQuiereRematch": "{jugador} wants a rematch."
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -740,7 +742,8 @@ const TRADUCCIONES = {
       "paseFijado": "La passe de {carta} est fixée à {valor}.",
       "soloFaseRobo": "Cette carte ne peut être utilisée que pendant la phase de pioche, avant de placer ton réceptionneur.",
       "proteccionDebuffActivo": "Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.",
-      "opcionNoRobar": "Ne pas piocher"
+      "opcionNoRobar": "Ne pas piocher",
+      "jugadorQuiereRematch": "{jugador} veut une revanche."
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -990,7 +993,8 @@ const TRADUCCIONES = {
       "paseFijado": "",
       "soloFaseRobo": "",
       "proteccionDebuffActivo": "",
-      "opcionNoRobar": ""
+      "opcionNoRobar": "",
+      "jugadorQuiereRematch": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

@@ -177,7 +177,8 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
 
     habilidad,                  // esto será una función propia de cada carta
     zonaActual: null,           // para saber en qué zona se encuentra la carta
-    habilidadUsada: false       // controlar si la habilidad se ha usado o no
+    habilidadUsada: false,       // controlar si la habilidad se ha usado o no
+    entradaCerrada: false       // true si ya estaba en juego cuando se jugó un evento (ya no puede usar su "al entrar")
   };
 }
 
@@ -264,6 +265,7 @@ function limpiarRecienJugadas(jugador) {
   for (let zona in jugador.zonas) {          // para todas las zonas del jugador activo
     jugador.zonas[zona].forEach(carta => {   // para todas y cada una de las cartas de esa zona
       carta.recienJugada = false;            // recién jugada pasa a false y ya podrá usarse en el próximo GUTS
+      carta.entradaCerrada = false;          // limpiar el cierre de habilidad "al entrar"
     });
   }
 }
@@ -320,9 +322,14 @@ function nombreRepetido(jugador, nombre) {
 function marcarEventoEnFase(carta) {                                     // se llama al jugar un evento o una carta desde la mano
   if (carta?.info?.faseRobo && game.fase === "recepcion") {              // evento de Robo en recepción...
     let receptor = game.jugadores[game.jugadorActivo].zonas.recepcion.at(-1); // receptor actual
-    if (!receptor || !receptor.recienJugada) return;                     // ...antes de colocar al receptor: es fase de robo, no bloquea
+    if (!receptor || !receptor.recienJugada) return;                     // ...antes de colocar al receptor: es fase de robo, no cierra nada
   }
-  game.faseConEvento = { fase: game.fase, turno: game.turno };           // a partir de aquí: ni personajes ni habilidades en esta fase
+  let jugador = game.jugadores[game.jugadorActivo];                      // jugador que juega el evento
+  ["saque", "recepcion", "pase", "remate", "bloqueo", "bloqueoApoyo"].forEach(zona => { // todas sus zonas
+    jugador.zonas[zona].forEach(c => {                                   // cada carta de la zona
+      if (c.recienJugada) c.entradaCerrada = true;                       // los personajes ya en juego pierden su "al entrar"
+    });
+  });
 }
 function hayEventoEnFase() {                                             // ¿ya se jugó un evento en esta fase?
   return game.faseConEvento?.fase === game.fase &&                       // misma fase
@@ -337,7 +344,6 @@ function perderPunto(jugador) {
       const gane = jugador !== game.jugadores[miNumero - 1];   // gané si el que perdió no soy yo
       mostrarFinPartida(gane);                                 // mostrar panel al perdedor
       enviarJugada("finPartida", { ganador: miNumero === 1 ? 2 : 1 }); // avisar al rival
-      if (!gane) borrarPartida();                              // el perdedor borra la partida
     } else {
       mostrarFinPartida(true);                                 // en local siempre mostrar panel
     }
@@ -706,12 +712,6 @@ function colocarCarta(jugador, carta, zona) {
       carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
       zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) 
     }));
-    return;
-  }
-  
-  if (hayEventoEnFase()) {                                          // ya se jugó un evento en esta fase
-    log(t("log.personajeTrasEvento"));
-    renderMano();                                                   // la carta no ha salido de la mano
     return;
   }
 
@@ -1793,7 +1793,7 @@ async function usarHabilidad() {
     log(t("log.habilidadSoloCartaJugada"));
     return;                                                // salir sin marcar nada
   }
-  if (hayEventoEnFase() && !carta.info?.sinEntrada) {      // ya se jugó un evento en esta fase (salvo habilidades sin "Enter")
+  if (carta.entradaCerrada && !carta.info?.sinEntrada) {   // ya estaba en juego cuando se jugó un evento
     log(t("log.habilidadTrasEvento"));
     return;                                                // salir sin marcar nada
   }
@@ -4093,7 +4093,7 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P03-057", "HV-D01-008", "HV-P03-047"].forEach(id => {
+["HV-P03-057", "HV-D01-008", "HV-P03-047", "HV-D01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);

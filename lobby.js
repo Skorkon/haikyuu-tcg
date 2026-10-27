@@ -18,14 +18,14 @@ document.getElementById("input-mazo").addEventListener("change", function(evento
 });
 
 // =============================================================== BOTÓN CREAR PARTIDA
-document.getElementById("btn-crear").addEventListener("click", function() {
-  if (!miMazo) {                            // buscar mazo
+document.getElementById("btn-crear").addEventListener("click", async function() {
+  if (!miMazo) {
     alert(t("lobby.alertMazo"));
     return;
   }
 
   inicializarFirebase();
-  const codigo = crearPartida(miMazo);
+  const codigo = await crearPartida(miMazo); 
 
   document.getElementById("codigo-sala").textContent = codigo;
   document.getElementById("codigo-sala").style.display = "block";

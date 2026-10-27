@@ -41,21 +41,30 @@ function generarCodigo() { // genera un código aleatorio para la sala
   return codigo;
 }
 
-// ── CREAR PARTIDA ─────────────────────────────────────────
-function crearPartida(mazo) { 
+// ============================================================================ CREAR PARTIDA 
+async function crearPartida(mazo) { 
   const codigo = generarCodigo();
   salaActual   = codigo;
   miNumero     = 1;
   modoOnline   = true;
 
-  db.ref("partidas/" + codigo).set({ // crea la partida con todas las variables
-    estado:        "esperando",
-    jugador1listo: false,
-    jugador2listo: false,
-    jugador1mazo:  mazo,
-    jugador2mazo:  null,
-    jugador1nombre: miNombre, // nombre del jugador 1
+  // Buscar si ya existe una sala creada por este jugador
+  const snapshot = await db.ref("partidas").orderByChild("jugador1nombre").equalTo(miNombre).once("value");
+  if (snapshot.exists()) {
+    snapshot.forEach((child) => {
+      child.ref.remove(); // borrar la sala antigua
+    });
+  }
+
+  await db.ref("partidas/" + codigo).set({
+    estado:         "esperando",
+    jugador1listo:  false,
+    jugador2listo:  false,
+    jugador1mazo:   mazo,
+    jugador2mazo:   null,
+    jugador1nombre: miNombre,
   });
+
   console.log("Match created: " + codigo);
   return codigo;
 }
@@ -112,6 +121,32 @@ function escucharPartida() {
     if (jugada.jugador === miNumero) return;
 
     aplicarJugadaRival(jugada); // aplica la jugada del rival en el tu tablero
+  });
+
+  // ================================================================================ APARTADO PARA EL REMATCH
+  db.ref("partidas/" + salaActual + "/rematch").on("value", function(snap) {
+    const rematch = snap.val();
+    if (!rematch) return;
+
+    const rivalNumero = miNumero === 1 ? 2 : 1;
+
+    // el rival quiere rematch — avisamos en el log
+    if (rematch["jugador" + rivalNumero] && !rematch["jugador" + miNumero]) {
+      logCompartido("log.jugadorQuiereRematch", { jugador: game.jugadores[rivalNumero - 1].nombre });
+    }
+
+    // los dos quieren rematch — arrancar nueva partida
+    if (rematch.jugador1 && rematch.jugador2) {
+      db.ref("partidas/" + salaActual + "/rematch").off();
+      if (miNumero === 1) {
+        iniciarRematch(); // J1 resetea y redirige
+      } else {
+        // J2 espera un momento y redirige
+        setTimeout(function() {
+          window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
+        }, 2000);
+      }
+    }
   });
 }
 
@@ -415,7 +450,7 @@ function aplicarJugadaRival(jugada) {
     );
     if (eventoVol) {                                                     // si se encontró
       rivalEventoVol.zonas.eventos.push(eventoVol);                     // colocar en zona de eventos
-      log(t("log.rivalColocaEventoEnZona", { jugador: rival.nombre, carta: eventoVol.nombre }));
+      log(t("log.rivalColocaEventoEnZona", { jugador: rivalEventoVol.nombre, carta: eventoVol.nombre })); // usar rivalEventoVol, no rival (rival no existe en este case)
     }
     renderCampo();                                                       // actualizar campo
     break;
@@ -933,8 +968,36 @@ function escucharMazoRival() {
 function borrarPartida() {
   if (!modoOnline) return;                               // solo en modo online
   db.ref("partidas/" + salaActual).remove()             // borrar la sala de Firebase
-    .then(() => console.log("Match deleted from Firebase ✅")) // confirmación
+    .then(() => console.log("Match deleted from Firebase.")) // confirmación
     .catch(e => console.log("Error deleting match " + e)); // error
+}
+
+// ================================================================================== PEDIR REMATCH 
+// ================================================================================================
+function pedirRematch() {
+  db.ref("partidas/" + salaActual + "/rematch/jugador" + miNumero).set(true);       // escribir en Firebase que este jugador quiere rematch
+  document.getElementById("btn-rematch").disabled = true;                           // deshabilitar el botón para que no pueda pulsar dos veces
+}
+function iniciarRematch() {
+  if (miNumero !== 1) return;
+
+  db.ref("partidas/" + salaActual).once("value", function(snap) {
+    const sala = snap.val();
+
+    db.ref("partidas/" + salaActual).set({
+      estado:         "jugando",
+      jugador1listo:  false,
+      jugador2listo:  false,
+      jugador1mazo:   sala.jugador1mazo,
+      jugador2mazo:   sala.jugador2mazo,
+      jugador1nombre: sala.jugador1nombre,
+      jugador2nombre: sala.jugador2nombre,
+    }).then(() => {
+      // cancelar el onDisconnect antes de redirigir
+      db.ref("partidas/" + salaActual).onDisconnect().cancel();
+      window.location.href = "game.html?sala=" + salaActual + "&jugador=" + miNumero;
+    });
+  });
 }
 
 // ================================================================================= SORTEO INICIAL 

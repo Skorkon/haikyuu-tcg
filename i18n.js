@@ -40,6 +40,7 @@ const I18N = {
             contadorTurno: "Turno {turno}",
             zonaCampo: "campo",
             partidaNoExiste: "Esta partida ya no existe. Vuelve al lobby.",
+            rematch: "Revancha",
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -176,6 +177,7 @@ const I18N = {
             contadorTurno:    "Turn {turno}",
             zonaCampo: "field",
             partidaNoExiste: "This match no longer exists. Return to the lobby.",
+            rematch: "Rematch",
         },
         menu: {
           labelNombre:      "Your name",
@@ -312,6 +314,7 @@ const I18N = {
             contadorTurno:    "Tour {turno}",
             zonaCampo: "terrain",
             partidaNoExiste: "Cette partie n’existe plus. Retourne au lobby.",
+            rematch: "Revanche",
         },
         menu: {
           labelNombre:      "Ton nom",

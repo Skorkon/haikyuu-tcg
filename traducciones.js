@@ -241,7 +241,8 @@ const TRADUCCIONES = {
       "soloFaseRobo": "Esta carta solo se puede usar en la fase de robo, antes de colocar a tu receptor.",
       "proteccionDebuffActivo": "Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.",
       "opcionNoRobar": "No robar",
-      "jugadorQuiereRematch": "{jugador} quiere jugar una revancha."
+      "jugadorQuiereRematch": "{jugador} quiere jugar una revancha.",
+      "descartaPorEfecto": "{jugador} descarta {carta} por efecto de carta"
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -492,7 +493,8 @@ const TRADUCCIONES = {
       "soloFaseRobo": "This card can only be used in the draw phase, before placing your receiver.",
       "proteccionDebuffActivo": "During this turn, the parameters of the indicated characters can’t be reduced.",
       "opcionNoRobar": "Don’t draw",
-      "jugadorQuiereRematch": "{jugador} wants a rematch."
+      "jugadorQuiereRematch": "{jugador} wants a rematch.",
+      "descartaPorEfecto": "{jugador} discards {carta} due to a card effect"
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -743,7 +745,8 @@ const TRADUCCIONES = {
       "soloFaseRobo": "Cette carte ne peut être utilisée que pendant la phase de pioche, avant de placer ton réceptionneur.",
       "proteccionDebuffActivo": "Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.",
       "opcionNoRobar": "Ne pas piocher",
-      "jugadorQuiereRematch": "{jugador} veut une revanche."
+      "jugadorQuiereRematch": "{jugador} veut une revanche.",
+      "descartaPorEfecto": "{jugador} défausse {carta} par effet de carte"
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -994,7 +997,8 @@ const TRADUCCIONES = {
       "soloFaseRobo": "",
       "proteccionDebuffActivo": "",
       "opcionNoRobar": "",
-      "jugadorQuiereRematch": ""
+      "jugadorQuiereRematch": "",
+      "descartaPorEfecto": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

@@ -330,6 +330,7 @@ function marcarEventoEnFase(carta) {                                     // se l
       if (c.recienJugada) c.entradaCerrada = true;                       // los personajes ya en juego pierden su "al entrar"
     });
   });
+  game.faseConEvento = { fase: game.fase, turno: game.turno };           // desde ahora no se colocan más personajes en esta fase (reglas 5-13 / 5-14)
 }
 function hayEventoEnFase() {                                             // ¿ya se jugó un evento en esta fase?
   return game.faseConEvento?.fase === game.fase &&                       // misma fase
@@ -712,6 +713,12 @@ function colocarCarta(jugador, carta, zona) {
       carta: DESCRIPCIONES[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre, 
       zona: t("ui.zona" + zona.charAt(0).toUpperCase() + zona.slice(1)) 
     }));
+    return;
+  }
+
+  if (hayEventoEnFase()) {                                          // ya se jugó un evento en esta fase: el paso de entrada terminó
+    log(t("log.personajeTrasEvento"));
+    renderMano();                                                   // la carta no ha salido de la mano
     return;
   }
 

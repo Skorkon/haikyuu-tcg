@@ -242,3 +242,4 @@ log.soloFaseRobo;Esta carta solo se puede usar en la fase de robo, antes de colo
 log.proteccionDebuffActivo;Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.;During this turn, the parameters of the indicated characters can’t be reduced.;Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.;
 log.opcionNoRobar;No robar;Don’t draw;Ne pas piocher;
 log.jugadorQuiereRematch;{jugador} quiere jugar una revancha.;{jugador} wants a rematch.;{jugador} veut une revanche.;
+log.descartaPorEfecto;{jugador} descarta {carta} por efecto de carta;{jugador} discards {carta} due to a card effect ;{jugador} défausse {carta} par effet de carte ;

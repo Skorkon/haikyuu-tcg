@@ -12,7 +12,7 @@ document.getElementById("input-mazo").addEventListener("change", function(evento
   lector.onload = function(e) {
     miMazo = JSON.parse(e.target.result);
     document.getElementById("estado-mazo").textContent = 
-       "✅ " + miMazo.nombre + " (" + miMazo.entries.length + ")"; // simplificado, sin depender de traducción por ahora
+      miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + "/40)";
   };
   lector.readAsText(archivo);
 });
@@ -72,7 +72,7 @@ function escucharPartidasAbiertas() {
       div.className = "partida-item";
       div.innerHTML = `
         <span class="partida-nombre">${partida.jugador1nombre || "Jugador"} (${codigo})</span>
-        <button class="btn-mini" onclick="unirseDesdeLista('${codigo}')">${t("lobby.btnUnirse")}</button>
+        <button class="btn-opcion btn-mini" onclick="unirseDesdeLista('${codigo}')">${t("lobby.btnUnirse")}</button>
       `;
       lista.appendChild(div);
     });
@@ -122,7 +122,7 @@ function cargarMazoGuardado(id) {
   };
 
   document.getElementById("estado-mazo").textContent =
-    "✅ " + miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + " cartas)";
+    miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + "/40)";
 }
 llenarListaMazosGuardados(); // rellenar el desplegable al cargar la página
 

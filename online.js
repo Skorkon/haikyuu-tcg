@@ -256,6 +256,7 @@ function aplicarJugadaRival(jugada) {
       break;
 
     case "perderPunto": // ====================================================================== PERDER PUNTO
+      limpiarJugada();
       const rivalIndicePunto = miNumero === 1 ? 1 : 0;       // índice del rival
       const rivalPunto = game.jugadores[rivalIndicePunto];    // jugador rival
       if (rivalPunto.mazoPuntos.length > 0) {
@@ -371,7 +372,7 @@ function aplicarJugadaRival(jugada) {
         let index = miJugadorDescarte.mano.indexOf(cartaElegida);         // buscar en la mano
         miJugadorDescarte.mano.splice(index, 1);                          // sacar de la mano
         miJugadorDescarte.trash.push(cartaElegida);                       // enviar al trash
-        log(t("log.descartaPorEfecto", { jugador: miJugadorDescarte.nombre, carta: cartaElegida.nombre })); // antes usaba "jugador", que no existe aquí
+        log(t("log.descartaPorEfecto", { jugador: miJugadorDescarte.nombre, carta: cartaElegida.nombre }));
 
         enviarTrash(miJugadorDescarte);                                   // sincronizar trash antes de confirmar
         db.ref("partidas/" + salaActual + "/confirmacionDescarte").set({  // confirmar al rival

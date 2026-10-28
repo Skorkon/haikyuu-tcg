@@ -1570,6 +1570,14 @@ const DESCRIPCIONES = {
     "en": "<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Block</span> <span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Receive</span> <span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Attack</span></strong></br>Draw 1 card and add +1 to one of the parameters of your <strong>Hinata Shoyo</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Unique</span></strong> During this turn, the abilities of your other cards with the same name as this one are nullified.",
     "fr": "<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Contre</span> <span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Réception</span> <span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Attaque</span></strong></br>Piochez 1 carte et ajoutez +1 à l'un des paramètres de votre <strong>Hinata Shoyo</strong>.</br><strong><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Unique</span></strong> Pendant ce tour, la capacité de vos autres cartes portant le même nom que celle-ci est annulée."
   },
+  "HV-P03-097": {
+    "nombre_es": "",
+    "nombre_en": "",
+    "nombre_fr": "",
+    "es": "<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Bloqueo</span></strong></br>Añade a tu mano 2 cartas de personaje de <strong>Date Tech</strong> con nombres distintos desde tu Zona de Descarte, luego descarta 1 carta de tu mano.",
+    "en": "<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Block</span></strong></br>Add 2 character cards with different names from <strong>Date Tech</strong> from your Drop Zone to your hand, then discard 1 card from your hand.",
+    "fr": "<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Contre</span></strong></br>Ajoutez à votre main 2 cartes de personnage de <strong>Date Tech</strong> avec des noms différents depuis votre Zone de Défausse, puis défaussez 1 carte de votre main."
+  },
   "HV-P03-098": {
     "nombre_es": "¡¡¡Aplastadlos!!!",
     "nombre_en": "Crush them!!!",

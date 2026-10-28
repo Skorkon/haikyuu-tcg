@@ -4,25 +4,25 @@
   <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
   <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
-  <title>HV-TCG · Lobby</title>
+  <title>HV-SIM · Lobby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico */
-    :root {                                     /* variables de color, mismas que index.html */
-      --bg: #f2f0e8;                          /* fondo gris clarito tipo papel de manga */
-      --surface: #16161a;                     /* superficie oscura de paneles */
-      --surface2: #1e1e24;                    /* superficie secundaria (inputs) */
-      --border: rgba(255,255,255,0.07);       /* borde sutil */
-      --border2: rgba(255,255,255,0.13);      /* borde algo más marcado */
-      --text: #e8e8ec;                        /* texto claro */
-      --text2: #9090a0;                       /* texto gris apagado */
-      --accent: #E8761A;                      /* naranja de color secundario */
-      --font-display: 'Bebas Neue', sans-serif; /* fuente de títulos */
-      --font-body: 'Noto Sans JP', sans-serif;  /* fuente de texto */
+    :root {
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.13);
+      --text: #e8e8ec;
+      --text2: #9090a0;
     }
     body {
       background: var(--bg);           /* fondo general */
-      color: var(--text);              /* color de texto por defecto */
-      font-family: Arial, sans-serif;  /* fuente base */
+      color: var(--tinta);
+      font-family: var(--font-texto);
       min-height: 100vh;               /* toda la altura de pantalla */
       display: flex;                   /* flexbox para centrar */
       flex-direction: column;          /* apilado vertical */
@@ -32,47 +32,50 @@
 
     /* ------------------------------- TRÍPTICO ------------------------------------- */
     .triptico {
-      display: flex;              /* las 3 columnas en fila */
-      width: 100%;                /* todo el ancho */
-      height: 100vh;              /* toda la altura */
-      position: fixed;            /* fijo en toda la pantalla */
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      position: fixed;   /* fijo en toda la pantalla, detrás del contenido */
       top: 0;
       left: 0;
-      justify-content: space-between;    /* centra el conjunto si sobra espacio */
     }
 
-    /* ------------------------------- COLUMNAS ------------------------------------- */
-    .columna-lateral {
-      flex: 1;                          /* ocupa espacio proporcional */
-      max-width: 400px;                 /* límite de ancho */
-      background-size: cover;           /* imagen sin deformarse */
-      background-position: center;      /* centrada */
-      background-repeat: no-repeat;
-      min-width: 0;                     /* evita comportamiento raro de flexbox */
-    }
     #columna-izquierda {
-      background-image: url('img/fondos/lobby_columna_izquierda.jpg'); 
-      background-color: #1a1a2e;            /* color de respaldo mientras no hay imagen */
-      border-right: 3px solid var(--accent);  /* borde naranja hacia el centro */
+      width: 20%;                /* siempre el 20%, como en deckbuilder */
+      flex-shrink: 0;            /* nunca se encoge aunque falte espacio */
+      background-image: url('img/fondos/lobby_columna_izquierda.jpg');
+      background-color: #1a1a2e; /* color de respaldo mientras no hay imagen */
+      background-size: cover;    /* la imagen cubre toda la columna sin deformarse */
+      background-position: center;
+      background-repeat: no-repeat;
+      border-right: 3px solid var(--accent); /* línea naranja hacia el centro */
     }
-    #columna-derecha {
-      background: var(--bg);          
-      border-left: 3px solid var(--accent); /* borde naranja hacia el centro */
+
+    .columna-central {
+      flex: 1;                   /* ocupa todo el espacio que sobra entre izquierda y derecha */
+      background: var(--bg);
       display: flex;
       flex-direction: column;
-      padding: 20px;                        /* aire interior */
-      overflow-y: auto;                     /* scroll si el contenido crece */
+      overflow: hidden;          /* el scroll irá dentro, no en la columna entera */
     }
-    .columna-central {
-      width: 500px;                 /* ancho fijo, algo más ancha que en index.html */
-      flex-shrink: 0;               /* nunca se encoge */
-      background: var(--bg);        /* mismo gris clarito */
+
+    #columna-derecha {
+      width: 35%;                /* más ancha que antes */
+      flex-shrink: 0;            /* nunca se encoge */
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
       display: flex;
-      flex-direction: column;       /* contenido apilado en vertical */
-      align-items: center;          /* centrado horizontal */
-      padding: 30px 20px;           /* aire interior */
-      position: relative;           /* por si hay que meter algo dentro */
-      overflow-y: auto;             /* scroll si hay mucho contenido */
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .central-contenido {
+      width: 750px;        /* ancho fijo de diseño */
+      margin: 0 auto;      /* centrado horizontal */
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     /* ------------------------------- RESPONSIVE ------------------------------------- */
@@ -83,108 +86,114 @@
 
     /* ------------------------------- ESTILOS COMPARTIDOS ------------------------------------- */
     h1 {
-      font-size: 32px;             /* tamaño de título */
-      letter-spacing: 3px;         /* espaciado entre letras */
-      color: var(--accent);        /* naranja color secundario */
-      margin-bottom: 20px;         /* separación con lo siguiente */
+      font-family: 'Anton', sans-serif;
+      font-weight: 400;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--tinta);
+      -webkit-text-stroke: 3px var(--accent);
+      paint-order: stroke fill;
+      margin-bottom: 20px;
     }
     h2 {
-      font-size: 16px;             /* subtítulos de cada panel */
-      color: var(--accent);        /* gris oscuro, legible sobre fondo claro */
+      font-size: 16px;
+      color: var(--tinta);
       margin-bottom: 10px;
     }
     .btn-menu {
-      display: block;                    /* ocupa toda la línea */
-      width: 100%;                       /* ancho completo del contenedor */
-      padding: 14px;                     /* aire interior */
-      background: #000000;             /* relleno negro */
-      border: 2px solid var(--accent);   /* borde naranja */
-      border-radius: 8px;                /* esquinas redondeadas */
-      color: var(--text);                /* texto claro */
-      text-decoration: none;             /* sin subrayado en los <a> */
-      text-align: center;                /* texto centrado */
-      font-size: 16px;
-      font-weight: bold;                 /* negrita */
-      font-family: inherit;              /* hereda la fuente del body */
-      cursor: pointer;                   /* cursor de mano */
-      transition: all 0.15s;             /* transición suave en hover */
-    }
-    .btn-menu:hover {
-      background: var(--accent);          /* al pasar el ratón: fondo naranja */
-      color: #000000;                   /* texto negro */
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      font-size: 15px;
+      padding: 4px 12px;
     }
     .input-settings {
-      width: 100%;                       /* ancho completo */
-      padding: 10px;                     /* aire interior */
-      background: var(--surface2);       /* fondo oscuro */
-      border: 1px solid var(--border2);  /* borde sutil */
-      border-radius: 6px;                /* esquinas redondeadas */
-      color: var(--text);                /* texto claro */
+      width: 100%;
+      padding: 10px;
+      background: var(--tinta);
+      border: 2px solid var(--accent);
+      border-radius: 0;
+      color: var(--papel);
       font-size: 15px;
-      font-family: inherit;
-      outline: none;                     /* sin borde azul de foco */
+      font-family: var(--font-texto);
+      outline: none;
     }
 
     /* ------------------------------- PROPIO AL LOBBY ------------------------------------- */
-    .panel {
-      width: 100%;                      /* ancho completo del contenedor */
-      background: #000000;            /* fondo blanco para destacar sobre el gris clarito */
-      border: 2px solid var(--accent);  /* borde sutil */
-      border-radius: 8px;               /* esquinas redondeadas */
-      padding: 16px;                    /* aire interior */
-      margin-bottom: 16px;              /* separación entre paneles */
-      color: var(--text);
-    }
-    .volver-link {
-      align-self: flex-start;       /* alineado a la izquierda dentro del flex column */
-      margin-bottom: 16px;          /* separación con el título */
-      text-decoration: none;        /* sin subrayado */
-      color: var(--accent);         /* naranja de marca */
-      font-weight: bold;
-      font-size: 14px;
-    }
+
     #codigo-sala {
-      font-size: 28px;              /* código de sala bien visible */
+      font-size: 28px;
       font-weight: bold;
-      letter-spacing: 4px;          /* espaciado entre caracteres del código */
-      margin: 10px 0;
-      color: var(--accent);                   /* gris oscuro, legible sobre fondo blanco del panel */
+      letter-spacing: 4px;
+      color: var(--accent);
     }
 
-    .select-oscuro {                /* lista de mazos guardados */
-      background: #000000;
+    .select-oscuro {
+      background: var(--tinta);
       border: 2px solid var(--accent);
-      border-radius: 8px;
-      color: var(--text);
+      border-radius: 0;
+      color: var(--papel);
       padding: 7px 10px;
-      font-family: inherit;
+      font-family: var(--font-texto);
       font-size: 13px;
       cursor: pointer;
       outline: none;
     }
 
+    /* cabecera de la columna central: botón izquierda, título centrado */
+    header {
+      position: relative;           /* referencia para centrar el título */
+      display: flex;
+      align-items: center;
+      padding: 18px 28px;
+      border-bottom: 2px solid var(--accent);  /* línea  separadora */
+      background: var(--bg);
+      flex-shrink: 0;               /* nunca se encoge */
+      min-height: 60px;
+    }
+
+    header h1 {
+      position: absolute;
+      left: 50%;                    /* borde izquierdo en el centro... */
+      transform: translateX(-50%);  /* ...retrocede la mitad de su ancho: centrado exacto */
+      margin: 0;
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: 3px;
+      line-height: 1;
+      color: var(--tinta);
+      -webkit-text-stroke: 3px var(--accent);  /* contorno de tu color */
+      paint-order: stroke fill;                /* el contorno se pinta detrás del relleno */
+    }
+
+    .volver-link {
+      display: inline-block;
+      padding: 8px 14px;
+      font-size: 11px;
+      white-space: nowrap;
+      text-decoration: none;
+      text-transform: uppercase;    /* como los botones */
+    }
+
+
     /* ------------------------------- LISTA DE PARTIDAS ------------------------------------- */
     .partida-item {
+      background: var(--tinta);
+      border: 2px solid var(--accent);
+      box-shadow: none;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding: 8px 12px;
+      padding: 7px 16px;
       margin-bottom: 6px;
-      background: #000000;
-      border: 1px solid var(--accent);
-      border-radius: 6px;
     }
 
     .partida-nombre {
       font-size: 12px;
-      color: var(--text);
-    }
-
-    .partida-item .btn-mini {
-      flex: none;
-      padding: 5px 12px;
-      width: auto;
+      color: var(--papel);
     }
 
     .sin-partidas {
@@ -195,22 +204,99 @@
     }
 
     .btn-mini {
-      padding: 7px 4px;
-      border-radius: 6px;
-      border: 2px solid var(--accent);
-      background: #000000;
-      color: var(--text);
-      font-family: inherit;
+      padding: 5px 12px;
+      width: auto;
+      flex: none;
       font-size: 11px;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-      transition: all 0.15s;
     }
 
-    .btn-mini:hover {
+    /* tres zonas de la columna central */
+    .zona-mazo {
+      flex: 0;                          /* ocupa el espacio disponible */
+      padding: 5px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+                  min-height: 100px;
+
+    }
+
+    .zona-mazo h2 {
+      color: var(--accent);             /* título en naranja, sin fondo */
+      font-family: 'Anton', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .divisor {
+      height: 2px;
       background: var(--accent);
-      color: #000000;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .zona-botones {
+      padding: 16px 28px 1px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .zona-botones .btn-menu {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .deck-section-title {                           /* Your DECK */
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      padding: 8px 1px 4px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .estado-mazo { /* ==================================================== ESTADO DEL MAZO */
+      font-size: 14px;
+      color: var(--accent);
+      margin-left: 8px;
+    }
+
+    .zona-botones-titulo { /* ============================================ TITULO GRIS DE LA ZONA DE BOTONES */
+      width: 100%;
+      margin-bottom: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      text-transform: uppercase;
+    }
+
+    .sala-codigo {
+      font-size: 24px;
+      margin: 0;
+      padding: 4px 0;
+    }
+
+    .sala-estado {
+      font-size: 13px;
+      margin: 0;
+      padding: 2px 0;
+    }
+
+    .zona-sala {
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .partida-item .btn-opcion {
+      padding: 4px 10px;
+      font-size: 11px;
     }
   </style>
 </head>
@@ -223,28 +309,50 @@
 
     <!-- COLUMNA CENTRAL -->
     <div class="columna-central">
-      <a href="index.html" class="volver-link" data-i18n="lobby.volverInicio">← Volver a inicio</a>
-      <h1 data-i18n="menu.btnJugar">Jugar</h1>
-      <!-- PANEL: tu mazo -->
-      <div class="panel">
-        <h2 data-i18n="lobby.tituloMazo">Tu mazo</h2>
+      <header>
+        <a href="index.html" class="btn-menu volver-link" data-i18n="lobby.volverInicio">← Inicio</a>
+        <h1 class="titulo-caja" data-i18n="menu.btnJugar">Play</h1>
+      </header>
 
-        <select id="savedDecksSelectLobby" class="select-oscuro" style="width:100%; margin-bottom:10px;" onchange="cargarMazoGuardado(this.value)">
-          <option value="" data-i18n="lobby.elegirMazoGuardado">Elige un mazo guardado...</option>
-        </select>
-        
-        <p style="text-align:center; font-size:11px; color:var(--text2); margin-bottom:10px;" data-i18n="lobby.oImportarArchivo">— o importa un archivo —</p>
+      <div class="central-contenido">
 
-        <input type="file" id="input-mazo" accept=".json" style="margin:10px 0;">
-        <p id="estado-mazo" style="font-size:13px;" data-i18n="lobby.mazoNoCargado">Ningún mazo cargado</p>
+        <!-- ZONA MAZO -->
+        <div class="zona-mazo">
+          <div class="deck-section-title" data-i18n="lobby.tituloMazo">Your deck</div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          <select id="savedDecksSelectLobby" class="select-oscuro" style="width:50%;" onchange="cargarMazoGuardado(this.value)">
+            <option value="" data-i18n="lobby.elegirMazoGuardado">Elige un mazo guardado...</option>
+          </select>
+          <label for="input-mazo" class="btn-menu volver-link" style="cursor:pointer;">Importar</label>
+            <input type="file" id="input-mazo" accept=".json" style="display:none;">
+          <p id="estado-mazo" class="estado-mazo"></p>
+        </div>
+        </div>
+
+        <div class="divisor"></div>
+
+        <!-- ZONA BOTONES -->
+        <div class="zona-botones">
+          <div class="zona-botones-titulo" data-i18n="lobby.tituloCrear">Create</div>
+          <button id="btn-crear" class="btn-menu" ...>New match</button>
+          <button class="btn-menu" disabled>Solo</button>
+          <button class="btn-menu" disabled>Ranked</button>
+        </div>
+        <div class="zona-sala">
+          <p id="codigo-sala" class="sala-codigo" style="display:none"></p>
+          <p id="estado-sala" class="sala-estado"></p>
+        </div>
+
+        <div class="divisor" style="margin-top: 20px;"></div>
+      <!-- ZONA PARTIDAS ABIERTAS -->
+      <div class="zona-botones" style="flex-direction: column;">
+        <div class="zona-botones-titulo" data-i18n="lobby.tituloPartidas">Open matches</div>
+        <div id="lista-partidas" data-i18n="lobby.buscandoPartidas">Buscando partidas...</div>
       </div>
-      <!-- PANEL: crear partida -->
-      <div class="panel">
-        <h2 data-i18n="lobby.tituloCrear">Crear partida</h2>
-        <button id="btn-crear" class="btn-menu" data-i18n="lobby.btnCrear">Crear partida</button>
-        <p id="codigo-sala" style="display:none"></p>
-        <p id="estado-sala"></p>
-      </div>
+
+      </div> <!-- fin central-contenido -->
+
     </div> <!-- fin columna central -->
 
     <!-- COLUMNA DERECHA: BUSCAR / UNIRSE A PARTIDA -->
@@ -255,11 +363,6 @@
         <input type="text" id="input-codigo" placeholder="Ej: XK7F2A" maxlength="6" class="input-settings" style="margin-bottom:10px;">
         <button id="btn-unirse" class="btn-menu" data-i18n="lobby.btnUnirse">Unirse</button>
       </div>
-      <!-- PANEL: lista de partidas abiertas -->
-      <div class="panel">
-        <h2 data-i18n="lobby.tituloPartidas">Partidas abiertas</h2>
-        <div id="lista-partidas" data-i18n="lobby.buscandoPartidas">Buscando partidas...</div>
-      </div>
     </div> <!-- fin columna derecha -->
   </div> <!-- fin triptico -->
 
@@ -269,6 +372,35 @@
     if (colorGuardado) {
       document.documentElement.style.setProperty("--accent", colorGuardado);
     }
+  </script>
+
+  <script>
+    // ====================================================== ESCALAR COLUMNA IZQUIERDA
+    const ANCHO_DISENO_IZQ = 380;
+    function escalarIzquierda() {
+      const columna = document.getElementById("columna-izquierda");
+      const escala = columna.clientWidth / ANCHO_DISENO_IZQ;
+      columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
+    }
+    new ResizeObserver(escalarIzquierda).observe(document.getElementById("columna-izquierda"));
+
+    // ====================================================== ESCALAR COLUMNA CENTRAL
+    const ANCHO_DISENO_CENTRO = 750;
+    function escalarCentro() {
+      const columna = document.querySelector(".columna-central");
+      const escala = columna.clientWidth / ANCHO_DISENO_CENTRO;
+      columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
+    }
+    new ResizeObserver(escalarCentro).observe(document.querySelector(".columna-central"));
+
+    // ====================================================== ESCALAR COLUMNA DERECHA
+    const ANCHO_DISENO_DER = 500;
+    function escalarDerecha() {
+      const columna = document.getElementById("columna-derecha");
+      const escala = columna.clientWidth / ANCHO_DISENO_DER;
+      columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
+    }
+    new ResizeObserver(escalarDerecha).observe(document.getElementById("columna-derecha"));
   </script>
   
   <script src="i18n.js"></script>

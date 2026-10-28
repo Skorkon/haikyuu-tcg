@@ -1800,6 +1800,14 @@ function inicializarCartas() {
 
       potenciarReceptor(3, "Aoba Jôsai");                                 // +3 solo a receptores de Aoba Jôsai
 
+      jugador.zonas.bloqueoApoyo.forEach(c => jugador.trash.push(c));    // los apoyos van al descarte, como al resolver un bloqueo
+      jugador.zonas.bloqueoApoyo = [];                                   // vaciar zona de apoyo
+      game.bloqueoActual = { central: null, apoyos: [] };                // olvidar los bloqueadores de este bloqueo
+      if (modoOnline) {
+        enviarJugada("limpiarBloqueadores", {});                         // avisar al rival
+        enviarTrash(jugador);                                            // sincronizar trash
+      }
+
       game.fase = "recepcion";                                           // terminar fase de bloqueo
       log(t("log.habilidadActivada", { carta: carta.nombre }));
       if (modoOnline) enviarFase("recepcion");                           // sincronizar fase con el rival
@@ -2338,7 +2346,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +5 puntos de bloqueo.`
     }
   ),
-  crearCarta("Futakuchi Kenji", // =========================================================== P01-055
+  crearCarta("Futakuchi Kenji", // ============================================================== P01-055
     {
       saque: 5,
       recepcion: 0,

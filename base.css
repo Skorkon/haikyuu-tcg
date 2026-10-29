@@ -161,7 +161,7 @@ h1, h2, h3, button {
   color: var(--tinta);
   background: var(--bg);
   border: 5px solid var(--tinta);
-  box-shadow: 3px 3px 0px var(--accent);        /* 6px: más larga que la de un botón, para no confundirse */
+  box-shadow: 3px 3px 0px var(--accent);        /* 6px: más larga que la de un botón */
   padding: 8px 18px 6px;
   -webkit-text-stroke: 0;                    /* anula contornos que traiga el h1 de cada página */
   paint-order: normal;

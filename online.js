@@ -767,6 +767,7 @@ function confirmarMulliganOnline() {
         escucharMazoPuntosRival()   // escuchar los cambios de el mazo de puntos
         escucharMazoRival()         // escuchar los cambios de el mazo del rival
         escucharJugadasReactivas(); // escuchar jugadas reactivas
+        iniciarChat(); 
         actualizarFaseUI();         // actualizar el letrero
         renderMano();               // redibujar mano
         renderManoRival()
@@ -1065,4 +1066,53 @@ function arrancarMulligan(indicePrimerSacador) {
   log(t("log.partidaIniciada", { jugador: game.jugadores[indicePrimerSacador].nombre }));
   renderMano();
   renderCampo();
+}
+
+// ============================================================================= CHAT
+function iniciarChat() {
+  if (!modoOnline) return;                                   // solo en modo online
+  document.getElementById("chat-modo-solo").style.display = "none";
+
+  const input    = document.getElementById("chat-input");    // campo de texto
+  const boton    = document.getElementById("chat-send");     // botón enviar
+  const mensajes = document.getElementById("chat-messages"); // contenedor de mensajes
+
+  // aplicar textos traducidos
+  input.placeholder = t("ui.chatPlaceholder");
+  boton.textContent  = t("ui.chatEnviar");
+
+  // enviar mensaje a Firebase
+  function enviarMensaje() {
+    const texto = input.value.trim();                         // leer y limpiar el texto
+    if (!texto) return;                                       // ignorar si está vacío
+    db.ref("partidas/" + salaActual + "/chat").push({         // añadir mensaje a Firebase
+      jugador: miNumero,                                      // quién lo envía
+      texto:   texto,                                         // contenido
+      ts:      Date.now()                                     // marca de tiempo
+    });
+    input.value = "";                                         // limpiar el input
+  }
+
+  boton.addEventListener("click", enviarMensaje);            // enviar al pulsar botón
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") enviarMensaje();                  // enviar al pulsar Enter
+  });
+
+  // escuchar mensajes nuevos en tiempo real
+  db.ref("partidas/" + salaActual + "/chat").on("child_added", function(snap) {
+    const msg  = snap.val();                                  // datos del mensaje
+    const esMio = msg.jugador === miNumero;                   // ¿lo he enviado yo?
+
+    const div = document.createElement("div");                // crear elemento visual
+    div.textContent = msg.texto;
+    div.classList.add(esMio ? "chat-mio" : "chat-rival");
+    div.style.cssText =
+      "padding:2px 6px; border-radius:4px;" +
+      "background: rgba(0,0,0,0.07);" +
+      "align-self:" + (esMio ? "flex-end" : "flex-start") + ";" +
+      "max-width:90%; word-break:break-word;";
+
+    mensajes.appendChild(div);                               // añadir al contenedor
+    mensajes.scrollTop = mensajes.scrollHeight;              // scroll al último mensaje
+  });
 }

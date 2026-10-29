@@ -2,6 +2,15 @@
 <meta charset="UTF-8">
 
 <html>
+
+<!-- Tipografías (Google Fonts) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Estilos compartidos entre páginas -->
+<link rel="stylesheet" href="base.css">
+
 <style>
   * {
   box-sizing: border-box;
@@ -10,27 +19,28 @@
 }
 /* ----------------------------------------------------------------------------------------------- REMAKE : PASO 1 */
 :root {
-  --bg: #f2f0e8;              /* fondo gris clarito, papel de manga */
-  --surface: #16161a;         /* superficie oscura de paneles */
-  --surface2: #1e1e24;        /* superficie secundaria (inputs) */
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
   --text: #e8e8ec;            /* texto claro (sobre fondos oscuros) */
   --text2: #9090a0;           /* texto gris apagado */
-  --accent: #E8761A;          /* naranja de marca */
-  --font-body: 'Noto Sans JP', sans-serif;
   --cancha2: #7fb8d9; 
   --bggris: #B9B9B9;
 }
 
 body {
-  font-family: var(--font-body), Arial, sans-serif;
+  font-family: var(--font-texto), Arial, sans-serif;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);      /* ← antes #d0d0d0, ahora el gris clarito de toda la app */
+  /* background: var(--bg);      /* ← antes #d0d0d0, ahora el gris clarito de toda la app */
 }
 
+
+.titulo-caja {
+  color: var(--tinta);                       /* texto negro: tu color siempre es claro */
+  font-family: var(--font-texto);
+  font-weight: 700;
+  letter-spacing: 0px;
+  padding: 5px 20px 5px;
+}
 
 /* -------------------------------------------------- ZONA PRINCIPAL */
 .main {
@@ -42,38 +52,32 @@ body {
 /* -------------------------------------------------- IZQUIERDA */
 .panel-izquierda {
   width: 30%;
-  background: var(--bg);        /* ← antes #f2f2f2 */
+  background: transparent;  
   padding: 10px;
-  overflow-y: auto;
-  border-right: 2px solid var(--accent);   
+  overflow-y: auto;   
   display: flex;
   flex-direction: column;
-}
-
-.panel-acciones {
-  height: 180px;
-  overflow-y: auto;
+  position: relative;
+  border-right: 6px solid var(--accent);    /* como las columnas del index */
 }
 
 .titulo-mano-rival {
-  color: var(--accent);
-  font-size: 13px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  letter-spacing: var(--espaciado-titulos);
+  font-size: 18px;
+  color: var(--tinta);
   margin: 6px 0 10px;
   text-align: center;
 }
 #mano-rival {
   display: flex;
   justify-content: center;
-  flex-wrap: nowrap;         /* nunca saltar a una segunda fila */
-  gap: 0;                    /* el espacio lo gestiona el solape calculado */
+  flex-wrap: wrap;
+  gap: 4px;
   margin: -10px -10px 10px -10px;
   padding-top: 4px;
   flex-shrink: 0;   /* ← nuevo: nunca se encoge, siempre arriba del todo */
-}
-#mano-rival .carta {
-  flex-shrink: 0;            /* los dorsos nunca se estrechan: si no caben, se solapan más */
 }
 
 .contenido-inferior {
@@ -85,79 +89,94 @@ body {
 /* -------------------------------------------------- DERECHA */
 .panel-derecha {
   width: 20%;
-  background: var(--bg);        /* ← antes #f9f9f9 */
+  background: transparent;        /* ← antes var(--bg) */
   padding: 10px;
-  overflow-y: auto;
-  border-left: 2px solid var(--accent);    
+  overflow-y: hidden;
+  border-left: 6px solid var(--accent); 
   display: flex;
   flex-direction: column;
 }
 
+.panel-derecha .titulo-caja {
+  font-size: 12px;
+  padding: 5px 10px 4px;
+  width: auto;
+  display: inline-block !important;
+  margin-bottom: 12px;
+  align-self: flex-start;
+}
+
 .panel {
   margin-bottom: 15px;
-  padding: 10px;
-  background: var(--bg);          /* ← antes white, ahora negro (paneles estilo deckbuilder) */
-  /* border: 2px solid var(--accent); */
-  border-radius: 8px;
-  color: var(--text);            /* texto claro sobre fondo negro */
+  /*padding: 10px 12px;
+  /* background: var(--papel);          /* interior blanco */
+  /* border: var(--contorno);           /* trazo de tinta */
+  /* border-radius: 0;                  /* esquinas rectas, como una viñeta */
+  /* box-shadow: var(--sombra-dura);    /* sombra dura */
+  color: var(--tinta);
 }
 
-/* ----------------------------------------------------------------------------------------------- REMAKE : PASO 2 */
-.panel h3 {
-  color: var(--accent);
-  font-size: 13px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
+/* ---------------------------------------- PANEL ACCIONES: título a la izquierda, botones a la derecha */
+/* ---------------------------------------- PANEL ACCIONES: título abajo, botones creciendo hacia arriba */
+.panel-acciones {
+  display: flex;
+  align-items: flex-end;         /* título y columna de botones alineados por abajo */
+  gap: 14px;
+  margin: 0 14px 15px;           /* margen lateral dentro de la franja */
 }
 
-.panel button {
-  display: block;
-  width: 100%;
-  margin: 6px 0;
-  padding: 9px;
-  background: #000000;
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.15s;
+.panel-acciones h3 {
+  flex: none;                    /* el título no se estira ni se encoge */
+  margin: 0 0 0 3px;
 }
 
-.panel button:hover {
-  background: var(--accent);
-  color: #000000;
+.acciones-botones {
+  flex: 1;                       /* la columna ocupa todo el ancho restante */
+  display: flex;
+  flex-direction: column-reverse;   /* el primer botón del HTML va abajo; los siguientes, encima */
+  gap: 8px;
 }
 
-.panel button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.acciones-botones button {
+  margin: 0;                     /* el espacio entre botones ya lo da gap */
+}
+.panel-otros {
+  display: grid;
+  grid-template-columns: auto 1fr;     /* columna 1: lo que mida el título · columna 2: el resto */
+  column-gap: 14px;
+  row-gap: 8px;
+  align-items: center;                 /* el título y el primer botón, centrados en su fila */
+  align-content: start;                /* las filas se apilan arriba, no se reparten la altura */
+}
+.panel-otros h3 {
+  grid-column: 1;                      /* el título, siempre en la columna izquierda */
+  margin: 0 0 0 3px;                   /* el espacio entre filas ya lo da row-gap */
+}
+.panel-otros button {
+  grid-column: 2;                      /* todos los botones, en la columna derecha */
+  margin: 0;
+}
+
+/* panel Otros: fijo en el centro vertical del panel izquierdo */
+.panel-otros {
+  position: absolute;            /* saca a Otros del flujo del panel, sin verse afectado por los otros paneles*/
+  top: 40%;                      /* su borde superior, a media altura */
+  left: 24px;
+  right: 24px;
+  margin: 0;
 }
 
 .mano-bottom {
-  background: var(--bg);
-  /* border: 2px solid var(--accent); */
-  border-radius: 8px;
-  padding: 12px;
+  padding: 16px 0 4px;               /* aire arriba para que las cartas suban al pasar el ratón */
   text-align: center;
 }
 
 /* ----------------------------------------------------------------------------------------------- REMAKE : PASO 3 Columna derecha */
-.panel-derecha h3 {
-  color: var(--accent);
-  font-size: 13px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
 
 #log-container {
   border-bottom: 2px solid var(--accent) !important;   /* sustituye el #ccc inline del HTML */
-  border: 2px solid var(--accent);
-  border-radius: 8px;
+  border: 3px solid var(--accent);
+  border-radius: 0px;
 }
 
 #log {
@@ -166,36 +185,33 @@ body {
 }
 
 #selector-cartas {
-  background: #000000;
-  color: var(--text);
-  border-radius: 8px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 20%;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 10px 10px 10px;
+  background: var(--bg);
+  border-left: 6px solid var(--accent);
 }
 
-#selector-cartas button {
-  background: #000000;
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: bold;
-  padding: 9px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-#selector-cartas button:hover {
-  background: var(--accent);
-  color: #000000;
+#selector-cartas .btn-menu {
+  font-size: 0.75rem;
+  padding: 0px 1px;
+  align-self: flex-start;
 }
 
 #selector-mano {
-  display: flex;
-  flex-wrap: nowrap;      /* ← cambia esto: nunca salta de línea */
-  overflow-x: auto;        /* scroll horizontal si no caben todas */
-  gap: 5px;
+  height: 140px;
+  min-height: 140px;
+  background: #000;
+  border: 3px solid var(--accent);
+  padding: 6px;
+  align-items: center;
+  justify-content: center;
 }
-
   /* -------------------- BARRA DE SCROLL PERSONALIZADA  ------------------------- */
   /* ── SCROLLBAR PANEL IZQUIERDA ────────────────────────────── */
 .panel-izquierda::-webkit-scrollbar { width: 6px; }
@@ -208,6 +224,12 @@ body {
 .panel-derecha::-webkit-scrollbar-track { background: var(--bg); }
 .panel-derecha::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
 .panel-derecha::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
+
+/* -------------------------------------------------------------------------------- SCROLLBAR CHAT */
+#chat-messages::-webkit-scrollbar { width: 6px; }
+#chat-messages::-webkit-scrollbar-track { background: var(--bg); }
+#chat-messages::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+#chat-messages::-webkit-scrollbar-thumb:hover { background: #000000; border: 2px solid var(--accent); }
   
   #log-container::-webkit-scrollbar {
     width: 6px;
@@ -236,6 +258,7 @@ body {
   background: var(--bggris);
   padding: 10px;
   outline: 5px solid white;     /* gris oscuro alrededor del borde blanco */
+  outline-offset: -5px;        /* el filete blanco, por dentro del campo: ya no tapa los bordes de los paneles */
   min-width: 0;                   /* deja que el campo central sea más estrecho que el tablero */
   overflow: hidden;               /* lo que sobre del tablero (antes de escalar) no se ve */
 }
@@ -307,6 +330,11 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   flex-wrap: nowrap; /* no saltar a segunda fila */
+  filter:           /* borde blanco a toda la mano */
+    drop-shadow(2px 0 0 var(--papel))
+    drop-shadow(-2px 0 0 var(--papel))
+    drop-shadow(0 2px 0 var(--papel))
+    drop-shadow(0 -2px 0 var(--papel));
 }
 
 /* -------------------------------------------------- CARTAS */
@@ -322,14 +350,39 @@ body {
 }
 
 .carta:hover {
-  /* filter: brightness(1.1);          aclara ligeramente la carta */
-  outline: 2px solid #31d1ae;      /* marco verde al hacer hover */
-  outline-offset: -2px;            /* el marco queda por dentro de la carta */
+  outline: 2px solid var(--accent);        /* trazo de tinta al pasar el ratón */
+  outline-offset: -2px;                   /* por dentro de la carta */
 }
 
 .carta.seleccionada {
-  outline: 2px solid red;
+  outline: 3px solid var(--tinta);        /* marco negro, por dentro de la carta */
   outline-offset: -2px;
+  box-shadow: 3px 3px 0 var(--accent);    /* sombra dura de tu color, como en los botones */
+}
+
+/* carta de la mano: se levanta al pasar el ratón */
+#mano .carta {
+  position: relative;               /* necesario para que z-index funcione */
+  transition: transform 0.12s ease-out;
+}
+#mano .carta:hover {
+  transform: translateY(-12px);     /* sube 12px */
+  z-index: 10;                      /* se pone delante de sus vecinas */
+}
+/* la carta seleccionada de la mano se queda levantada */
+#mano .carta.seleccionada {
+  transform: translateY(-12px);
+  z-index: 10;
+}
+/* la carta que se está arrastrando se queda semitransparente en su sitio */
+#mano .carta.arrastrando {
+  opacity: 0.4;
+}
+/* mientras se reordena la mano, el hover no levanta cartas (el navegador lo deja "congelado") */
+#mano.ordenando .carta:not(.seleccionada):hover {
+  transform: none;
+  z-index: auto;
+  outline: none;
 }
 
 /* -------------------------------------------------- PREVIEW */
@@ -359,38 +412,41 @@ body {
   display: none;
   position: fixed;
   background: var(--bg);
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
   padding: 0;
   z-index: 100;
   width: 300px;
   pointer-events: none;
-  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  box-shadow: 5px 5px 0 var(--tinta);
 }
 .tooltip-imagen {
   width: 100%;
-  height: 420px;
+  aspect-ratio: 5 / 7;
   background-size: cover;
   background-position: center;
 }
-.tooltip-info {
-  background: #000000;
-  color: var(--text);
-  padding: 12px;
+.tooltip-etiqueta {
+  position: absolute;
+  bottom: calc(100% - 8px);
+  right: 12px;
+  max-width: calc(100% - 24px);
+  padding: 4px 8px;
+  border: 3px solid var(--tinta);
+  box-shadow: 3px 3px 0 var(--tinta);
+  z-index: 2;
 }
-.tooltip-info h3 {
-  font-size: 14px;
-  margin-bottom: 4px;
+.tooltip-nombre {
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: var(--espaciado-titulos);
+  text-transform: uppercase;
 }
-.tooltip-info .tooltip-meta {
-  font-size: 10px;
-  color: var(--text2);
-  margin-bottom: 8px;
-}
-.tooltip-info .tooltip-stats {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 10px;
+.tooltip-datos {
+  font-size: 11px;
+  margin-top: 2px;
 }
 .tstat {
   flex: 1;
@@ -408,16 +464,21 @@ body {
   display: block;
   font-size: 11px;
 }
-.tstat-saque     { background: rgba(230,81,0,.2);   color: #ff9248; }
-.tstat-recepcion { background: rgba(21,101,192,.2); color: #5b9bf5; }
-.tstat-pase      { background: rgba(46,125,50,.2);  color: #6fcf73; }
-.tstat-remate    { background: rgba(198,40,40,.2);  color: #ff6b6b; }
-.tstat-bloqueo   { background: rgba(66,66,66,.3);   color: #bbb; }
-.tooltip-info .tooltip-desc {
-  font-size: 10px;
+.tooltip-desc {
+  position: absolute;
+  top: calc(100% - 20px);
+  right: 12px;
+  max-width: calc(100% - 24px);
+  font-size: 12px;
   line-height: 1.5;
-  border-top: 1px solid var(--border2);
-  padding-top: 8px;
+  padding: 10px 12px;
+  background: var(--color-escuela, var(--bg));
+  color: var(--tinta-escuela, var(--text));
+  border: 3px solid var(--tinta);
+  box-shadow: 3px 3px 0 var(--tinta);
+}
+.tooltip-desc:empty {
+  display: none;
 }
 
 /* -------------------------------------------------- ZONAS */
@@ -471,15 +532,8 @@ body {
   width: 100%;
 }
 
-.red {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
 /* -------------------------------------------------- BOTONES */
 button {
-  display: block;
   width: 100%;
   margin: 5px 0;
   padding: 8px;
@@ -806,6 +860,7 @@ button {
     animation: flipPapel 0.22s ease-in-out;
   }
 
+  /* --------------- NOVEDADES V3 ------------------------------------------------------------------- */
   /* --------------------------------------------------------------------------------- CONTADOR TURNO */
   .contador-turno {
     position: absolute;
@@ -819,6 +874,98 @@ button {
     font-size: 13px;
     font-weight: bold;
     z-index: 10;
+  }
+
+  /* ----------------------------------------------------------- Cambiar tamaño de titulo-caja y btn-menu */
+  .panel .titulo-caja {
+    font-size: 12px;
+    padding: 5px 10px 4px;
+  }
+  .panel .btn-menu {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  /* ----------------------------------------------------------- Tamaño botones LOG y CHAT */
+  .tabs-panel {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .tabs-panel .btn-opcion {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  /* ------------------------------------------------------------------------------- CHAT */
+  .panel-derecha {
+    overflow-x: hidden;   /* evita scroll horizontal */
+  }
+
+  #chat-container {
+    height: 50%;
+    max-height: 50%;
+    overflow: hidden;
+    flex-direction: column;
+    border: 3px solid var(--accent);
+    border-radius: 0;
+  }
+
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+  }
+
+  #chat-messages div {
+    word-break: break-word;
+    max-width: 100%;
+  }
+
+  #chat-input-area {
+    flex-shrink: 0;
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border-top: 2px solid var(--accent);
+  }
+
+  #chat-input {
+    flex: 1;
+    padding: 4px 8px;
+    background: transparent;
+    color: var(--tinta);
+    border: none;
+    border-bottom: 1px solid var(--tinta);
+    border-radius: 0;
+    font-family: inherit;
+    font-size: 11px;
+    outline: none;
+  }
+  .chat-mio { color: var(--accent); }
+  .chat-rival { color: var(--tinta); }
+
+  /* ------------------------------------------------------------------------------- ZONA SELECTOR */
+  #selector-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text2);
+    padding: 8px 6px 4px;
+    text-transform: uppercase;
+  }
+  #selector-cartas .btn-menu {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    align-self: flex-start;
+  }
+  #btn-cancelar-selector {
+    cursor: pointer;
   }
 
 </style>
@@ -836,26 +983,26 @@ button {
     <h3 class="titulo-mano-rival" id="tituloManoRival"></h3>
     <!----------------------------------------------------------------------- ACCIONES -->
     <div class="contenido-inferior">
-      <div class="panel">
-        <h3 data-i18n="ui.panelBotones">Otros</h3>
-        <div style="display:flex; gap:6px;">
-          <button style="flex:1;" onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
-          <button style="flex:1;" onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
-        </div>
-        <button id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
+      <div class="panel panel-otros">
+        <h3 class="titulo-caja" data-i18n="ui.panelBotones">Otros</h3>
+        <button class="btn-menu" onclick="deseleccionarCarta()" data-i18n="ui.btnDeseleccionar">Deseleccionar carta</button>
+        <button class="btn-menu" onclick="concederPunto()" data-i18n="ui.btnConcederPunto">Conceder punto</button>
+        <button class="btn-menu" id="btn-confirmar-mulligan" onclick="confirmarMulligan(modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo])" data-i18n="ui.btnMulligan">Confirmar mulligan</button>
       </div> <!-- fin panel otros -->
       <div class="panel panel-acciones">
-        <h3 data-i18n="ui.panelAcciones">Acciones</h3>
-        <button id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
-        <button id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
-        <button id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
-        <button id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
-        <button id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
-        <button id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
-        <button id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
-        <button id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
-        <button id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
-        <button id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
+        <h3 class="titulo-caja" data-i18n="ui.panelAcciones">Acciones</h3>
+        <div class="acciones-botones">   <!-- NUEVO: columna de botones -->
+          <button class="btn-menu" id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
+          <button class="btn-menu" id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
+          <button class="btn-menu" id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
+          <button class="btn-menu" id="btn-accion-recepcion" onclick="resolverRecepcion()" data-i18n="ui.btnRecepcion" style="display:none">Recepción</button>
+          <button class="btn-menu" id="btn-accion-pase" onclick="resolverPase()" data-i18n="ui.btnPase" style="display:none">Pase</button>
+          <button class="btn-menu" id="btn-accion-remate" onclick="resolverRemate()" data-i18n="ui.btnRemate" style="display:none">Remate</button>
+          <button class="btn-menu" id="btn-accion-bloqueo" onclick="resolverBloqueo()" data-i18n="ui.btnBloqueo" style="display:none">Bloqueo</button>
+          <button class="btn-menu" id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
+          <button class="btn-menu" id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
+          <button class="btn-menu" id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
+        </div>                            <!-- NUEVO: fin columna de botones -->
       </div> <!-- fin panel acciones -->
       <div class="mano-bottom">
         <div id="mano"></div>
@@ -947,18 +1094,28 @@ button {
 <!-------------------------------------------------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------------------------------- DERECHA: LOG -->
   <div class="panel-derecha">
-    <div id="log-container" style="height:65%; overflow-y:auto; border-bottom: 2px solid #ccc; padding:10px;">
-      <h3 data-i18n="ui.tituloLog">Log</h3>
+    <div class="tabs-panel">
+      <button class="btn-opcion activo" onclick="mostrarTab('log')">LOG</button>
+      <button class="btn-opcion" onclick="mostrarTab('chat')">CHAT</button>
+    </div> <!-- fin tabs-panel -->
+    <div id="log-container" style="height:50%; overflow-y:auto; padding:10px;">
       <div id="log"></div>
-    </div>
-    <div id="selector-cartas" style="height:30%; padding:10px; display:none; flex-direction:column; gap:8px; margin-top:auto;">
+    </div> <!-- fin log container -->
+    <div id="chat-container" style="display:none;">
+      <div id="chat-modo-solo" style="display:none; padding:10px; font-size:11px; color:var(--gris-medio);" data-i18n="ui.chatDeshabilitado">Chat deshabilitado en modo SOLO</div>
+      <div id="chat-messages"></div>
+      <div id="chat-input-area">
+        <input id="chat-input" type="text" data-i18n-placeholder="ui.chatPlaceholder">
+        <button id="chat-send" class="btn-menu" data-i18n="ui.chatEnviar"></button>
+      </div>
+    </div> <!-- fin chat container -->
+    <div id="selector-cartas">
+      <button id="btn-cancelar-selector" onclick="cancelarSelector()" class="btn-menu" data-i18n="ui.cancelar">Cancelar</button>
       <h3 id="selector-titulo" data-i18n="ui.elegirCarta">Elige una carta:</h3>
       <div id="selector-mano" style="display:flex; flex-wrap:nowrap; gap:5px; overflow-x:auto;" onmouseleave="document.getElementById('tooltip').style.display='none'">
-      <button onclick="cancelarSelector()" data-i18n="ui.cancelar">Cancelar</button>
+      </div>
     </div>
-  </div>
-
-</div>
+</div> <!-- fin panel derecha -->
 
 <!-- PANEL FIN DE PARTIDA -->
 <div id="panel-fin" style="
@@ -1037,6 +1194,112 @@ button {
 
   // se ejecuta al cargar y cada vez que cambie el tamaño del campo central
   new ResizeObserver(escalarTablero).observe(document.querySelector(".campo-central"));
+
+  // ====================================================== SONIDO AL CAMBIAR DE POSICIÓN UNA CARTA DE LA MANO
+  const sonidoCarta = new Audio("audio/draw2.mp3");   // se carga una sola vez
+  const VOLUMEN_CARTA = 0.05;                          // 20% del volumen general del jugador
+
+  function reproducirSonidoCarta() {
+    try {
+      if (obtenerHinchada() === "ninguna") return;    // "Sin sonido" en ajustes: silencio
+      sonidoCarta.volume = obtenerVolumen() * VOLUMEN_CARTA;
+      sonidoCarta.currentTime = 0;                    // vuelve al principio si aún sonaba
+      sonidoCarta.play().catch(() => {});             // si el navegador lo bloquea, no da error
+    } catch (err) {
+      console.warn("[sonido]", err);                  // un fallo de sonido nunca debe afectar a la partida
+    }
+  }
+
+  // ====================================================== REORDENAR LA MANO ARRASTRANDO
+  const manoEl = document.getElementById("mano");
+  let cartaArrastrada = null;      // el div de la carta que se está arrastrando
+  let indiceOrigen = null;         // su posición en la mano al empezar
+  let margenSolape = "0px";        // el margen negativo con el que renderMano solapa las cartas
+
+  // la mano que se ve en pantalla (el mismo criterio que usa renderMano)
+  function jugadorDeLaMano() {
+    return modoOnline ? game.jugadores[miNumero - 1] : game.jugadores[game.jugadorActivo];
+  }
+
+  // renderMano da margen 0 a la primera carta y margen negativo a las demás;
+  // al mover cartas hay que repetirlo, si no el solape se descoloca
+  function reajustarSolape() {
+    Array.from(manoEl.children).forEach((c, i) => {
+      c.style.marginLeft = i === 0 ? "0" : margenSolape;
+    });
+  }
+
+  // 1. empieza el arrastre
+  manoEl.addEventListener("dragstart", function (e) {
+    const carta = e.target.closest(".carta");
+    if (!carta) return;
+    manoEl.classList.add("ordenando");               // desactiva la subida por hover mientras se arrastra
+    const cartas = Array.from(manoEl.children);
+    cartaArrastrada = carta;
+    indiceOrigen = cartas.indexOf(carta);
+    margenSolape = cartas.length > 1 ? cartas[1].style.marginLeft : "0";  // se lo copiamos a renderMano
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", "");                  // Firefox no arrastra sin algún dato
+    document.getElementById("tooltip").style.display = "none";
+
+    // la transparencia se aplica un instante después: si no, la "imagen fantasma"
+    // que el navegador pega al ratón saldría también transparente
+    setTimeout(() => carta.classList.add("arrastrando"), 0);
+  });
+
+  // 2. mientras se arrastra: mover la carta a donde caería
+  manoEl.addEventListener("dragover", function (e) {
+    if (!cartaArrastrada) return;                    // solo si el arrastre empezó en la mano
+    e.preventDefault();                              // permitir soltar aquí
+
+    const destino = e.target.closest(".carta");
+    if (!destino || destino === cartaArrastrada) return;   // en un hueco o sobre sí misma: nada
+
+    // ¿mitad izquierda (va delante) o mitad derecha (va detrás) de la carta de destino?
+    const rect = destino.getBoundingClientRect();
+    const delante = e.clientX < rect.left + rect.width / 2;
+    const referencia = delante ? destino : destino.nextSibling;   // se insertará justo antes de esta
+
+    // si ya está en ese sitio, no tocar nada (evita parpadeos)
+    if (referencia === cartaArrastrada || cartaArrastrada.nextSibling === referencia) return;
+
+    manoEl.insertBefore(cartaArrastrada, referencia);   // referencia null = al final
+    reajustarSolape();
+    reproducirSonidoCarta();                            // suena cada vez que la carta cambia de posición
+  });
+
+  // 3. se suelta dentro de la mano: guardar el orden que se ve en pantalla
+  manoEl.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (!cartaArrastrada) return;
+
+    const indiceFinal = Array.from(manoEl.children).indexOf(cartaArrastrada);
+    const mano = jugadorDeLaMano().mano;
+    const [carta] = mano.splice(indiceOrigen, 1);    // sacarla de su sitio original
+    mano.splice(indiceFinal, 0, carta);              // meterla donde ha quedado en pantalla
+  });
+
+  // 4. fin del arrastre (se haya soltado dentro o fuera)
+  manoEl.addEventListener("dragend", function () {
+    if (!cartaArrastrada) return;
+    manoEl.classList.remove("ordenando");
+    cartaArrastrada = null;
+    indiceOrigen = null;
+    renderMano();   // redibuja desde el array: con el orden nuevo, o el original si se soltó fuera
+  });
+
+  // ================================================================================= OCULTAR/MOSTRAR CHAT/LOG
+  function mostrarTab(tab) {
+    document.getElementById('log-container').style.display = tab === 'log' ? 'block' : 'none';
+    document.getElementById('chat-container').style.display = tab === 'chat' ? 'flex' : 'none';
+    if (tab === 'chat' && !modoOnline) {
+      document.getElementById('chat-modo-solo').style.display = 'block';
+    }
+    document.querySelectorAll('.tabs-panel .btn-opcion').forEach(b => b.classList.remove('activo'));
+    event.target.classList.add('activo');
+  }
+
 </script>
 
 </html>

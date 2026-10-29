@@ -1756,6 +1756,7 @@ function inicializarCartas() {
       posicion: "WS",
       anyo: 3,
       rareza: "R",
+      zonasHabilidad: ["remate"],
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Ataque</span></strong> Puedes descartar 1 carta de <strong>Aoba Jôsai</strong> para usar esta habilidad. Este personaje obtiene +2 puntos de ataque. </br>Si el rival tiene 4 o menos cartas en la mano, durante su próximo turno, no podrá añadir cartas a su mano mediante habilidades.`
     }
   ),

@@ -154,7 +154,8 @@ function crearCarta(nombre, stats = {}, habilidad, info = {}) {
       tipo: info.tipo || "personaje",
       subtipo: info.subtipo || null,
       id: info.id || null,
-      fases: info.fases || [],
+      fases: info.fases || [],                              // fases permitidas para el uso de eventos
+      zonasHabilidad: info.zonasHabilidad || [],            // para ocultar/mostrar botones si el jugador puede usar habilidad en la zona en la que está
       escuela: info.escuela || null,
       posicion: info.posicion || null,
       anyo: info.anyo || null,
@@ -319,18 +320,27 @@ function nombreRepetido(jugador, nombre) {
   return !!(cartaAnterior?.recienJugada && cartaAnterior.nombre === nombre); // recién jugada y con el mismo nombre
 }
 // ================================================================== MARCAR / COMPROBAR EVENTO JUGADO EN LA FASE
-function marcarEventoEnFase(carta) {                                     // se llama al jugar un evento o una carta desde la mano
+function marcarEventoEnFase(carta) {                                     // al jugar un evento o una carta desde la mano (paso libre)
+  let marca = { anterior: game.faseConEvento, cerradas: [] };            // para poder deshacerlo si al final no se juega
   if (carta?.info?.faseRobo && game.fase === "recepcion") {              // evento de Robo en recepción...
     let receptor = game.jugadores[game.jugadorActivo].zonas.recepcion.at(-1); // receptor actual
-    if (!receptor || !receptor.recienJugada) return;                     // ...antes de colocar al receptor: es fase de robo, no cierra nada
+    if (!receptor || !receptor.recienJugada) return marca;               // ...antes del receptor: es la fase de robo, no cierra nada
   }
   let jugador = game.jugadores[game.jugadorActivo];                      // jugador que juega el evento
   ["saque", "recepcion", "pase", "remate", "bloqueo", "bloqueoApoyo"].forEach(zona => { // todas sus zonas
     jugador.zonas[zona].forEach(c => {                                   // cada carta de la zona
-      if (c.recienJugada) c.entradaCerrada = true;                       // los personajes ya en juego pierden su "al entrar"
+      if (c.recienJugada && !c.entradaCerrada) {                         // personajes ya en juego que aún podían usar su "al entrar"
+        c.entradaCerrada = true;                                         // lo pierden (FAQ)
+        marca.cerradas.push(c);                                          // apuntar para poder deshacerlo
+      }
     });
   });
-  game.faseConEvento = { fase: game.fase, turno: game.turno };           // desde ahora no se colocan más personajes en esta fase (reglas 5-13 / 5-14)
+  game.faseConEvento = { fase: game.fase, turno: game.turno };           // se acabó el paso de entrada: no más personajes en esta fase
+  return marca;                                                          // devolver lo que se ha cambiado
+}
+function deshacerMarcaEvento(marca) {                                    // el evento o la carta no llegó a jugarse: volver como estaba
+  game.faseConEvento = marca.anterior;                                   // restaurar el estado anterior de la fase
+  marca.cerradas.forEach(c => c.entradaCerrada = false);                 // reabrir las habilidades que se habían cerrado
 }
 function hayEventoEnFase() {                                             // ¿ya se jugó un evento en esta fase?
   return game.faseConEvento?.fase === game.fase &&                       // misma fase
@@ -560,85 +570,135 @@ function mostrarEleccion(opciones) { // ===================================== MO
 // =============================================================================================
 function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
   bloquearUI();
+  document.getElementById("btn-cancelar-selector").disabled = !cancelable;
 
-  // limpiar cualquier listener de cancelable residual de una llamada anterior,
-  // sin importar si aquel selector se cerró clicando dentro o fuera —
-  // esto evita que listeners "zombi" se acumulen en document y se disparen más tarde
   if (window._cerrarFuera) {
     document.removeEventListener("click", window._cerrarFuera, { capture: true });
     window._cerrarFuera = null;
   }
 
   return new Promise(resolve => {
-    let selector = document.getElementById("selector-cartas");
-    let contenedor = document.getElementById("selector-mano");
-    let tituloEl = document.getElementById("selector-titulo");
+    const CARTAS_POR_PAGINA = 6;
+    let paginaActual = 0;
+    const totalPaginas = Math.ceil(cartas.length / CARTAS_POR_PAGINA);
+
+    let selector    = document.getElementById("selector-cartas");
+    let contenedor  = document.getElementById("selector-mano");
+    let tituloEl    = document.getElementById("selector-titulo");
 
     tituloEl.innerHTML = titulo;
-    contenedor.innerHTML = "";
     selector.style.display = "flex";
 
-    // ejemplo creado para el evento de los Miya (no he entendido mucho esto)
-    if (cancelable) {                                                         // si se puede cerrar clicando fuera
-      window._cerrarFuera = function(e) {                                     // guardar referencia global
-        if (!selector.contains(e.target)) {                                   // si el clic es fuera del selector
-          cerrarSelector();                                                    // cerrar selector
-          desbloquearUI();
-          resolve(null);                                                        // resolver con null (cancelado)
-          document.removeEventListener("click", window._cerrarFuera, { capture: true }); // limpiar listener
-          window._cerrarFuera = null;                                           // limpiar referencia global
+    // ── Botones de paginación (se crean una sola vez) ──────────────────
+    let navExistente = document.getElementById("selector-nav");
+    if (navExistente) navExistente.remove();
+
+    const nav = document.createElement("div");
+    nav.id = "selector-nav";
+    nav.style.cssText = "display:flex; justify-content:space-between; align-items:center; gap:6px; width:100%;";
+
+    const btnAnterior = document.createElement("button");
+    btnAnterior.textContent = "◀";
+    btnAnterior.className = "btn-menu";
+    btnAnterior.style.cssText = "width:auto; padding:2px 10px;";
+
+    const indicador = document.createElement("span");
+    indicador.style.cssText = "font-size:11px; color:var(--text2); flex:1; text-align:center;";
+
+    const btnSiguiente = document.createElement("button");
+    btnSiguiente.textContent = "▶";
+    btnSiguiente.className = "btn-menu";
+    btnSiguiente.style.cssText = "width:auto; padding:2px 10px;";
+
+    nav.appendChild(btnAnterior);
+    nav.appendChild(indicador);
+    nav.appendChild(btnSiguiente);
+
+    // Insertar la nav justo antes del contenedor de cartas
+    selector.insertBefore(nav, contenedor);
+
+    // ── Función que dibuja la página actual ────────────────────────────
+    function renderPagina() {
+      contenedor.innerHTML = "";
+
+      const inicio = paginaActual * CARTAS_POR_PAGINA;
+      const cartasPagina = cartas.slice(inicio, inicio + CARTAS_POR_PAGINA);
+
+      // Paginación: mostrar solo si hay más de una página
+      nav.style.display = totalPaginas > 1 ? "flex" : "none";
+      btnAnterior.disabled  = paginaActual === 0;
+      btnSiguiente.disabled = paginaActual === totalPaginas - 1;
+      indicador.textContent = totalPaginas > 1
+        ? `${paginaActual + 1} / ${totalPaginas}`
+        : "";
+
+      // Solapamiento igual que antes
+      const cartaAncho        = 80;
+      const contenedorAncho   = contenedor.offsetWidth;
+      const overlapNecesario  = cartasPagina.length > 1
+        ? Math.max(0, (cartasPagina.length * cartaAncho - contenedorAncho) / (cartasPagina.length - 1))
+        : 0;
+
+      cartasPagina.forEach((carta, index) => {
+        let div = document.createElement("div");
+        div.classList.add("carta");
+        div.style.marginRight = index === cartasPagina.length - 1 ? "0" : `-${overlapNecesario}px`;
+        div.style.zIndex = cartasPagina.length - index;
+
+        if (carta.info?.id) {
+          mostrarIMGmini(div, carta.info.id);
+        } else {
+          div.textContent = carta.nombre;
         }
-      };
-      document.addEventListener("click", window._cerrarFuera, { capture: true }); // añadir listener
+
+        div.addEventListener("mouseover", (e) => mostrarTooltip(carta, e));
+        div.addEventListener("mousemove", (e) => mostrarTooltip(carta, e));
+        div.addEventListener("mouseout", () => {
+          document.getElementById("tooltip").style.display = "none";
+        });
+
+        div.onclick = () => {
+          cerrarSelector();
+          desbloquearUI();
+          if (window._cerrarFuera) {
+            document.removeEventListener("click", window._cerrarFuera, { capture: true });
+            window._cerrarFuera = null;
+          }
+          resolve(carta);
+        };
+
+        contenedor.appendChild(div);
+      });
     }
 
-    // Cálculo de solapamiento, igual que en renderMano()
-    let totalCartas = cartas.length;
-    let contenedorAncho = contenedor.offsetWidth;
-    let cartaAncho = 80;
-    let overlapNecesario = totalCartas > 1
-      ? Math.max(0, (totalCartas * cartaAncho - contenedorAncho) / (totalCartas - 1))
-      : 0;
+    btnAnterior.onclick  = () => { paginaActual--; renderPagina(); };
+    btnSiguiente.onclick = () => { paginaActual++; renderPagina(); };
 
-    cartas.forEach((carta, index) => {
-      let div = document.createElement("div");
-      div.classList.add("carta");
-      div.style.marginRight = index === cartas.length - 1 ? "0" : `-${overlapNecesario}px`;
-      div.style.zIndex = cartas.length - index;
+    renderPagina(); // dibujar la primera página
 
-      if (carta.info?.id) { 
-        mostrarIMGmini(div, carta.info.id);
-      } else {
-        div.textContent = carta.nombre;
-      }
-
-      div.addEventListener("mouseover", (e) => mostrarTooltip(carta, e));
-      div.addEventListener("mousemove", (e) => mostrarTooltip(carta, e));
-      div.addEventListener("mouseout", () => {
-        document.getElementById("tooltip").style.display = "none";
-      });
-
-      div.onclick = () => {
-        cerrarSelector();
-        desbloquearUI();
-        // elegir una carta normalmente también debe anular la posibilidad de cancelar por fuera de ESTE selector,
-        // si no, su listener se queda huérfano ligado a un elemento del DOM ya eliminado
-        if (window._cerrarFuera) {
+    // ── Cancelar clicando fuera (igual que antes) ──────────────────────
+    if (cancelable) {
+      window._cerrarFuera = function(e) {
+        if (!selector.contains(e.target)) {
+          cerrarSelector();
+          desbloquearUI();
+          resolve(null);
           document.removeEventListener("click", window._cerrarFuera, { capture: true });
           window._cerrarFuera = null;
-        }           
-        resolve(carta);                     // resolver con la carta elegida
+        }
       };
-      contenedor.appendChild(div);           // añadir al contenedor
-    });
+      document.addEventListener("click", window._cerrarFuera, { capture: true });
+    }
 
-    window._selectorResolve = resolve;       // guardar resolve para el botón cancelar (a verificar si borrar)
+    window._selectorResolve = resolve;
   });
 }
 
 function cerrarSelector() {
   document.getElementById("selector-cartas").style.display = "none";
   document.getElementById("selector-mano").innerHTML = "";
+  const nav = document.getElementById("selector-nav");
+  if (nav) nav.remove();
 }
 
 function cancelarSelector() {
@@ -1911,7 +1971,7 @@ async function jugarEvento() {
   jugador.zonas.eventos.push(carta); // colocar en zona de eventos
   carta.zonaActual = "eventos";
   carta.recienJugada = true;                                       // jugada este turno (se limpia al cambiar de turno)
-  marcarEventoEnFase(carta);                                       // desde ahora no se colocan personajes ni se usan habilidades en esta fase
+  let marcaEvento = marcarEventoEnFase(carta);                     // cerrar el paso de entrada (se deshace si el evento vuelve a la mano)
 
   log(t("log.eventoJugado", { 
     jugador: jugador.nombre, 
@@ -1922,6 +1982,8 @@ async function jugarEvento() {
   if (carta.habilidad) { // activar el efecto
     await carta.habilidad(jugador, game, carta);
   }
+  if (!jugador.zonas.eventos.includes(carta)) deshacerMarcaEvento(marcaEvento); // volvió a la mano: no cuenta como jugado
+
   if (faseAlJugar === "remate" && jugador.zonas.eventos.includes(carta)) { // evento jugado de verdad en tu fase de remate
     aplicarKageyama047(jugador);                                   // comprobar Kageyama P03-047 en pase
   }
@@ -1979,11 +2041,12 @@ async function jugarHabilidadDesdeMano() {                       // async: algun
     return;                                                        // cancelar sin descartar
   }
 
-  marcarEventoEnFase(carta);                                     // misma temporización que un evento
+  let marcaEvento = marcarEventoEnFase(carta);                   // misma temporización que un evento (se deshace si no se usa)
 
   if (carta.info?.manoAEventos || carta.info?.costePropio) {     // la habilidad comprueba condiciones y paga su propio coste (Hinata P03-001, Tashiro P03-056)
     game.cartaSeleccionada = null;                               // deseleccionar antes de abrir selectores
     await carta.habilidad(jugador, game, carta);                 // la habilidad comprueba condiciones y mueve la carta ella misma
+    if (jugador.mano.includes(carta)) deshacerMarcaEvento(marcaEvento); // la carta sigue en la mano: no se llegó a usar
     renderMano();                                                // actualizar mano
     renderManoRival();                                           // actualizar mano rival
     renderCampo();                                               // actualizar campo
@@ -2223,12 +2286,15 @@ function actualizarBotonesAccion() {
   } else {
     document.getElementById('btn-accion-' + fase).style.display = 'block';
   }
-
+  
+  // ==================================================== MOSTRAR/OCULTAR BOTÓN USAR HABILIDAD O JUGAR EVENTO SEGÚN LA FASE
   if (game.ultimaCarta && game.ultimaCarta.habilidad &&
       !game.ultimaCarta.habilidadUsada && !game.ultimaCarta.info?.activacionMano) {
     const fasesCarta = game.ultimaCarta.info?.fases;
     const faseValida = !fasesCarta || fasesCarta.length === 0 || fasesCarta.includes(fase);
-    if (faseValida) {
+    const zonasHabilidad = game.ultimaCarta.info?.zonasHabilidad;
+    const zonaValida = !zonasHabilidad || zonasHabilidad.length === 0 || zonasHabilidad.includes(fase);
+    if (faseValida && zonaValida) {
       document.getElementById('btn-accion-usarHabilidad').style.display = 'block';
     }
   }
@@ -2686,45 +2752,54 @@ function mostrarTooltip(carta, e) {
   let tooltip = document.getElementById("tooltip");
   
   const colorEscuela = getSchoolColor(carta.info?.escuela);
+  tooltip.style.setProperty("--color-escuela", colorEscuela);
+  tooltip.style.setProperty("--tinta-escuela", tintaSobre(colorEscuela));
   const nombre = DESCRIPCIONES?.[carta.info?.id]?.["nombre_" + idiomaActivo] || carta.nombre;
-
-  let infoStats = carta.info?.tipo === "evento" ? "" : `
-    <div class="tooltip-stats">
-      <div class="tstat tstat-saque"><span>${t("deckbuilder.statSaqueCorto")}</span><strong>${carta.stats.saque}</strong></div>
-      <div class="tstat tstat-bloqueo"><span>${t("deckbuilder.statBloqueoCorto")}</span><strong>${carta.stats.bloqueo}</strong></div>
-      <div class="tstat tstat-recepcion"><span>${t("deckbuilder.statRecepcionCorto")}</span><strong>${carta.stats.recepcion}</strong></div>
-      <div class="tstat tstat-pase"><span>${t("deckbuilder.statPaseCorto")}</span><strong>${carta.stats.pase}</strong></div>
-      <div class="tstat tstat-remate"><span>${t("deckbuilder.statRemateCorto")}</span><strong>${carta.stats.remate}</strong></div>
-    </div>
-  `;
 
   const descripcion = DESCRIPCIONES?.[carta.info?.id]?.[idiomaActivo] || carta.info?.descripcion || "";
 
+  const datos = [
+    carta.info?.escuela || (carta.info?.tipo === "evento" ? t("deckbuilder.pillEvento") : ""),
+    carta.info?.posicion,
+    carta.info?.id
+  ].filter(Boolean).join(" · ");
+
   tooltip.innerHTML = `
-    <div class="tooltip-imagen" style="background-image:url('img/cartas/${carta.info?.id}.png'); border-bottom: 3px solid ${colorEscuela};"></div>
-    <div class="tooltip-info">
-      <h3 style="color:${colorEscuela}">${nombre}</h3>
-      <div class="tooltip-meta">${carta.info?.escuela || (carta.info?.tipo === 'evento' ? 'Evento' : '')} ${carta.info?.posicion ? '· ' + carta.info.posicion : ''} · ${carta.info?.id}</div>
-      ${infoStats}
-      <div class="tooltip-desc">${descripcion ? descripcion.replace(/&quot;/g, '"') : ''}</div>
+    <div class="tooltip-imagen" style="background-image:url('img/cartas/${carta.info?.id}.png');"></div>
+    <div class="tooltip-etiqueta" style="background:${colorEscuela}; color:${tintaSobre(colorEscuela)};">
+      <div class="tooltip-nombre">${nombre}</div>
+      <div class="tooltip-datos">${datos}</div>
     </div>
+    <div class="tooltip-desc">${descripcion ? descripcion.replace(/&quot;/g, '"') : ''}</div>
   `;
 
-  tooltip.style.border = `2px solid ${colorEscuela}`;
+  tooltip.style.border = `3px solid ${colorEscuela}`;
+  tooltip.style.boxShadow = `5px 5px 0 var(--tinta)`;
   tooltip.style.display = "block";
 
   let x = e.clientX + 15;
-  let y = e.clientY + 15;
   if (x + tooltip.offsetWidth > window.innerWidth - 8) x = e.clientX - tooltip.offsetWidth - 15;
 
-  // siempre hacia abajo del ratón; si no cabe, se sube lo justo para entrar en pantalla
-  const maxY = window.innerHeight - tooltip.offsetHeight - 8;
-  y = Math.max(8, Math.min(y, maxY));
+  const desc = tooltip.querySelector(".tooltip-desc");
+  const descAltura = desc ? desc.offsetHeight : 0;
+
+  let y = e.clientY + 15;
+  const maxY = window.innerHeight - tooltip.offsetHeight - descAltura - 15;
+  const minY = 8;
+  y = Math.max(minY, Math.min(y, maxY));
 
   tooltip.style.left = x + "px";
   tooltip.style.top = y + "px";
 }
 
+// ------------------------------------- TEXTO NEGRO O BLANCO SEGÚN EL COLOR DE FONDO
+function tintaSobre(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);      // rojo   (0-255)
+  const g = parseInt(hex.slice(3, 5), 16);      // verde  (0-255)
+  const b = parseInt(hex.slice(5, 7), 16);      // azul   (0-255)
+  const luminosidad = 0.299 * r + 0.587 * g + 0.114 * b;   // cuánto "brilla" el color para el ojo
+  return luminosidad > 150 ? "#000000" : "#FFFFFF";         // fondo claro → texto negro; oscuro → blanco
+}
 // ======================================================================================================= COLORES ESCUELA PARA TOOLTIP
 function getSchoolColor(escuela) {
   const colores = {
@@ -4347,7 +4422,7 @@ mazoPruebaMultiEscuela.forEach(id => {
 });
 
 // mazo evento de pruebas
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < 20; i++) {
   let evento = todasLasCartas.find(c => c.info?.id === "HV-D01-011");
   game.jugadores[0].zonas.eventos.push(evento);
   // game.jugadores[1].zonas.eventos.push(evento);
@@ -4388,7 +4463,7 @@ const mazoPruebaInarizaki = [
 ];
 mazoPruebaInarizaki.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
-  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- INARIZAKI <

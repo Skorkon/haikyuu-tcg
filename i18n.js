@@ -41,6 +41,9 @@ const I18N = {
             zonaCampo: "campo",
             partidaNoExiste: "Esta partida ya no existe. Vuelve al lobby.",
             rematch: "Revancha",
+            chatPlaceholder: "Mensaje...",
+            chatEnviar: "Enviar",
+            chatDeshabilitado: "Chat deshabilitado en modo un jugador",
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -178,6 +181,9 @@ const I18N = {
             zonaCampo: "field",
             partidaNoExiste: "This match no longer exists. Return to the lobby.",
             rematch: "Rematch",
+            chatPlaceholder: "Message...",
+            chatEnviar: "Envoyer",
+            chatDeshabilitado: "Chat disabled in single player mode",
         },
         menu: {
           labelNombre:      "Your name",
@@ -315,6 +321,9 @@ const I18N = {
             zonaCampo: "terrain",
             partidaNoExiste: "Cette partie n’existe plus. Retourne au lobby.",
             rematch: "Revanche",
+            chatPlaceholder: "Message...",
+            chatEnviar: "Send",
+            chatDeshabilitado: "Chat désactivé en mode un joueur",
         },
         menu: {
           labelNombre:      "Ton nom",

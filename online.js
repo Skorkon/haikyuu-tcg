@@ -204,6 +204,7 @@ function aplicarJugadaRival(jugada) {
       const rivalIndiceEvento = miNumero === 1 ? 1 : 0;                       // índice del rival
       const rivalEvento = game.jugadores[rivalIndiceEvento];
       rivalEvento.zonas.eventos.push(evento);                                 // añadir a zona eventos
+      mostrarAnimacionEventoRival(evento.info?.id);
       log(t("log.eventoJugado", { 
         jugador: rivalEvento.nombre, 
         carta: DESCRIPCIONES[evento.info?.id]?.["nombre_" + idiomaActivo] || evento.nombre 
@@ -917,6 +918,42 @@ function escucharEventosRival() {
 
     renderCampo();
   });
+}
+
+// ==================================================================== ANIMACIÓN EVENTO RIVAL
+function mostrarAnimacionEventoRival(idCarta) {
+  if (!idCarta) return;                                           // comprobar que el ID existe
+
+  const overlay = document.createElement("div");                  // Crear el overlay
+  overlay.id = "overlay-evento-rival";
+  overlay.classList.add("evento-rival-overlay");
+
+  const img = document.createElement("img");
+  img.src = `img/cartas/${idCarta}.png`; 
+  img.classList.add("evento-rival-img");
+
+  const label = document.createElement("div");
+  label.classList.add("evento-rival-label");
+  label.textContent = DESCRIPCIONES[idCarta]?.["nombre_" + idiomaActivo] || idCarta;
+
+  const titulo = document.createElement("div");
+  titulo.classList.add("evento-rival-titulo");
+  titulo.textContent = t("ui.rivalJuegaEvento");
+
+  const lineaGorda = document.createElement("div");
+  lineaGorda.classList.add("evento-rival-linea-gorda");
+
+  const lineaFina = document.createElement("div");
+  lineaFina.classList.add("evento-rival-linea-fina");
+
+  overlay.appendChild(lineaGorda);
+  overlay.appendChild(lineaFina);
+  overlay.appendChild(titulo);
+  overlay.appendChild(img);
+  overlay.appendChild(label);
+  document.body.appendChild(overlay);
+
+  setTimeout(() => overlay.remove(), 3000);                        // Eliminar tras 3 segundos
 }
 
 // ── SINCRONIZAR MAZO DE PUNTOS ────────────────────────────

@@ -2122,7 +2122,8 @@ function inicializarCartas() {
 
       let bokutoElegido = await mostrarSelectorCartas(                      // selector cancelable
         t("log.elegirCarta"),
-        bokutos
+        bokutos,
+        true
       );
 
       if (bokutoElegido) {                                                  // si elige uno
@@ -3499,9 +3500,9 @@ function inicializarCartas() {
       } else {                                                                // si hay al menos una de Fukurodani
         let valida = false;                                                   // controla si la elección es válida
         while (!valida) {                                                     // repetir hasta elegir una válida
-          let seleccion = await mostrarSelectorCartas(                       // selector SIN cancelable: bloquea clic fuera
+          let seleccion = await mostrarSelectorCartas(                       // selector NO cancelable: bloquea clic fuera
             t("log.elegirCarta"),
-            tresCartas                                                        // mostrar las 3 reveladas
+            tresCartas,                                                        // mostrar las 3 reveladas
           );
           if (seleccion.info?.escuela === "Fukurodani") {                     // si eligió una carta válida
             cartaElegida = seleccion;                                         // guardar la elección

@@ -44,6 +44,7 @@ const I18N = {
             chatPlaceholder: "Mensaje...",
             chatEnviar: "Enviar",
             chatDeshabilitado: "Chat deshabilitado en modo un jugador",
+            rivalJuegaEvento: "Evento jugado",
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -184,6 +185,7 @@ const I18N = {
             chatPlaceholder: "Message...",
             chatEnviar: "Envoyer",
             chatDeshabilitado: "Chat disabled in single player mode",
+            rivalJuegaEvento: "Rival plays event",
         },
         menu: {
           labelNombre:      "Your name",
@@ -324,6 +326,7 @@ const I18N = {
             chatPlaceholder: "Message...",
             chatEnviar: "Send",
             chatDeshabilitado: "Chat désactivé en mode un joueur",
+            rivalJuegaEvento: "Événement joué",
         },
         menu: {
           labelNombre:      "Ton nom",

@@ -2387,7 +2387,7 @@ function renderManoRival() {
   const anchoDisponible = contenedor.offsetWidth;
   const cartaAncho = 80;
   const solape = totalCartas > 1
-    ? Math.max(40, (totalCartas * cartaAncho - anchoDisponible) / (totalCartas - 1))
+    ? Math.max(40, Math.min(cartaAncho - 1, (totalCartas * cartaAncho - anchoDisponible) / (totalCartas - 1)))
     : 0;
 
   rival.mano.forEach((_, index) => {                     // para cada carta del rival (index = su posición)
@@ -4175,7 +4175,7 @@ mazoPruebaNekoma.forEach(id => {
 
 // ---------------------------------------------------------------------------------- KARASUNO > 
 // MANO KARASUNO
-["HV-P03-057", "HV-D01-008", "HV-P03-047", "HV-D01-011"].forEach(id => {
+["HV-P03-057", "HV-D01-008", "HV-P03-047", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);

@@ -54,7 +54,8 @@ body {
   width: 30%;
   background: transparent;  
   padding: 10px;
-  overflow-y: auto;   
+  overflow-y: auto;
+  overflow-x: visible;   
   display: flex;
   flex-direction: column;
   position: relative;
@@ -75,9 +76,19 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   gap: 4px;
-  margin: -10px -10px 10px -10px;
+  margin: -10px -10px 10px -10px; 
   padding-top: 4px;
-  flex-shrink: 0;   /* ← nuevo: nunca se encoge, siempre arriba del todo */
+  flex-shrink: 0;   /* ← nunca se encoge, siempre arriba del todo */
+  white-space: nowrap;
+  overflow: visible; 
+  flex-wrap: nowrap;
+  padding: 0 7px; 
+  box-sizing: border-box;
+}
+#mano-rival .carta {
+  display: inline-block;
+  outline: 3px solid black; /* el color del borde de tu cardback.png */
+  outline-offset: -3px;
 }
 
 .contenido-inferior {
@@ -368,15 +379,18 @@ body {
 #mano .carta:hover {
   transform: translateY(-12px);     /* sube 12px */
   z-index: 10;                      /* se pone delante de sus vecinas */
+  margin-right: 20px;
 }
 /* la carta seleccionada de la mano se queda levantada */
 #mano .carta.seleccionada {
   transform: translateY(-12px);
-  z-index: 10;
+  z-index: 20;
+  margin-right: 20px; 
 }
 /* la carta que se está arrastrando se queda semitransparente en su sitio */
 #mano .carta.arrastrando {
   opacity: 0.4;
+  transform: translateY(-12px);
 }
 /* mientras se reordena la mano, el hover no levanta cartas (el navegador lo deja "congelado") */
 #mano.ordenando .carta:not(.seleccionada):hover {
@@ -947,6 +961,11 @@ button {
     font-size: 11px;
     outline: none;
   }
+  #chat-input-area button {
+    width: auto;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
   .chat-mio { color: var(--accent); }
   .chat-rival { color: var(--tinta); }
 
@@ -967,6 +986,104 @@ button {
   #btn-cancelar-selector {
     cursor: pointer;
   }
+
+
+/* ------------------------------------------------------------------------------- EVENTO JUGADO POR EL RIVAL */
+.evento-rival-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 380px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  animation: eventoRivalEntrar 0.4s ease-out,
+             eventoRivalSalir  0.4s ease-in  2.6s forwards;
+}
+.evento-rival-titulo {
+  font-weight: bold;
+  color: var(--bg);
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.evento-rival-img {
+  width: 300px;
+  border: 3px solid var(--tinta);
+  border-radius: 0px;
+  box-shadow: 4px 4px 0 var(--accent);
+}
+.evento-rival-label {
+  background: var(--bg);
+  color: var(--tinta);
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.3rem 0.8rem;
+  border: 3px solid var(--tinta);
+  box-shadow: 3px 3px 0 var(--accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  max-width: 300px;
+  text-align: center;
+  white-space: normal;
+}
+
+.evento-rival-img,
+.evento-rival-label,
+.evento-rival-titulo {
+  z-index: 2;
+  position: relative;  /* ← necesario para que z-index funcione */
+}
+
+/* columna con título + carta + label */
+.evento-rival-overlay > .evento-rival-titulo,
+.evento-rival-overlay > .evento-rival-img,
+.evento-rival-overlay > .evento-rival-label {
+  order: 3;
+}
+
+.evento-rival-linea-gorda {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  width: 180px;
+  height: 100%;
+  background: var(--accent);
+  z-index: 1;
+  opacity: 1;
+}
+
+.evento-rival-linea-fina {
+  position: absolute;
+  left: calc(50% + 97px);   /* ← justo al lado de la gorda */
+  top: 0;
+  width: 15px;
+  height: 100%;
+  background: var(--accent);
+  z-index: 1;
+  opacity: 1;
+}
+
+@keyframes eventoRivalEntrar {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes eventoRivalSalir {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
 
 </style>
 <!----------------------------------------------------------------------------------------------------------------------------->
@@ -1195,6 +1312,49 @@ button {
   // se ejecuta al cargar y cada vez que cambie el tamaño del campo central
   new ResizeObserver(escalarTablero).observe(document.querySelector(".campo-central"));
 
+  // ====================================================== ESCALAR COLUMNAS LATERALES
+  const ANCHO_DISENO_IZQ = 450;   // ancho para el que está diseñado el panel izquierdo (30% de ~1200px)
+  const ANCHO_DISENO_DER = 300;   // ancho para el que está diseñado el panel derecho  (20% de ~1200px)
+  const MARGEN_LATERAL = 0.97;
+
+  function escalarColumnaIzquierda() {
+    const columna = document.querySelector(".panel-izquierda");
+    const hijos = columna.querySelectorAll(":scope > *");
+
+    hijos.forEach(el => el.style.zoom = 1);
+    let altoContenido = 0;
+    hijos.forEach(el => altoContenido += el.offsetHeight);
+
+    const escala = Math.min(
+      columna.offsetWidth  / ANCHO_DISENO_IZQ,
+      columna.clientHeight / altoContenido
+    ) * MARGEN_LATERAL;
+
+    hijos.forEach(el => el.style.zoom = escala);
+  }
+
+  function escalarColumnaDerecha() {
+    const columna = document.querySelector(".panel-derecha");
+    const hijos = columna.querySelectorAll(":scope > *");
+
+    hijos.forEach(el => el.style.zoom = 1);
+    let altoContenido = 0;
+    hijos.forEach(el => altoContenido += el.offsetHeight);
+
+    const escala = Math.min(
+      columna.offsetWidth  / ANCHO_DISENO_DER,
+      columna.clientHeight / altoContenido
+    ) * MARGEN_LATERAL;
+
+    hijos.forEach(el => el.style.zoom = escala);
+  }
+
+  const observadorIzq = new ResizeObserver(escalarColumnaIzquierda);
+  observadorIzq.observe(document.querySelector(".panel-izquierda"));
+
+  const observadorDer = new ResizeObserver(escalarColumnaDerecha);
+  observadorDer.observe(document.querySelector(".panel-derecha"));
+
   // ====================================================== SONIDO AL CAMBIAR DE POSICIÓN UNA CARTA DE LA MANO
   const sonidoCarta = new Audio("audio/draw2.mp3");   // se carga una sola vez
   const VOLUMEN_CARTA = 0.05;                          // 20% del volumen general del jugador
@@ -1233,6 +1393,7 @@ button {
   manoEl.addEventListener("dragstart", function (e) {
     const carta = e.target.closest(".carta");
     if (!carta) return;
+    game.cartaSeleccionada = null;
     manoEl.classList.add("ordenando");               // desactiva la subida por hover mientras se arrastra
     const cartas = Array.from(manoEl.children);
     cartaArrastrada = carta;
@@ -1245,7 +1406,11 @@ button {
 
     // la transparencia se aplica un instante después: si no, la "imagen fantasma"
     // que el navegador pega al ratón saldría también transparente
-    setTimeout(() => carta.classList.add("arrastrando"), 0);
+    setTimeout(() => {
+      carta.classList.add("arrastrando");
+      game.cartaSeleccionada = null;
+      renderMano();
+    }, 0);
   });
 
   // 2. mientras se arrastra: mover la carta a donde caería

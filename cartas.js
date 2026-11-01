@@ -5660,7 +5660,7 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 2
     },
-    null, 
+    null, // habilidad gestionada en colocarCarta con aplicarGoshiki51
     {
       tipo: "personaje",
       id: "HV-P02-051",
@@ -8542,7 +8542,7 @@ function inicializarCartas() {
       rareza: "UC",
     }
   ), 
-  crearCarta("Koganegawa Kanji", // ============================================================== P03-009
+  crearCarta("Koganegawa Kanji", // ============================================================ P03-009
     {
       saque: 1,
       recepcion: 0,
@@ -8550,15 +8550,41 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 2
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "pase", 2)) {
+        return false;
+      }
+
+      let eventosTotal = jugador.zonas.eventos.length;
+
+      if (eventosTotal < 4) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      game.valorPase += 2;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.paseAumentado", { valor: 2 }));
+
+      if (eventosTotal >= 6) {
+        negarOneTouch();
+        log(t("log.condicionCumplida"));
+      }
+    },
     {
       tipo: "personaje",
       id: "HV-P03-009",
       escuela: "Date Kôgyô",
       posicion: "S",
       anyo: 1,
-      rareza: "S",
-      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Si tu zona de eventos tiene 4 cartas o más, añade +2 al pase de esta carta. Si tiene 6 o más, durante el próximo turno se anula <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>One Touch</strong></span> del rival.`
+      categorias: ["Miyagi Camp"],
+      zonasHabilidad: ["pase"],
+      rareza: "R",
+      descripcion: '<strong><span style=&quot;background:#059846; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Pase</span></strong></br>Se puede usar pagando 2 Guts. Si hay 4 o más cartas en tu Zona de Evento, este personaje obtiene <strong>+2 a su Pase</strong>. Si hay 6 o más, durante el siguiente turno rival, los efectos de <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Desvío (N)</strong></span> del rival quedan anulados.',
     }
   ),
   crearCarta("Koganegawa Kanji", // ============================================================== P03-010
@@ -8580,7 +8606,7 @@ function inicializarCartas() {
       rareza: "C",
     }
   ), 
-  crearCarta("Goshiki Tsutomu", // ============================================================== P03-011
+  crearCarta("Goshiki Tsutomu", // ============================================================= P03-011
     {
       saque: 2,
       recepcion: 3,
@@ -8588,15 +8614,71 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (!jugador.mano.includes(carta)) {
+        log(t("log.soloDesdeMano"));
+        return false;
+      }
+      // comprobar que todos los personajes son de Shiratorizawa o Miyagi Camp
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);
+
+      let todasValidas = cartasEnJuego.every(c =>
+        c.info?.escuela === "Shiratorizawa" || c.info?.categorias?.includes("Miyagi Camp")
+      );
+      if (!todasValidas) {
+        log(t("log.condicionEscuelaNoCumplida", { escuela: "Shiratorizawa" }));
+        return false;
+      }
+
+      let eventosTotal = jugador.zonas.eventos.length;
+      if (eventosTotal < 4) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      // descartar esta carta de la mano y colocarla en recepción
+      let index = jugador.mano.indexOf(carta);
+      if (index !== -1) jugador.mano.splice(index, 1);
+
+      jugador.zonas.recepcion.push(carta);
+      carta.zonaActual = "recepcion";
+      carta.recienJugada = true;
+      carta.habilidadUsada = true;
+      game.ultimaCarta = carta;
+      game.ultimoJugador = jugador;
+
+      game.valorDefensa += 4;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 4 }));
+
+      if (modoOnline) {
+        enviarJugada("cartaJugada", {
+          zona: "recepcion",
+          cartaId: carta.info.id
+        });
+      }
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
     {
       tipo: "personaje",
       id: "HV-P03-011",
       escuela: "Shiratorizawa",
       posicion: "WS",
       anyo: 1,
-      rareza: "T",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Descarta esta carta desde tu mano para hacerla entrar en juego en tu zona de recepción. Si todos tus personajes en juego son de <strong>Shiratorizawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y tienes 4 cartas o más en tu zona de eventos, añade +4 a la recepción de esta carta.`
+      categorias: ["Miyagi Camp"],
+      rareza: "SR",
+      activacionMano: true,
+      fases: ["recepcion"],
+      costePropio: true,
+      descripcion: '<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Recepción</span></strong> <strong><span style=&quot;background:#B3085A; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong></br>[Descarta esta carta desde tu mano]: Si todos tus personajes son de <strong>Shiratorizawa</strong> o <strong>Miyagi Champ</strong> y hay 4 o más cartas en tu Zona de Evento, coloca esta carta en tu Zona de Recepción y este personaje obtiene <strong>+4 a su Recepción</strong>.</br><span style=&quot;font-size:0.85em&quot;><strong><span style=&quot;background:#21227C; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Recepción</span> <span style=&quot;background:#B3085A; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong> : Durante la fase de Recepción, si esta carta está en tu mano, puede usarse como una carta de Evento. [A] : Si no ejecutas A, esta habilidad no puede activarse.</span>',
     }
   ),
   crearCarta("Goshiki Tsutomu", // ============================================================== P03-012
@@ -8618,7 +8700,7 @@ function inicializarCartas() {
       rareza: "UC",
     }
   ), 
-  crearCarta("Sagae Yuushou", // ============================================================== P03-013
+  crearCarta("Sagae Yûsho", // ================================================================= P03-013
     {
       saque: 0,
       recepcion: 0,
@@ -8626,19 +8708,94 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (!jugador.mano.includes(carta)) {                              // comprobar que la carta sigue en la mano
+        log(t("log.soloDesdeMano"));
+        return false;
+      }
+
+      // comprobar que todos los personajes en juego son de Miyagi Camp
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);
+
+      let todasMiyagi = cartasEnJuego.every(c =>
+        c.info?.categorias?.includes("Miyagi Camp")
+      );
+      if (!todasMiyagi) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      if (jugador.mazo.length < 2) {                                    // comprobar que hay al menos 2 cartas en el mazo
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        return false;
+      }
+
+      // coste: mover esta carta a la zona de eventos
+      jugador.mano.splice(jugador.mano.indexOf(carta), 1);              // sacar de la mano
+      jugador.zonas.eventos.push(carta);                                // colocar en eventos
+      carta.zonaActual = "eventos";                                     // actualizar zona
+      log(t("log.descartaDesdeMano", { jugador: jugador.nombre, carta: carta.nombre }));
+
+      // registrar única
+      game.efectosActivos.push({
+        tipo: "unicaUsada",
+        nombre: carta.nombre,
+        activadoPor: game.jugadorActivo,
+        expira: game.turno + 1
+      });
+      if (modoOnline) enviarEfectos();                                  // sincronizar efectos
+      if (modoOnline) enviarEventos(jugador);                           // sincronizar zona de eventos
+
+      // revelar las 2 primeras cartas del mazo
+      let dosCartas = jugador.mazo.splice(0, 2);                        // sacar las 2 primeras
+      log(t("log.cartasReveladas", { cartas: dosCartas.map(c => c.nombre).join(", ") }));
+
+      // elegir 1 personaje para añadir a la mano
+      let personajes = dosCartas.filter(c => c.info?.tipo === "personaje"); // filtrar personajes
+      let cartaElegida = null;
+      if (personajes.length > 0) {
+        cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), personajes); // abrir selector
+      }
+
+      if (cartaElegida) {
+        dosCartas.splice(dosCartas.indexOf(cartaElegida), 1);           // sacar de las reveladas
+        añadirCartaAMano(jugador, cartaElegida);                        // añadir a la mano
+        log(t("log.cartaAnadidaAMano", { carta: cartaElegida.nombre }));
+      }
+
+      // el resto al fondo del mazo en el orden que quiera
+      if (dosCartas.length > 0) {
+        await ordenarCartasAlFondo(jugador, dosCartas);                 // ordenar y enviar al fondo
+      }
+
+      if (modoOnline) enviarTrash(jugador);                             // sincronizar trash
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
     {
       tipo: "personaje",
       id: "HV-P03-013",
       escuela: "Shiratorizawa",
-      posicion: "Recogepelotas",
+      posicion: "BB",
       anyo: 1,
-      rareza: "N",
+      categorias: ["Miyagi Camp"],
+      rareza: "C",
+      activacionMano: true,
+      costePropio: true,
+      unica: true,
+      fases: ["remate"],
       zonasProhibidas: ["saque", "recepcion", "pase", "remate", "bloqueo"],
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 2 cartas superiores de tu mazo y añade hasta 1 carta de personaje a tu mano. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+      descripcion: '<strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Ataque</span></strong> <strong><span style=&quot;background:#B3085A; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong></br><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Única</strong></span> [Coloca esta carta desde tu mano en tu Zona de Evento]: Si todos tus personajes son <strong>Miyagi Champ</strong>, revela las 2 cartas superiores de tu mazo, añade a tu mano hasta 1 carta de personaje entre ellas y coloca el resto en la parte inferior del mazo en el orden que prefieras.</br><span style=&quot;font-size:0.85em&quot;><strong><span style=&quot;background:#E30E1F; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Ataque</span> <span style=&quot;background:#B3085A; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong> : Durante la fase de Ataque, si esta carta está en tu mano, puede usarse con el mismo timing que una carta de Evento. <strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Única</span></strong> : Durante este turno, anula las habilidades de tus cartas con el mismo nombre que esta. [A] : Si no ejecutas A, esta habilidad no puede activarse.</span>',
     }
   ),
-  crearCarta("Akakura Kai", // ============================================================== P03-014
+  crearCarta("Akakura Kai", // ================================================================= P03-014
     {
       saque: 0,
       recepcion: 0,
@@ -8646,16 +8803,89 @@ function inicializarCartas() {
       remate: 0,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (!jugador.mano.includes(carta)) {                              // comprobar que la carta sigue en la mano
+        log(t("log.soloDesdeMano"));
+        return false;
+      }
+
+      // comprobar que todos los personajes en juego son de Miyagi Camp
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);
+
+      let todasMiyagi = cartasEnJuego.every(c =>
+        c.info?.categorias?.includes("Miyagi Camp")
+      );
+      if (!todasMiyagi) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      if (jugador.mazo.length < 3) {                                    // comprobar que hay al menos 3 cartas en el mazo
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        return false;
+      }
+
+      // coste: mover esta carta a la zona de eventos
+      jugador.mano.splice(jugador.mano.indexOf(carta), 1);              // sacar de la mano
+      jugador.zonas.eventos.push(carta);                                // colocar en eventos
+      carta.zonaActual = "eventos";                                     // actualizar zona
+      log(t("log.descartaDesdeMano", { jugador: jugador.nombre, carta: carta.nombre }));
+
+      // registrar única
+      game.efectosActivos.push({
+        tipo: "unicaUsada",
+        nombre: carta.nombre,
+        activadoPor: game.jugadorActivo,
+        expira: game.turno + 1
+      });
+      if (modoOnline) enviarEfectos();                                  // sincronizar efectos
+      if (modoOnline) enviarEventos(jugador);                           // sincronizar zona de eventos
+
+      // revelar las 3 primeras cartas del mazo
+      let tresCartas = jugador.mazo.splice(0, 3);                       // sacar las 3 primeras
+      log(t("log.cartasReveladas", { cartas: tresCartas.map(c => c.nombre).join(", ") }));
+
+      // añadir todos los eventos a la mano
+      let eventos = tresCartas.filter(c => c.info?.tipo === "evento");  // filtrar eventos
+      let resto = tresCartas.filter(c => c.info?.tipo !== "evento");    // el resto
+
+      for (let e of eventos) {
+        añadirCartaAMano(jugador, e);                                   // añadir cada evento a la mano
+        logCompartido("log.jugadorRevelaYAnade", {                      // log visible para ambos
+          jugador: jugador.nombre,
+          carta: e.nombre,
+          cartaId: e.info?.id
+        });
+      }
+
+      // el resto al fondo del mazo en el orden que quiera
+      if (resto.length > 0) {
+        await ordenarCartasAlFondo(jugador, resto);                     // ordenar y enviar al fondo
+      }
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
     {
       tipo: "personaje",
       id: "HV-P03-014",
       escuela: "Shiratorizawa",
-      posicion: "Recogepelotas",
+      posicion: "BB",
       anyo: 1,
-      rareza: "N",
+      categorias: ["Miyagi Camp"],
+      rareza: "C",
+      activacionMano: true,
+      costePropio: true,
+      unica: true,
+      fases: ["remate"],
       zonasProhibidas: ["saque", "recepcion", "pase", "remate", "bloqueo"],
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span> <span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Desde la mano</span></strong> Coloca esta carta desde tu mano en tu zona de eventos: Si todos tus personajes en juego son de <strong>Jóvenes de Miyagi</strong>, revela las 3 cartas superiores de tu mazo y añade a tu mano todas las cartas de evento que haya entre ellas. Las cartas no añadidas van al fondo del mazo en el orden que elijas.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
+      descripcion: '<strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Ataque</span></strong> <strong><span style=&quot;background:#B3085A; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong></br><span style=&quot;background:#e91e8c; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Única</strong></span> [Coloca esta carta desde tu mano en tu Zona de Evento]: Si todos tus personajes son <strong>Miyagi Champ</strong>, revela las 3 cartas superiores de tu mazo, añade a tu mano todos los cartas de Evento entre ellas y coloca el resto en la parte inferior del mazo en el orden que prefieras.</br><span style=&quot;font-size:0.85em&quot;><strong><span style=&quot;background:#E30E1F; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Fase de Ataque</span> <span style=&quot;background:#B3085A; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Desde la mano</span></strong> : Durante la fase de Ataque, si esta carta está en tu mano, puede usarse con el mismo timing que una carta de Evento. <strong><span style=&quot;background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Única</span></strong> : Durante este turno, anula las habilidades de tus cartas con el mismo nombre que esta. [A] : Si no ejecutas A, esta habilidad no puede activarse.</span>',
     }
   ),
   crearCarta("Yura Shota", // ================================================================ P03-015
@@ -8718,6 +8948,77 @@ function inicializarCartas() {
     }
   ),
 
+
+  crearCarta("Miya Atsumu", // ================================================================= P03-021
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 1,
+      remate: 1,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "pase", 3)) {
+        return false;
+      }
+
+      game.valorPase += 2;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.paseAumentado", { valor: 2 }));
+
+      // buscar eventos de U19 en el trash
+      let elegibles = jugador.trash.filter(c =>
+        c.info?.tipo === "evento" &&
+        c.info?.categorias?.includes("U19")
+      );
+
+      if (elegibles.length === 0) {
+        log(t("log.condicionNoCumplida"));
+        return;
+      }
+
+      let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles);
+      if (!cartaElegida) {
+        log(t("log.habilidadCancelada"));
+        return;
+      }
+
+      // añadir a la mano
+      let indexTrash = jugador.trash.indexOf(cartaElegida);
+      jugador.trash.splice(indexTrash, 1);
+      añadirCartaAMano(jugador, cartaElegida);
+      log(t("log.cartaAnadidaAMano", { carta: cartaElegida.nombre }));
+
+      // descartar 1 de la mano
+      let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), jugador.mano);
+      if (!cartaDescarte) return;
+
+      let index = jugador.mano.indexOf(cartaDescarte);
+      jugador.mano.splice(index, 1);
+      jugador.trash.push(cartaDescarte);
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+      if (modoOnline) enviarTrash(jugador);
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-021",
+      escuela: "Inarizaki",
+      posicion: "Li",
+      anyo: 2,
+      categorias: ["U19"],
+      zonasProhibidas: ["saque", "bloqueo"],
+      rareza: "SR",
+      descripcion: `<strong><span style=&quot;background:#059846; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Pase</span></strong></br>Se puede usar pagando 3 Guts. Este personaje obtiene <strong>+2 a su Pase</strong>, y puedes añadir a tu mano hasta 1 carta de Evento de <strong>Youth</strong> desde tu Zona de Descarte. Si lo haces, descarta 1 carta de tu mano.`
+    }
+  ),
   crearCarta("Miya Atsumu", // ============================================================ P03-022
     { saque: 1, recepcion: 0, pase: 2, remate: 2, bloqueo: 3 },
     null, 
@@ -8892,8 +9193,44 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Descarta 1 carta de <strong>Nekoma</strong> de tu mano para +3 al bloqueo de esta carta. Si el rival tiene 2 o menos cartas en la mano, +2 adicional al bloqueo.`
     }
   ),
-
-  crearCarta("Miya Osamu", // ============================================================== P03-041
+  crearCarta("Miya Atsumu", // ================================================================= P03-039
+    {
+      saque: 3,
+      recepcion: 0,
+      pase: 1,
+      remate: 2,
+      bloqueo: 0
+    },
+    null, // gestionado con aplicarAtsumu 339 en colocar carta y jugar evento
+    {
+      tipo: "personaje",
+      id: "HV-P03-039",
+      escuela: "Inarizaki",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R",
+      descripcion: `Cuando se juegue una carta de Evento de <strong>Inarizaki</strong> desde tu mano: si este personaje es el sacador durante la fase de Saque, puedes descarta 2 cartas de <strong>Inarizaki</strong> jugables con <strong><span style=&quot;background:#EE8F06; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Saque</span></strong> desde tu Zona de Evento. Si lo haces, este personaje obtiene <strong>+1 a su Saque</strong>.`
+    }
+  ),
+  crearCarta("Miya Atsumu", // ================================================================= P03-040
+    {
+      saque: 5,
+      recepcion: 1,
+      pase: 2,
+      remate: 2,
+      bloqueo: 0
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-040",
+      escuela: "Inarizaki",
+      posicion: "S",
+      anyo: 2,
+      rareza: "UC",
+    }
+  ),
+  crearCarta("Miya Osamu", // ================================================================= P03-041
     {
       saque: 3,
       recepcion: 3,
@@ -8901,19 +9238,78 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 1
     },
-    null, // habilidad pendiente de implementar
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "remate") {
+        log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
+        return false;
+      }
+      if (!tieneEfecto("justoBlanco")) { // <------REVISAR: en el futuro añadir otras opciones de traer a osamu a la zona de remate
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+      if (jugador.mano.length > 3) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      game.valorAtaque += 2;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.ataqueAumentado", { valor: 2 }));
+
+      // eliminar debuffs de rematador del rival
+      game.efectosActivos = game.efectosActivos.filter(e => // < REVISAR : el sistema actual (11.2026) no aplica debuff a una carta que entra a la zona de una forma distinta que colocar carta
+        !(e.tipo === "debilitarRematador" && e.activadoPor !== game.jugadorActivo)
+      );
+      if (modoOnline) enviarEfectos();
+    },
     {
       tipo: "personaje",
       id: "HV-P03-041",
       escuela: "Inarizaki",
       posicion: "WS",
       anyo: 2,
-      rareza: "S",
-      descripcion: `<strong><span style="color:#c62828">Remate</span></strong> Si esta carta entró en juego mediante una habilidad y tienes 3 cartas o menos en la mano, añade +2 al ataque de esta carta y, durante este turno, sus parámetros no podrán ser reducidos.`
+      rareza: "R",
+      zonasHabilidad: ["remate"],
+      descripcion: `<strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong></br>Si este personaje ha entrado mediante una habilidad y tienes 3 o menos cartas en mano, obtiene <strong>+2 a su Ataque</strong> y sus estadísticas no pueden ser reducidas durante este turno.`
     }
   ),
-
-  crearCarta("Suna Rintaro", // ============================================================== P03-044
+  crearCarta("Miya Osamu", // ================================================================= P03-042
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-042",
+      escuela: "Inarizaki",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "C",
+    }
+  ),
+  crearCarta("Kita Shinsuke", // =============================================================== P03-043
+    {
+      saque: 1,
+      recepcion: 5,
+      pase: 0,
+      remate: 2,
+      bloqueo: 2
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-043",
+      escuela: "Inarizaki",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "UC",
+    }
+  ),
+  crearCarta("Suna Rintaro", // =============================================================== P03-044
     {
       saque: 1,
       recepcion: 0,
@@ -8921,59 +9317,107 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 3
     },
-    null, // habilidad pendiente de implementar
+    null, // gestionada en colocar carta y aplicar SunaP03044
     {
       tipo: "personaje",
       id: "HV-P03-044",
       escuela: "Inarizaki",
       posicion: "MB",
       anyo: 2,
-      rareza: "R",
-      descripcion: `Cuando entre en juego tu personaje de <strong><span style="color:#424242">Bloqueo</span></strong> de <strong>Inarizaki</strong>, si esta carta está en tu zona de remate, puedes usar esta habilidad descartando 1 carta de tu mano: haz que esta carta entre en juego en tu zona de bloqueo como bloqueador de apoyo.`
+      rareza: "UC",
+      descripcion: 'Cuando uno de tus personajes bloqueadores de <strong>Inarizaki</strong> entre en juego: si este personaje es el atacante, puedes descarta 1 carta de tu mano. Si lo haces, coloca a este personaje como bloqueador de apoyo en tu Zona de Bloqueo.',
     }
   ),
-  crearCarta("Ojiro Aran", // ============================================================== P03-045
+  crearCarta("Ojiro Aran", // ================================================================= P03-045
     {
-      saque: 0,
+      saque: 2,
       recepcion: 4,
       pase: 0,
       remate: 2,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion" && carta.zonaActual !== "remate") {
+        log(t("log.habilidadEnEstaFase"));
+        return false;
+      }
+
+      let inarizakiEnMano = jugador.mano.filter(c => c.info?.escuela === "Inarizaki");
+      if (inarizakiEnMano.length === 0) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), inarizakiEnMano);
+      if (!cartaDescarte) return false;
+
+      let index = jugador.mano.indexOf(cartaDescarte);
+      jugador.mano.splice(index, 1);
+      jugador.trash.push(cartaDescarte);
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+      if (carta.zonaActual === "recepcion") {
+        game.valorDefensa += 2;
+        log(t("log.defensaAumentada", { valor: 2 }));
+      } else {
+        game.valorAtaque += 2;
+        log(t("log.ataqueAumentado", { valor: 2 }));
+      }
+
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      if (modoOnline) enviarTrash(jugador);
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
     {
       tipo: "personaje",
       id: "HV-P03-045",
       escuela: "Inarizaki",
       posicion: "WS",
       anyo: 3,
-      rareza: "S",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong> Descarta 1 carta de <strong>Inarizaki</strong> de tu mano para usar esta habilidad: añade +2 a uno de los parámetros de esta carta.`
+      rareza: "R",
+      zonasHabilidad: ["recepcion", "remate"],
+      descripcion: '<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong> <strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong></br>Se puede usar descartando 1 carta de <strong>Inarizaki</strong> desde tu mano. Este personaje obtiene <strong>+2 a la estadística de la zona en que se activa</strong>.',
     }
   ),
-
-  crearCarta("Akagi Michinari", // ============================================================== P03-046
+  crearCarta("Akagi Michinari", // ============================================================= P03-046
     {
       saque: 0,
       recepcion: 5,
       pase: 0,
       remate: 0,
-      bloqueo: 0
+      bloqueo: 1
     },
-    null, // habilidad pendiente de implementar
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;
+      }
+
+      if (game.valorAtaque <= 2) {
+        robarCarta(jugador, 1, false);
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
+      }
+
+      if (game.valorAtaque >= 6) {
+        game.valorDefensa += 2;
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
+        log(t("log.recepcionAumentada", { valor: 2 }));
+      }
+    },
     {
       tipo: "personaje",
       id: "HV-P03-046",
       escuela: "Inarizaki",
       posicion: "Li",
       anyo: 3,
-      rareza: "N",
+      rareza: "C",
       zonasProhibidas: ["saque", "bloqueo"],
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si el saque del rival tiene 2 o menos de ataque, roba 1 carta. Si el saque del rival tiene 6 o más de ataque, añade +2 a la recepción de esta carta.`
+      zonasHabilidad: ["recepcion"],
+      descripcion: '<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong></br>Si el Saque rival es 2 o menos, roba 1 carta. Si el Saque rival es 6 o más, este personaje obtiene <strong>+2 a su Recepción</strong>.'
     }
   ),
-
-
   crearCarta("Kageyama Tobio", // ============================================================ P03-047
     {
       saque: 2,
@@ -9077,6 +9521,7 @@ function inicializarCartas() {
       anyo: 2,
       rareza: "C",                                                            // N japonesa = C
       zonasProhibidas: ["saque", "bloqueo"],                                  // líbero
+      zonasHabilidad: ["recepcion"],
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Si todas las cartas pagadas son de <strong>Karasuno</strong>, este personaje obtiene +2 puntos de recepción y, si el personaje con el que te ha atacado el rival tiene 0 puntos originales en ese parámetro, el ataque del rival obtiene -3 puntos.`
     }
   ),
@@ -9118,7 +9563,8 @@ function inicializarCartas() {
       escuela: "Karasuno",
       posicion: "WS",
       anyo: 2,
-      rareza: "C",                                                            // N japonesa = C
+      rareza: "C",
+      zonasHabilidad: ["saque"],
       descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Coloca 1 carta de tu mano en el fondo de tu mazo para usar esta habilidad: roba 1 carta y este personaje obtiene +5 puntos de saque.`
     }
   ),
@@ -9155,7 +9601,8 @@ function inicializarCartas() {
       escuela: "Karasuno",
       posicion: "WS",
       anyo: 3,
-      rareza: "UC",                                                           // R japonesa = UC
+      rareza: "UC", 
+      zonasHabilidad: ["remate"],
       descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Ataque</span></strong> Si tu colocador es <strong><span style="color:#2e7d32">Kageyama Tobio</span></strong>, puedes pagar 3 GUTS para usar esta habilidad. Este personaje obtiene +3 puntos de ataque. Durante el próximo turno del rival, se anula su <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Bloqueo ofensivo (N)</strong></span>, y cada vez que su bloqueador central entre en juego, ese personaje obtiene -4 puntos de bloqueo.`
     }
   ),
@@ -9175,8 +9622,9 @@ function inicializarCartas() {
       escuela: "Karasuno",
       categorias: ["Neighborhood Association"],                               // afiliación secundaria 
       posicion: "WS",
-      anyo: "Adult",                                                          // adulto, sin curso
-      rareza: "C",                                                            // N japonesa = C
+      anyo: "Adult", 
+      rareza: "C", 
+      zonasHabilidad: ["saque"],
       descripcion: `<strong><span style="background:#EE8F06; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Saque</span></strong></br>Durante el próximo turno del rival, cada vez que un colocador <strong>S</strong> entre en juego desde su mano, fija sus puntos de pase en 1.`
     }
   ),
@@ -9196,49 +9644,43 @@ function inicializarCartas() {
   crearCarta("Tashiro Hidemi", // ============================================================ P03-056
     { saque: 0, recepcion: 3, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
-      if (!jugador.mano.includes(carta)) {                                    // comprobar que la carta sigue en la mano
+      if (!jugador.mano.includes(carta)) {                              // comprobar que la carta sigue en la mano
         log(t("log.soloDesdeMano"));
-        return false;                                                         // return false: no está en la mano
+        return false;
       }
 
-      let yaUsada = game.efectosActivos.some(e =>                             // Única: ¿ya se usó una carta con este nombre este turno?
-        e.tipo === "unicaUsada" && e.nombre === carta.nombre && e.activadoPor === game.jugadorActivo
-      );
-      if (yaUsada) {
-        log(t("log.cartaUnica", { carta: carta.nombre }));
-        return false;                                                         // return false: restricción Única
-      }
-
-      let elegibles = filtrarTrash(jugador, {                                 // personajes de Karasuno de 3.º en el descarte
+      // buscar personajes de Karasuno de 3.º en el descarte
+      let elegibles = filtrarTrash(jugador, {
         escuela: "Karasuno", anyo: 3, tipo: "personaje"
       });
-      if (elegibles.length === 0) {                                           // sin objetivo no se puede usar (la carta no se descarta)
+      if (elegibles.length === 0) {                                     // sin objetivo no se puede usar
         log(t("log.sinCartasValidas"));
-        return false;                                                         // return false: condición no cumplida
+        return false;
       }
-      if (anadirAManoBloqueado(jugador)) return false;                        // bloqueado por Iwaizumi P01-035 (la carta no se descarta)
+      if (anadirAManoBloqueado(jugador)) return false;                  // bloqueado por Iwaizumi P01-035
 
       // coste: esta carta de la mano al descarte
-      jugador.mano.splice(jugador.mano.indexOf(carta), 1);                    // sacarla de la mano
-      jugador.trash.push(carta);                                              // enviarla al descarte
+      jugador.mano.splice(jugador.mano.indexOf(carta), 1);              // sacar de la mano
+      jugador.trash.push(carta);                                        // enviar al descarte
       log(t("log.descartaDesdeMano", { jugador: jugador.nombre, carta: carta.nombre }));
-      if (modoOnline) enviarTrash(jugador);                                   // sincronizar trash
+      if (modoOnline) enviarTrash(jugador);                             // sincronizar trash
 
-      game.efectosActivos.push({                                              // registrar la Única hasta el cambio de turno
+      // registrar única
+      game.efectosActivos.push({
         tipo: "unicaUsada",
         nombre: carta.nombre,
         activadoPor: game.jugadorActivo,
         expira: game.turno + 1
       });
-      if (modoOnline) enviarEfectos();                                        // sincronizar efectos
+      if (modoOnline) enviarEfectos();                                  // sincronizar efectos
 
-      let cartaElegida = await mostrarSelectorCartas(                         // selector obligatorio ("añade 1")
+      let cartaElegida = await mostrarSelectorCartas(                   // selector obligatorio
         t("log.elegirCarta"),
         elegibles
       );
-      jugador.trash.splice(jugador.trash.indexOf(cartaElegida), 1);           // sacarla del descarte
-      añadirCartaAMano(jugador, cartaElegida);                                // añadir a la mano (sincroniza el trash)
-      logCompartido("log.rivalCartaAManoDesdeDescarte", {                     // lo ven los dos jugadores
+      jugador.trash.splice(jugador.trash.indexOf(cartaElegida), 1);     // sacar del descarte
+      añadirCartaAMano(jugador, cartaElegida);                          // añadir a la mano
+      logCompartido("log.rivalCartaAManoDesdeDescarte", {               // log visible para ambos
         jugador: jugador.nombre,
         carta: cartaElegida.nombre,
         cartaId: cartaElegida.info?.id
@@ -9249,12 +9691,12 @@ function inicializarCartas() {
       id: "HV-P03-056",
       escuela: "Karasuno",
       posicion: "WS",
-      anyo: null,                                                             // exalumno, la carta no indica curso
+      anyo: null,
       rareza: "C",
-      activacionMano: true,                                                   // se usa desde la mano
-      costePropio: true,                                                      // la habilidad se descarta a sí misma tras comprobar condiciones
-      fases: ["remate"],                                                      // fase de ataque
-      unica: true, 
+      activacionMano: true,
+      costePropio: true,
+      unica: true,
+      fases: ["remate"],
       descripcion: `<strong><span style="background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Ataque</span> <span style="background:#B3085A; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Desde la mano</span> <span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Única</span></strong></br>(Envía esta carta de tu mano al descarte): Añade a tu mano 1 carta de personaje de <strong>Karasuno</strong> de 3.º año de tu descarte.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
@@ -9278,7 +9720,60 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#651981; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Robo</span> <span style="background:#B3085A; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;">Desde la mano</span></strong></br>(Envía esta carta de tu mano al descarte): Durante este turno, cada vez que entre en juego uno de tus personajes de <strong>Karasuno</strong> de 2.º o 3.º año, ese personaje obtiene +2 puntos de recepción y sus parámetros no pueden reducirse.`
     }
   ),
-
+  crearCarta("Oikawa Toru", // =============================================================== P03-058
+    {
+      saque: 5,
+      recepcion: 0,
+      pase: 2,
+      remate: 0,
+      bloqueo: 2
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-058",
+      escuela: "Aoba Jôsai",
+      posicion: "S",
+      anyo: 3,
+      rareza: "UC",
+    }
+  ),
+  crearCarta("Iwaizumi Hajime", // =========================================================== P03-059
+    {
+      saque: 4,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-059",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 3,
+      rareza: "C",
+    }
+  ),
+  crearCarta("Kunimi Akira", // ============================================================== P03-060
+    {
+      saque: 2,
+      recepcion: 4,
+      pase: 1,
+      remate: 2,
+      bloqueo: 1
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-060",
+      escuela: "Aoba Jôsai",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "SEC",
+    }
+  ),
   crearCarta("Kotaro Bokuto", // ============================================================== P03-061
     {
       saque: 2,
@@ -9299,7 +9794,7 @@ function inicializarCartas() {
     }
   ),
 
-  crearCarta("Ushijima Wakatoshi", // ============================================================== P03-067
+  crearCarta("Ushijima Wakatoshi", // ========================================================= P03-067
     {
       saque: 3,
       recepcion: 2,
@@ -9307,19 +9802,90 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "recepcion", 2)) {
+        return false;
+      }
+
+      game.valorDefensa += 4;
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.recepcionAumentada", { valor: 4 }));
+
+      // comprobar si el rematador rival tiene ataque original de 1 o menos
+      let rivalIndex = game.jugadores.indexOf(jugador) === 0 ? 1 : 0;
+      let rival = game.jugadores[rivalIndex];
+      let rematadorRival = rival.zonas.remate.at(-1);
+
+      if (rematadorRival && rematadorRival.stats.remate <= 1) {
+        // comprobar si hay un bloqueador central de Shiratorizawa
+        let bloqueadorCentral = jugador.zonas.bloqueo.at(-1);
+        if (bloqueadorCentral && bloqueadorCentral.info?.escuela === "Shiratorizawa") {
+
+          let eleccion = await mostrarEleccion([
+            { texto: t("log.activarHabilidad", { carta: carta.nombre }) },
+            { texto: t("log.noActivar") }
+          ]);
+
+          if (eleccion === 0) {
+            // descartar el bloqueador central
+            let index = jugador.zonas.bloqueo.indexOf(bloqueadorCentral);
+            jugador.zonas.bloqueo.splice(index, 1);
+            jugador.trash.push(bloqueadorCentral);
+            log(t("log.cartaDescartadaCoste", { carta: bloqueadorCentral.nombre }));
+
+            game.valorAtaque -= 2;
+            log(t("log.ataqueRivalReducido", { valor: 2 }));
+
+            if (modoOnline) {
+              enviarTrash(jugador);
+              enviarJugada("quitarCartaZona", {
+                zona: "bloqueo",
+                cartaId: bloqueadorCentral.info.id
+              });
+            }
+            renderCampo();
+          }
+        }
+      }
+
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
     {
       tipo: "personaje",
       id: "HV-P03-067",
       escuela: "Shiratorizawa",
       posicion: "WS",
       anyo: 3,
-      rareza: "R",
-      descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> GUTS 2</strong>: Añade +4 a la recepción de esta carta. Si el atacante rival tiene un ataque original de 1 o menos, puedes descartar 1 bloqueador de <strong>Shiratorizawa</strong> de tu mano para usar esta habilidad: resta -2 al ataque del rival.`
+      rareza: "UC",
+      zonasHabilidad: ["recepcion"],
+      descripcion: '<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong></br>Se puede usar pagando 2 Guts. Este personaje obtiene <strong>+4 a su Recepción</strong>. Si el Ataque base del personaje atacante rival es 1 o menos, puedes descartar 1 personaje bloqueador de <strong>Shiratorizawa</strong> para reducir el Ataque rival en <strong>-2</strong>.',
     }
   ),
-
-  crearCarta("Shirabu Kenjiro", // ============================================================== P03-069
+  crearCarta("Tendo Satori", // =============================================================== P03-068
+    {
+      saque: 1,
+      recepcion: 0,
+      pase: 1,
+      remate: 3,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-068",
+      escuela: "Shiratorizawa",
+      posicion: "MB",
+      anyo: 3,
+      rareza: "UC",
+    }
+  ),
+  crearCarta("Shirabu Kenjirô", // ============================================================ P03-069
     {
       saque: 1,
       recepcion: 1,
@@ -9327,18 +9893,121 @@ function inicializarCartas() {
       remate: 2,
       bloqueo: 1
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {                                // comprobar zona válida
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;
+      }
+      if (!await usarGuts(jugador, "pase", 2)) {                        // pagar 2 GUTS de pase
+        return false;
+      }
+
+      robarCarta(jugador, 1, false);                                    // robar 1 carta
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      game.valorPase += 1;                                              // +1 al pase
+      log(t("log.ataqueAumentado", { valor: 1 }));
+    },
     {
       tipo: "personaje",
       id: "HV-P03-069",
       escuela: "Shiratorizawa",
       posicion: "S",
       anyo: 2,
-      rareza: "S",
-      descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span> GUTS 2</strong>: Roba 1 carta y añade +1 al pase.`
+      rareza: "R",
+      zonasHabilidad: ["pase"],
+      descripcion: '<strong><span style=&quot;background:#059846; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Pase</span></strong></br>Se puede usar pagando 2 Guts. Roba 1 carta y este personaje obtiene <strong>+1 a su Pase</strong>.',
     }
   ),
-  crearCarta("Semi Eita", // ============================================================== P03-072
+  crearCarta("Goshiki Tsutomu", // ============================================================= P03-070
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 1,
+      remate: 3,
+      bloqueo: 1
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-070",
+      escuela: "Shiratorizawa",
+      posicion: "WS",
+      anyo: 1,
+      rareza: "SEC",
+    }
+  ),
+  crearCarta("Yamagata Hayato", // ============================================================= P03-071
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 0,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "recepcion") {                           // comprobar zona válida
+        log(t("log.noEsFase", { zona: t("ui.zonaRecepcion") }));
+        return false;
+      }
+
+      // comprobar que entre los dos jugadores hay 1 o menos eventos en juego
+      let totalEventos = game.jugadores[0].zonas.eventos.length +       // eventos del jugador 1
+                        game.jugadores[1].zonas.eventos.length;        // eventos del jugador 2
+      if (totalEventos > 1) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      if (!await usarGuts(jugador, "recepcion", 3)) {                   // pagar 3 GUTS de recepción
+        return false;
+      }
+
+      game.valorDefensa += 2;                                           // +2 a la recepción
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      log(t("log.defensaAumentada", { valor: 2 }));
+
+      // buscar personajes de Shiratorizawa de 3er año en el trash (excluyendo a Yamagata Hayato)
+      let elegibles = jugador.trash.filter(c =>
+        c.info?.tipo === "personaje" &&                                 // solo personajes
+        c.info?.escuela === "Shiratorizawa" &&                          // de Shiratorizawa
+        c.info?.anyo === 3 &&                                           // de 3er año
+        c.nombre !== "Yamagata Hayato"                                  // que no sea él mismo
+      );
+
+      if (elegibles.length === 0) {                                     // si no hay elegibles
+        log(t("log.sinCartasValidas"));
+        return;
+      }
+
+      let cartaElegida = await mostrarSelectorCartas(                   // abrir selector
+        t("log.elegirCarta"),
+        elegibles
+      );
+      if (!cartaElegida) return;                                        // si cancela, ignorar
+
+      jugador.trash.splice(jugador.trash.indexOf(cartaElegida), 1);     // sacar del trash
+      añadirCartaAMano(jugador, cartaElegida);                          // añadir a la mano
+      log(t("log.cartaAnadidaAMano", { carta: cartaElegida.nombre }));
+
+      if (modoOnline) enviarTrash(jugador);                             // sincronizar trash
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-071",
+      escuela: "Shiratorizawa",
+      posicion: "Li",
+      anyo: 3,
+      rareza: "C",
+      zonasHabilidad: ["recepcion"],
+      zonasProhibidas: ["saque", "bloqueo"],
+      descripcion: '<strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong></br>Si entre ambos jugadores hay 1 o menos cartas de Set en juego, se puede usar pagando 3 Guts. Este personaje obtiene <strong>+2 a su Recepción</strong> y puedes añadir a tu mano hasta 1 carta de personaje de 3er año de <strong>Shiratorizawa</strong> que no sea <strong>Yamagata Hayato</strong> desde tu Zona de Descarte.',
+    }
+  ),  
+  crearCarta("Semi Eita", // ================================================================== P03-072
     {
       saque: 3,
       recepcion: 0,
@@ -9346,15 +10015,16 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 1
     },
-    null, // habilidad pendiente de implementar
+    null, // habilidad implementada en colocarCarta con aplicarSemiP03072
     {
       tipo: "personaje",
       id: "HV-P03-072",
       escuela: "Shiratorizawa",
       posicion: "S",
       anyo: 3,
-      rareza: "N",
-      descripcion: `<strong><span style="background:#e65100; color:white; padding:1px 4px; border-radius:2px;">Saque</span></strong> Si esta carta entró en juego encima de un personaje de <strong>Shiratorizawa</strong>, añade +3 al saque de esta carta. Durante el próximo turno rival, cada vez que entre en juego un personaje Líbero (Li) receptor rival, resta -1 a la recepción de esa carta.`
+      rareza: "C",
+      zonasHabilidad: ["saque"],
+      descripcion: '<strong><span style=&quot;background:#EE8F06; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Saque</span></strong></br>Si este personaje ha entrado sobre un personaje de <strong>Shiratorizawa</strong>, obtiene <strong>+3 a su Saque</strong>, y durante el siguiente turno rival, cada vez que el rival coloque un personaje <strong>Li</strong> receptor, ese personaje tendrá <strong>-1 a su Recepción</strong>.',
     }
   ),
   crearCarta("Ogano Daiki", // ============================================================== P03-073

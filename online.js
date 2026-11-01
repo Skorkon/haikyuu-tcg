@@ -1106,6 +1106,7 @@ function arrancarMulligan(indicePrimerSacador) {
 }
 
 // ============================================================================= CHAT
+// ============================================================================= CHAT
 function iniciarChat() {
   if (!modoOnline) return;                                   // solo en modo online
   document.getElementById("chat-modo-solo").style.display = "none";
@@ -1135,10 +1136,13 @@ function iniciarChat() {
     if (e.key === "Enter") enviarMensaje();                  // enviar al pulsar Enter
   });
 
+  const tsConexion = Date.now();                             // marca de tiempo al conectarse
+
   // escuchar mensajes nuevos en tiempo real
   db.ref("partidas/" + salaActual + "/chat").on("child_added", function(snap) {
-    const msg  = snap.val();                                  // datos del mensaje
-    const esMio = msg.jugador === miNumero;                   // ¿lo he enviado yo?
+
+    const msg   = snap.val();                                 // datos del mensaje
+    const esMio = Number(msg.jugador) === Number(miNumero);   // comparación numérica para evitar fallos de tipo
 
     const div = document.createElement("div");                // crear elemento visual
     div.textContent = msg.texto;
@@ -1151,5 +1155,33 @@ function iniciarChat() {
 
     mensajes.appendChild(div);                               // añadir al contenedor
     mensajes.scrollTop = mensajes.scrollHeight;              // scroll al último mensaje
+
+    // los mensajes anteriores a la conexión solo se muestran, sin badge ni sonido
+    if (msg.ts < tsConexion) return;
+
+    // notificación si el mensaje es del rival
+    if (!esMio) {
+      const chatVisible = document.getElementById('chat-container').style.display !== 'none';
+
+      // badge parpadeante: solo si el chat está cerrado
+      if (!chatVisible) {
+        const btnChat = [...document.querySelectorAll('.tabs-panel .btn-opcion')]
+          .find(b => b.textContent.trim() === 'CHAT');
+        const yaTeniaBadge = btnChat?.classList.contains('tab-con-badge');
+        btnChat?.classList.add('tab-con-badge');
+
+        // sonido: solo la primera vez que aparece el badge
+        // independiente de la hinchada; se controla con el toggle "Sonido de chat" en settings
+        if (!yaTeniaBadge && localStorage.getItem("hv-sonido-chat") !== "no") {
+          try {
+            const sonidoChat = new Audio("audio/mensaje.mp3");
+            sonidoChat.volume = obtenerVolumen() * 0.15;
+            sonidoChat.play().catch(e => console.warn("[sonido chat]", e));
+          } catch (err) {
+            console.warn("[sonido chat]", err);
+          }
+        }
+      }
+    }
   });
 }

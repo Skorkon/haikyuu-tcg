@@ -554,6 +554,7 @@ function mostrarEleccion(opciones) { // ===================================== MO
 
     opciones.forEach((opcion, index) => { 
       let btn = document.createElement("button");           // meter en cada botón de opciones...
+      btn.className = "btn-menu";
       btn.textContent = opcion.texto;                       // ...el texto descrito en la habilidad de la carta
       btn.onclick = () => {                                 // haciendo clic en el botón 
         panel.style.display = "none";                       // ocultamos el panel
@@ -855,6 +856,11 @@ function colocarCarta(jugador, carta, zona) {
       aplicarBokuto064(jugador, carta);
     }
     comprobarEncimaDe(jugador, carta);                            // +1 si entra encima del personaje indicado en info.encimaDe
+    // ------------------------------------------------------------------------- Semi P03-072
+  if (carta.info?.id === "HV-P03-072" &&                                 // si es este Semi
+      jugador.zonas.saque.at(-2)?.info?.escuela === "Shiratorizawa") {   // si debajo hay un Shiratorizawa
+    aplicarSemiP03072(jugador, carta);
+  }
 
     actualizarFaseUI(); 
     renderMano(); 
@@ -909,7 +915,10 @@ function colocarCarta(jugador, carta, zona) {
       // ================================================== Efectos
       // comprobar debilitar receptor
       game.efectosActivos
-        .filter(e => e.tipo === "debilitarReceptor" && e.activadoPor !== game.jugadorActivo && !estaProtegido(carta, "recepcion")) // debuffs del rival, salvo protección
+        .filter(e => e.tipo === "debilitarReceptor" &&
+             e.activadoPor !== game.jugadorActivo &&
+             (!e.posicion || carta.info?.posicion === e.posicion) && // filtro de posición
+             !estaProtegido(carta, "recepcion"))
         .forEach(efecto => {                                                                   // aplicar cada uno
           if (!efecto.soloSinHabilidad || carta.habilidad === null) {                          // solo si afecta a este receptor
             game.valorDefensa -= efecto.valor;
@@ -1197,7 +1206,17 @@ function colocarCarta(jugador, carta, zona) {
           aplicarLevApoyo(jugador);
         }
 
-        // comprobar personaje doble
+        // ------------------------------------------------------------------------- SUNA P03-044
+        let sunaEnRemate = jugador.zonas.remate.at(-1);
+        let esSunaP03044 = sunaEnRemate?.info?.id === "HV-P03-044";
+        let sunaEnBloqueo = [game.bloqueoActual.central, ...game.bloqueoActual.apoyos]
+          .some(c => c?.nombre === "Suna Rintaro");
+        if (esSunaP03044 && !sunaEnBloqueo && game.bloqueoActual.apoyos.length < 2 &&
+            carta.info?.escuela === "Inarizaki") {
+          aplicarSunaP03044(jugador);
+        }
+
+        // ------------------------------------------------------------------------- PERSONAJE DOBLE
         if (carta.info?.personajeDoble) {                                 // si es personaje doble
           aplicarPersonajeDoble(jugador, carta);                          // lanzar elección
         }
@@ -1983,7 +2002,12 @@ async function jugarEvento() {
     await carta.habilidad(jugador, game, carta);
   }
   if (!jugador.zonas.eventos.includes(carta)) deshacerMarcaEvento(marcaEvento); // volvió a la mano: no cuenta como jugado
-
+  
+  if (jugador.zonas.eventos.includes(carta) &&                     // Atsumu P03-039
+      carta.info?.escuela === "Inarizaki" && 
+      carta.info?.fases?.includes("saque")) {
+    aplicarAtsumuP03039(jugador);
+  }
   if (faseAlJugar === "remate" && jugador.zonas.eventos.includes(carta)) { // evento jugado de verdad en tu fase de remate
     aplicarKageyama047(jugador);                                   // comprobar Kageyama P03-047 en pase
   }
@@ -2042,6 +2066,17 @@ async function jugarHabilidadDesdeMano() {                       // async: algun
   }
 
   let marcaEvento = marcarEventoEnFase(carta);                   // misma temporización que un evento (se deshace si no se usa)
+
+  if (carta.info?.unica) {                                       // si carta única
+    let yaUsada = game.efectosActivos.some(e =>
+      e.tipo === "unicaUsada" && e.nombre === carta.nombre && e.activadoPor === game.jugadorActivo
+    );
+    if (yaUsada) {
+      log(t("log.cartaUnica", { carta: carta.nombre }));
+      deshacerMarcaEvento(marcaEvento);
+      return;
+    }
+  }
 
   if (carta.info?.manoAEventos || carta.info?.costePropio) {     // la habilidad comprueba condiciones y paga su propio coste (Hinata P03-001, Tashiro P03-056)
     game.cartaSeleccionada = null;                               // deseleccionar antes de abrir selectores
@@ -3067,12 +3102,13 @@ function fijarColocador(valor, posicion = null) {                      // próxi
   log(t("log.fijarColocadorActivo", { valor: valor }));
 }
 
-function debilitarReceptor(cantidad = 1, soloSinHabilidad = false) {
+function debilitarReceptor(cantidad = 1, soloSinHabilidad = false, posicion = null) {
   game.efectosActivos.push({
     tipo: "debilitarReceptor",
     activadoPor: game.jugadorActivo,
     valor: cantidad,
     soloSinHabilidad: soloSinHabilidad,
+    posicion: posicion,                                              // filtro de posición (null = cualquiera)
     expira: game.turno + 2
   });
   if (modoOnline) enviarEfectos();
@@ -4098,7 +4134,98 @@ async function aplicarShibayamaPR023(jugador, carta) { // ======================
   log(t("log.ataqueAumentado", { valor: 1 }));
   actualizarContadoresVisual();                                  // refrescar el contador de ataque
 }
+async function aplicarAtsumuP03039(jugador) { // ============================================ ATSUMU P03-039
+  if (game.fase !== "saque") return;                              // solo en fase de saque
 
+  let atsumu = jugador.zonas.saque.at(-1);                        // sacador actual
+  if (atsumu?.info?.id !== "HV-P03-039") return;                  // debe ser este Atsumu
+
+  // buscar 2 cartas de Inarizaki jugables en saque en la zona de eventos
+  let elegibles = jugador.zonas.eventos.filter(c =>
+    c.info?.escuela === "Inarizaki" &&
+    c.info?.fases?.includes("saque")
+  );
+  if (elegibles.length < 2) return;                              // necesita al menos 2
+
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidad", { carta: atsumu.nombre }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;
+
+  // elegir 2 cartas para descartar
+  let carta1 = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles);
+  if (!carta1) return;
+  jugador.zonas.eventos.splice(jugador.zonas.eventos.indexOf(carta1), 1);
+  jugador.trash.push(carta1);
+
+  let elegibles2 = elegibles.filter(c => c !== carta1);
+  if (elegibles2.length === 0) return;
+  let carta2 = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles2);
+  if (!carta2) return;
+  jugador.zonas.eventos.splice(jugador.zonas.eventos.indexOf(carta2), 1);
+  jugador.trash.push(carta2);
+
+  game.valorAtaque += 1;
+  log(t("log.habilidadActivada", { carta: atsumu.nombre }));
+  log(t("log.saqueAumentado", { valor: 1 }));
+
+  if (modoOnline) enviarTrash(jugador);
+  renderMano();
+  renderManoRival();
+  renderCampo();
+}
+async function aplicarSunaP03044(jugador) { // ============================================= SUNA P03-044
+  let sunaEnRemate = jugador.zonas.remate.at(-1);
+  if (sunaEnRemate?.info?.id !== "HV-P03-044") return false;
+
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidadNombre", { carta: "Suna Rintaro" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;
+
+  if (jugador.mano.length === 0) {
+    log(t("log.sinCartasEnMano"));
+    return;
+  }
+
+  let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), jugador.mano);
+  if (!cartaDescarte) return;
+
+  let index = jugador.mano.indexOf(cartaDescarte);
+  jugador.mano.splice(index, 1);
+  jugador.trash.push(cartaDescarte);
+  log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+  game.bloqueoActual.apoyos.push(sunaEnRemate);
+  jugador.zonas.bloqueoApoyo.push(sunaEnRemate);
+  sunaEnRemate.zonaActual = "bloqueoApoyo";
+  let indexRemate = jugador.zonas.remate.indexOf(sunaEnRemate);
+  if (indexRemate !== -1) jugador.zonas.remate.splice(indexRemate, 1);
+
+  if (modoOnline) {
+    enviarJugada("cartaJugada", {
+      zona: "bloqueoApoyo",
+      cartaId: sunaEnRemate.info.id
+    });
+    enviarJugada("quitarCartaZona", {
+      zona: "remate",
+      cartaId: sunaEnRemate.info.id
+    });
+    enviarTrash(jugador);
+  }
+  renderMano();
+  renderManoRival();
+  renderCampo();
+}
+function aplicarSemiP03072(jugador, carta) { // ========================================= SEMI P03-072
+  game.valorAtaque += 3;                                            // +3 al saque
+  log(t("log.habilidadActivada", { carta: carta.nombre }));
+  log(t("log.ataqueAumentado", { valor: 3 }));
+
+  debilitarReceptor(1, false, "Li");                                // -1 al líbero rival que entre
+}
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 let partidaTerminada = false;                               // evita que el sonido y el panel se repitan

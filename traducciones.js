@@ -242,7 +242,9 @@ const TRADUCCIONES = {
       "proteccionDebuffActivo": "Durante este turno, los parámetros de tus personajes indicados no pueden reducirse.",
       "opcionNoRobar": "No robar",
       "jugadorQuiereRematch": "{jugador} quiere jugar una revancha.",
-      "descartaPorEfecto": "{jugador} descarta {carta} por efecto de carta"
+      "descartaPorEfecto": "{jugador} descarta {carta} por efecto de carta",
+      "habilidadEnEstaFase": "No puedes usar esta habilidad en esta fase.",
+      "ataqueRivalReducido": "El ataque del rival se reduce en {valor}."
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -494,7 +496,9 @@ const TRADUCCIONES = {
       "proteccionDebuffActivo": "During this turn, the parameters of the indicated characters can’t be reduced.",
       "opcionNoRobar": "Don’t draw",
       "jugadorQuiereRematch": "{jugador} wants a rematch.",
-      "descartaPorEfecto": "{jugador} discards {carta} due to a card effect"
+      "descartaPorEfecto": "{jugador} discards {carta} due to a card effect",
+      "habilidadEnEstaFase": "You can’t use this ability in this phase.",
+      "ataqueRivalReducido": "The opponent’s attack is reduced by {valor}."
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -746,7 +750,9 @@ const TRADUCCIONES = {
       "proteccionDebuffActivo": "Pendant ce tour, les paramètres des personnages indiqués ne peuvent pas être réduits.",
       "opcionNoRobar": "Ne pas piocher",
       "jugadorQuiereRematch": "{jugador} veut une revanche.",
-      "descartaPorEfecto": "{jugador} défausse {carta} par effet de carte"
+      "descartaPorEfecto": "{jugador} défausse {carta} par effet de carte",
+      "habilidadEnEstaFase": "Tu ne peux pas utiliser cette capacité dans cette phase.",
+      "ataqueRivalReducido": "L’attaque de l’adversaire est réduite de {valor}."
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -998,7 +1004,9 @@ const TRADUCCIONES = {
       "proteccionDebuffActivo": "",
       "opcionNoRobar": "",
       "jugadorQuiereRematch": "",
-      "descartaPorEfecto": ""
+      "descartaPorEfecto": "",
+      "habilidadEnEstaFase": "",
+      "ataqueRivalReducido": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

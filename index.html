@@ -314,6 +314,13 @@
               <label data-i18n="menu.labelVolumen">Volumen</label>
               <input type="range" id="input-volumen" min="0" max="100" step="5" style="width:100%; accent-color:var(--accent);">
             </div>
+            <div class="opcion">
+              <label data-i18n="menu.labelSonidoChat">Sonido de chat</label>
+              <div class="fila-opciones">
+                <button type="button" id="btn-sonido-chat-si" class="btn-opcion" onclick="elegirSonidoChat(true)"  data-i18n="menu.sonidoChatSi">Sí</button>
+                <button type="button" id="btn-sonido-chat-no" class="btn-opcion" onclick="elegirSonidoChat(false)" data-i18n="menu.sonidoChatNo">No</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -432,6 +439,7 @@
       select.value = guardada;
       if (select.value !== guardada) select.value = HINCHADA_DEFECTO;   // si la guardada ya no existe en la lista
       document.getElementById("input-volumen").value = Math.round(obtenerVolumen() * 100);
+      marcarSonidoChat();
     }
 
     // botón ▶: suena lo que hay elegido ahora, aunque aún no se haya guardado
@@ -441,6 +449,17 @@
       const audio = new Audio(`audio/${id}.mp3`);
       audio.volume = document.getElementById("input-volumen").value / 100;
       audio.play().catch(() => {});
+    }
+
+    // ===================================================================================== SONIDO CHAT
+    function elegirSonidoChat(valor) {
+      localStorage.setItem("hv-sonido-chat", valor ? "si" : "no");
+      marcarSonidoChat();
+    }
+    function marcarSonidoChat() {
+      const activo = (localStorage.getItem("hv-sonido-chat") || "si") === "si";
+      document.getElementById("btn-sonido-chat-si").classList.toggle("activo", activo);
+      document.getElementById("btn-sonido-chat-no").classList.toggle("activo", !activo);
     }
 
     // ================================================================================ CONFIRMAR Y GUARDAR

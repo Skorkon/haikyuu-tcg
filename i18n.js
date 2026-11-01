@@ -45,6 +45,7 @@ const I18N = {
             chatEnviar: "Enviar",
             chatDeshabilitado: "Chat deshabilitado en modo un jugador",
             rivalJuegaEvento: "Evento jugado",
+            panelInfo: 'Si encuentras cualquier fallo, no dudes en reportarlo en nuestro <a href="https://discord.gg/7wcknmWTH" target="_blank">Discord</a>.',
           },
         menu: {                                           // ← para index.html
           labelNombre:      "Tu nombre",
@@ -62,6 +63,9 @@ const I18N = {
           labelHinchada: "Hinchada",
           labelVolumen:  "Volumen",
           sonidoNinguno: "Sin sonido",
+          labelSonidoChat: "Sonido de chat",
+          sonidoChatSi:    "Sí",
+          sonidoChatNo:    "No",
         },
         lobby: {                                          // ← para lobby.html
           volverInicio:     "← Volver a inicio",
@@ -186,6 +190,7 @@ const I18N = {
             chatEnviar: "Envoyer",
             chatDeshabilitado: "Chat disabled in single player mode",
             rivalJuegaEvento: "Rival plays event",
+            panelInfo: 'If you find any bug, feel free to report it on our <a href="https://discord.gg/7wcknmWTH" target="_blank">Discord</a>.',
         },
         menu: {
           labelNombre:      "Your name",
@@ -203,6 +208,9 @@ const I18N = {
           labelHinchada: "Cheering crowd",
           labelVolumen:  "Volume",
           sonidoNinguno: "No sound",
+          labelSonidoChat: "Chat sound",
+          sonidoChatSi:    "On",
+          sonidoChatNo:    "Off",
         },
         lobby: {
           volverInicio:     "← Back to home",
@@ -327,6 +335,7 @@ const I18N = {
             chatEnviar: "Send",
             chatDeshabilitado: "Chat désactivé en mode un joueur",
             rivalJuegaEvento: "Événement joué",
+            panelInfo: 'Si tu trouves un bug, n\'hésite pas à le signaler sur notre <a href="https://discord.gg/7wcknmWTH" target="_blank">Discord</a>.',
         },
         menu: {
           labelNombre:      "Ton nom",
@@ -344,6 +353,9 @@ const I18N = {
           labelHinchada: "Supporters",
           labelVolumen:  "Volume",
           sonidoNinguno: "Aucun son",
+          labelSonidoChat: "Son du chat",
+          sonidoChatSi:    "Oui",
+          sonidoChatNo:    "Non",
         },
         lobby: {
           volverInicio:     "← Retour à l'accueil",

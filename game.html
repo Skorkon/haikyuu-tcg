@@ -55,7 +55,7 @@ body {
   background: transparent;  
   padding: 10px;
   overflow-y: auto;
-  overflow-x: visible;   
+  overflow-x: hidden;   
   display: flex;
   flex-direction: column;
   position: relative;
@@ -969,6 +969,26 @@ button {
   .chat-mio { color: var(--accent); }
   .chat-rival { color: var(--tinta); }
 
+    /* ================================================= NOTIFICACIÓN MENSAJES SIN LEER */
+    .tab-con-badge {
+      position: relative;
+    }
+    .tab-con-badge::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: parpadeo 1s ease-in-out infinite;
+    }
+    @keyframes parpadeo {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
   /* ------------------------------------------------------------------------------- ZONA SELECTOR */
   #selector-titulo {
     font-size: 11px;
@@ -1085,6 +1105,73 @@ button {
   to   { opacity: 0; }
 }
 
+/* ------------------------------------------------------------------------------- INFO + */
+#btn-info {
+  width: 28px !important;
+  height: 28px !important;
+  margin: 4px 0 0 4px !important;
+  padding: 0 !important;
+  border-radius: 50%;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  text-transform: none;
+}
+#panel-info {
+  display: none;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--tinta);
+  border: 2px solid var(--accent);
+  margin: 4px;
+  margin-top: 8px;
+}
+#panel-info a {
+  color: white;
+}
+
+/* -------------------------------------------------------- PANELES POPUP CENTRALES : SELECTORES E INICIO Y FIN */
+.panel-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  text-align: center;
+  min-width: 300px;
+  padding: 30px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: 5px solid var(--tinta);
+  box-shadow: 6px 6px 0 var(--accent);
+}
+.panel-popup .titulo-caja {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+.panel-popup .btn-menu {
+  width: 100%;
+  margin: 0;
+}
+#opciones-eleccion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+#panel-fin {
+  gap: 12px;
+}
+
 </style>
 <!----------------------------------------------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------------------------------------- HTML -->
@@ -1098,6 +1185,15 @@ button {
     <!----------------------------------------------------------------------- MANO DEL RIVAL -->
     <div id="mano-rival"></div>
     <h3 class="titulo-mano-rival" id="tituloManoRival"></h3>
+
+    <!------------------------------------------------------------------------ BOTÓN INFO -->
+    <div style="position: absolute; top: 21%; left: 10px;">
+      <button id="btn-info" class="btn-menu" title="Info">i</button>
+      <div id="panel-info" style="display:none;">
+        Aquí va el texto de info.
+      </div>
+    </div>
+
     <!----------------------------------------------------------------------- ACCIONES -->
     <div class="contenido-inferior">
       <div class="panel panel-otros">
@@ -1108,7 +1204,7 @@ button {
       </div> <!-- fin panel otros -->
       <div class="panel panel-acciones">
         <h3 class="titulo-caja" data-i18n="ui.panelAcciones">Acciones</h3>
-        <div class="acciones-botones">   <!-- NUEVO: columna de botones -->
+        <div class="acciones-botones">   
           <button class="btn-menu" id="btn-accion-jugarCarta" onclick="jugarCarta()" data-i18n="ui.btnJugarCarta" style="display:none">Jugar carta</button>
           <button class="btn-menu" id="btn-accion-jugarEvento" onclick="jugarEvento()" data-i18n="ui.btnEvento" style="display:none">Jugar Evento</button>
           <button class="btn-menu" id="btn-accion-saque" onclick="resolverSaque()" data-i18n="ui.btnSaque" style="display:none">Saque</button>
@@ -1119,7 +1215,7 @@ button {
           <button class="btn-menu" id="btn-accion-usarHabilidad" onclick="usarHabilidad()" data-i18n="ui.btnHabilidad" style="display:none">Usar habilidad</button>
           <button class="btn-menu" id="btn-accion-habilidadMano" onclick="jugarHabilidadDesdeMano()" data-i18n="ui.btnHabilidadMano" style="display:none">Habilidad desde mano</button>
           <button class="btn-menu" id="btn-accion-noBloquear" onclick="resolverBloqueo()" data-i18n="ui.btnNoBloquear" style="display:none">No bloquear</button>
-        </div>                            <!-- NUEVO: fin columna de botones -->
+        </div>                           
       </div> <!-- fin panel acciones -->
       <div class="mano-bottom">
         <div id="mano"></div>
@@ -1131,7 +1227,9 @@ button {
   <div id="pelota" style="position:absolute; width:32px; height:32px; z-index:50; transition: all 0.3s ease;">
     <img src="img/pelota.png" alt="pelota" style="width:100%; height:100%; object-fit:contain; filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));">
   </div>
+  
   <div class="tablero" id="tablero">
+    
     <div id="contador-turno" class="contador-turno">Turno 1</div>
     <div class="cancha-marco"></div>
     <!----------------------------------------------------------------------------------------------------------------- JUGADOR 2 (rival) -->
@@ -1235,31 +1333,21 @@ button {
 </div> <!-- fin panel derecha -->
 
 <!-- PANEL FIN DE PARTIDA -->
-<div id="panel-fin" style="
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border: 3px solid black;
-  padding: 40px;
-  z-index: 500;
-  text-align: center;
-  min-width: 300px;
-">
-  <h2 id="fin-titulo" style="font-size: 28px; margin-bottom: 20px;"></h2>
-  <button onclick="volverLobby()" style="padding: 12px 24px; font-size: 16px;" data-i18n="ui.volverLobby">Volver al lobby</button>
-  <button onclick="pedirRematch()" style="padding: 12px 24px; font-size: 16px;" data-i18n="ui.rematch">Rematch</button>
+<div id="panel-fin" class="panel-popup">
+  <h2 id="fin-titulo" class="titulo-caja"></h2>
+  <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+    <button id="btn-volver-lobby" class="btn-menu" onclick="volverLobby()" data-i18n="ui.volverLobby">Volver al lobby</button>
+    <button id="btn-rematch" class="btn-menu" onclick="pedirRematch()" data-i18n="ui.rematch">Rematch</button>
+  </div>
 </div>
  
 <!-- TOOLTIP -->
 <div id="tooltip" class="tooltip"></div>
 
 <!-- PANEL DE OPCIONES A ELEGIR -->
-<div id="panel-eleccion" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; border:2px solid black; padding:20px; z-index:200; flex-direction:column; gap:10px; text-align:center;">
-  <h3 data-i18n="ui.elegirOpcion">Elige una opción:</h3>
-  <div id="opciones-eleccion" style="display:flex; flex-direction:column; gap:8px;"></div>
+<div id="panel-eleccion" class="panel-popup">
+  <h3 class="titulo-caja" data-i18n="ui.elegirOpcion">Elige una opción:</h3>
+  <div id="opciones-eleccion"></div>
 </div>
 
 <!-- Firebase -->
@@ -1463,7 +1551,27 @@ button {
     }
     document.querySelectorAll('.tabs-panel .btn-opcion').forEach(b => b.classList.remove('activo'));
     event.target.classList.add('activo');
+
+    // al abrir el chat: borrar badge de "sin leer"
+    if (tab === 'chat') {
+      document.querySelectorAll('.tabs-panel .btn-opcion').forEach(b => {
+        if (b.textContent.trim() === 'CHAT') b.classList.remove('tab-con-badge');
+      });
+    }
   }
+
+  // ================================================================================= OCULTAR/MOSTRAR INFO
+  document.addEventListener('DOMContentLoaded', function() {
+  const btnInfo = document.getElementById('btn-info');
+  const panelInfo = document.getElementById('panel-info');
+
+  panelInfo.innerHTML = t('ui.panelInfo');
+
+  btnInfo.addEventListener('click', function(e) {
+    e.stopPropagation();
+    panelInfo.style.display = panelInfo.style.display === 'none' ? 'block' : 'none';
+  });
+});
 
 </script>
 

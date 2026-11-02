@@ -972,7 +972,6 @@
     // ---------------------------------------------- CARTAS ------------------------------------------- 
     const CATALOGUE = inicializarCartas();          // carga todas las cartas desde cartas.js
     const imgPath = id => `img/cartas/${id}.png`;   // ruta de la imagen de cada carta
-    const esNoProgramada = c => c.id.startsWith("HV-P03-"); // cartas no programadas por el momento
     function getCardName(c) {                       // nombre de la carta en el idioma activo
       return DESCRIPCIONES?.[c.id]?.["nombre_" + idiomaActivo] || c.nombre;
     }
@@ -1485,12 +1484,6 @@
     function saveDeck() {
       const nombre = document.getElementById('deckNameInput').value.trim() || t("deckbuilder.nombreMazoDefecto");
       if (!deck.length) return;
-
-      // Cartas bloqueadas P03
-      if (deck.some(e => esNoProgramada(e.carta))) {
-        alert(t("deckbuilder.errorP03"));
-        return;
-      }
 
       //                                                                  // validaciones antes de guardar
       const total   = deck.reduce((s,e) => s+e.qty, 0);

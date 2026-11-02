@@ -683,6 +683,29 @@ function leerParametrosURL() {
   const sala   = params.get("sala");
   const jugador = params.get("jugador");
 
+  // ==================================================================== MODO SOLO
+  if (params.get("solo")) {                                              // si la URL tiene ?solo=true
+
+    const mazo1 = JSON.parse(localStorage.getItem('hv-solo-mazo1'));    // leer mazo J1 guardado por lobby.js
+    const mazo2 = JSON.parse(localStorage.getItem('hv-solo-mazo2'));    // leer mazo J2 guardado por lobby.js
+    localStorage.removeItem('hv-solo-mazo1');                           // limpiar una vez leídos
+    localStorage.removeItem('hv-solo-mazo2');                           // limpiar una vez leídos
+
+    if (!mazo1 || !mazo2) {                                             // si no se encuentran, volver al lobby
+      alert(t("lobby.soloErrorMazos"));
+      window.location.href = 'lobby.html';
+      return;
+    }
+
+    game.jugadores[0].nombre = mazo1.nombre;                            // asignar nombre del mazo como nombre del jugador 1
+    game.jugadores[1].nombre = mazo2.nombre;                            // asignar nombre del mazo como nombre del jugador 2
+    game.jugadores[0].mazo   = construirMazo(mazo1);                    // construir y barajar el mazo del jugador 1
+    game.jugadores[1].mazo   = construirMazo(mazo2);                    // construir y barajar el mazo del jugador 2
+
+    // modoOnline sigue siendo false → game.js arranca en modo local automáticamente
+    return;
+  }
+
   if (!sala || !jugador) return; // no venimos del lobby, partida local
 
   salaActual = sala;

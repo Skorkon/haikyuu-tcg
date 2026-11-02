@@ -124,6 +124,54 @@ function cargarMazoGuardado(id) {
   document.getElementById("estado-mazo").textContent =
     miMazo.nombre + " (" + miMazo.entries.reduce((s,e) => s+e.qty, 0) + "/40)";
 }
+
+// =============================================================== MODO SOLO
+function abrirPopupSolo() {
+  const savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]'); // leer mazos guardados
+  if (savedDecks.length === 0) {          // si no hay ninguno, avisar y salir
+    alert(t("lobby.alertMazo"));
+    return;
+  }
+
+  // construir las opciones del select con los mazos guardados
+  const opciones = savedDecks
+    .map(d => `<option value="${d.id}">${d.nombre} (${d.total}/40)</option>`)
+    .join('');
+  document.getElementById('solo-mazo1').innerHTML = opciones; // rellenar selector 1
+  document.getElementById('solo-mazo2').innerHTML = opciones; // rellenar selector 2
+
+  // si hay al menos 2 mazos, preseleccionar el segundo en el selector 2
+  if (savedDecks.length >= 2) {
+    document.getElementById('solo-mazo2').value = savedDecks[1].id;
+  }
+  document.getElementById('popup-solo').style.display = 'flex'; // mostrar popup
+}
+
+function cerrarPopupSolo() {
+  document.getElementById('popup-solo').style.display = 'none'; // ocultar popup
+}
+
+document.getElementById('btn-solo-comenzar').addEventListener('click', function() {
+  const savedDecks = JSON.parse(localStorage.getItem('hv-decks') || '[]'); // leer mazos guardados
+
+  const id1 = document.getElementById('solo-mazo1').value; // id del mazo elegido para J1
+  const id2 = document.getElementById('solo-mazo2').value; // id del mazo elegido para J2
+
+  const mazo1 = savedDecks.find(d => d.id === id1); // buscar mazo J1 en el array
+  const mazo2 = savedDecks.find(d => d.id === id2); // buscar mazo J2 en el array
+
+  if (!mazo1 || !mazo2) {               // si alguno no se encuentra, avisar y salir
+    alert(t("lobby.alertMazo"));
+    return;
+  }
+
+  // guardar los dos mazos temporalmente en localStorage para que game.js los lea al cargar
+  localStorage.setItem('hv-solo-mazo1', JSON.stringify({ nombre: mazo1.nombre, entries: mazo1.entries }));
+  localStorage.setItem('hv-solo-mazo2', JSON.stringify({ nombre: mazo2.nombre, entries: mazo2.entries }));
+
+  window.location.href = 'game.html?solo=true'; // redirigir a game.html en modo solo
+});
+
 llenarListaMazosGuardados(); // rellenar el desplegable al cargar la página
 
 inicializarFirebase();                                       // conectar Firebase para escuchar

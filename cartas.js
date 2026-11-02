@@ -9794,6 +9794,172 @@ function inicializarCartas() {
     }
   ),
 
+
+  crearCarta("Aone Takanobu", // =============================================================== P03-063
+    {
+      saque: 2,
+      recepcion: 0,
+      pase: 0,
+      remate: 2,
+      bloqueo: 3
+    },
+    function(jugador, game, carta) {
+      if (carta.zonaActual !== "saque") {                               // comprobar zona válida
+        log(t("log.noEsFase", { zona: t("ui.zonaSaque") }));
+        return false;
+      }
+
+      if (jugador.mazo.length === 0) {                                  // comprobar que hay cartas en el mazo
+        log(t("log.sinCartasEnMazo", { jugador: jugador.nombre }));
+        return false;
+      }
+
+      let cartaRevelada = jugador.mazo.shift();                         // revelar carta superior del mazo
+      jugador.trash.push(cartaRevelada);                                // enviar al trash
+      logCompartido("log.cartasReveladas", {                            // log visible para ambos
+        cartas: cartaRevelada.nombre,
+        cartaId: cartaRevelada.info?.id
+      });
+
+      if (cartaRevelada.info?.escuela === "Date Kôgyô" &&               // si es de Date Kôgyô
+          cartaRevelada.info?.tipo === "personaje") {                   // y es un personaje
+        game.valorAtaque += 3;                                          // +3 al saque
+        log(t("log.habilidadActivada", { carta: carta.nombre }));
+        log(t("log.ataqueAumentado", { valor: 3 }));
+        negarEventos(["remate"]);                                       // negar eventos de ataque rival
+      } else {
+        log(t("log.condicionNoCumplida"));
+      }
+
+      if (modoOnline) enviarTrash(jugador);                             // sincronizar trash
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-063",
+      escuela: "Date Kôgyô",
+      posicion: "MB",
+      anyo: 2,
+      rareza: "UC",
+      zonasHabilidad: ["saque"],
+      descripcion: '<strong><span style=&quot;background:#EE8F06; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Saque</span></strong></br>Descarta la carta superior de tu mazo. Si esa carta es un personaje de <strong>Date Kôgyô</strong>, este personaje obtiene <strong>+3 a su Saque</strong> y durante el siguiente turno rival, anula las habilidades de las cartas de Evento rivales jugadas con <strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong>.',
+    }
+  ),
+  crearCarta("Futakuchi Kenji", // ============================================================= P03-064
+    {
+      saque: 1,
+      recepcion: 1,
+      pase: 0,
+      remate: 3,
+      bloqueo: 2
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") { // comprobar zona válida
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;
+      }
+
+      // comprobar que hay al menos 2 cartas de Date Kôgyô en la mano
+      let dateEnMano = jugador.mano.filter(c => c.info?.escuela === "Date Kôgyô"); // filtrar por escuela
+      if (dateEnMano.length < 2) {                                      // si hay menos de 2
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      // elegir primera carta para descartar
+      let carta1 = await mostrarSelectorCartas(t("log.elegirCarta"), dateEnMano);
+      if (!carta1) return false;                                        // si cancela, ignorar
+      jugador.mano.splice(jugador.mano.indexOf(carta1), 1);             // sacar de la mano
+      jugador.trash.push(carta1);                                       // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: carta1.nombre }));
+
+      // elegir segunda carta para descartar
+      let dateEnMano2 = jugador.mano.filter(c => c.info?.escuela === "Date Kôgyô"); // filtrar de nuevo
+      if (dateEnMano2.length === 0) {                                   // si no quedan
+        log(t("log.condicionNoCumplida"));
+        jugador.trash.splice(jugador.trash.indexOf(carta1), 1);         // devolver la primera
+        jugador.mano.push(carta1);
+        return false;
+      }
+      let carta2 = await mostrarSelectorCartas(t("log.elegirCarta"), dateEnMano2);
+      if (!carta2) return false;                                        // si cancela, ignorar
+      jugador.mano.splice(jugador.mano.indexOf(carta2), 1);             // sacar de la mano
+      jugador.trash.push(carta2);                                       // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: carta2.nombre }));
+
+      robarCarta(jugador, 1, false);                                    // robar 1 carta
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      game.valorDefensa += 4;                                           // +4 al bloqueo
+      log(t("log.defensaAumentada", { valor: 4 }));
+
+      // compensar debuffs de bloqueador central del rival ya aplicados
+      if (carta.zonaActual === "bloqueo") {                             // solo si es bloqueador central
+        let debuffs = game.efectosActivos.filter(e =>
+          e.tipo === "debilitarBloqueadorCentral" &&                    // solo este tipo
+          e.activadoPor !== game.jugadorActivo                          // activados por el rival
+        );
+        let totalDebuff = debuffs.reduce((acc, e) => acc + e.valor, 0); // sumar todos los valores
+        if (totalDebuff > 0) {
+          game.valorDefensa += totalDebuff;                             // recuperar lo restado
+          log(t("log.debuffCancelado", { valor: totalDebuff }));
+        }
+      }
+
+      if (modoOnline) enviarTrash(jugador);                             // sincronizar trash
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-064",
+      escuela: "Date Kôgyô",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "R",
+      zonasHabilidad: ["bloqueo"],
+      descripcion: '<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Bloqueo</span></strong></br>Se puede usar descartando 2 cartas de <strong>Date Kôgyô</strong> desde tu mano. Roba 1 carta, este personaje obtiene <strong>+4 a su Bloqueo</strong> y su Bloqueo no puede ser reducido durante este turno.',
+    }
+  ),
+  crearCarta("Onagawa Tarô", // =============================================================== P03-065
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-065",
+      escuela: "Date Kôgyô",
+      posicion: "WS",
+      anyo: 2,
+      rareza: "C",
+    }
+  ),
+  crearCarta("Fukiage Jingo", // =============================================================== P03-066
+    {
+      saque: 3,
+      recepcion: 2,
+      pase: 0,
+      remate: 3,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-066",
+      escuela: "Date Kôgyô",
+      posicion: "MB",
+      anyo: 1,
+      rareza: "C",
+    }
+  ),
   crearCarta("Ushijima Wakatoshi", // ========================================================= P03-067
     {
       saque: 3,
@@ -10421,7 +10587,7 @@ function inicializarCartas() {
       posicion: "MB",
       anyo: 1,
       rareza: "P",
-      descripcion: `<strong><span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Ataque</span></strong> Puedes descartar 1 carta de tu mano para usar esta habilidad. Este personaje obtiene +2 puntos de ataque.`
+      descripcion: `<strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong></br>Puedes descartar 1 carta para usar esta habilidad. Este personaje obtiene <strong>+2 a su Ataque</strong>.`
     }
   ),
   crearCarta("Kageyama Tobio", // ============================================================ PR-004
@@ -10961,7 +11127,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#2e7d32; color:white; padding:1px 4px; border-radius:2px;">Pase</span></strong> Puedes pagar 2 GUTS para usar esta habilidad. Envía hasta 1 carta de la zona de eventos del rival a su descarte. Durante el próximo turno del rival, cada vez que su receptor entre en juego, ese personaje obtiene -2 puntos de recepción.`
     }
   ),
-  crearCarta("A demon and another demon", // ================================================= PR-029
+  crearCarta("They’ll be one monster... and another monster", // ============================= PR-029
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     async function(jugador, game, carta) {
       if (anadirAManoBloqueado(jugador)) return;                       // bloqueado por efecto de negar
@@ -11002,7 +11168,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#6a1b9a; color:white; padding:1px 4px; border-radius:2px;">Robo</span></strong> Añade a tu mano desde tu descarte hasta 1 <strong>Hinata Shoyo</strong> y hasta 1 <strong>Kageyama Tobio</strong>.`
     }
   ),
-  crearCarta("Being the libero of Nekoma's defense is a huge honor", // ====================== PR-030
+  crearCarta("Think about it... Starting Libero for Nekoma, “The King of Defense”? There’s no bigger honor than that! ", // =========== PR-030
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       let receptor = jugador.zonas.recepcion.at(-1);                          // tu receptor (jugarEvento ya exige que sea de esta jugada)
@@ -11029,7 +11195,7 @@ function inicializarCartas() {
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Uno de tus receptores de <strong>Nekoma</strong> obtiene +2 puntos de recepción. Si ese personaje es <strong><span style="color:#1565c0">Shibayama Yuki</span></strong>, roba 1 carta.</br><strong><span style="background:#e91e8c; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong><span style="font-size:0.85em"> : Solo puedes jugar 1 carta con este nombre por turno.</span>`
     }
   ),
-  crearCarta("Everyone is watching you", // ================================================== PR-031
+  crearCarta("That means everybody is watching you", // ====================================== PR-031
     { saque: 0, recepcion: 0, pase: 0, remate: 0, bloqueo: 0 },
     function(jugador, game, carta) {
       robarCarta(jugador, 1, true);                                           // roba 1 carta

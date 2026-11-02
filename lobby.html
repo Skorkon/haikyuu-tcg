@@ -324,7 +324,7 @@
           <select id="savedDecksSelectLobby" class="select-oscuro" style="width:50%;" onchange="cargarMazoGuardado(this.value)">
             <option value="" data-i18n="lobby.elegirMazoGuardado">Elige un mazo guardado...</option>
           </select>
-          <label for="input-mazo" class="btn-menu volver-link" style="cursor:pointer;">Importar</label>
+          <label for="input-mazo" class="btn-menu volver-link" style="cursor:pointer;" data-i18n="lobby.importarBtn"></label>
             <input type="file" id="input-mazo" accept=".json" style="display:none;">
           <p id="estado-mazo" class="estado-mazo"></p>
         </div>
@@ -336,7 +336,7 @@
         <div class="zona-botones">
           <div class="zona-botones-titulo" data-i18n="lobby.tituloCrear">Create</div>
           <button id="btn-crear" class="btn-menu" ...>New match</button>
-          <button class="btn-menu" disabled>Solo</button>
+          <button class="btn-menu" onclick="abrirPopupSolo()">Solo</button>
           <button class="btn-menu" disabled>Ranked</button>
         </div>
         <div class="zona-sala">
@@ -402,6 +402,29 @@
     }
     new ResizeObserver(escalarDerecha).observe(document.getElementById("columna-derecha"));
   </script>
+
+  <!------------------------------------------------------------------------------------ POPUP MODO SOLO -->
+  <div id="popup-solo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; align-items:center; justify-content:center;">
+    <!-- contenedor del popup, centrado en pantalla -->
+    <div style="background:var(--bg); border:3px solid var(--accent); padding:36px; min-width:420px; display:flex; flex-direction:column; gap:18px;">
+      <h2 style="font-family:'Anton',sans-serif; font-size:22px; letter-spacing:2px; color:var(--tinta); -webkit-text-stroke:2px var(--accent); paint-order:stroke fill;">SOLO</h2>
+      <!-- selector de mazo para el jugador 1 -->
+      <div>
+        <div class="deck-section-title" data-i18n="lobby.soloMazo1">Mazo 1</div>
+        <select id="solo-mazo1" class="select-oscuro" style="width:100%;"></select>
+      </div>
+      <!-- selector de mazo para el jugador 2 -->
+      <div>
+        <div class="deck-section-title" data-i18n="lobby.soloMazo2">Mazo 2</div>
+        <select id="solo-mazo2" class="select-oscuro" style="width:100%;"></select>
+      </div>
+      <!-- botones de acción -->
+      <div style="display:flex; gap:10px; margin-top:6px;">
+        <button id="btn-solo-comenzar" class="btn-menu" style="flex:1;" data-i18n="lobby.soloComenzar">Comenzar</button>
+        <button class="btn-menu" onclick="cerrarPopupSolo()" style="flex:1;" data-i18n="lobby.soloCancelar">Cancelar</button>
+      </div>
+    </div> <!-- fin panel modo solo -->
+  </div> <!-- fin popup modo solo -->
   
   <script src="i18n.js"></script>
 

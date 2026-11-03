@@ -245,3 +245,6 @@ log.jugadorQuiereRematch;{jugador} quiere jugar una revancha.;{jugador} wants a 
 log.descartaPorEfecto;{jugador} descarta {carta} por efecto de carta;{jugador} discards {carta} due to a card effect ;{jugador} défausse {carta} par effet de carte ;
 log.habilidadEnEstaFase;No puedes usar esta habilidad en esta fase.;You can’t use this ability in this phase. ;Tu ne peux pas utiliser cette capacité dans cette phase. ;
 log.ataqueRivalReducido;El ataque del rival se reduce en {valor}.;The opponent’s attack is reduced by {valor}.;L’attaque de l’adversaire est réduite de {valor}.;
+log.ataqueTresMetros;Ataque de 3 metros: {jugador} coloca {carta} en su Zona de Ataque con un ataque de {valor}.;3-meter attack: {jugador} places {carta} in their Attack Zone with an attack of {valor}.;Attaque à 3 mètres : {jugador} place {carta} dans sa Zone d’Attaque avec une attaque de {valor}.;
+log.ataqueTresMetrosPotenciado;Ataque de 3 metros potenciado en {valor} este turno.;3-meter attack boosted by {valor} this turn.;Attaque à 3 mètres boostée de {valor} ce tour.;
+log.protegerAtaqueActivo;Ataque protegido contra reducciones.;Attack protected from reductions.;Attaque protégée contre les réductions.;

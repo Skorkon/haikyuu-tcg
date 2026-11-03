@@ -1034,6 +1034,8 @@ function colocarCarta(jugador, carta, zona) {
     if (carta.info?.id === "HV-P02-064") {             // comprobar Bokuto 064
       aplicarBokuto064(jugador, carta);
     }
+    comprobarKomoriP03028(jugador, carta);
+    comprobarHyakuzawaP03016(jugador);                            // Hyakuzawa P03-016
     comprobarEncimaDe(jugador, carta);                            // +1 si entra encima del personaje indicado en info.encimaDe
 
     actualizarFaseUI();
@@ -1108,6 +1110,8 @@ function colocarCarta(jugador, carta, zona) {
     if (jugador.zonas.pase.at(-1)?.info?.id === "HV-P02-060" && carta.stats.remate === 3) {
       aplicarKenma060(jugador, carta);                            // lanzar habilidad de Kenma
     }
+    // ------------------------------------------------------------------------- Kageyama P03-020
+    comprobarKageyamaP03020(jugador, carta);
     // ------------------------------------------------------------------------- Goshiki P02-051
     if (carta.info?.id === "HV-P02-051" &&                                 // si es este Goshiki en concreto
         jugador.zonas.remate.at(-2)?.nombre === "Ushijima Wakatoshi" &&    // si debajo hay un Ushijima
@@ -1124,7 +1128,8 @@ function colocarCarta(jugador, carta, zona) {
     game.efectosActivos
       .filter(e => e.tipo === "debilitarRematador" &&                      // todos los efectos de este tipo
                    e.activadoPor !== game.jugadorActivo &&                 // activados por el rival
-                   !estaProtegido(carta, "remate"))                        // salvo protección
+                   !estaProtegido(carta, "rematAh noe") &&                      // salvo protección
+                   !tieneEfecto("protegerAtaque"))                         // salvo protección de ataque
       .forEach(efecto => {                                                 // aplicar cada uno
         game.valorAtaque -= efecto.valor;                                  // restar su valor (antes restaba siempre 2)
         log(t("log.efectoDebilitarRematador", { valor: efecto.valor, carta: carta.nombre }));
@@ -1721,20 +1726,20 @@ function resolverPase(){
 // ============================================================================================================================= BOTÓN
 // =================================================================================================================== RESOLVER REMATE
 function resolverRemate() {
+  console.log(game.valorAtaque)
   if (game.fase !== "remate") {
     log(t("log.noEsFase", { zona: t("ui.zonaRemate") }));
     return;
   }
   if (!esResolverValido()) return;                  // comprobar turno en online
-  let atacante = game.valorAtaque;                  // valor del pase que se ha enviado al atacante
   let jugador = game.jugadores[game.jugadorActivo]; // jugador activo
   let carta = jugador.zonas.remate.at(-1);          // carta colocada en la zona
-  let valorRemate = carta.stats.remate;             // remate del atacante
   if (!carta || !carta.recienJugada) {
     log(t("log.noCartaEnZona", { zona: t("ui.zonaRemate") }));
     return;
   }
-  game.valorAtaque = atacante + valorRemate;
+  const { ataque } = calcularValoresEnVivo();       // calcular ataque real (ya incluye remate y habilidades)
+  game.valorAtaque = ataque;
   log(t("log.remataConPotencia", { carta: carta.nombre, valor: game.valorAtaque }));
   game.gutsDescartados = [];
 
@@ -2247,7 +2252,7 @@ function calcularValoresEnVivo() {
 
   if (game.fase === 'remate') {   
     const carta = jugador.zonas.remate.at(-1);
-    if (carta && carta.recienJugada) {
+    if (carta && carta.recienJugada && !carta.ataqueOverride) {
       ataque = game.valorAtaque + carta.stats.remate;
     }
   }
@@ -3271,6 +3276,43 @@ function oneTouch(n) {
   renderManoRival();
   renderCampo();
 }
+function ataqueTresMetros(jugador, carta, valorAtaque) { // =================== ATAQUE DE 3 METROS
+  // sacar de recepción
+  let index = jugador.zonas.recepcion.indexOf(carta);
+  if (index !== -1) jugador.zonas.recepcion.splice(index, 1);       // sacar de recepción
+
+  // colocar en remate
+  jugador.zonas.remate.push(carta);                                 // colocar en remate
+  carta.zonaActual = "remate";                                      // actualizar zona
+  carta.recienJugada = true;                                        // marcar como recién jugada
+  carta.ataqueOverride = true;                                      // ← aquí
+  game.valorAtaque += valorAtaque;                                  // fijar ataque
+
+    // comprobar efecto potenciarAtaque3metros (Komori P03-028)
+  if (game.efectosActivos.some(e => e.tipo === "potenciarAtaque3metros")) {
+    game.valorAtaque += 1;
+    log(t("log.ataqueAumentado", { valor: 1 }));
+  }
+
+  logCompartido("log.ataqueTresMetros", {                           // log visible para ambos
+    jugador: jugador.nombre,
+    carta: carta.nombre,
+    cartaId: carta.info?.id,
+    valor: valorAtaque
+  });
+
+  if (modoOnline) {
+    enviarJugada("quitarCartaZona", {                               // avisar que sale de recepción
+      zona: "recepcion",
+      cartaId: carta.info?.id
+    });
+    enviarJugada("cartaJugada", {                                   // avisar que entra en remate
+      zona: "remate",
+      cartaId: carta.info?.id
+    });
+  }
+  actualizarContadoresVisual(); 
+}
 // ======================================== NEGAR ONE TOUCH
 function negarOneTouch() {
   game.efectosActivos.push({
@@ -3345,7 +3387,16 @@ function negarHabilidadPersonaje(nombrePersonaje) { // anula la habilidad de un 
   if (modoOnline) enviarEfectos();                                       // sincronizar efectos con el rival
   log(t("log.anularHabilidadPersonajeActivo", { carta: nombrePersonaje }));
 }
-
+// ======================================== PROTEGER DE REDUCCIÓN DE ATAQUE
+function protegerAtaque() {
+  game.efectosActivos.push({
+    tipo: "protegerAtaque",
+    activadoPor: game.jugadorActivo,                                  // quién lo activó
+    expira: game.turno + 2                                            // dura el siguiente turno rival
+  });
+  if (modoOnline) enviarEfectos();                                    // sincronizar efectos
+  log(t("log.protegerAtaqueActivo"));
+}
 // ======================================== BUSCAR EN EL TRASH
 function filtrarTrash(jugador, { escuela, posicion, anyo, tipo, sinHabilidad } = {}) {
   return jugador.trash.filter(c => {
@@ -4226,6 +4277,170 @@ function aplicarSemiP03072(jugador, carta) { // ================================
 
   debilitarReceptor(1, false, "Li");                                // -1 al líbero rival que entre
 }
+function comprobarHyakuzawaP03016(jugador) { // ================================= COMPROBAR HYAKUZAWA P03-016
+  let hyakuzawaEnRecepcion = jugador.zonas.recepcion.at(-1);
+  if (hyakuzawaEnRecepcion?.info?.id !== "HV-P03-016") return;     // debe ser este Hyakuzawa en recepción
+
+  let cartasEnJuego = [
+    jugador.zonas.saque.at(-1),
+    jugador.zonas.recepcion.at(-1),
+    jugador.zonas.pase.at(-1),
+    jugador.zonas.remate.at(-1),
+    jugador.zonas.bloqueo.at(-1)
+  ].filter(c => c !== null && c !== undefined);
+
+  let todasValidas = cartasEnJuego.every(c =>                       // todos de Kakugawa o Miyagi Camp
+    c.info?.escuela === "Kakugawa" || c.info?.categorias?.includes("Miyagi Camp")
+  );
+  if (todasValidas) {
+    aplicarHyakuzawaP03016(jugador, hyakuzawaEnRecepcion);
+  }
+}
+async function aplicarHyakuzawaP03016(jugador, hyakuzawa) { // ========================== HYAKUZAWA P03-016
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidadNombre", { carta: "Hyakuzawa Yûdai" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;                                       // si no quiere activar, ignorar
+
+  if (!await usarGuts(jugador, "recepcion", 1)) {                   // pagar 1 GUTS de recepción
+    return;
+  }
+
+  // mover Hyakuzawa de recepción a la mano
+  let index = jugador.zonas.recepcion.indexOf(hyakuzawa);           // buscar en recepción
+  jugador.zonas.recepcion.splice(index, 1);                         // sacar de la zona
+  añadirCartaAMano(jugador, hyakuzawa);                             // añadir a la mano
+  log(t("log.cartaAManoDesdeGuts", { carta: hyakuzawa.nombre, zona: t("ui.zonaRecepcion") }));
+
+  if (modoOnline) enviarJugada("quitarCartaZona", {                 // avisar al rival
+    zona: "recepcion",
+    cartaId: hyakuzawa.info?.id
+  });
+
+  potenciarPersonaje("Hyakuzawa Yûdai", "remate", 2);               // +2 al ataque por cada Hyakuzawa que entre
+
+  renderMano();                                                     // actualizar mano
+  renderManoRival();                                                // actualizar mano rival
+  renderCampo();                                                    // actualizar campo
+}
+function comprobarKageyamaP03020(jugador, carta) { // ========================= COMPROBAR KAGEYAMA P03-020
+  if (carta.stats.remate !== 3) return;                               // solo si el rematador tiene remate original 3
+
+  let kageyama = jugador.zonas.recepcion.at(-1);                      // receptor actual
+  if (kageyama?.info?.id !== "HV-P03-020") return;                   // debe ser este Kageyama en recepción
+
+  aplicarKageyamaP03020(jugador, kageyama);
+}
+async function aplicarKageyamaP03020(jugador, kageyama) { // =================== APLICAR KAGEYAMA P03-020
+  // buscar cartas de U19 en la zona de eventos
+  let u19EnEventos = jugador.zonas.eventos.filter(c =>
+    c.info?.categorias?.includes("U19")                              // filtrar por categoría U-19
+  );
+  if (u19EnEventos.length === 0) {                                    // si no hay ninguna
+    log(t("log.condicionNoCumplida"));
+    return;
+  }
+
+  let eleccion = await mostrarEleccion([                              // preguntar si quiere activar
+    { texto: t("log.activarHabilidadNombre", { carta: "Kageyama Tobio" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;                                         // si no quiere, ignorar
+
+  // descartar 1 carta de U19 de la zona de eventos
+  let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), u19EnEventos);
+  if (!cartaDescarte) return;                                         // si cancela, ignorar
+
+  let index = jugador.zonas.eventos.indexOf(cartaDescarte);           // buscar en eventos
+  jugador.zonas.eventos.splice(index, 1);                             // sacar de eventos
+  jugador.trash.push(cartaDescarte);                                  // enviar al trash
+  log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+
+  ataqueTresMetros(jugador, kageyama, 4);                             // activar ataque de 3 metros
+  protegerAtaque();                                                   // proteger ataque el siguiente turno
+
+  if (modoOnline) {
+    enviarTrash(jugador);                                             // sincronizar trash
+    enviarEventos(jugador);                                           // sincronizar zona de eventos
+  }
+  renderMano();                                                       // actualizar mano
+  renderManoRival();                                                  // actualizar mano rival
+  renderCampo();                                                      // actualizar campo
+}
+function comprobarKomoriP03028(jugador, carta) { // ================================= COMPROBAR KOMORI P03-028
+  if (!carta.info?.categorias?.includes("U19")) return;               // solo si el colocador es U19
+
+  let komori = jugador.zonas.recepcion.at(-1);                        // receptor actual
+  if (komori?.info?.id !== "HV-P03-028") return;                      // debe ser Komori en recepción
+
+  aplicarKomoriP03028(jugador, komori);
+}
+
+async function aplicarKomoriP03028(jugador, komori) { // =========================== APLICAR KOMORI P03-028
+  // buscar Kageyama Tobio en los GUTS de recepción
+  let kageyamasEnGuts = jugador.zonas.recepcion.slice(0, -1).filter(c =>
+    c.nombre === "Kageyama Tobio"
+  );
+  if (kageyamasEnGuts.length === 0) return;                           // si no hay Kageyama, ignorar
+
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidadNombre", { carta: "Komori Motoya" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;
+
+  let kageyamaElegido = await mostrarSelectorCartas(t("log.elegirCarta"), kageyamasEnGuts);
+  if (!kageyamaElegido) return;
+
+  // Komori actual va al GUTS (al principio del array)
+  let indexActual = jugador.zonas.recepcion.indexOf(komori);
+  jugador.zonas.recepcion.splice(indexActual, 1);
+  jugador.zonas.recepcion.unshift(komori);
+
+  // Kageyama elegido pasa a ser el receptor activo
+  let indexElegido = jugador.zonas.recepcion.indexOf(kageyamaElegido);
+  jugador.zonas.recepcion.splice(indexElegido, 1);
+  jugador.zonas.recepcion.push(kageyamaElegido);
+  kageyamaElegido.zonaActual = "recepcion";
+  kageyamaElegido.recienJugada = true;
+  kageyamaElegido.habilidadUsada = false;
+  game.ultimaCarta = kageyamaElegido;
+  game.ultimoJugador = jugador;
+
+  log(t("log.habilidadActivada", { carta: "Komori Motoya" }));
+  logCompartido("log.ataqueTresMetrosPotenciado", { valor: 1 });
+
+  // efecto potenciarAtaque3metros: solo si se sube a Kageyama
+  game.efectosActivos.push({
+    tipo: "potenciarAtaque3metros",
+    expira: game.turno + 1
+  });
+
+  // preguntar si usar habilidad de Kageyama (sin kageyamas con habilidad de recepción por el momento)
+  /*if (kageyamaElegido.habilidad) {
+    let eleccionHab = await mostrarEleccion([
+      { texto: t("log.activarHabilidadNombre", { carta: kageyamaElegido.nombre }) },
+      { texto: t("log.noActivar") }
+    ]);
+    if (eleccionHab === 0) {
+      let resultado = await kageyamaElegido.habilidad(jugador, game, kageyamaElegido);
+      if (resultado !== false) kageyamaElegido.habilidadUsada = true;
+    }
+  }*/
+
+  if (modoOnline) {
+    enviarJugada("cartaMovida", {
+      zona: "recepcion",
+      cartaId: kageyamaElegido.info.id,
+      posicion: "ultimo"
+    });
+  }
+
+  renderMano();
+  renderManoRival();
+  renderCampo();
+}
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 let partidaTerminada = false;                               // evita que el sonido y el panel se repitan
@@ -4257,17 +4472,17 @@ const todasLasCartas = inicializarCartas();
 /*
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
-["HV-D02-004", "HV-D02-004", "HV-P01-018", "HV-P01-023"].forEach(id => {
+["HV-D02-004", "HV-D02-004", "HV-P03-031", "HV-P01-023"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  // if (carta) game.jugadores[1].mano.push(carta);
+  if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS NEKOMA
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
-    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-004"); 
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-D02-001"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // MAZO NEKOMA
@@ -4296,7 +4511,7 @@ const mazoPruebaNekoma = [
 mazoPruebaNekoma.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- NEKOMA <
 
@@ -4305,21 +4520,21 @@ mazoPruebaNekoma.forEach(id => {
 ["HV-P03-057", "HV-D01-008", "HV-P03-047", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011", "HV-D01-011"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
-  if (carta) game.jugadores[1].mano.push(carta);
+  // if (carta) game.jugadores[1].mano.push(carta);
 });
 // GUTS KARASUNO
 ["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
   for (let i = 0; i < 3; i++) {
     let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P01-010"); 
     // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
-    game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
   }
 });
 // TRASH KARASUNO
 ["HV-P01-004"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
 });
 // MAZO KARASUNO
 const mazoPruebaKarasuno = [
@@ -4347,7 +4562,7 @@ const mazoPruebaKarasuno = [
 mazoPruebaKarasuno.forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
-  if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- KARASUNO
 
@@ -4594,6 +4809,52 @@ mazoPruebaInarizaki.forEach(id => {
   // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
 });
 // ---------------------------------------------------------------------------------- INARIZAKI <
+
+// ---------------------------------------------------------------------------------- U19  >
+// MANO U19
+["HV-P03-021", "HV-D02-021", "HV-D02-024", "HV-P03-028"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].mano.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mano.push(Object.assign({}, carta));
+});
+// GUTS U19
+["saque", "recepcion", "pase", "remate", "bloqueo"].forEach(zona => {
+  for (let i = 0; i < 4; i++) {
+    let gutsCarta = todasLasCartas.find(c => c.info?.id === "HV-P03-020"); 
+    // game.jugadores[0].zonas[zona].push(Object.assign({}, gutsCarta));
+    // game.jugadores[1].zonas[zona].push(Object.assign({}, gutsCarta));
+  }
+});
+// TRASH U19
+["HV-P03-029"].forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].trash.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].trash.push(Object.assign({}, carta));
+});
+// MAZO EVENTOS U19
+for (let i = 0; i < 3; i++) {
+  let evento = todasLasCartas.find(c => c.info?.id === "HV-P03-084");
+  // game.jugadores[0].zonas.eventos.push(evento);
+  // game.jugadores[1].zonas.eventos.push(evento);
+}
+// MAZO U19
+const mazoPruebaU19 = [
+  "HV-P03-020", 
+  "HV-P03-021", 
+  "HV-P03-022", 
+  "HV-P03-023",                               
+  "HV-P03-024",                                 
+  "HV-P03-025",                                 
+  "HV-P03-028",                                    
+  "HV-P03-027",                                  
+  "HV-P03-029",                                             
+];
+mazoPruebaU19.forEach(id => {
+  let carta = todasLasCartas.find(c => c.info?.id === id);
+  // if (carta) game.jugadores[0].mazo.push(Object.assign({}, carta));
+  // if (carta) game.jugadores[1].mazo.push(Object.assign({}, carta));
+});
+// ---------------------------------------------------------------------------------- U19 <
 */
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------
 // PRUEBAS -----------------------------------------------------------------------------------------------------------------

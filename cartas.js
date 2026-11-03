@@ -8901,7 +8901,7 @@ function inicializarCartas() {
       rareza: "C" 
     }
   ),
-  crearCarta("Hyakuzawa Yudai", // ============================================================== P03-016
+  crearCarta("Hyakuzawa Yudai", // ============================================================= P03-016
     {
       saque: 0,
       recepcion: 2,
@@ -8909,15 +8909,16 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 2
     },
-    null, // habilidad pendiente de implementar
+    null, // habilidad gestionada por comprobarHyakuzawa y aplicarHyakuzawa en colocar carta (pase)
     {
       tipo: "personaje",
       id: "HV-P03-016",
       escuela: "Kakugawa",
       posicion: "WS",
       anyo: 1,
-      rareza: "S",
-      descripcion: `Cuando tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> entre en juego, si todos tus personajes en juego son de <strong>Kakugawa</strong> o todos son de <strong>Jóvenes de Miyagi</strong>, y esta carta es tu receptora, puedes pagar 1 GUTS de <strong><span style="color:#1565c0">recepción</span></strong> para usar esta habilidad: añade esta carta a tu mano. </br>Durante este turno, cada vez que entre en juego tu <strong><span style="color:#c62828">Hyakuzawa Yudai</span></strong>, añade +2 al ataque de esa carta.`
+      categorias: ["Miyagi Camp"],
+      rareza: "R",
+      descripcion: 'Cuando uno de tus personajes de Pase entre en juego: si todos tus personajes son de <strong>Kakugawa</strong> o <strong>Miyagi Champ</strong> y este personaje es un receptor, puedes pagar 1 Guts para usar esta habilidad. Añade este personaje a tu mano y durante este turno, cada vez que uno de tus <strong>«Yudai Hyakuzawa»</strong> entre en juego, ese personaje obtiene <strong>+2 a su Ataque</strong>.',
     }
   ),
   crearCarta("Hyakuzawa Yudai", // ================================================================ P03-017
@@ -8947,8 +8948,45 @@ function inicializarCartas() {
       zonasProhibidas: ["saque", "bloqueo"]
     }
   ),
-
-
+  crearCarta("Nagamatsu Yumeto", // ============================================================ P03-019
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 3
+    },
+    null,
+    {
+      tipo: "personaje",
+      id: "HV-P03-019",
+      escuela: "Kôsenshû",
+      posicion: "MB",
+      anyo: 3,
+      categorias: ["Miyagi Camp"],
+      rareza: "C",
+    }
+  ),
+  crearCarta("Kageyama Tobio", // ============================================================== P03-020
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 0
+    },
+    null, // gestionado con comprobarKageyama y aplicarKageyama P03020
+    {
+      tipo: "personaje",
+      id: "HV-P03-020",
+      escuela: "Karasuno",
+      posicion: "WS",
+      anyo: 1,
+      categorias: ["U19"],
+      rareza: "SR",
+      descripcion: 'Cuando uno de tus personajes atacantes con Ataque base 3 entre en juego: si este personaje es un receptor, puedes descartar 1 carta de <strong>U19</strong> desde tu Zona de Evento. Si lo haces, realiza <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Ataque de 3 metros (4)</strong></span> y durante el siguiente turno rival, tu Ataque no puede ser reducido.</br><span style=&quot;background:#29b6f6; font-size:0.85em; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Ataque de 3 metros (N)</strong></span><span style=&quot;font-size:0.85em&quot;> : Coloca esta carta en tu Zona de Ataque y establece el Ataque de este personaje en N.</span>',
+    }
+  ),
   crearCarta("Miya Atsumu", // ================================================================= P03-021
     {
       saque: 0,
@@ -9032,7 +9070,7 @@ function inicializarCartas() {
       rareza: "UC",
     }
   ),
-  crearCarta("Hoshiumi Korai", // ============================================================== P03-023
+  crearCarta("Hoshiumi Kôrai", // ============================================================== P03-023
     {
       saque: 4,
       recepcion: 3,
@@ -9040,15 +9078,78 @@ function inicializarCartas() {
       remate: 1,
       bloqueo: 0
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" &&
+          carta.zonaActual !== "bloqueoApoyo" &&
+          carta.zonaActual !== "recepcion" &&
+          carta.zonaActual !== "remate") {
+        log(t("log.habilidadEnEstaFase"));
+        return false;
+      }
+
+      // comprobar que todos los personajes en juego son de U19
+      let cartasEnJuego = [
+        jugador.zonas.saque.at(-1),
+        jugador.zonas.recepcion.at(-1),
+        jugador.zonas.pase.at(-1),
+        jugador.zonas.remate.at(-1),
+        jugador.zonas.bloqueo.at(-1)
+      ].filter(c => c !== null && c !== undefined);
+
+      let todasU19 = cartasEnJuego.every(c =>
+        c.info?.categorias?.includes("U19")                            // todos de U19
+      );
+      if (!todasU19) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      // buscar cartas de U-19 en la zona de eventos
+      let u19EnEventos = jugador.zonas.eventos.filter(c =>
+        c.info?.categorias?.includes("U19")                             // filtrar por categoría U-19
+      );
+      if (u19EnEventos.length === 0) {                                  // si no hay ninguna
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      // elegir carta para descartar
+      let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), u19EnEventos);
+      if (!cartaDescarte) return false;                                 // si cancela, ignorar
+
+      let index = jugador.zonas.eventos.indexOf(cartaDescarte);         // buscar en eventos
+      jugador.zonas.eventos.splice(index, 1);                           // sacar de eventos
+      jugador.trash.push(cartaDescarte);                                // enviar al trash
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      // aplicar +3 según la zona
+      if (carta.zonaActual === "remate") {
+        game.valorAtaque += 3;                                          // +3 al ataque
+        log(t("log.ataqueAumentado", { valor: 3 }));
+      } else {
+        game.valorDefensa += 3;                                         // +3 a la defensa
+        log(t("log.defensaAumentada", { valor: 3 }));
+      }
+
+      if (modoOnline) {
+        enviarTrash(jugador);                                           // sincronizar trash
+        enviarEventos(jugador);                                         // sincronizar zona de eventos
+      }
+      renderMano();                                                     // actualizar mano
+      renderManoRival();                                                // actualizar mano rival
+      renderCampo();                                                    // actualizar campo
+    },
     {
       tipo: "personaje",
       id: "HV-P03-023",
       escuela: "Kamomedai",
       posicion: "WS",
       anyo: 2,
-      rareza: "T",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span> <span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span> <span style="background:#c62828; color:white; padding:1px 4px; border-radius:2px;">Remate</span></strong></br>Si todos tus personajes en juego son de <strong>Sub 19</strong>, puedes usar esta habilidad descartando 1 carta de <strong>Sub 19</strong> de tu zona de eventos: añade +3 a uno de los parámetros de esta carta.`
+      categorias: ["U19"],
+      rareza: "SR",
+      zonasHabilidad: ["bloqueo", "recepcion", "remate"],
+      descripcion: '<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Bloqueo</span></strong> <strong><span style=&quot;background:#21227C; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Recepción</span></strong> <strong><span style=&quot;background:#E30E1F; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Ataque</span></strong></br>Si todos tus personajes son <strong>U19</strong>, puedes descartar 1 carta de <strong>U19</strong> desde tu Zona de Evento. Si lo haces, este personaje obtiene <strong>+3 a la estadística de la zona en que se activa</strong>.',
     }
   ),
   crearCarta("Hoshiumi Korai", // ============================================================ P03-024
@@ -9072,28 +9173,66 @@ function inicializarCartas() {
       id: "HV-P03-025",
       escuela: "Kamomedai",
       categorias: ["U19"],
-      posicion: "WS",
+      posicion: "S",
       anyo: 2,
       rareza: "UC",
     }
   ),
-  crearCarta("Komori Motoya", // ============================================================== P03-028
+  crearCarta("Sakusa Kiyoomi", // ============================================================== P03-026
     {
-      saque: 0,
-      recepcion: 5,
+      saque: 1,
+      recepcion: 1,
       pase: 0,
-      remate: 1,
-      bloqueo: 0
+      remate: 3,
+      bloqueo: 2
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" &&
+          carta.zonaActual !== "bloqueoApoyo") {
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;
+      }
+
+      // buscar cartas U19 en la zona de eventos
+      let u19EnEventos = jugador.zonas.eventos.filter(c =>
+        c.info?.categorias?.includes("U19")
+      );
+      if (u19EnEventos.length === 0) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      // elegir carta para descartar
+      let cartaDescarte = await mostrarSelectorCartas(t("log.elegirCarta"), u19EnEventos);
+      if (!cartaDescarte) return false;
+
+      let index = jugador.zonas.eventos.indexOf(cartaDescarte);
+      jugador.zonas.eventos.splice(index, 1);
+      jugador.trash.push(cartaDescarte);
+      log(t("log.cartaDescartadaCoste", { carta: cartaDescarte.nombre }));
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+
+      game.valorDefensa += 2;
+      log(t("log.defensaAumentada", { valor: 2 }));
+
+      if (modoOnline) {
+        enviarTrash(jugador);
+        enviarEventos(jugador);
+      }
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
     {
       tipo: "personaje",
-      id: "HV-P03-028",
+      id: "HV-P03-026",
       escuela: "Itachiyama",
-      posicion: "WS",
+      posicion: "MB",
       anyo: 2,
-      rareza: "S",
-      descripcion: `Cuando entre en juego tu personaje de <strong><span style="color:#2e7d32">Pase</span></strong> de <strong>Sub 19</strong>, si esta carta es tu receptora, puedes usar esta habilidad colocando 1 carta de <strong>Kageyama Tobio</strong> del GUTS de tu zona de <strong><span style="color:#1565c0">recepción</span></strong> encima de esta carta: durante este turno, cada vez que uno de tus personajes entre en juego con <span style="background:#29b6f6; color:white; padding:1px 4px; border-radius:2px;"><strong>Ataque de 3 metros (N)</strong></span>, añade +1 al ataque de ese personaje.`
+      categorias: ["U19"],
+      rareza: "R",
+      zonasHabilidad: ["bloqueo"],
+      descripcion: `Cuando entre en juego tu personaje de <strong>Pase</strong> de <strong>Sub 19</strong>, si esta carta es tu receptora, puedes usar esta habilidad colocando 1 carta de <strong>Kageyama Tobio</strong> del GUTS de tu zona de <strong>recepción</strong> encima de esta carta: durante este turno, cada vez que uno de tus personajes entre en juego con <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Ataque de 3 metros (N)</strong></span>, añade +1 al ataque de ese personaje.`,
     }
   ),
   crearCarta("Sakusa Kiyoomi", // ============================================================ P03-027
@@ -9109,21 +9248,47 @@ function inicializarCartas() {
       rareza: "UC",
     }
   ),
-  crearCarta("Komori Motoya", // ============================================================ P03-025
-    { saque: 0, recepcion: 6, pase: 0, remate: 0, bloqueo: 0 },
-    null, 
+  crearCarta("Komori Motoya", // ================================================ P03-028
+    {
+      saque: 0,
+      recepcion: 5,
+      pase: 0,
+      remate: 1,
+      bloqueo: 0
+    },
+    null, // gestionado con comprobar y aplicar komoriP03028 en colocar carta (pase)
+    {
+      tipo: "personaje",
+      id: "HV-P03-028",
+      escuela: "Itachiyama",
+      posicion: "WS",
+      anyo: 2,
+      categorias: ["U19"],
+      rareza: "R",
+      descripcion: `Cuando uno de tus personajes de Pase de <strong>U19</strong> entre en juego: si este personaje es un receptor, puedes colocar 1 Guts de <strong>«Tobio Kageyama»</strong> desde tu Zona de Recepción sobre este personaje. Si lo haces, durante este turno, cada vez que uno de tus personajes entre en juego mediante <span style=&quot;background:#29b6f6; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;><strong>Ataque de 3 metros (N)</strong></span>, ese personaje obtiene <strong>+1 a su Ataque</strong>.`,
+    }
+  ),
+  crearCarta("Komori Motoya", // ================================================ P03-029
+    {
+      saque: 1,
+      recepcion: 6,
+      pase: 0,
+      remate: 0,
+      bloqueo: 1
+    },
+    null,
     {
       tipo: "personaje",
       id: "HV-P03-029",
       escuela: "Itachiyama",
-      categorias: ["U19"],
       posicion: "Li",
       anyo: 2,
-      rareza: "UC",
-      zonasProhibidas: ["saque", "bloqueo"]
+      categorias: ["U19"],
+      rareza: "R",
+      descripcion: ``,
     }
   ),
-  crearCarta("Chigaya Eikichi", // ============================================================== P03-030
+  crearCarta("Chigaya Eikichi", // ============================================== P03-030
     {
       saque: 0,
       recepcion: 0,
@@ -9131,17 +9296,140 @@ function inicializarCartas() {
       remate: 3,
       bloqueo: 3
     },
-    null, // habilidad pendiente de implementar
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "bloqueo" && carta.zonaActual !== "bloqueoApoyo") {
+        log(t("log.noEsFase", { zona: t("ui.zonaBloqueo") }));
+        return false;
+      }
+      if (!todosDeCategoria(jugador, "U19")) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+      if (game.valorAtaque < 8) {
+        log(t("log.condicionNoCumplida"));
+        return false;
+      }
+
+      potenciarReceptor(2);                                               // +2 a cada receptor que entre este turno
+
+      jugador.zonas.bloqueoApoyo.forEach(c => jugador.trash.push(c));    // los apoyos van al descarte
+      jugador.zonas.bloqueoApoyo = [];                                   // vaciar zona de apoyo
+      game.bloqueoActual = { central: null, apoyos: [] };                // olvidar los bloqueadores
+      if (modoOnline) {
+        enviarJugada("limpiarBloqueadores", {});
+        enviarTrash(jugador);
+      }
+
+      game.fase = "recepcion";
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      if (modoOnline) enviarFase("recepcion");
+
+      actualizarFaseUI();
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
     {
       tipo: "personaje",
       id: "HV-P03-030",
       escuela: "Shinzen",
       posicion: "MB",
       anyo: 1,
+      categorias: ["U19"],
       rareza: "R",
-      descripcion: `<strong><span style="background:#424242; color:white; padding:1px 4px; border-radius:2px;">Bloqueo</span></strong> Solo puedes usar esta habilidad si todos tus personajes en juego son de <strong>Sub 19</strong> y el ataque del rival es 8 o más.</br>Termina inmediatamente la fase de bloqueo y pasa a tu fase de robo. Además, durante este turno, cada vez que entre en juego tu receptor, añade +2 a la recepción de esa carta.`
+      zonasHabilidad: ["bloqueo"],
+      descripcion: `<strong><span style=&quot;background:#444340; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Bloqueo</span></strong></br>Se puede usar si todos tus personajes son <strong>U19</strong> y el Ataque rival es 8 o más. Finaliza inmediatamente la fase de Bloqueo y pasa a tu fase de Recepción. Además, durante este turno, cada vez que un personaje receptor entre en juego, ese personaje obtiene <strong>+2 a su Recepción</strong>.`,
     }
   ),
+  crearCarta("Kozume Kenma", // ================================================= P03-031
+    {
+      saque: 2,
+      recepcion: 1,
+      pase: 1,
+      remate: 2,
+      bloqueo: 0
+    },
+    async function(jugador, game, carta) {
+      if (carta.zonaActual !== "pase") {
+        log(t("log.noEsFase", { zona: t("ui.zonaPase") }));
+        return false;
+      }
+
+      if (!await usarGuts(jugador, "pase", 2)) {                          // pagar 2 GUTS de pase
+        return false;
+      }
+
+      // comprobar si las 2 cartas pagadas son de Nekoma
+      let todasNekoma = game.gutsDescartados.every(c =>
+        c.info?.escuela === "Nekoma"
+      );
+
+      if (todasNekoma) {
+        game.valorAtaque += 2;                                            // +2 al pase
+        log(t("log.potenciarColocador", { valor: 2, carta: carta.nombre }));
+
+        if (jugador.mazo.length === 0) {                                  // si no hay cartas en el mazo
+          log(t("log.sinCartasEnMazo"));
+          renderMano();
+          renderManoRival();
+          renderCampo();
+          return;
+        }
+
+        // mirar las 3 primeras cartas del mazo
+        let tresCartas = jugador.mazo.slice(0, 3);
+        log(t("log.cartasReveladas", traducirParamsCartas({               // solo en mi log: mirar es privado
+          cartasIds: tresCartas.map(c => c.info?.id),
+          cartasNombres: tresCartas.map(c => c.nombre)
+        })));
+
+        // filtrar cartas de Nekoma o eventos de Nekoma
+        let elegibles = tresCartas.filter(c =>
+          c.info?.escuela === "Nekoma"
+        );
+
+        if (elegibles.length === 0 || anadirAManoBloqueado(jugador)) {   // sin elegibles o bloqueado
+          log(t("log.condicionNoCumplida"));
+          let restantes = jugador.mazo.splice(0, 3);                     // sacar las 3 del mazo
+          jugador.mazo.push(...restantes);                               // mandar al fondo
+        } else {
+          let cartaElegida = await mostrarSelectorCartas(t("log.elegirCarta"), elegibles); // elegir carta
+
+          if (cartaElegida) {
+            let index = jugador.mazo.indexOf(cartaElegida);              // buscar en el mazo
+            jugador.mazo.splice(index, 1);                               // sacar del mazo
+            añadirCartaAMano(jugador, cartaElegida);                     // añadir a la mano
+            logCompartido("log.jugadorRevelaYAnade", {                   // revelada: la ven los dos
+              jugador: jugador.nombre,
+              carta: cartaElegida.nombre,
+              cartaId: cartaElegida.info?.id
+            });
+          }
+
+          // las restantes al fondo en el orden que quiera
+          let restantes = jugador.mazo.splice(0, cartaElegida ? 2 : 3); // sacar las restantes
+          await ordenarCartasAlFondo(jugador, restantes);                // el jugador elige el orden
+          log(t("log.cartasAlFondoMazo"));
+        }
+      }
+
+      log(t("log.habilidadActivada", { carta: carta.nombre }));
+      renderMano();
+      renderManoRival();
+      renderCampo();
+    },
+    {
+      tipo: "personaje",
+      id: "HV-P03-031",
+      escuela: "Nekoma",
+      posicion: "S",
+      anyo: 2,
+      rareza: "R",
+      zonasHabilidad: ["pase"],
+      descripcion: `<strong><span style=&quot;background:#059846; color:white; padding:1px 4px; border-radius:2px; border:1px solid white;&quot;>Pase</span></strong></br>Se puede usar pagando 2 Guts. Si todas las cartas pagadas son Setter S de <strong>Nekoma</strong>, este personaje obtiene <strong>+2 a su Pase</strong>, y miras las 3 cartas superiores de tu mazo, puedes revelar y añadir a tu mano hasta 1 carta de <strong>Nekoma</strong> o carta de Evento de <strong>Nekoma</strong> entre ellas. Coloca el resto en la parte inferior del mazo en el orden que prefieras.`,
+    }
+  ),
+
   crearCarta("Kozume Kenma", // ============================================================ P03-032
     { saque: 3, recepcion: 0, pase: 2, remate: 2, bloqueo: 2 },
     null, 
@@ -10344,6 +10632,7 @@ function inicializarCartas() {
       id: "HV-P03-084",
       fases: ["recepcion"],
       escuela: "U19",  // a revisar las traducciones
+      categorias: ["U19"],
       rareza: "N",
       descripcion: `<strong><span style="background:#1565c0; color:white; padding:1px 4px; border-radius:2px;">Recepción</span></strong> Si todos tus personajes en juego son de <strong>Sub 19</strong>, roba 1 carta y añade +1 a la recepción de uno de tus personajes. Si tu zona de eventos tiene 2 cartas o menos, añade +1 adicional a la recepción.</br><strong><span style="background:#e91e8c; color:white; padding:1px 4px; border-radius:2px;">Única</span></strong> Durante este turno, se anula la habilidad de tus otras cartas con el mismo nombre que esta.`
     }

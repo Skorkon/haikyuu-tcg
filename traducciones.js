@@ -244,7 +244,10 @@ const TRADUCCIONES = {
       "jugadorQuiereRematch": "{jugador} quiere jugar una revancha.",
       "descartaPorEfecto": "{jugador} descarta {carta} por efecto de carta",
       "habilidadEnEstaFase": "No puedes usar esta habilidad en esta fase.",
-      "ataqueRivalReducido": "El ataque del rival se reduce en {valor}."
+      "ataqueRivalReducido": "El ataque del rival se reduce en {valor}.",
+      "ataqueTresMetros": "Ataque de 3 metros: {jugador} coloca {carta} en su Zona de Ataque con un ataque de {valor}.",
+      "ataqueTresMetrosPotenciado": "Ataque de 3 metros potenciado en {valor} este turno.",
+      "protegerAtaqueActivo": "Ataque protegido contra reducciones."
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -498,7 +501,10 @@ const TRADUCCIONES = {
       "jugadorQuiereRematch": "{jugador} wants a rematch.",
       "descartaPorEfecto": "{jugador} discards {carta} due to a card effect",
       "habilidadEnEstaFase": "You can’t use this ability in this phase.",
-      "ataqueRivalReducido": "The opponent’s attack is reduced by {valor}."
+      "ataqueRivalReducido": "The opponent’s attack is reduced by {valor}.",
+      "ataqueTresMetros": "3-meter attack: {jugador} places {carta} in their Attack Zone with an attack of {valor}.",
+      "ataqueTresMetrosPotenciado": "3-meter attack boosted by {valor} this turn.",
+      "protegerAtaqueActivo": "Attack protected from reductions."
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -752,7 +758,10 @@ const TRADUCCIONES = {
       "jugadorQuiereRematch": "{jugador} veut une revanche.",
       "descartaPorEfecto": "{jugador} défausse {carta} par effet de carte",
       "habilidadEnEstaFase": "Tu ne peux pas utiliser cette capacité dans cette phase.",
-      "ataqueRivalReducido": "L’attaque de l’adversaire est réduite de {valor}."
+      "ataqueRivalReducido": "L’attaque de l’adversaire est réduite de {valor}.",
+      "ataqueTresMetros": "Attaque à 3 mètres : {jugador} place {carta} dans sa Zone d’Attaque avec une attaque de {valor}.",
+      "ataqueTresMetrosPotenciado": "Attaque à 3 mètres boostée de {valor} ce tour.",
+      "protegerAtaqueActivo": "Attaque protégée contre les réductions."
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -1006,7 +1015,10 @@ const TRADUCCIONES = {
       "jugadorQuiereRematch": "",
       "descartaPorEfecto": "",
       "habilidadEnEstaFase": "",
-      "ataqueRivalReducido": ""
+      "ataqueRivalReducido": "",
+      "ataqueTresMetros": "",
+      "ataqueTresMetrosPotenciado": "",
+      "protegerAtaqueActivo": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

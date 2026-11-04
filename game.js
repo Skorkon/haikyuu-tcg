@@ -728,6 +728,26 @@ async function ordenarCartasAlFondo(jugador, cartas, titulo = t("log.elegirEnOrd
   log(t("log.cartasAlFondoMazo"));
 }
 
+// ======================================================= ORDENAR PARA ENVIAR ARRIBA DEL MAZO
+// =============================================================================================
+async function ordenarCartasArriba(jugador, cartas, titulo = t("log.elegirEnOrden")) {
+
+  let restantes = cartas.slice();                                          // copia para no mutar el array original
+  let ordenadas = [];                                                      // array para guardar el orden elegido
+
+  while (restantes.length > 0) {                                           // mientras queden cartas por colocar
+    let cartaElegida = await mostrarSelectorCartas(                        // selector obligatorio, sin cancelable
+      titulo,
+      restantes                                                            // cartas restantes por ordenar
+    );
+    let index = restantes.indexOf(cartaElegida);                          // buscar en las restantes
+    restantes.splice(index, 1);                                           // sacarla de las restantes
+    ordenadas.push(cartaElegida);                                         // guardar en orden elegido
+  }
+  jugador.mazo.unshift(...ordenadas);                                     // colocar todas arriba del mazo
+  log(t("log.cartasArribaMazo"));
+}
+
 // ===================================================================================== SONIDOS
 // =============================================================================================
 const cacheAudio = {};   // guarda cada audio ya cargado, para no recargarlo en cada reproducción
@@ -1112,6 +1132,8 @@ function colocarCarta(jugador, carta, zona) {
     }
     // ------------------------------------------------------------------------- Kageyama P03-020
     comprobarKageyamaP03020(jugador, carta);
+    // ------------------------------------------------------------------------- Kuroo P03-033
+    comprobarKurooP03033(jugador, carta);
     // ------------------------------------------------------------------------- Goshiki P02-051
     if (carta.info?.id === "HV-P02-051" &&                                 // si es este Goshiki en concreto
         jugador.zonas.remate.at(-2)?.nombre === "Ushijima Wakatoshi" &&    // si debajo hay un Ushijima
@@ -1900,6 +1922,13 @@ async function usarHabilidad() {
     let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadColocador");
     if (efecto.activadoPor !== game.jugadorActivo && carta.zonaActual === "pase") {
       log(t("log.anularHabilidadColocador"));
+      return;
+    }
+  }
+    if (tieneEfecto("anularHabilidadBloqueador")) {
+    let efecto = game.efectosActivos.find(e => e.tipo === "anularHabilidadBloqueador");
+    if (efecto.activadoPor !== game.jugadorActivo && carta.zonaActual === "bloqueo") {
+      log(t("log.anularHabilidadBloqueador"));
       return;
     }
   }
@@ -2917,6 +2946,15 @@ function anularHabilidadColocador() {
   if (modoOnline) enviarEfectos();
   log(t("log.anularHabilidadColocador"));
 }
+function anularHabilidadBloqueador() {
+  game.efectosActivos.push({
+    tipo: "anularHabilidadBloqueador",
+    activadoPor: game.jugadorActivo,
+    expira: game.turno + 2
+  });
+  if (modoOnline) enviarEfectos();
+  logCompartido("log.anularHabilidadBloqueadorActivo");
+}
 function negarColocador() {
   game.efectosActivos.push({
     tipo: "negarColocador",
@@ -3276,25 +3314,25 @@ function oneTouch(n) {
   renderManoRival();
   renderCampo();
 }
-function ataqueTresMetros(jugador, carta, valorAtaque) { // =================== ATAQUE DE 3 METROS
-  // sacar de recepción
-  let index = jugador.zonas.recepcion.indexOf(carta);
-  if (index !== -1) jugador.zonas.recepcion.splice(index, 1);       // sacar de recepción
+function ataqueTresMetros(jugador, carta, valorAtaque, zonaOrigen = "recepcion") { // ========= ATAQUE DE 3 METROS
+  // sacar de la zona origen
+  let index = jugador.zonas[zonaOrigen].indexOf(carta);
+  if (index !== -1) jugador.zonas[zonaOrigen].splice(index, 1);       // sacar de la zona origen
 
   // colocar en remate
-  jugador.zonas.remate.push(carta);                                 // colocar en remate
-  carta.zonaActual = "remate";                                      // actualizar zona
-  carta.recienJugada = true;                                        // marcar como recién jugada
-  carta.ataqueOverride = true;                                      // ← aquí
-  game.valorAtaque += valorAtaque;                                  // fijar ataque
+  jugador.zonas.remate.push(carta);                                   // colocar en remate
+  carta.zonaActual = "remate";                                        // actualizar zona
+  carta.recienJugada = true;                                          // marcar como recién jugada
+  carta.ataqueOverride = true;                                        // override de ataque
+  game.valorAtaque += valorAtaque;                                    // fijar ataque
 
-    // comprobar efecto potenciarAtaque3metros (Komori P03-028)
+  // comprobar efecto potenciarAtaque3metros (Komori P03-028)
   if (game.efectosActivos.some(e => e.tipo === "potenciarAtaque3metros")) {
-    game.valorAtaque += 1;
+    game.valorAtaque += 1;                                            // +1 adicional
     log(t("log.ataqueAumentado", { valor: 1 }));
   }
 
-  logCompartido("log.ataqueTresMetros", {                           // log visible para ambos
+  logCompartido("log.ataqueTresMetros", {                             // log visible para ambos
     jugador: jugador.nombre,
     carta: carta.nombre,
     cartaId: carta.info?.id,
@@ -3302,16 +3340,16 @@ function ataqueTresMetros(jugador, carta, valorAtaque) { // =================== 
   });
 
   if (modoOnline) {
-    enviarJugada("quitarCartaZona", {                               // avisar que sale de recepción
-      zona: "recepcion",
+    enviarJugada("quitarCartaZona", {                                 // avisar que sale de la zona origen
+      zona: zonaOrigen,
       cartaId: carta.info?.id
     });
-    enviarJugada("cartaJugada", {                                   // avisar que entra en remate
+    enviarJugada("cartaJugada", {                                     // avisar que entra en remate
       zona: "remate",
       cartaId: carta.info?.id
     });
   }
-  actualizarContadoresVisual(); 
+  actualizarContadoresVisual();
 }
 // ======================================== NEGAR ONE TOUCH
 function negarOneTouch() {
@@ -4441,6 +4479,32 @@ async function aplicarKomoriP03028(jugador, komori) { // =======================
   renderManoRival();
   renderCampo();
 }
+function comprobarKurooP03033(jugador, carta) { // ============================ COMPROBAR KUROO P03-033
+  if (carta.info?.escuela !== "Nekoma") return;                       // solo si el rematador es de Nekoma
+
+  let kuroo = jugador.zonas.saque.at(-1);                            // sacador actual
+  if (kuroo?.info?.id !== "HV-P03-033") return;                      // debe ser Kuroo en saque
+
+  aplicarKurooP03033(jugador, kuroo);
+}
+async function aplicarKurooP03033(jugador, kuroo) { // ======================= APLICAR KUROO P03-033
+  let eleccion = await mostrarEleccion([
+    { texto: t("log.activarHabilidadNombre", { carta: "Kuroo Tetsuro" }) },
+    { texto: t("log.noActivar") }
+  ]);
+  if (eleccion !== 0) return;
+
+  if (!await usarGuts(jugador, "remate", 1)) return;                 // pagar 1 GUTS de remate
+
+  ataqueTresMetros(jugador, kuroo, 4, "saque");                      // 3-Meter Attack (4) desde saque
+
+  if (modoOnline) {
+    enviarTrash(jugador);                                             // sincronizar trash
+  }
+  renderMano();
+  renderManoRival();
+  renderCampo();
+}
 // ===================================================================================================================================
 // ================================================================================================================= FIN DE LA PARTIDA
 let partidaTerminada = false;                               // evita que el sonido y el panel se repitan
@@ -4472,7 +4536,7 @@ const todasLasCartas = inicializarCartas();
 /*
 // ---------------------------------------------------------------------------------- NEKOMA >
 // MANO NEKOMA 
-["HV-D02-004", "HV-D02-004", "HV-P03-031", "HV-P01-023"].forEach(id => {
+["HV-D02-004", "HV-D02-004", "HV-P03-073", "HV-P03-035", "HV-P03-033"].forEach(id => {
   let carta = todasLasCartas.find(c => c.info?.id === id);
   // if (carta) game.jugadores[0].mano.push(carta);
   if (carta) game.jugadores[1].mano.push(carta);

@@ -103,6 +103,8 @@ log.negarRobar;Efecto activo: {jugador} no puede robar cartas por habilidad este
 log.anularHabilidadReceptorActivo;Efecto activo: el siguiente receptor rival no podrá usar su habilidad;Active effect: next rival receiver cannot use their ability;Effet actif : le prochain receveur rival ne pourra pas utiliser sa capacité;
 log.anularHabilidadReceptor;El receptor no puede usar su habilidad este turno;The receiver cannot use their ability this turn;Le receveur ne peut pas utiliser sa capacité ce tour;
 log.anularHabilidadColocador;Efecto activo: el colocador no puede usar su habilidad;Active effect: setter cannot use their ability;Effet actif : le passeur ne peut pas utiliser sa capacité;
+log.anularHabilidadBloqueadorActivo;Efecto activo: el siguiente bloqueador central rival no podrá usar su habilidad.;Active effect: the next opponent’s middle blocker won’t be able to use their ability.;Effet actif : le prochain central adverse ne pourra pas utiliser sa capacité.;
+log.anularHabilidadBloqueador;El bloqueador central no puede usar su habilidad este turno.;The middle blocker can’t use their ability this turn.;Le central ne peut pas utiliser sa capacité ce tour.;
 log.limitarBloqueadoresActivo;Efecto activo: el rival solo podrá colocar hasta {max} bloqueadores;Active effect: rival can only place up to {max} blockers;Effet actif : le rival ne pourra placer que {max} bloqueurs;
 log.limitarBloqueadores;No puedes colocar más de {max} bloqueadores este turno;You cannot place more than {max} blockers this turn;Tu ne peux pas placer plus de {max} bloqueurs ce tour;
 log.maximoBloqueadores;Máximo 2 bloqueadores de apoyo;Maximum 2 support blockers;Maximum 2 bloqueurs de soutien;
@@ -248,3 +250,5 @@ log.ataqueRivalReducido;El ataque del rival se reduce en {valor}.;The opponent�
 log.ataqueTresMetros;Ataque de 3 metros: {jugador} coloca {carta} en su Zona de Ataque con un ataque de {valor}.;3-meter attack: {jugador} places {carta} in their Attack Zone with an attack of {valor}.;Attaque à 3 mètres : {jugador} place {carta} dans sa Zone d’Attaque avec une attaque de {valor}.;
 log.ataqueTresMetrosPotenciado;Ataque de 3 metros potenciado en {valor} este turno.;3-meter attack boosted by {valor} this turn.;Attaque à 3 mètres boostée de {valor} ce tour.;
 log.protegerAtaqueActivo;Ataque protegido contra reducciones.;Attack protected from reductions.;Attaque protégée contre les réductions.;
+log.cartasArribaMazo;Enviar cartas arriba del mazo.;Send cards to the top of the deck.;Envoyer les cartes en haut du deck.;
+log.cartasAlFondoMazo;Enviar cartas al fondo del mazo.;Send cards to the bottom of the deck.;Envoyer les cartes en bas du deck.;

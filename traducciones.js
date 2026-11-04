@@ -108,6 +108,8 @@ const TRADUCCIONES = {
       "anularHabilidadReceptorActivo": "Efecto activo: el siguiente receptor rival no podrá usar su habilidad",
       "anularHabilidadReceptor": "El receptor no puede usar su habilidad este turno",
       "anularHabilidadColocador": "Efecto activo: el colocador no puede usar su habilidad",
+      "anularHabilidadBloqueadorActivo": "Efecto activo: el siguiente bloqueador central rival no podrá usar su habilidad.",
+      "anularHabilidadBloqueador": "El bloqueador central no puede usar su habilidad este turno.",
       "limitarBloqueadoresActivo": "Efecto activo: el rival solo podrá colocar hasta {max} bloqueadores",
       "limitarBloqueadores": "No puedes colocar más de {max} bloqueadores este turno",
       "maximoBloqueadores": "Máximo 2 bloqueadores de apoyo",
@@ -138,7 +140,7 @@ const TRADUCCIONES = {
       "cartaDescartadaCoste": "{carta} descartada como coste",
       "cartaRevelada": "Carta revelada: {carta}",
       "cartaReveladaEscuela": "Carta revelada: {carta} ({escuela})",
-      "cartasAlFondoMazo": "Cartas restantes enviadas al fondo del mazo",
+      "cartasAlFondoMazo": "Enviar cartas al fondo del mazo.",
       "motivar": "Motivación: robas 1 carta extra por el punto del rival",
       "motivarActivo": "Efecto activo: si el rival pierde un punto en el siguiente turno, robas 1 carta extra",
       "descartarCuandoRoboActivo": "Efecto activo: el rival deberá descartar 1 carta cada vez que añada una carta a su mano por medios no estándar",
@@ -247,7 +249,8 @@ const TRADUCCIONES = {
       "ataqueRivalReducido": "El ataque del rival se reduce en {valor}.",
       "ataqueTresMetros": "Ataque de 3 metros: {jugador} coloca {carta} en su Zona de Ataque con un ataque de {valor}.",
       "ataqueTresMetrosPotenciado": "Ataque de 3 metros potenciado en {valor} este turno.",
-      "protegerAtaqueActivo": "Ataque protegido contra reducciones."
+      "protegerAtaqueActivo": "Ataque protegido contra reducciones.",
+      "cartasArribaMazo": "Enviar cartas arriba del mazo."
     },
     "deckbuilder": {
       "aplicaFiltro": "Aplica al menos un filtro para ver cartas"
@@ -365,6 +368,8 @@ const TRADUCCIONES = {
       "anularHabilidadReceptorActivo": "Active effect: next rival receiver cannot use their ability",
       "anularHabilidadReceptor": "The receiver cannot use their ability this turn",
       "anularHabilidadColocador": "Active effect: setter cannot use their ability",
+      "anularHabilidadBloqueadorActivo": "Active effect: the next opponent’s middle blocker won’t be able to use their ability.",
+      "anularHabilidadBloqueador": "The middle blocker can’t use their ability this turn.",
       "limitarBloqueadoresActivo": "Active effect: rival can only place up to {max} blockers",
       "limitarBloqueadores": "You cannot place more than {max} blockers this turn",
       "maximoBloqueadores": "Maximum 2 support blockers",
@@ -395,7 +400,7 @@ const TRADUCCIONES = {
       "cartaDescartadaCoste": "{carta} discarded as cost",
       "cartaRevelada": "Card revealed: {carta}",
       "cartaReveladaEscuela": "Card revealed: {carta} ({escuela})",
-      "cartasAlFondoMazo": "Remaining cards sent to the bottom of the deck",
+      "cartasAlFondoMazo": "Send cards to the bottom of the deck.",
       "motivar": "Motivation: you draw 1 extra card from the rival's point",
       "motivarActivo": "Active effect: if the rival loses a point next turn, you draw 1 extra card",
       "descartarCuandoRoboActivo": "Active effect: rival must discard 1 card each time they add a card to their hand by non-standard means",
@@ -504,7 +509,8 @@ const TRADUCCIONES = {
       "ataqueRivalReducido": "The opponent’s attack is reduced by {valor}.",
       "ataqueTresMetros": "3-meter attack: {jugador} places {carta} in their Attack Zone with an attack of {valor}.",
       "ataqueTresMetrosPotenciado": "3-meter attack boosted by {valor} this turn.",
-      "protegerAtaqueActivo": "Attack protected from reductions."
+      "protegerAtaqueActivo": "Attack protected from reductions.",
+      "cartasArribaMazo": "Send cards to the top of the deck."
     },
     "deckbuilder": {
       "aplicaFiltro": "Apply at least one filter to see cards"
@@ -622,6 +628,8 @@ const TRADUCCIONES = {
       "anularHabilidadReceptorActivo": "Effet actif : le prochain receveur rival ne pourra pas utiliser sa capacité",
       "anularHabilidadReceptor": "Le receveur ne peut pas utiliser sa capacité ce tour",
       "anularHabilidadColocador": "Effet actif : le passeur ne peut pas utiliser sa capacité",
+      "anularHabilidadBloqueadorActivo": "Effet actif : le prochain central adverse ne pourra pas utiliser sa capacité.",
+      "anularHabilidadBloqueador": "Le central ne peut pas utiliser sa capacité ce tour.",
       "limitarBloqueadoresActivo": "Effet actif : le rival ne pourra placer que {max} bloqueurs",
       "limitarBloqueadores": "Tu ne peux pas placer plus de {max} bloqueurs ce tour",
       "maximoBloqueadores": "Maximum 2 bloqueurs de soutien",
@@ -652,7 +660,7 @@ const TRADUCCIONES = {
       "cartaDescartadaCoste": "{carta} défaussée comme coût",
       "cartaRevelada": "Carte révélée : {carta}",
       "cartaReveladaEscuela": "Carte révélée : {carta} ({escuela})",
-      "cartasAlFondoMazo": "Cartes restantes envoyées au fond du deck",
+      "cartasAlFondoMazo": "Envoyer les cartes en bas du deck.",
       "motivar": "Motivation : tu pioches 1 carte supplémentaire grâce au point du rival",
       "motivarActivo": "Effet actif : si le rival perd un point au prochain tour, tu pioches 1 carte supplémentaire",
       "descartarCuandoRoboActivo": "Effet actif : le rival devra se défausser d'1 carte chaque fois qu'il ajoute une carte à sa main par des moyens non standard",
@@ -761,7 +769,8 @@ const TRADUCCIONES = {
       "ataqueRivalReducido": "L’attaque de l’adversaire est réduite de {valor}.",
       "ataqueTresMetros": "Attaque à 3 mètres : {jugador} place {carta} dans sa Zone d’Attaque avec une attaque de {valor}.",
       "ataqueTresMetrosPotenciado": "Attaque à 3 mètres boostée de {valor} ce tour.",
-      "protegerAtaqueActivo": "Attaque protégée contre les réductions."
+      "protegerAtaqueActivo": "Attaque protégée contre les réductions.",
+      "cartasArribaMazo": "Envoyer les cartes en haut du deck."
     },
     "deckbuilder": {
       "aplicaFiltro": "Applique au moins un filtre pour voir les cartes"
@@ -879,6 +888,8 @@ const TRADUCCIONES = {
       "anularHabilidadReceptorActivo": "",
       "anularHabilidadReceptor": "",
       "anularHabilidadColocador": "",
+      "anularHabilidadBloqueadorActivo": "",
+      "anularHabilidadBloqueador": "",
       "limitarBloqueadoresActivo": "",
       "limitarBloqueadores": "",
       "maximoBloqueadores": "",
@@ -1018,7 +1029,8 @@ const TRADUCCIONES = {
       "ataqueRivalReducido": "",
       "ataqueTresMetros": "",
       "ataqueTresMetrosPotenciado": "",
-      "protegerAtaqueActivo": ""
+      "protegerAtaqueActivo": "",
+      "cartasArribaMazo": ""
     },
     "deckbuilder": {
       "aplicaFiltro": ""

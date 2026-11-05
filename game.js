@@ -657,7 +657,6 @@ function mostrarSelectorCartas(titulo, cartas, cancelable = false) {
         div.addEventListener("mouseout", () => {
           document.getElementById("tooltip").style.display = "none";
         });
-        vincularTooltipTactil(div, carta);
 
         div.onclick = () => {
           cerrarSelector();
@@ -2426,7 +2425,6 @@ function renderMano() {
     div.addEventListener("mouseout", () => {
       document.getElementById("tooltip").style.display = "none";
     });
-    vincularTooltipTactil(div, carta);
     contenedor.appendChild(div);
   });
   if (modoOnline) enviarCantidadMano();                        // enviar cantidad de cartas al rival
@@ -2580,7 +2578,6 @@ function renderCampo() {
         div.addEventListener("mouseover", (e) => mostrarTooltip(carta, e));
         div.addEventListener("mousemove", (e) => mostrarTooltip(carta, e));
         div.addEventListener("mouseout", () => {document.getElementById("tooltip").style.display = "none";});
-        vincularTooltipTactil(div, carta);
         div.addEventListener("click", (e) => {
           let selector = document.getElementById("selector-cartas");
           if (selector.style.display === "flex") return;              // si hay selector abierto, no hacer nada
@@ -2650,7 +2647,6 @@ function renderCampo() {
         div.addEventListener("mouseout", () => {                                 // ocultar tooltip
           document.getElementById("tooltip").style.display = "none";
         });
-        vincularTooltipTactil(div, carta);                                       // tooltip en móvil: mantener pulsado
         div.addEventListener("click", () => {                                    // NUEVO: clic para seleccionar el apoyo
           let selector = document.getElementById("selector-cartas");            // selector de cartas
           if (selector.style.display === "flex") return;                        // si hay un selector abierto, no hacer nada
@@ -2697,7 +2693,6 @@ function renderCampo() {
       trashCont.addEventListener("mouseout", () => {
         document.getElementById("tooltip").style.display = "none";
       });
-      vincularTooltipTactil(trashCont, () => jugador.trash.at(-1));   // función, no valor: la última carta puede cambiar
       trashCont.addEventListener("click", () => {
         let selector = document.getElementById("selector-cartas");
         if (selector.style.display === "flex") return;           // si hay selector abierto, no hacer nada
@@ -2780,7 +2775,6 @@ function renderCampo() {
         eventosCont.addEventListener("mouseout", () => {
           document.getElementById("tooltip").style.display = "none";
         });
-        vincularTooltipTactil(eventosCont, () => jugador.zonas.eventos.at(-1));   // función: la última carta puede cambiar
         eventosCont.addEventListener("click", () => {
           let selector = document.getElementById("selector-cartas");
           if (selector.style.display === "flex") return;           // si hay selector abierto, no hacer nada
@@ -2865,45 +2859,6 @@ function mostrarTooltip(carta, e) {
 
   tooltip.style.left = x + "px";
   tooltip.style.top = y + "px";
-}
-
-// ===================================================================================================================================
-// ============================================================================================== TOOLTIP TÁCTIL (móvil / pantallas táctiles)
-// En touch no existe "pasar el ratón". En la mayoría de estas zonas el toque normal ya hace algo (jugar/
-// seleccionar la carta, abrir un selector...), así que el tooltip aquí se muestra manteniendo el dedo
-// pulsado, igual que en otros juegos de cartas: un toque corto sigue haciendo lo de siempre, y solo si se
-// mantiene pulsado aparece la carta en grande. Al soltar, se cierra, y si fue pulsación larga se cancela
-// el clic normal que si no se dispararía justo después (jugaría/seleccionaría la carta sin querer).
-const DURACION_PULSACION_TOOLTIP = 450; // ms que hay que mantener pulsado para que aparezca
-
-function vincularTooltipTactil(el, obtenerCarta) {
-  let temporizador = null;
-  let fuePulsacionLarga = false;
-
-  el.addEventListener("touchstart", (e) => {
-    fuePulsacionLarga = false;
-    const carta = typeof obtenerCarta === "function" ? obtenerCarta() : obtenerCarta;
-    if (!carta) return;
-    const toque = e.touches[0];
-    temporizador = setTimeout(() => {
-      fuePulsacionLarga = true;
-      mostrarTooltip(carta, { clientX: toque.clientX, clientY: toque.clientY });
-    }, DURACION_PULSACION_TOOLTIP);
-  }, { passive: true });
-
-  const cancelarTemporizadorTooltip = () => {
-    if (temporizador) { clearTimeout(temporizador); temporizador = null; }
-  };
-
-  el.addEventListener("touchend", (e) => {
-    cancelarTemporizadorTooltip();
-    document.getElementById("tooltip").style.display = "none";
-    if (fuePulsacionLarga) {
-      e.preventDefault();   // evita el "clic fantasma" al soltar tras la pulsación larga
-    }
-  });
-  el.addEventListener("touchmove", cancelarTemporizadorTooltip);     // si el dedo se desliza, se cancela (no es una pulsación mantenida)
-  el.addEventListener("touchcancel", cancelarTemporizadorTooltip);
 }
 
 // ------------------------------------- TEXTO NEGRO O BLANCO SEGÚN EL COLOR DE FONDO

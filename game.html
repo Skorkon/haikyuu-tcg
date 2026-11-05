@@ -1,5 +1,7 @@
 <!DOCTYPE html>  <!-- Le dice al navegador que esto es HTML moderno -->
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  <!-- faltaba: sin esto el móvil renderiza como si fuera escritorio -->
+<meta name="screen-orientation" content="landscape"> <!-- pista para navegadores que la respeten; el forzado real va por CSS más abajo -->
 
 <html>
 
@@ -17,6 +19,7 @@
   margin: 0;
   padding: 0;
 }
+html, body { overflow-x: hidden; }   /* red de seguridad: evita scroll horizontal accidental */
 /* ----------------------------------------------------------------------------------------------- REMAKE : PASO 1 */
 :root {
   --text: #e8e8ec;            /* texto claro (sobre fondos oscuros) */
@@ -28,6 +31,7 @@
 body {
   font-family: var(--font-texto), Arial, sans-serif;
   height: 100vh;
+  height: 100dvh;      /* en móvil, se adapta cuando la barra del navegador aparece/desaparece */
   display: flex;
   flex-direction: column;
   /* background: var(--bg);      /* ← antes #d0d0d0, ahora el gris clarito de toda la app */
@@ -1169,6 +1173,29 @@ button {
 }
 #panel-fin {
   gap: 12px;
+}
+
+/* ------------------------------------------------------------------------------- FORZAR HORIZONTAL EN MÓVIL */
+/* En pantallas estrechas sujetas en vertical, rotamos visualmente toda la página 90°: así el tríptico
+   (pensado para escritorio) recibe de golpe todo el ancho del teléfono como si estuviera en horizontal,
+   sin depender de que el jugador lo gire físicamente. En landscape real no se aplica: ya hay ancho de sobra
+   y el escalado por zoom/transform existente (escalarTablero, escalarColumnaIzquierda/Derecha) hace el resto. */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  html {
+    width: 100vh;              /* el alto real del móvil pasa a ser el "ancho" tras rotar */
+    height: 100vw;              /* y el ancho real del móvil pasa a ser el "alto" */
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform-origin: left top;
+    transform: rotate(-90deg);
+  }
+  body {
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+  }
 }
 
 </style>

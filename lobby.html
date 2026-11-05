@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
   <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  <!-- responsive + respeta notch/safe-area -->
   <title>HV-SIM · Lobby</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="base.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; } /* reset básico */
+    html, body { overflow-x: hidden; }   /* evita scroll horizontal accidental en móvil */
     :root {
       --surface: #16161a;
       --surface2: #1e1e24;
@@ -24,6 +25,7 @@
       color: var(--tinta);
       font-family: var(--font-texto);
       min-height: 100vh;               /* toda la altura de pantalla */
+      min-height: 100dvh;              /* en móvil, se ajusta cuando la barra del navegador aparece/desaparece */
       display: flex;                   /* flexbox para centrar */
       flex-direction: column;          /* apilado vertical */
       align-items: center;             /* centrado horizontal */
@@ -80,8 +82,66 @@
 
     /* ------------------------------- RESPONSIVE ------------------------------------- */
     @media (max-width: 900px) {
-      .columna-lateral { display: none; }  /* ocultar laterales en pantallas pequeñas */
-      .columna-central { width: 100%; }    /* panel central ocupa toda la pantalla */
+      /* ojo: antes esta regla ocultaba TODA .columna-lateral, y #columna-derecha (unirse con código)
+         también tiene esa clase — en móvil el panel de unirse por código desaparecía sin dejar rastro.
+         Ahora solo se oculta la imagen decorativa; la columna derecha se apila debajo, visible. */
+      #columna-izquierda { display: none; }
+
+      .triptico {
+        position: static;         /* deja de ser un overlay fijo: la página pasa a fluir y hacer scroll normal */
+        height: auto;
+        flex-direction: column;   /* las columnas que queden se apilan una debajo de otra */
+      }
+      .columna-central {
+        width: 100%;
+        overflow: visible;        /* el scroll ya lo da la página entera, no hace falta recortar aquí */
+      }
+      .central-contenido {
+        width: 100%;              /* en vez del lienzo fijo de 750px, pensado para el escalado por zoom */
+        padding: 0 16px;
+      }
+      #columna-derecha {
+        width: 100%;
+        border-left: none;
+        border-top: 3px solid var(--accent);
+        padding: 20px 16px;
+      }
+      body {
+        min-height: auto;
+        display: block;           /* ya no centramos por flex: el contenido fluye de arriba a abajo */
+      }
+
+      /* tipografía y controles a tamaño propio, sin depender del escalado por zoom (pensado para escritorio) */
+      header h1 {
+        font-size: clamp(20px, 7vw, 26px);
+      }
+      .zona-botones {
+        padding: 16px;
+      }
+      .zona-sala, .zona-mazo {
+        padding: 10px 16px;
+      }
+      .btn-menu {
+        font-size: clamp(13px, 3.6vw, 15px);
+        padding: 11px 12px;        /* área de toque más cómoda */
+      }
+      .input-settings,
+      .select-oscuro {
+        font-size: 16px;           /* evita que iOS haga zoom automático al enfocar el campo */
+      }
+      #codigo-sala {
+        font-size: clamp(20px, 6vw, 28px);
+      }
+      .partida-item {
+        flex-wrap: wrap;
+      }
+
+      /* el popup de modo Solo tenía min-width:420px fijo: en un móvil estrecho se salía de la pantalla */
+      #popup-solo > div {
+        min-width: 0;
+        width: 90vw;
+        padding: 24px;
+      }
     }
 
     /* ------------------------------- ESTILOS COMPARTIDOS ------------------------------------- */
@@ -375,10 +435,19 @@
   </script>
 
   <script>
+    // El escalado por "zoom" encaja cada columna en su lienzo de diseño para el tríptico de escritorio;
+    // por debajo de 900px el CSS ya pasa a un diseño apilado y propio (ver @media max-width:900px),
+    // así que ahí se deja el zoom en 1 y se sale sin escalar nada.
+    const BREAKPOINT_MOVIL_LOBBY = 900;  // mismo punto de corte que el @media del CSS
+
     // ====================================================== ESCALAR COLUMNA IZQUIERDA
     const ANCHO_DISENO_IZQ = 380;
     function escalarIzquierda() {
       const columna = document.getElementById("columna-izquierda");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_LOBBY) {
+        columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = 1);
+        return;
+      }
       const escala = columna.clientWidth / ANCHO_DISENO_IZQ;
       columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
     }
@@ -388,6 +457,10 @@
     const ANCHO_DISENO_CENTRO = 750;
     function escalarCentro() {
       const columna = document.querySelector(".columna-central");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_LOBBY) {
+        columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = 1);
+        return;
+      }
       const escala = columna.clientWidth / ANCHO_DISENO_CENTRO;
       columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
     }
@@ -397,6 +470,10 @@
     const ANCHO_DISENO_DER = 500;
     function escalarDerecha() {
       const columna = document.getElementById("columna-derecha");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_LOBBY) {
+        columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = 1);
+        return;
+      }
       const escala = columna.clientWidth / ANCHO_DISENO_DER;
       columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = escala);
     }

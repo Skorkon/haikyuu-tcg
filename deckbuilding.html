@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" type="image/png" href="favicon.png">                   <!-- icono navegador -->
   <meta charset="UTF-8">                                                  <!-- codificación de caracteres -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- responsive básico -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  <!-- responsive + respeta notch/safe-area -->
   <title>HVB-TCG · Deckbuilder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="base.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }          /* reset básico para todos los elementos */
+    html, body { overflow-x: hidden; }   /* evita scroll horizontal accidental en móvil */
 
     :root {                                       /* variables de color reutilizables, mismas que index.html y lobby.html */
       --surface: #16161a;                       /* superficie oscura de paneles */
@@ -29,7 +30,8 @@
       font-family: var(--font-texto);  /* fuente base, de base.css */
       font-size: 14px;                 /* tamaño de texto base */
       min-height: 100vh;               /* ocupa toda la altura de pantalla */
-      overflow: hidden;                /* sin scroll en el body — cada columna scrollea por su cuenta */
+      min-height: 100dvh;              /* en móvil, se ajusta cuando la barra del navegador aparece/desaparece */
+      overflow: hidden;                /* sin scroll en el body — cada columna scrollea por su cuenta (se cambia en móvil, ver @media) */
     }
 
     /* -------------------------------------------------- CONTENEDOR TRÍPTICO ------------------------------------------ */
@@ -334,6 +336,12 @@
     }
     .preview-panel.show {
       display: flex;
+    }
+    .preview-backdrop {
+      display: none;    /* solo aparece en móvil (ver @media): ahí el preview pasa a ser una ventana modal */
+    }
+    .preview-cerrar {
+      display: none;    /* en escritorio, mouseleave ya cierra el preview; el botón de cerrar solo hace falta en móvil */
     }
     .preview-imagen {
       width: 100%;
@@ -747,15 +755,135 @@
       color: var(--gris-medio);
       margin-bottom: 8px;
     }
-  
+
+    /* ------------------------------- RESPONSIVE ------------------------------------- */
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;              /* antes "hidden": en móvil ya no hay 3 columnas con scroll propio, scrollea la página */
+      }
+      .triptico {
+        flex-direction: column;      /* las columnas que queden, apiladas una debajo de otra */
+        height: auto;
+      }
+      #columna-izquierda {
+        /* display:contents: la caja de esta columna (imagen de fondo, borde...) deja de pintarse y no
+           ocupa sitio en el apilado vertical, pero su hijo (el preview) sigue pudiendo mostrarse —
+           ahora como una ventana flotante centrada, activable con el dedo (ver JS más abajo). */
+        display: contents;
+      }
+      .preview-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: min(92vw, 360px);
+        max-height: 85vh;
+        overflow-y: auto;
+        z-index: 200;
+      }
+      .preview-backdrop.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 150;
+      }
+      .preview-cerrar {
+        display: flex;
+        position: absolute;
+        top: 8px; right: 8px;
+        width: 28px; height: 28px;
+        align-items: center;
+        justify-content: center;
+        background: var(--tinta);
+        color: var(--papel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 3;
+      }
+      .columna-central {
+        width: 100%;
+        overflow: visible;
+      }
+      .columna-derecha {
+        width: 100%;
+        border-left: none;
+        border-top: 3px solid var(--accent);
+        overflow: visible;
+      }
+
+      /* catálogo: con 8 columnas fijas, cada carta mediría ~45px en un móvil — ilegible e imposible de tocar */
+      :root { --cartas-por-fila: 5; }
+
+      .catalogue-grid {
+        overflow-y: visible;         /* el scroll ya lo da la página entera */
+      }
+      .deck-list {
+        overflow-y: visible;
+      }
+
+      /* cabecera: título a ancho completo arriba, volver+pestañas debajo (ya no centrado por posición absoluta) */
+      header {
+        flex-wrap: wrap;
+        min-height: auto;
+        padding: 12px 16px;
+        gap: 8px;
+      }
+      header h1 {
+        position: static;
+        transform: none;
+        width: 100%;
+        order: -1;
+        font-size: clamp(20px, 7vw, 28px);
+        margin: 0 0 4px;
+      }
+      nav {
+        margin-left: auto;
+      }
+
+      /* controles a tamaño propio, sin depender del escalado por zoom (pensado para escritorio) */
+      .campo,
+      .select-oscuro {
+        font-size: 16px;             /* evita que iOS haga zoom automático al enfocar el campo */
+      }
+      .btn-menu,
+      .tab-btn {
+        font-size: clamp(13px, 3.4vw, 15px);
+        padding: 10px 12px;          /* área de toque más cómoda */
+      }
+      .filters {
+        padding: 12px 16px;
+      }
+      .catalogue-grid,
+      .card-count,
+      .aviso-p03 {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root { --cartas-por-fila: 4; }
+    }
+
+    @media (max-width: 420px) {
+      :root { --cartas-por-fila: 3; }
+    }
+
   </style>
 </head>
 <body>
   <!-- CONTENEDOR PRINCIPAL -->
   <div class="triptico">
+    <!-- Fondo oscuro detrás del preview cuando se muestra como ventana modal en móvil; tocarlo lo cierra -->
+    <div class="preview-backdrop" id="previewBackdrop" onclick="ocultarPreview()"></div>
     <!-- COLUMNA IZQUIERDA : solo imagen -->
     <div id="columna-izquierda">
       <div class="preview-panel" id="previewPanel">
+        <button type="button" class="preview-cerrar" onclick="ocultarPreview()" aria-label="Cerrar">✕</button>
         <div class="preview-imagen" id="previewImagen"></div>
         <div class="preview-etiqueta" id="previewEtiqueta"></div>
         <div class="preview-bocadillo" id="previewBocadillo"></div>
@@ -1050,10 +1178,15 @@
         addToDeck(c);
       });
 
-      // clic en la carta (no en el +): mostrar u ocultar la descripción en el preview
-      div.addEventListener("click", alternarDescripcion); 
+      // clic en la carta (no en el +): mostrar el preview de esta carta y alternar su descripción.
+      // Antes solo alternaba la descripción, asumiendo que el preview ya estaba abierto por el hover
+      // previo — con el dedo no hay hover, así que ahora el propio clic/toque también llama a mostrarPreview.
+      div.addEventListener("click", () => {
+        mostrarPreview(c);
+        alternarDescripcion();
+      });
 
-      // ------------------------------------------------------------------- Mostrar tooltip al pasar el ratón   
+      // ------------------------------------------------------------------- Mostrar tooltip al pasar el ratón (escritorio)
       div.addEventListener("mouseenter", () => mostrarPreview(c));
       div.addEventListener("mouseleave", () => ocultarPreview());
 
@@ -1093,11 +1226,13 @@
       panel.classList.remove("con-descripcion");      // cada carta nueva empieza sin bocadillo
 
       panel.classList.add("show");
+      document.getElementById("previewBackdrop").classList.add("show");   // solo se ve en móvil (ver CSS)
     }
 
     // ------------------------------------- OCULTAR TOOLTIP
     function ocultarPreview() {
       document.getElementById("previewPanel").classList.remove("show");
+      document.getElementById("previewBackdrop").classList.remove("show");
     }
     // ------------------------------------- COLOCAR EL BOCADILLO: lo más abajo posible sin salirse de la pantalla
     function colocarBocadillo() {
@@ -1473,6 +1608,7 @@
         el.addEventListener('mouseleave', () => ocultarPreview());
         el.addEventListener('click', e => {
           if (e.target.closest('.deck-entry-rm')) return;   // los botones − y ✕ no abren el bocadillo
+          mostrarPreview(entry.carta);   // por si se llega aquí tocando, sin haber pasado antes el ratón
           alternarDescripcion();
         });
       });
@@ -1896,15 +2032,25 @@
   </script>
 
   <script>
+    // El escalado por "zoom" encaja cada zona en su lienzo de diseño para el tríptico de escritorio;
+    // por debajo de 900px el CSS ya pasa a un diseño apilado y propio (ver @media max-width:900px),
+    // así que ahí se deja todo en zoom 1 y no se escala nada por JS.
+    const BREAKPOINT_MOVIL_DECKBUILDER = 900;   // mismo punto de corte que el @media del CSS
+
     // ====================================================== ESCALAR LA ZONA DE ARRIBA (cabecera y filtros)
     const ANCHO_DISENO_CENTRO = 1100;   // ancho de columna central para el que está diseñada la zona de arriba
 
     function escalarCabecera() {
       const centro = document.querySelector(".columna-central");
+      const elementos = document.querySelectorAll("header, .filters, .aviso-p03, .card-count");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_DECKBUILDER) {
+        elementos.forEach(el => el.style.zoom = 1);
+        return;
+      }
       const escala = centro.clientWidth / ANCHO_DISENO_CENTRO;     // cuántas veces cabe el diseño
 
       // cabecera, filtros, aviso P03 y contador de cartas
-      document.querySelectorAll("header, .filters, .aviso-p03, .card-count").forEach(function (el) {
+      elementos.forEach(function (el) {
         el.style.zoom = escala;
       });
     }
@@ -1917,6 +2063,10 @@
 
     function escalarColumnaDerecha() {
       const columna = document.querySelector(".columna-derecha");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_DECKBUILDER) {
+        columna.querySelectorAll(":scope > *").forEach(el => el.style.zoom = 1);
+        return;
+      }
       const escala = columna.clientWidth / ANCHO_DISENO_DERECHA;
 
       // cada bloque de la columna: cabecera del mazo, botones, lista y decks guardados
@@ -1930,6 +2080,10 @@
 
     function escalarColumnaIzquierda() {
       const columna = document.getElementById("columna-izquierda");
+      if (window.innerWidth <= BREAKPOINT_MOVIL_DECKBUILDER) {
+        document.getElementById("previewPanel").style.zoom = 1;
+        return;
+      }
       const escala  = columna.clientWidth / ANCHO_DISENO_IZQUIERDA;
       document.getElementById("previewPanel").style.zoom = escala;
     }
